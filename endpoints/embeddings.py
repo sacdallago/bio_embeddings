@@ -2,9 +2,9 @@ from endpoints import api
 from flask_cors import cross_origin
 from flask import request, abort
 
-from extractor import get_seqvec
+from machine_learning.extractor import get_seqvec
 from flask_restplus import Resource
-from request_models import sequence_post_parameters
+from endpoints.request_models import sequence_post_parameters
 
 
 ns = api.namespace("embeddings", description="Get embeddings")

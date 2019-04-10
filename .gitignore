@@ -2,5 +2,5 @@
 .ipynb_checkpoints/*
 .idea/*
 __pycache__/
-model/*
-!model/.empty
+machine_learning/model/*
+!machine_learning/model/.empty
