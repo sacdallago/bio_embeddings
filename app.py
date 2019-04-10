@@ -1,25 +1,14 @@
-import re
-from extractor import extract_embedding
-from flask import Flask, request, abort
-from flask_cors import cross_origin
+from flask import Flask, Blueprint
+
+from endpoints import api
+from endpoints.embeddings import ns as embeddings_namespace
+
 
 app = Flask(__name__)
 
-
-@app.route('/')
-@cross_origin()
-def get_location():
-    query = request.args.get('q')
-
-    if query:
-        if UNIPROT_AC_REGEX.match(query):
-            results = extract_locations_from_URL("https://www.uniprot.org/uniprot/{}.xml".format(query))
-            return results.to_json(orient="records")
-        else:
-            abort(400)
-
-    else:
-        abort(404)
+blueprint = Blueprint('api', __name__, url_prefix='/')
+api.init_app(blueprint)
+api.add_namespace(embeddings_namespace)
 
 
 if __name__ == '__main__':
