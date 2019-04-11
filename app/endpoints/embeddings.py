@@ -1,11 +1,10 @@
 import io
 import numpy as np
-from endpoints import api
-from flask_cors import cross_origin
+from app.endpoints import api
 from flask import request, abort, send_file
-from machine_learning.extractor import get_seqvec
+from app.machine_learning import get_seqvec
 from flask_restplus import Resource
-from endpoints.request_models import sequence_post_parameters
+from app.endpoints.request_models import sequence_post_parameters
 
 ns = api.namespace("embeddings", description="Get embeddings")
 
