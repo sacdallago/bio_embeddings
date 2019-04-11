@@ -1,5 +1,5 @@
 from app.endpoints import api
-from flask import request, abort
+from flask import request, abort, jsonify
 from app.machine_learning import get_seqvec, get_subcellular_location, get_secondary_structure
 from flask_restplus import Resource
 from app.endpoints.request_models import sequence_post_parameters
@@ -28,4 +28,12 @@ class Features(Resource):
         predicted_localizations, predicted_membrane = get_subcellular_location(embeddings)
         predicted_dssp3, predicted_dssp8, predicted_disorder = get_secondary_structure(embeddings)
 
-        return predicted_dssp8
+        result = {
+            "predictedSubcellularLocalizations": predicted_localizations,
+            "predicted_membrane": predicted_membrane,
+            "predicted_dssp3": predicted_dssp3,
+            "predicted_dssp8": predicted_dssp8,
+            "predicted_disorder": predicted_disorder,
+        }
+
+        return jsonify(result)
