@@ -1,9 +1,10 @@
 import io
 import numpy as np
-from app.endpoints import api
 from flask import request, abort, send_file
-from app.machine_learning import get_seqvec
 from flask_restplus import Resource
+from app.endpoints import api
+from app.endpoints.utils import check_valid_sequence
+from app.machine_learning import get_seqvec
 from app.endpoints.request_models import sequence_post_parameters
 
 ns = api.namespace("embeddings", description="Get embeddings")
@@ -20,9 +21,7 @@ class Embeddings(Resource):
 
         sequence = params.get('sequence')
 
-        if not sequence:
-            return abort(400)
-        if len(sequence) > 2000:
+        if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400)
 
         embeddings = get_seqvec(sequence)
