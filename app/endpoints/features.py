@@ -29,6 +29,7 @@ class Features(Resource):
         predicted_dssp3, predicted_dssp8, predicted_disorder = get_secondary_structure(embeddings)
 
         result = {
+            "sequence": sequence,
             "predictedSubcellularLocalizations": predicted_localizations,
             "predicted_membrane": predicted_membrane,
             "predicted_dssp3": predicted_dssp3,
