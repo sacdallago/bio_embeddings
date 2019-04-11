@@ -10,7 +10,6 @@ ns = api.namespace("embeddings", description="Get embeddings")
 
 
 @ns.route('')
-# @cross_origin()
 class Embeddings(Resource):
     @api.expect(sequence_post_parameters, validate=True)
     @api.response(200, "Calculated embeddings")

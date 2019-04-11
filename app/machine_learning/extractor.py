@@ -60,7 +60,12 @@ def get_subcellular_location(embedding):
 
     # 1) Read in pre-trained model (again: we can save time by holding it in main memory)
     model = SUBCELL_FNN().to(_device)  # create un-trained (raw) model
-    state = torch.load(path.join(_model_dir, _subcellular_location_checkpoint))  # load pre-trained weights
+
+    if torch.cuda.is_available():
+        state = torch.load(path.join(_model_dir, _subcellular_location_checkpoint))  # load pre-trained weights
+    else:
+        state = torch.load(path.join(_model_dir, _subcellular_location_checkpoint), map_location='cpu')  # load pre-trained weights
+
     model.load_state_dict(state['state_dict'])  # load pre-trained weights into raw model
     model.eval()  # ensure that model is in evaluation mode (important for batchnorm and dropout)
 
@@ -92,7 +97,11 @@ def get_secondary_structure(embedding):
 
     # 1) Read in pre-trained model (again: we can save time by holding it in main memory)
     model = SECSTRUCT_CNN().to(_device)  # create un-trained (raw) model
-    state = torch.load(path.join(_model_dir, _secondary_structure_checkpoint))  # load pre-trained weights
+
+    if torch.cuda.is_available():
+        state = torch.load(path.join(_model_dir, _secondary_structure_checkpoint))  # load pre-trained weights
+    else:
+        state = torch.load(path.join(_model_dir, _secondary_structure_checkpoint), map_location='cpu')  # load pre-trained weights
     model.load_state_dict(state['state_dict'])  # load pre-trained weights into raw model
     model.eval()  # ensure that model is in evaluation mode (important for batchnorm and dropout)
 
