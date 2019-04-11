@@ -30,10 +30,10 @@ class Features(Resource):
         result = {
             "sequence": sequence,
             "predictedSubcellularLocalizations": predicted_localizations,
-            "predicted_membrane": predicted_membrane,
-            "predicted_dssp3": predicted_dssp3,
-            "predicted_dssp8": predicted_dssp8,
-            "predicted_disorder": predicted_disorder,
+            "predictedMembrane": predicted_membrane,
+            "predictedDSSP3": predicted_dssp3,
+            "predictedDSSP8": predicted_dssp8,
+            "predictedDisorder": predicted_disorder,
         }
 
         return jsonify(result)
