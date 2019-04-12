@@ -8,7 +8,7 @@ from app.endpoints.features import ns as features_namespace
 app = Flask(__name__)
 
 blueprint = Blueprint('api', __name__)
-cors = CORS(blueprint, origins=['http://localhost:3000', 'https://api.embed.protein.properties/'])
+cors = CORS(blueprint, origins=['http://localhost:3000', 'https://embed.protein.properties/'])
 
 api.init_app(blueprint)
 api.add_namespace(embeddings_namespace)
