@@ -6,6 +6,7 @@ from app.endpoints import api
 from app.endpoints.utils import check_valid_sequence
 from app.machine_learning import get_seqvec
 from app.endpoints.request_models import sequence_post_parameters
+from app.tasks import task_keeper
 
 ns = api.namespace("embeddings", description="Get embeddings")
 
@@ -24,7 +25,8 @@ class Embeddings(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400)
 
-        embeddings = get_seqvec(sequence)
+        job = get_seqvec.delay(sequence)
+        embeddings = job.get()
 
         buffer = io.BytesIO()
 

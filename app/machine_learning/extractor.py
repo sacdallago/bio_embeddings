@@ -3,6 +3,7 @@ from os import path
 from pathlib import Path
 from app.machine_learning.models import SECSTRUCT_CNN, SUBCELL_FNN
 from allennlp.commands.elmo import ElmoEmbedder
+from app.tasks import task_keeper
 
 
 _model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
@@ -26,6 +27,7 @@ else:
 model = ElmoEmbedder(weight_file=_weight_file, options_file=_options_file, cuda_device=_cuda_device)
 
 
+@task_keeper.task()
 def get_seqvec(seq):
     """
         Input:
@@ -37,7 +39,7 @@ def get_seqvec(seq):
 
     embedding = model.embed_sentence(list(seq)) # get embedding for sequence
 
-    return embedding
+    return embedding.tolist()
 
 
 def get_subcellular_location(embedding):

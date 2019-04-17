@@ -22,7 +22,8 @@ class Features(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400)
 
-        embeddings = get_seqvec(sequence)
+        job = get_seqvec.delay(sequence)
+        embeddings = job.get()
 
         predicted_localizations, predicted_membrane = get_subcellular_location(embeddings)
         predicted_dssp3, predicted_dssp8, predicted_disorder = get_secondary_structure(embeddings)
