@@ -8,7 +8,6 @@ task_keeper = _celery(broker=_broker, backend=_broker)
 
 IN_CELERY_WOKER_PROCESS = False
 
-if len(sys.argv) > 0 and sys.argv[0].endswith('celery')\
-        and 'worker' in sys.argv:
+if len(sys.argv) > 0 and 'worker' in sys.argv:
     IN_CELERY_WOKER_PROCESS=True
-    print ('This is a Celery worker')
+    print('This is a Celery worker')
