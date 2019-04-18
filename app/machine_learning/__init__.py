@@ -1,6 +1,2 @@
-from app.machine_learning.extractor import (
-    get_secondary_structure,
-    get_subcellular_location,
-    get_seqvec,
-    model
-)
+from app.machine_learning.embeddings import get_seqvec, load_model
+from app.machine_learning.features import get_subcellular_location, get_secondary_structure

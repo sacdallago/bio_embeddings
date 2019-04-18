@@ -1,45 +1,11 @@
 import torch
 from os import path
 from pathlib import Path
-from app.machine_learning.models import SECSTRUCT_CNN, SUBCELL_FNN
-from allennlp.commands.elmo import ElmoEmbedder
-from app.tasks import task_keeper
-
+from app.machine_learning.models import SUBCELL_FNN, SECSTRUCT_CNN
 
 _model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
-_weights_file_name = 'weights.hdf5'
-_options_file_name = 'options.json'
 _subcellular_location_checkpoint = 'subcell_checkpoint.pt'
 _secondary_structure_checkpoint = 'secstruct_checkpoint.pt'
-
-
-_weight_file = path.join(_model_dir, _weights_file_name)
-_options_file = path.join(_model_dir, _options_file_name)
-# use GPU if available, otherwise run on CPU
-
-if torch.cuda.is_available():
-    print("CUDA available")
-    _cuda_device = 0
-else:
-    print("CUDA NOT available")
-    _cuda_device = -1
-
-model = ElmoEmbedder(weight_file=_weight_file, options_file=_options_file, cuda_device=_cuda_device)
-
-
-@task_keeper.task()
-def get_seqvec(seq):
-    """
-        Input:
-            seq=amino acid sequence
-            model_dir = directory holding weights and parameters of pre-trained ELMo
-        Returns:
-            Embedding for the amino acid sequence 'seq'
-    """
-
-    embedding = model.embed_sentence(list(seq)) # get embedding for sequence
-
-    return embedding.tolist()
 
 
 def get_subcellular_location(embedding):
@@ -82,13 +48,6 @@ def get_subcellular_location(embedding):
     return pred_loc, pred_mem
 
 
-def _class2label(label_dict, yhat):
-    # get index of output node with max. activation (=predicted class)
-    class_indices = torch.max(yhat, dim=1)[1].squeeze()
-    yhat = [label_dict[class_idx.item()] for class_idx in class_indices]
-    return ''.join(yhat)
-
-
 def get_secondary_structure(embedding):
     _device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -118,3 +77,10 @@ def get_secondary_structure(embedding):
     pred_disor = _class2label(disor_labels, yhat_disor)
 
     return pred_dssp3, pred_dssp8, pred_disor
+
+
+def _class2label(label_dict, yhat):
+    # get index of output node with max. activation (=predicted class)
+    class_indices = torch.max(yhat, dim=1)[1].squeeze()
+    yhat = [label_dict[class_idx.item()] for class_idx in class_indices]
+    return ''.join(yhat)
