@@ -24,7 +24,8 @@ class Embeddings(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400)
 
-        job = get_seqvec.delay(sequence)
+        # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
+        job = get_seqvec.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
         embeddings = job.get()
 
         buffer = io.BytesIO()

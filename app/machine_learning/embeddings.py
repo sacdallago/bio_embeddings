@@ -3,6 +3,8 @@ from os import path
 from pathlib import Path
 from allennlp.commands.elmo import ElmoEmbedder
 from app.tasks import task_keeper, IN_CELERY_WOKER_PROCESS
+from celery.exceptions import SoftTimeLimitExceeded
+
 
 _model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
 _weights_file_name = 'weights.hdf5'
@@ -30,7 +32,8 @@ if IN_CELERY_WOKER_PROCESS:
     print("Loading model...")
     model = load_model()
 
-@task_keeper.task()
+
+@task_keeper.task(time_limit=60*5, soft_time_limit=60*5, expires=60*60)
 def get_seqvec(seq):
     """
         Input:
@@ -39,7 +42,12 @@ def get_seqvec(seq):
         Returns:
             Embedding for the amino acid sequence 'seq'
     """
+    try:
+        embedding = model.embed_sentence(list(seq))  # get embedding for sequence
 
-    embedding = model.embed_sentence(list(seq)) # get embedding for sequence
+        return embedding.tolist()
+    except SoftTimeLimitExceeded:
+        raise Exception("Time limit exceeded")
 
-    return embedding.tolist()
+
+
