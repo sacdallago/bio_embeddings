@@ -1,9 +1,9 @@
 from flask import request, abort, jsonify
 from flask_restplus import Resource
-from app.endpoints import api
-from app.endpoints.utils import check_valid_sequence
-from app.endpoints.request_models import sequence_post_parameters
-from app.machine_learning import get_seqvec, get_subcellular_location, get_secondary_structure
+from webserver.endpoints import api
+from webserver.endpoints.utils import check_valid_sequence
+from webserver.endpoints.request_models import sequence_post_parameters
+from webserver.machine_learning import get_seqvec, get_subcellular_location, get_secondary_structure
 
 ns = api.namespace("features", description="Get features from embeddings through sequence")
 

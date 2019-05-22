@@ -1,0 +1,1 @@
+from bio_embeddings.features import get_subcellular_location, get_secondary_structure

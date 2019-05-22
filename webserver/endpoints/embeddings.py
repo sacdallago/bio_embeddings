@@ -2,10 +2,10 @@ import io
 import numpy as np
 from flask import request, abort, send_file
 from flask_restplus import Resource
-from app.endpoints import api
-from app.endpoints.utils import check_valid_sequence
-from app.machine_learning import get_seqvec
-from app.endpoints.request_models import sequence_post_parameters
+from webserver.endpoints import api
+from webserver.endpoints.utils import check_valid_sequence
+from webserver.machine_learning import get_seqvec
+from webserver.endpoints.request_models import sequence_post_parameters
 
 ns = api.namespace("embeddings", description="Get embeddings")
 

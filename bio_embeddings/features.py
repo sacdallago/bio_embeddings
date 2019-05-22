@@ -1,7 +1,7 @@
 import torch
 from os import path
 from pathlib import Path
-from app.machine_learning.models import SUBCELL_FNN, SECSTRUCT_CNN
+from webserver.machine_learning.models import SUBCELL_FNN, SECSTRUCT_CNN
 
 _model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
 _subcellular_location_checkpoint = 'subcell_checkpoint.pt'

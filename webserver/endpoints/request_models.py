@@ -1,5 +1,5 @@
 from flask_restplus import fields
-from app.endpoints import api
+from webserver.endpoints import api
 
 sequence_post_parameters = api.model("EmbeddingParameters", {
     # In frontend: protein.sequence

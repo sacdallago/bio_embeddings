@@ -1,9 +1,9 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
 
-from app.endpoints import api
-from app.endpoints.embeddings import ns as embeddings_namespace
-from app.endpoints.features import ns as features_namespace
+from webserver.endpoints import api
+from webserver.endpoints.embeddings import ns as embeddings_namespace
+from webserver.endpoints.features import ns as features_namespace
 
 app = Flask(__name__)
 
