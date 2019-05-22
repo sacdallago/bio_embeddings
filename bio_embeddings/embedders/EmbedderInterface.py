@@ -22,9 +22,8 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
         pass
 
-    @staticmethod
     @abc.abstractmethod
-    def get_embedding(sequence):
+    def get_embedding(self, sequence):
         """
         Returns embedding for one sequence.
 
