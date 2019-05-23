@@ -10,15 +10,11 @@ import abc
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
-    def __init__(self, weights_file, options_file):
+    def __init__(self):
         """
         Initializer accepts location of a pre-trained model and options
-
-        :param weights_file: location of the weights
-        :param options_file: location of the model options, if any
         """
-        self._weights_file = weights_file
-        self._options_file = options_file
+        self._options = None
         self._embedding = None
         self._sequence = None
         self._model = None
@@ -34,13 +30,21 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         :return: An embedding of the sequence.
         """
 
-        # TODO: Test that sequence is a valid sequence
-
-        self._sequence = sequence
         raise NotImplementedError
 
+    def get_embedding(self):
+        """
+        Returns the embedding
+        :return: An elmo embedding or NoEmbeddingException
+        """
+
+        if self._embedding is None:
+            raise NoEmbeddingException
+
+        return self._embedding
+
     @abc.abstractmethod
-    def get_features(self):
+    def get_features(sel):
         """
         Returns a bag with Objects of type Feature. Embedding must not be None, otherwise rises NoEmbeddingException
         :return: A bag with various AA-specific and global features

@@ -1,0 +1,4 @@
+from bio_embeddings.features.Disorder import Disorder
+from bio_embeddings.features.Location import Location
+from bio_embeddings.features.Membrane import Membrane
+from bio_embeddings.features.SecondaryStructure import SecondaryStructure
