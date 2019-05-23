@@ -17,7 +17,7 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         self._options = None
         self._embedding = None
         self._sequence = None
-        self._model = None
+        self._elmo_model = None
 
         pass
 
@@ -42,6 +42,13 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
             raise NoEmbeddingException
 
         return self._embedding
+
+    def get_sequence(self):
+        """
+        :return: A string representing the sequence which was embedded. None if no embedding has been calculated
+        """
+
+        return self._sequence
 
     @abc.abstractmethod
     def get_features(sel):
