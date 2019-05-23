@@ -20,3 +20,9 @@ class FeatureInterface(object, metaclass=abc.ABCMeta):
         :return: Bool
         """
         raise NotImplementedError
+
+
+class InvalidFeatureException(Exception):
+    """
+    Exception to handle most of regex or string matching exceptions. E.g. DSSP8 dictionary or protein location classes
+    """
