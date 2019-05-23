@@ -1,4 +1,4 @@
-from bio_embeddings.embedders.elmo.features import FeatureInterface
+from bio_embeddings.features.FeatureInterface import FeatureInterface
 
 
 class Disorder(FeatureInterface):
