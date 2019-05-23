@@ -20,17 +20,23 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         self._weights_file = weights_file
         self._options_file = options_file
         self._embedding = None
+        self._sequence = None
+        self._model = None
 
         pass
 
     @abc.abstractmethod
-    def get_embedding(self, sequence):
+    def embed(self, sequence):
         """
         Returns embedding for one sequence.
 
         :param sequence: Valid amino acid sequence as String
         :return: An embedding of the sequence.
         """
+
+        # TODO: Test that sequence is a valid sequence
+
+        self._sequence = sequence
         raise NotImplementedError
 
     @abc.abstractmethod
