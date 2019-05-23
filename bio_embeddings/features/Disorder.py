@@ -13,7 +13,7 @@ class Disorder(FeatureInterface):
     def set_disorder(self, disorder):
         """
 
-        :param DSSP8: A string with equal length to the sequence containing the disordered regions (allowed chars: -X)
+        :param disorder: A string with equal length to the sequence containing the disordered regions (allowed chars: -X)
         :return: void
         """
 

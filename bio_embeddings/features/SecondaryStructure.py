@@ -30,7 +30,7 @@ class SecondaryStructure(FeatureInterface):
     def set_DSSP3(self, DSSP3):
         """
 
-        :param DSSP8: A string with equal length to the sequence containing the secondary structure in DSSP3 format (allowed chars: HEC)
+        :param DSSP3: A string with equal length to the sequence containing the secondary structure in DSSP3 format (allowed chars: HEC)
         :return: void
         """
 
