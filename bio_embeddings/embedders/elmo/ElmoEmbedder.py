@@ -79,9 +79,10 @@ class ElmoEmbedder(EmbedderInterface):
 
         self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-        # 1) Read in pre-trained model (again: we can save time by holding it in main memory)
-        self._subcellular_location_model = SUBCELL_FNN().to(self._device)  # create un-trained (raw) model
-        self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)  # create un-trained (raw) model
+        # Read in pre-trained model
+        # Create un-trained (raw) model
+        self._subcellular_location_model = SUBCELL_FNN().to(self._device)
+        self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
         if torch.cuda.is_available():
             Logger.log("CUDA available")
@@ -140,12 +141,9 @@ class ElmoEmbedder(EmbedderInterface):
         }
 
     def _get_subcellular_location(self):
-
-        # 2) Get predictions
         embedding = torch.tensor(self._embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
-        yhat_loc, yhat_mem = self._secondary_structure_model(embedding)
+        yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
-        # 3) Map predictions to labels
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
@@ -158,18 +156,12 @@ class ElmoEmbedder(EmbedderInterface):
         return result_loc, result_membrane
 
     def _get_secondary_structure(self):
+        embedding = torch.tensor(self._embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
+        yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
 
-        # 2) Get predictions
-        # Sum over 3 ELMo layers and add singleton dimension to fit CNN requirements
-        embedding = torch.tensor(self._embedding).to(_device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
-        yhat_dssp3, yhat_dssp8, yhat_disor = model(embedding)
-
-        # 3) Map predictions to labels
         pred_dssp3 = self._class2label(_dssp3_labels, yhat_dssp3)
         pred_dssp8 = self._class2label(_dssp8_labels, yhat_dssp8)
         pred_disor = self._class2label(_disor_labels, yhat_disor)
-
-        # Location, Membrane, Disorder, SecondaryStructure
 
         result_secondary_structure = SecondaryStructure()
         result_secondary_structure.set_DSSP3(pred_dssp3)
