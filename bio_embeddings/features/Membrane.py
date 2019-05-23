@@ -28,3 +28,9 @@ class Membrane(FeatureInterface):
     def is_membrane(self):
         return self._membrane
 
+    def to_stirng(self):
+        if self._membrane:
+            return "Membrane bound"
+        else:
+            return "Soluble"
+
