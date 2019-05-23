@@ -1,4 +1,4 @@
-from bio_embeddings.features.FeatureInterface import FeatureInterface, InvalidFeatureException
+from bio_embeddings.embedders.elmo.features import FeatureInterface, InvalidFeatureException
 
 
 class Membrane(FeatureInterface):
