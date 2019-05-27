@@ -51,9 +51,18 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         return self._sequence
 
     @abc.abstractmethod
-    def get_features(sel):
+    def get_features(self):
         """
-        Returns a bag with Objects of type Feature. Embedding must not be None, otherwise rises NoEmbeddingException
+        Returns a FeaturesCollection object. Embedding must not be None, otherwise rises NoEmbeddingException
+        :return: A bag with various AA-specific and global features
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    @abc.abstractmethod
+    def get_features_from_embedding(embedding):
+        """
+        Returns a FeaturesCollection object. Embedding must not be None, otherwise rises NoEmbeddingException
         :return: A bag with various AA-specific and global features
         """
         raise NotImplementedError
