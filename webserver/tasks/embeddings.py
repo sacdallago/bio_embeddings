@@ -1,9 +1,9 @@
-import torch
 from os import path
 from pathlib import Path
 from allennlp.commands.elmo import ElmoEmbedder
 from webserver.tasks import task_keeper, IN_CELERY_WOKER_PROCESS
 from celery.exceptions import SoftTimeLimitExceeded
+from bio_embeddings.embedders import ElmoEmbedder
 
 
 _model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
@@ -48,6 +48,5 @@ def get_seqvec(seq):
         return embedding.tolist()
     except SoftTimeLimitExceeded:
         raise Exception("Time limit exceeded")
-
 
 

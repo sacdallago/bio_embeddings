@@ -1,6 +1,6 @@
 import torch
 from bio_embeddings.embedders.EmbedderInterface import EmbedderInterface
-from bio_embeddings.features import Location, Membrane, Disorder, SecondaryStructure
+from bio_embeddings.features import Location, Membrane, Disorder, SecondaryStructure, FeaturesCollection
 from bio_embeddings.embedders.elmo.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 from bio_embeddings.utilities import Logger, get_defaults
 from allennlp.commands.elmo import ElmoEmbedder as _ElmoEmbedder
@@ -37,7 +37,7 @@ class ElmoEmbedder(EmbedderInterface):
         :param weights_file: path of weights file
         :param options_file: path of options file
         :param secondary_structure_checkpoint_file: path of secondary structure checkpoint file
-        :param subcellular_location_checkpoint: path of the subcellular location checkpoint file
+        :param subcellular_location_checkpoint_file: path of the subcellular location checkpoint file
         :param version: Integer. Available versions: 1, 2
 
 
@@ -50,7 +50,7 @@ class ElmoEmbedder(EmbedderInterface):
         self._weights_file = self._options.get('weights_file')
         self._options_file = self._options.get('options_file')
         self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
-        self._subcellular_location_checkpoint = self._options.get('subcellular_location_checkpoint')
+        self._subcellular_location_checkpoint = self._options.get('subcellular_location_checkpoint_file')
 
         # Get preferred version, if defined
         version = self._options.get('version')
@@ -135,10 +135,13 @@ class ElmoEmbedder(EmbedderInterface):
         secondary_structure, disorder = self._get_secondary_structure()
         location, membrane = self._get_subcellular_location()
 
-        return {
-            secondary_structure, disorder,
-            location, membrane
-        }
+        features = FeaturesCollection()
+        features.disorder = disorder
+        features.membrane = membrane
+        features.location = location
+        features.secondaryStructure = secondary_structure
+
+        return features
 
     def _get_subcellular_location(self):
         embedding = torch.tensor(self._embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)

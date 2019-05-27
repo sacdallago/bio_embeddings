@@ -1,0 +1,1 @@
+from bio_embeddings.embedders.elmo import ElmoEmbedder
