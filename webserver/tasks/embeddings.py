@@ -1,52 +1,46 @@
 from os import path
 from pathlib import Path
-from allennlp.commands.elmo import ElmoEmbedder
 from webserver.tasks import task_keeper, IN_CELERY_WOKER_PROCESS
 from celery.exceptions import SoftTimeLimitExceeded
 from bio_embeddings.embedders import ElmoEmbedder
 
 
-_model_dir = path.join(Path(path.abspath(__file__)).parent, 'model')
-_weights_file_name = 'weights.hdf5'
-_options_file_name = 'options.json'
+_model_dir = path.join(Path(path.abspath(__file__)).parent.parent, 'models')
+
+# Elmo V1
+_weight_file = path.join(_model_dir, 'weights.hdf5')
+_options_file = path.join(_model_dir, 'options.json')
+_secondary_structure_checkpoint_file = path.join(_model_dir, 'sec_struct.chk')
+_subcellular_location_checkpoint_file = path.join(_model_dir, 'sub_loc.chk')
 
 
-_weight_file = path.join(_model_dir, _weights_file_name)
-_options_file = path.join(_model_dir, _options_file_name)
+models = {}
 
 
-def load_model():
-    # use GPU if available, otherwise run on CPU
-    if torch.cuda.is_available():
-        print("CUDA available")
-        _cuda_device = 0
-    else:
-        print("CUDA NOT available")
-        _cuda_device = -1
+def load_models():
 
-    return ElmoEmbedder(weight_file=_weight_file, options_file=_options_file, cuda_device=_cuda_device)
+    models['elmo'] = ElmoEmbedder(weights_file=_weight_file,
+                                  options_file=_options_file,
+                                  secondary_structure_checkpoint_file=_secondary_structure_checkpoint_file,
+                                  subcellular_location_checkpoint_file=_subcellular_location_checkpoint_file
+                                  )
 
 
 # Only initialize the model if I'm a celery worker, otherwise it's just wasted RAM
 if IN_CELERY_WOKER_PROCESS:
     print("Loading model...")
-    model = load_model()
+    load_models()
 
 
 @task_keeper.task(time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-def get_seqvec(seq):
-    """
-        Input:
-            seq=amino acid sequence
-            model_dir = directory holding weights and parameters of pre-trained ELMo
-        Returns:
-            Embedding for the amino acid sequence 'seq'
-    """
+def get_seqvec(sequence, embedder='elmo'):
     try:
-        embedding = model.embed_sentence(list(seq))  # get embedding for sequence
+        embedding = models.get(embedder, models['elmo']).embed(sequence)
 
-        return embedding.tolist()
+        return embedding
     except SoftTimeLimitExceeded:
         raise Exception("Time limit exceeded")
 
 
+def get_features(embedder='elmo'):
+    models.get(embedder, models['elmo']).features().to_dict()
