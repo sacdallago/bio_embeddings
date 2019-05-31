@@ -58,13 +58,13 @@ class ElmoEmbedder(EmbedderInterface):
         # If version defined: fetch online
         if version is not None and version in [1, 2]:
             if version == 1:
-                self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
+                self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
                     'elmov1')
             elif version == 2:
-                self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
+                self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
                     'elmov2')
 
-            self._weight_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weight_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
+            self._weights_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weights_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
 
         # If any file is not defined: fetch all files online
         elif self._weights_file is None or \
@@ -72,9 +72,9 @@ class ElmoEmbedder(EmbedderInterface):
               self._subcellular_location_checkpoint_file is None or \
               self._secondary_structure_checkpoint_file is None:
 
-            self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults('elmov1')
+            self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults('elmov1')
 
-            self._weight_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weight_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
+            self._weights_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weights_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
             pass
 
         # use GPU if available, otherwise run on CPU
@@ -117,7 +117,7 @@ class ElmoEmbedder(EmbedderInterface):
         self._secondary_structure_model.eval()
 
         # Load ELMO model
-        self._elmo_model = _ElmoEmbedder(weight_file=self._weight_file,
+        self._elmo_model = _ElmoEmbedder(weight_file=self._weights_file,
                                          options_file=self._options_file,
                                          cuda_device=_cuda_device)
 
