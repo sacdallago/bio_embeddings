@@ -5,13 +5,13 @@ from celery.exceptions import SoftTimeLimitExceeded
 from bio_embeddings.embedders import ElmoEmbedder
 
 
-_model_dir = path.join(Path(path.abspath(__file__)).parent.parent, 'models')
+_model_dir = path.join(Path(path.abspath(__file__)).parent.parent.parent, 'models')
 
 # Elmo V1
-_weight_file = path.join(_model_dir, 'weights.hdf5')
-_options_file = path.join(_model_dir, 'options.json')
-_secondary_structure_checkpoint_file = path.join(_model_dir, 'sec_struct.chk')
-_subcellular_location_checkpoint_file = path.join(_model_dir, 'sub_loc.chk')
+_weight_file = path.join(_model_dir, 'elmov1', 'weights.hdf5')
+_options_file = path.join(_model_dir, 'elmov1', 'options.json')
+_secondary_structure_checkpoint_file = path.join(_model_dir, 'elmov1', 'secstruct_checkpoint.pt')
+_subcellular_location_checkpoint_file = path.join(_model_dir, 'elmov1', 'subcell_checkpoint.pt')
 
 
 models = {}
