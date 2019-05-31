@@ -50,7 +50,7 @@ class ElmoEmbedder(EmbedderInterface):
         self._weights_file = self._options.get('weights_file')
         self._options_file = self._options.get('options_file')
         self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
-        self._subcellular_location_checkpoint = self._options.get('subcellular_location_checkpoint_file')
+        self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
 
         # Get preferred version, if defined
         version = self._options.get('version')
@@ -58,19 +58,23 @@ class ElmoEmbedder(EmbedderInterface):
         # If version defined: fetch online
         if version is not None and version in [1, 2]:
             if version == 1:
-                self._weight_file, self._options_file, self._subcellular_location_checkpoint, self._secondary_structure_checkpoint_file = get_defaults(
+                self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
                     'elmov1')
             elif version == 2:
-                self._weight_file, self._options_file, self._subcellular_location_checkpoint, self._secondary_structure_checkpoint_file = get_defaults(
+                self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
                     'elmov2')
+
+            self._weight_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weight_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
 
         # If any file is not defined: fetch all files online
         elif self._weights_file is None or \
               self._options_file is None or \
-              self._subcellular_location_checkpoint is None or \
+              self._subcellular_location_checkpoint_file is None or \
               self._secondary_structure_checkpoint_file is None:
 
-            self._weight_file, self._options_file, self._subcellular_location_checkpoint, self._secondary_structure_checkpoint_file = get_defaults('elmov1')
+            self._temp_weight_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults('elmov1')
+
+            self._weight_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weight_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
             pass
 
         # use GPU if available, otherwise run on CPU
@@ -88,7 +92,7 @@ class ElmoEmbedder(EmbedderInterface):
             Logger.log("CUDA available")
 
             # load pre-trained weights for feature machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint)
+            subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
 
             # Set CUDA device for ELMO machine
@@ -97,7 +101,7 @@ class ElmoEmbedder(EmbedderInterface):
             Logger.log("CUDA NOT available")
 
             # load pre-trained weights for feature machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint, map_location='cpu')
+            subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location='cpu')
 
             # Set CUDA device for ELMO machine
@@ -128,7 +132,11 @@ class ElmoEmbedder(EmbedderInterface):
 
         return self._embedding.tolist()
 
-    def get_features(self):
+    def get_features(self, embedding=None):
+        # Allows to use get_features as a partly static method
+        if embedding is not None:
+            self._embedding = embedding
+
         # Will raise exception if no embedding
         self.get_embedding()
 
