@@ -3,7 +3,7 @@ from flask_restplus import Resource
 from webserver.endpoints import api
 from webserver.endpoints.utils import check_valid_sequence
 from webserver.endpoints.request_models import sequence_post_parameters
-from webserver.tasks.embeddings import get_seqvec, get_features
+from webserver.tasks.embeddings import get_features
 
 ns = api.namespace("features", description="Get features from embeddings through sequence")
 
@@ -23,10 +23,8 @@ class Features(Resource):
             return abort(400)
 
         # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
-        job = get_seqvec.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-        job.get()
-
-        result = get_features()
+        job = get_features.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
+        result = job.get()
 
         result['sequence'] = sequence
 

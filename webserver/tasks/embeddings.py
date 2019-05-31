@@ -33,7 +33,7 @@ if IN_CELERY_WOKER_PROCESS:
 
 
 @task_keeper.task(time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-def get_seqvec(sequence, embedder='elmo'):
+def get_embedding(sequence, embedder='elmo'):
     try:
         embedding = models.get(embedder, models['elmo']).embed(sequence)
 
@@ -42,5 +42,14 @@ def get_seqvec(sequence, embedder='elmo'):
         raise Exception("Time limit exceeded")
 
 
-def get_features(embedder='elmo'):
-    models.get(embedder, models['elmo']).features().to_dict()
+@task_keeper.task(time_limit=60*5, soft_time_limit=60*5, expires=60*60)
+def get_features(sequence, embedder='elmo'):
+    try:
+        model = models.get(embedder, models['elmo'])
+
+        model.embed(sequence)
+        features = model.get_features()
+
+        return features.to_dict()
+    except SoftTimeLimitExceeded:
+        raise Exception("Time limit exceeded")

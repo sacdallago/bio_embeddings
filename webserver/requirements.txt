@@ -1,7 +1,0 @@
-numpy
-flask
-torch
-allennlp
-celery
-flask_restplus
-flask_cors
