@@ -1,0 +1,1 @@
+from bio_embeddings.embedders.word2vec.Word2VecEmbedder import Word2VecEmbedder

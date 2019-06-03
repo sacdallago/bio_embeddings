@@ -11,7 +11,7 @@ ELMO_V1_SECONDARY_STRUCTURE_CHECKPOINT = "http://maintenance.dallago.us/public/e
 def _get_elmo_v1():
     """
 
-    :return: weight_file, options_file
+    :return: weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
     """
 
     Logger.log("Downloading files ELMO v1 embedder")
@@ -35,8 +35,25 @@ def _get_elmo_v1():
     return weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
 
 
+WORD2VEC_MODEL = "http://maintenance.dallago.us/public/embeddings/embedding_models/word2vec/word2vec.model"
+
+
+def _get_word2vec():
+    Logger.log("Downloading files word2vec embedder")
+
+    model_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading model file from {}".format(WORD2VEC_MODEL))
+    request.urlretrieve(WORD2VEC_MODEL, model_file.name)
+
+    Logger.log("Downloaded files for word2vec embedder")
+
+    return model_file
+
+
 _EMBEDDERS = {
     "elmov1": _get_elmo_v1,
+    "word2vec": _get_word2vec,
     None: lambda x: Logger.log("Trying to get undefined embedder. Name: {}".format(x))
 }
 

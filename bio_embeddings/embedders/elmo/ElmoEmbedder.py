@@ -1,5 +1,5 @@
 import torch
-from bio_embeddings.embedders.EmbedderInterface import EmbedderInterface, NoEmbeddingException
+from bio_embeddings.embedders.EmbedderInterface import EmbedderInterface
 from bio_embeddings.features import Location, Membrane, Disorder, SecondaryStructure, FeaturesCollection
 from bio_embeddings.embedders.elmo.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 from bio_embeddings.utilities import Logger, get_defaults

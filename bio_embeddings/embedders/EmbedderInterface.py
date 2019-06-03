@@ -17,7 +17,6 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         self._options = None
         self._embedding = None
         self._sequence = None
-        self._elmo_model = None
 
         pass
 
