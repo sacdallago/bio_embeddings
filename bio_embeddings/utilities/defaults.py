@@ -51,9 +51,26 @@ def _get_word2vec():
     return model_file
 
 
+FASTTEXT_MODEL = "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"
+
+
+def _get_fasttext():
+    Logger.log("Downloading files fasttext embedder")
+
+    model_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading model file from {}".format(FASTTEXT_MODEL))
+    request.urlretrieve(FASTTEXT_MODEL, model_file.name)
+
+    Logger.log("Downloaded files for fasttext embedder")
+
+    return model_file
+
+
 _EMBEDDERS = {
     "elmov1": _get_elmo_v1,
     "word2vec": _get_word2vec,
+    "fasttext": _get_fasttext,
     None: lambda x: Logger.log("Trying to get undefined embedder. Name: {}".format(x))
 }
 

@@ -4,7 +4,7 @@ from bio_embeddings.utilities import get_defaults
 import numpy as np
 
 
-class Word2VecEmbedder(EmbedderInterface):
+class FastTextEmbedder(EmbedderInterface):
 
     def __init__(self, **kwargs):
         """
@@ -18,10 +18,10 @@ class Word2VecEmbedder(EmbedderInterface):
         self._model_file = self._options.get('model_file')
 
         if self._model_file is None:
-            self._temp_model_file = get_defaults('word2vec')
+            self._temp_model_file = get_defaults('fasttext')
             self._model_file = self._temp_model_file.name
 
-        self._model = KeyedVectors.load(str(self._model_file), mmap='r')
+        self._model = KeyedVectors.load_word2vec_format(self._model_file, binary=False)
         self._vector_size = 512
         self._zero_vector = np.zeros(self._vector_size, dtype=np.float32)
         self._window_size = 3
