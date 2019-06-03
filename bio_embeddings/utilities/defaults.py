@@ -67,10 +67,27 @@ def _get_fasttext():
     return model_file
 
 
+GLOVE_MODEL = "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
+
+
+def _get_glove():
+    Logger.log("Downloading files glove embedder")
+
+    model_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading model file from {}".format(GLOVE_MODEL))
+    request.urlretrieve(GLOVE_MODEL, model_file.name)
+
+    Logger.log("Downloaded files for glove embedder")
+
+    return model_file
+
+
 _EMBEDDERS = {
     "elmov1": _get_elmo_v1,
     "word2vec": _get_word2vec,
     "fasttext": _get_fasttext,
+    "glove": _get_glove,
     None: lambda x: Logger.log("Trying to get undefined embedder. Name: {}".format(x))
 }
 
