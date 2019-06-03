@@ -1,0 +1,1 @@
+from bio_embeddings.embedders.transformerxl.mem_transformer.mem_transformer import MemTransformerLM
