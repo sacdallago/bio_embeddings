@@ -83,11 +83,37 @@ def _get_glove():
     return model_file
 
 
+TRANSFORMER_BASE_MODEL = "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/model.pt"
+TRANSFORMER_BASE_VOCABULARY = "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/vocab.pt"
+
+
+def _get_transformer_base():
+    Logger.log("Downloading files transformer_base embedder")
+
+    model_file = tempfile.NamedTemporaryFile()
+    vocabulary_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading model file from {}".format(TRANSFORMER_BASE_MODEL))
+    request.urlretrieve(TRANSFORMER_BASE_MODEL, model_file.name)
+
+    Logger.log("Downloading vocabulary file from {}".format(TRANSFORMER_BASE_VOCABULARY))
+    request.urlretrieve(TRANSFORMER_BASE_VOCABULARY, vocabulary_file.name)
+
+    Logger.log("Downloaded files for transformer_base embedder")
+
+    return model_file, vocabulary_file
+
+
 _EMBEDDERS = {
     "elmov1": _get_elmo_v1,
+    # todo: change
+    "elmov2": _get_elmo_v1,
     "word2vec": _get_word2vec,
     "fasttext": _get_fasttext,
     "glove": _get_glove,
+    "transformer_base": _get_transformer_base,
+    # todo: change
+    "transformer_large": _get_transformer_base,
     None: lambda x: Logger.log("Trying to get undefined embedder. Name: {}".format(x))
 }
 
