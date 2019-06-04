@@ -11,7 +11,6 @@ sys.path.append(os.path.join(current_path, 'utils'))
 
 
 class TransformerXLEmbedder(EmbedderInterface):
-
     def __init__(self, **kwargs):
         """
 
