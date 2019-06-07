@@ -1,4 +1,4 @@
-name: allennlp
+name: bio_embeddings
 channels:
   - pytorch
   - defaults
