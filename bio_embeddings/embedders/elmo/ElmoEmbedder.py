@@ -30,12 +30,14 @@ class ElmoEmbedder(EmbedderInterface):
         """
         Initialize Elmo embedder. Can define non-positional arguments for paths of files and version of ELMO.
 
-        If version is supplied, paths will be ignored and model will be downloaded from remote location.
+        If no version is supplied, v1 will be assumed. If version is set to 1 but vocabulary file is supplied,
+        will throw error.
 
         If one of the files is not supplied, all the files will be downloaded.
 
         :param weights_file: path of weights file
         :param options_file: path of options file
+        :param vocabulary_file: path of vocabulary file. Only needed if seqveq v2.
         :param secondary_structure_checkpoint_file: path of secondary structure checkpoint file
         :param subcellular_location_checkpoint_file: path of the subcellular location checkpoint file
         :param version: Integer. Available versions: 1, 2
@@ -47,35 +49,41 @@ class ElmoEmbedder(EmbedderInterface):
         self._options = kwargs
 
         # Get file locations from kwargs
+        self._vocabulary_file = self._options.get('vocabulary_file')
         self._weights_file = self._options.get('weights_file')
         self._options_file = self._options.get('options_file')
         self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
         self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
 
         # Get preferred version, if defined
-        version = self._options.get('version')
+        self._version = self._options.get('version')
 
-        # If version defined: fetch online
-        if version is not None and version in [1, 2]:
-            if version == 1:
-                self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
-                    'elmov1')
-            elif version == 2:
-                self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults(
-                    'elmov2')
-
-            self._weights_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weights_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
+        if self._version is None and self._vocabulary_file is not None:
+            self._version = 2
+        elif self._version is None and self._vocabulary_file is None:
+            self._version = 1
+        elif self._version is not None and self._version not in [1, 2]:
+            raise CannotInferModelVersionException
+        elif self._version == 1 and self._vocabulary_file is not None:
+            raise CannotInferModelVersionException
 
         # If any file is not defined: fetch all files online
-        elif self._weights_file is None or \
-              self._options_file is None or \
-              self._subcellular_location_checkpoint_file is None or \
-              self._secondary_structure_checkpoint_file is None:
+        if self._version == 1:
+            necessary_files = ['secondary_structure_checkpoint_file', 'subcellular_location_checkpoint_file', 'weights_file', 'options_file']
 
-            self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults('elmov1')
+            if not set(necessary_files) <= set(self._options.keys()):
+                self._temp_weights_file, self._temp_options_file, self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_defaults('elmov1')
 
-            self._weights_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weights_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
-            pass
+                self._weights_file, self._options_file, self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_weights_file.name, self._temp_options_file.name, self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
+        elif self._version == 1:
+            necessary_files = ['vocabulary_file', 'weights_file', 'options_file']
+
+            if not set(necessary_files) <= set(self._options.keys()):
+                self._temp_weights_file, self._temp_options_file, self._temp_vocabulary_file = get_defaults('elmov2')
+
+                self._weights_file, self._options_file, self._vocabulary_file, = self._temp_weights_file.name, self._temp_options_file.name, self._temp_vocabulary_file.name
+
+        # TODO: rest of implementation from here
 
         # use GPU if available, otherwise run on CPU
         # !important: GPU visibility can easily be hidden using this env variable: CUDA_VISIBLE_DEVICES=""
@@ -190,3 +198,10 @@ class ElmoEmbedder(EmbedderInterface):
         yhat = [label_dict[class_idx.item()] for class_idx in class_indices]
 
         return ''.join(yhat)
+
+
+class CannotInferModelVersionException(Exception):
+    """
+    Exception gets risen when a version is supplied but also files that are not relevant to that version
+    (e.g. version = 1 + vocabulary file).
+    """
