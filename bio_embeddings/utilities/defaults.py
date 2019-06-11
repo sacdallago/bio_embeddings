@@ -35,6 +35,35 @@ def _get_elmo_v1():
     return weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
 
 
+ELMO_V2_WEIGHTS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
+ELMO_V2_OPTIONS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.json"
+ELMO_V2_VOCABULARY = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.txt"
+
+
+def _get_elmo_v2():
+    """
+
+    :return: weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
+    """
+
+    Logger.log("Downloading files ELMO v2 embedder")
+
+    weight_file = tempfile.NamedTemporaryFile()
+    options_file = tempfile.NamedTemporaryFile()
+    vocabulary_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading weights from {}".format(ELMO_V2_WEIGHTS))
+    request.urlretrieve(ELMO_V1_WEIGHTS, weight_file.name)
+    Logger.log("Downloading options from {}".format(ELMO_V2_OPTIONS))
+    request.urlretrieve(ELMO_V1_OPTIONS, options_file.name)
+    Logger.log("Downloading vocabulary from {}".format(ELMO_V2_VOCABULARY))
+    request.urlretrieve(ELMO_V1_OPTIONS, vocabulary_file.name)
+
+    Logger.log("Downloaded files for ELMO v2 embedder")
+
+    return weight_file, options_file, vocabulary_file
+
+
 WORD2VEC_MODEL = "http://maintenance.dallago.us/public/embeddings/embedding_models/word2vec/word2vec.model"
 
 
@@ -106,8 +135,7 @@ def _get_transformer_base():
 
 _EMBEDDERS = {
     "elmov1": _get_elmo_v1,
-    # todo: change
-    "elmov2": _get_elmo_v1,
+    "elmov2": _get_elmo_v2,
     "word2vec": _get_word2vec,
     "fasttext": _get_fasttext,
     "glove": _get_glove,
