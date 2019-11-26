@@ -1,7 +1,7 @@
 # This repository is a WIP
-**Goal:** a python package where sequence goes in --> embeddings come out
-**Goal #2:** provide as many models as possible
-**Goal #3** include feature predictors
+- **Goal:** a python package where sequence goes in --> embeddings come out 
+- **Goal #2:** provide as many models as possible   
+- **Goal #3** include feature predictors
 
 
 ### Progress
