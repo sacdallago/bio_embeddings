@@ -2,7 +2,7 @@ import torch
 import os
 import sys
 from bio_embeddings.embedders.EmbedderInterface import EmbedderInterface
-from bio_embeddings.utilities import get_defaults
+from bio_embeddings.utilities import get_model_parameters
 
 # TODO: this is neccessary to import mem_transformer --> prettify when packaged!
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +35,7 @@ class TransformerXLEmbedder(EmbedderInterface):
         self._vocabulary_file = self._options.get('vocabulary_file')
 
         if self._model_file is None or self._vocabulary_file is None:
-            self._temp_model_file, self._temp_vocabulary_file = get_defaults('transformer_{}'.format(self._model_size))
+            self._temp_model_file, self._temp_vocabulary_file = get_model_parameters('transformer_{}'.format(self._model_size))
             self._model_file, self._vocabulary_file = self._temp_model_file.name, self._temp_vocabulary_file.name
 
         self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')

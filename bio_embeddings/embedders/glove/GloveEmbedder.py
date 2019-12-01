@@ -1,6 +1,6 @@
 from bio_embeddings.embedders.EmbedderInterface import EmbedderInterface
 from gensim.models.keyedvectors import KeyedVectors
-from bio_embeddings.utilities import get_defaults
+from bio_embeddings.utilities import get_model_parameters
 import numpy as np
 
 
@@ -18,7 +18,7 @@ class GloveEmbedder(EmbedderInterface):
         self._model_file = self._options.get('model_file')
 
         if self._model_file is None:
-            self._temp_model_file = get_defaults('glove')
+            self._temp_model_file = get_model_parameters('glove')
             self._model_file = self._temp_model_file.name
 
         self._model = KeyedVectors.load_word2vec_format(self._model_file, binary=False)
@@ -45,9 +45,6 @@ class GloveEmbedder(EmbedderInterface):
             # end of sequence reached
             except IndexError:
                 return self._embedding
-
-    def get_features(self, embedding=None):
-        raise NotImplementedError
 
     def _get_kmer_representation(self, k_mer):
         # try to retrieve embedding for k-mer

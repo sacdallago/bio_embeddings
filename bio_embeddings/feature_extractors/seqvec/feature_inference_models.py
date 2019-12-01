@@ -1,10 +1,8 @@
 import torch.nn as nn
 
 
-# return an un-trained model for the prediction of subcellular localization
-# in 10 states and a binary classification into membrane-bound vs. soluble
 class SUBCELL_FNN(nn.Module):
-
+    # in 10 states and a binary classification into membrane-bound vs. soluble
     def __init__(self):
         super(SUBCELL_FNN, self).__init__()
         # Linear layer, taking embedding dimension 1024 to make predictions:
@@ -26,10 +24,9 @@ class SUBCELL_FNN(nn.Module):
 
         return Yhat_loc, Yhat_mem
 
-    # Convolutional neural network for prediction of Sec.Struct. in 3- & 8-states and disorder
-
 
 class SECSTRUCT_CNN(nn.Module):
+    # Convolutional neural network for prediction of Sec.Struct. in 3- & 8-states and disorder
     def __init__(self):
         super(SECSTRUCT_CNN, self).__init__()
 

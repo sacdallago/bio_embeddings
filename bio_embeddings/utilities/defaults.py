@@ -2,45 +2,61 @@ import tempfile
 from bio_embeddings.utilities.logging import Logger
 from urllib import request
 
-ELMO_V1_WEIGHTS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
-ELMO_V1_OPTIONS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
-ELMO_V1_SUBCELLULAR_LOCATION_CHECKPOINT = "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
-ELMO_V1_SECONDARY_STRUCTURE_CHECKPOINT = "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+SEQVEC_V1_WEIGHTS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
+SEQVEC_V1_OPTIONS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
 
 
-def _get_elmo_v1():
+def _get_seqvec_v1():
     """
-
-    :return: weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
+    :return: weight_file, options_file
     """
 
     Logger.log("Downloading files ELMO v1 embedder")
 
     weight_file = tempfile.NamedTemporaryFile()
     options_file = tempfile.NamedTemporaryFile()
-    subcellular_location_checkpoint = tempfile.NamedTemporaryFile()
-    secondary_structure_checkpoint_file = tempfile.NamedTemporaryFile()
 
-    Logger.log("Downloading weights from {}".format(ELMO_V1_WEIGHTS))
-    request.urlretrieve(ELMO_V1_WEIGHTS, weight_file.name)
-    Logger.log("Downloading options from {}".format(ELMO_V1_OPTIONS))
-    request.urlretrieve(ELMO_V1_OPTIONS, options_file.name)
-    Logger.log("Downloading subcellular location checkpoint from {}".format(ELMO_V1_SUBCELLULAR_LOCATION_CHECKPOINT))
-    request.urlretrieve(ELMO_V1_SUBCELLULAR_LOCATION_CHECKPOINT, subcellular_location_checkpoint.name)
-    Logger.log("Downloading secondary structure checkpoint from {}".format(ELMO_V1_SECONDARY_STRUCTURE_CHECKPOINT))
-    request.urlretrieve(ELMO_V1_SECONDARY_STRUCTURE_CHECKPOINT, secondary_structure_checkpoint_file.name)
+    Logger.log("Downloading weights from {}".format(SEQVEC_V1_WEIGHTS))
+    request.urlretrieve(SEQVEC_V1_WEIGHTS, weight_file.name)
+    Logger.log("Downloading options from {}".format(SEQVEC_V1_OPTIONS))
+    request.urlretrieve(SEQVEC_V1_OPTIONS, options_file.name)
 
     Logger.log("Downloaded files for ELMO v1 embedder")
 
-    return weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
+    return weight_file, options_file
 
 
-ELMO_V2_WEIGHTS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
-ELMO_V2_OPTIONS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.json"
-ELMO_V2_VOCABULARY = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.txt"
+SEQVEC_V1_SUBCELLULAR_LOCATION_CHECKPOINT = "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
+SEQVEC_V1_SECONDARY_STRUCTURE_CHECKPOINT = "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
 
 
-def _get_elmo_v2():
+def _get_seqvec_feature_extractors_v1():
+    """
+
+    :return: subcellular_location_checkpoint, secondary_structure_checkpoint_file
+    """
+
+    Logger.log("Downloading files SEQVEC v1 feature extractors")
+
+    subcellular_location_checkpoint = tempfile.NamedTemporaryFile()
+    secondary_structure_checkpoint_file = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading subcellular location checkpoint from {}".format(SEQVEC_V1_SUBCELLULAR_LOCATION_CHECKPOINT))
+    request.urlretrieve(SEQVEC_V1_SUBCELLULAR_LOCATION_CHECKPOINT, subcellular_location_checkpoint.name)
+    Logger.log("Downloading secondary structure checkpoint from {}".format(SEQVEC_V1_SECONDARY_STRUCTURE_CHECKPOINT))
+    request.urlretrieve(SEQVEC_V1_SECONDARY_STRUCTURE_CHECKPOINT, secondary_structure_checkpoint_file.name)
+
+    Logger.log("Downloaded files for ELMO v1 feature extractors")
+
+    return subcellular_location_checkpoint, secondary_structure_checkpoint_file
+
+
+SEQVEC_V2_WEIGHTS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
+SEQVEC_V2_OPTIONS = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.json"
+SEQVEC_V2_VOCABULARY = "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.txt"
+
+
+def _get_seqvec_v2():
     """
 
     :return: weight_file, options_file, subcellular_location_checkpoint, secondary_structure_checkpoint_file
@@ -52,12 +68,12 @@ def _get_elmo_v2():
     options_file = tempfile.NamedTemporaryFile()
     vocabulary_file = tempfile.NamedTemporaryFile()
 
-    Logger.log("Downloading weights from {}".format(ELMO_V2_WEIGHTS))
-    request.urlretrieve(ELMO_V1_WEIGHTS, weight_file.name)
-    Logger.log("Downloading options from {}".format(ELMO_V2_OPTIONS))
-    request.urlretrieve(ELMO_V1_OPTIONS, options_file.name)
-    Logger.log("Downloading vocabulary from {}".format(ELMO_V2_VOCABULARY))
-    request.urlretrieve(ELMO_V1_OPTIONS, vocabulary_file.name)
+    Logger.log("Downloading weights from {}".format(SEQVEC_V2_WEIGHTS))
+    request.urlretrieve(SEQVEC_V2_WEIGHTS, weight_file.name)
+    Logger.log("Downloading options from {}".format(SEQVEC_V2_OPTIONS))
+    request.urlretrieve(SEQVEC_V2_OPTIONS, options_file.name)
+    Logger.log("Downloading vocabulary from {}".format(SEQVEC_V2_VOCABULARY))
+    request.urlretrieve(SEQVEC_V2_VOCABULARY, vocabulary_file.name)
 
     Logger.log("Downloaded files for ELMO v2 embedder")
 
@@ -133,18 +149,23 @@ def _get_transformer_base():
     return model_file, vocabulary_file
 
 
+# TODO: Implement!
+def _get_transformer_large():
+    return _get_transformer_base()
+
+
 _EMBEDDERS = {
-    "elmov1": _get_elmo_v1,
-    "elmov2": _get_elmo_v2,
+    "seqvecv1": _get_seqvec_v1,
+    "seqvecv1_feature_extractors": _get_seqvec_feature_extractors_v1,
+    "seqvecv2": _get_seqvec_v2,
     "word2vec": _get_word2vec,
     "fasttext": _get_fasttext,
     "glove": _get_glove,
     "transformer_base": _get_transformer_base,
-    # todo: change
-    "transformer_large": _get_transformer_base,
+    "transformer_large": _get_transformer_large,
     None: lambda x: Logger.log("Trying to get undefined embedder. Name: {}".format(x))
 }
 
 
-def get_defaults(embedder):
+def get_model_parameters(embedder):
     return _EMBEDDERS.get(embedder)()

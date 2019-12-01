@@ -7,6 +7,8 @@ Authors:
 
 import abc
 
+from bio_embeddings.utilities.exceptions import NoEmbeddingException
+
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
@@ -58,9 +60,3 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         :return: A bag with various AA-specific and global features
         """
         raise NotImplementedError
-
-
-class NoEmbeddingException(Exception):
-    """
-    Exception to handle the case no embedding has been computed, and one requests features.
-    """
