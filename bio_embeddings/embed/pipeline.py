@@ -1,7 +1,7 @@
 import numpy as np
 from collections import defaultdict
 from copy import deepcopy
-from bio_embeddings.embed import SeqVecEmbedder
+from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required
