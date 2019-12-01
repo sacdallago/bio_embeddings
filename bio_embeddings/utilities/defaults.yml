@@ -1,0 +1,31 @@
+seqvecv1:
+  weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
+  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
+
+seqvecv1_feature_extractors:
+  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+
+seqvecv2:
+  weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
+  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.hdf5"
+  vocabulary_file: "ttp://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.hdf5"
+
+fasttext:
+  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"
+
+word2vec:
+  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/word2vec/word2vec.model"
+
+glove:
+  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
+
+transformerxl_base:
+  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/model.pt"
+  vocabulary_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/vocab.pt"
+
+## TODO: add following when available!
+
+#transformerxl_large:
+#  model_file: ""
+#  vocabulary_file: ""

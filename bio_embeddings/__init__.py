@@ -1,3 +1,3 @@
-from bio_embeddings.embedders import (Word2VecEmbedder, ElmoEmbedder,
-                                      FastTextEmbedder, GloveEmbedder,
-                                      TransformerXLEmbedder)
+from bio_embeddings.embed import (Word2VecEmbedder, SeqVecEmbedder,
+                                  FastTextEmbedder, GloveEmbedder,
+                                  TransformerXLEmbedder)
