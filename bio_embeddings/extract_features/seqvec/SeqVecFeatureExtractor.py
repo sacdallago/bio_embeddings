@@ -2,7 +2,7 @@ import torch
 from bio_embeddings.extract_features.FeatureExtractorInterface import FeatureExtractorInterface
 from bio_embeddings.extract_features.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 from bio_embeddings.extract_features.features import Location, Membrane, Disorder, SecondaryStructure, FeaturesCollection
-from bio_embeddings.utilities import Logger, get_model_parameters, NoEmbeddingException
+from bio_embeddings.utilities import Logger, NoEmbeddingException
 
 # Label mappings
 _loc_labels = {0: 'Cell-Membrane',
@@ -42,9 +42,10 @@ class SeqVecFeatureExtractor(FeatureExtractorInterface):
 
         necessary_files = ['secondary_structure_checkpoint_file', 'subcellular_location_checkpoint_file']
 
-        if not set(necessary_files) <= set(self._options.keys()):
-            self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_model_parameters('seqvecv1_feature_extractors')
-            self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
+        # TODO: refactor
+        # if not set(necessary_files) <= set(self._options.keys()):
+        #     self._temp_subcellular_location_checkpoint_file, self._temp_secondary_structure_checkpoint_file = get_model_parameters('seqvecv1_feature_extractors')
+        #     self._subcellular_location_checkpoint_file, self._secondary_structure_checkpoint_file = self._temp_subcellular_location_checkpoint_file.name, self._temp_secondary_structure_checkpoint_file.name
 
         # use GPU if available, otherwise run on CPU
         # !important: GPU visibility can easily be hidden using this env variable: CUDA_VISIBLE_DEVICES=""

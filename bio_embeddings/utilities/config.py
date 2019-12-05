@@ -12,7 +12,7 @@ Authors:
 
 import ruamel.yaml as yaml
 
-from bio_embeddings.utilities import InvalidParameterError
+from bio_embeddings.utilities.exceptions import InvalidParameterError
 
 
 def parse_config(config_str, preserve_order=False):

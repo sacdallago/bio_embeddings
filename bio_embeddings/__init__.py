@@ -1,5 +1,4 @@
 import tempfile
-from copy import deepcopy
 from bio_embeddings.embed import (
     SeqVecEmbedder as _SeqVecEmbedder,
     Word2VecEmbedder as _Word2VecEmbedder,
@@ -9,8 +8,9 @@ from bio_embeddings.embed import (
 )
 from bio_embeddings.utilities import get_model_file
 
+_temporary_files = list()
 
-# To make it easier to final users of the embeddings as a package,
+# To make it easier for end-users of the embeddings as a package,
 # auto-download missing files!
 
 
@@ -24,9 +24,10 @@ def SeqVecEmbedder(**kwargs) -> _SeqVecEmbedder:
     for file in necessary_files:
         if not kwargs.get(file):
             f = tempfile.NamedTemporaryFile()
+            _temporary_files.append(f)
 
             get_model_file(
-                model='seqvecv{}'.format(str(kwargs['seqvec_version'])),
+                model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))),
                 file=file,
                 path=f.name
             )
@@ -42,6 +43,7 @@ def Word2VecEmbedder(**kwargs) -> _Word2VecEmbedder:
     for file in necessary_files:
         if not kwargs.get(file):
             f = tempfile.NamedTemporaryFile()
+            _temporary_files.append(f)
 
             get_model_file(
                 model='word2vec',
@@ -53,12 +55,14 @@ def Word2VecEmbedder(**kwargs) -> _Word2VecEmbedder:
 
     return _Word2VecEmbedder(**kwargs)
 
+
 def FastTextEmbedder(**kwargs) -> _FastTextEmbedder:
     necessary_files = ['model_file']
 
     for file in necessary_files:
         if not kwargs.get(file):
             f = tempfile.NamedTemporaryFile()
+            _temporary_files.append(f)
 
             get_model_file(
                 model='fasttext',
@@ -77,6 +81,7 @@ def GloveEmbedder(**kwargs) -> _GloveEmbedder:
     for file in necessary_files:
         if not kwargs.get(file):
             f = tempfile.NamedTemporaryFile()
+            _temporary_files.append(f)
 
             get_model_file(
                 model='glove',
@@ -97,6 +102,7 @@ def TransformerXLEmbedder(**kwargs) -> _TransformerXLEmbedder:
     for file in necessary_files:
         if not kwargs.get(file):
             f = tempfile.NamedTemporaryFile()
+            _temporary_files.append(f)
 
             get_model_file(
                 model='transformerxl_{}'.format(model_size),

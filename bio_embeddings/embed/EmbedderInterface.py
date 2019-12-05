@@ -50,13 +50,3 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         """
 
         return self._sequence
-
-    @abc.abstractmethod
-    def get_features(self, embedding=None):
-        """
-        Returns a FeaturesCollection object. Embedding must not be None, otherwise rises NoEmbeddingException
-
-        :param embedding: OPTIONAL embedding from which to calculate the features. Useful when running on parallel systems
-        :return: A bag with various AA-specific and global features
-        """
-        raise NotImplementedError
