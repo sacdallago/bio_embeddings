@@ -61,4 +61,4 @@ class SeqVecEmbedder(EmbedderInterface):
 
     def embed_many(self, sequences):
         sentences = [list(x) for x in sequences]
-        return self._elmo_model.embed_sentences(sentences).tolist()
+        return self._elmo_model.embed_sentences(sentences)

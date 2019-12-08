@@ -33,6 +33,17 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def embed_many(self, sequences):
+        """
+        Returns embedding for one sequence.
+
+        :param sequences: Array of proteins as AA strings
+        :return: An embedding of the sequence.
+        """
+
+        raise NotImplementedError
+
     def get_embedding(self):
         """
         Returns the embedding

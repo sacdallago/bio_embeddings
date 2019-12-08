@@ -1,5 +1,4 @@
 import numpy as np
-from collections import defaultdict
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file
@@ -24,7 +23,7 @@ def seqvec(**kwargs):
 
             get_model_file(
                 model='seqvecv{}'.format(str(result_kwargs['seqvec_version'])),
-                file= file,
+                file=file,
                 path=file_path
             )
 
