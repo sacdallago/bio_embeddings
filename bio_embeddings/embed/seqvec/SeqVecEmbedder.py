@@ -45,8 +45,6 @@ class SeqVecEmbedder(EmbedderInterface):
             _cuda_device = -1
             pass
 
-        # TODO: Implement seqvec v2
-        # Load ELMO model
         self._elmo_model = _ElmoEmbedder(weight_file=self._weights_file,
                                          options_file=self._options_file,
                                          cuda_device=_cuda_device)
@@ -61,4 +59,8 @@ class SeqVecEmbedder(EmbedderInterface):
 
     def embed_many(self, sequences):
         sentences = [list(x) for x in sequences]
-        return self._elmo_model.embed_sentences(sentences)
+        return list(self._elmo_model.embed_sentences(sentences))
+
+    @staticmethod
+    def reduce_per_protein(embedding):
+        return embedding.sum(0).mean(0)
