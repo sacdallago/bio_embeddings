@@ -1,9 +1,8 @@
 import numpy as np
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
-from bio_embeddings.utilities import InvalidParameterError, get_model_file
-from bio_embeddings.utilities.filemanagers import get_file_manager
-from bio_embeddings.utilities.helpers import check_required
+from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
+    check_required, get_file_manager, read_fasta_file, reindex_sequences
 
 _STAGE_NAME = "embed"
 _FILE_MANAGER = None
@@ -29,9 +28,13 @@ def seqvec(**kwargs):
 
             result_kwargs[file] = file_path
 
+    sequences = read_fasta_file(kwargs['sequences_file'])
+    mapping = reindex_sequences(sequences)
 
-    # TODO: extract sequences from fasta file
-    sequences = read_fasta(kwargs['sequences_file'])
+    remapped_sequence_file = _FILE_MANAGER.create_file(kwargs.get('prefix'), _STAGE_NAME, 'remapped_sequence_file', extension='.fasta')
+    # TODO write sequence file
+    result_kwargs['remapped_sequence_file'] = remapped_sequence_file
+
     embedder = SeqVecEmbedder(**kwargs)
 
     # TODO: get the embeddings for many sequences
