@@ -6,6 +6,7 @@ Authors:
 """
 
 import abc
+from typing import List
 
 from bio_embeddings.utilities.exceptions import NoEmbeddingException
 
@@ -21,7 +22,7 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def embed(self, sequence):
+    def embed(self, sequence: str):
         """
         Returns embedding for one sequence.
 
@@ -32,11 +33,11 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def embed_many(self, sequences):
+    def embed_many(self, sequences: List[str]) -> List[str]:
         """
         Returns embedding for one sequence.
 
-        :param sequences: Array of proteins as AA strings
+        :param sequences: List of proteins as AA strings
         :return: A list object with embeddings of the sequences.
         """
 

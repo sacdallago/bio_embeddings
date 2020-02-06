@@ -6,6 +6,7 @@ from bio_embeddings.embed import (
     GloveEmbedder as _GloveEmbedder,
     TransformerXLEmbedder as _TransformerXLEmbedder
 )
+
 from bio_embeddings.utilities import get_model_file
 
 _temporary_files = list()
