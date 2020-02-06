@@ -17,8 +17,6 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         Initializer accepts location of a pre-trained model and options
         """
         self._options = None
-        self._embedding = None
-        self._sequence = None
 
         pass
 
@@ -39,25 +37,19 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         Returns embedding for one sequence.
 
         :param sequences: Array of proteins as AA strings
-        :return: An embedding of the sequence.
+        :return: A list object with embeddings of the sequences.
         """
 
         raise NotImplementedError
 
-    def get_embedding(self):
+    @staticmethod
+    @abc.abstractmethod
+    def reduce_per_protein(embedding):
         """
-        Returns the embedding
-        :return: An seqvec embedding or NoEmbeddingException
-        """
+        For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.
 
-        if self._embedding is None:
-            raise NoEmbeddingException
-
-        return self._embedding
-
-    def get_sequence(self):
-        """
-        :return: A string representing the sequence which was embedded. None if no embedding has been calculated
+        :param embedding: the embedding
+        :return: A fixed size embedding (a vector of size N, where N is fixed)
         """
 
-        return self._sequence
+        raise NotImplementedError

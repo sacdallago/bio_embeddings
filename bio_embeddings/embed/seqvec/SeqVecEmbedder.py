@@ -52,10 +52,9 @@ class SeqVecEmbedder(EmbedderInterface):
         pass
 
     def embed(self, sequence):
-        self._sequence = sequence
-        self._embedding = self._elmo_model.embed_sentence(list(self._sequence))  # get embedding for sequence
+        embedding = self._elmo_model.embed_sentence(list(sequence))  # get embedding for sequence
 
-        return self._embedding.tolist()
+        return embedding.tolist()
 
     def embed_many(self, sequences):
         sentences = [list(x) for x in sequences]

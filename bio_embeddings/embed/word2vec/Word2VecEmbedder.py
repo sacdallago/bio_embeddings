@@ -24,22 +24,23 @@ class Word2VecEmbedder(EmbedderInterface):
         pass
 
     def embed(self, sequence):
-        self._sequence = sequence
-
         # pad sequence with special character (only 3-mers are considered)
         padded_sequence = '-' + sequence + '-'
 
         # container
-        self._embedding = np.zeros((len(sequence), self._vector_size), dtype=np.float32)
+        embedding = np.zeros((len(sequence), self._vector_size), dtype=np.float32)
 
         # for each aa in the sequence, retrieve k-mer
         for index in range(len(padded_sequence)):
             try:
                 k_mer = ''.join(padded_sequence[index: index + self._window_size])
-                self._embedding[index, :] = self._get_kmer_representation(k_mer)
+                embedding[index, :] = self._get_kmer_representation(k_mer)
             # end of sequence reached
             except IndexError:
-                return self._embedding
+                return embedding
+
+    def embed_many(self, sequences):
+        return [self.embed(sequence) for sequence in sequences]
 
     def _get_kmer_representation(self, k_mer):
         # try to retrieve embedding for k-mer
@@ -54,3 +55,8 @@ class Word2VecEmbedder(EmbedderInterface):
             elif '-' in k_mer:
                 idx_center = int(len(k_mer) / 2)
                 return self._get_kmer_representation(k_mer[idx_center])
+
+    @staticmethod
+    def reduce_per_protein(embedding):
+        # TODO
+        raise NotImplementedError
