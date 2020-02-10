@@ -7,8 +7,6 @@ from bio_embeddings.utilities.config import read_config_file
 from bio_embeddings.utilities.logging import Logger
 
 _module_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-
-# TODO: get abs. path for defaults.yml
 _defaults = read_config_file(_module_dir / 'defaults.yml')
 
 
