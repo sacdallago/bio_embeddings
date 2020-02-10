@@ -11,11 +11,13 @@ Authors:
 """
 
 import ruamel.yaml as yaml
+from ruamel.yaml.parser import ParserError
+from ruamel.yaml.comments import CommentedBase
 
 from bio_embeddings.utilities.exceptions import InvalidParameterError
 
 
-def parse_config(config_str, preserve_order=False):
+def parse_config(config_str: str, preserve_order: bool = True) -> dict:
     """
     Parse a configuration string
 
@@ -37,7 +39,7 @@ def parse_config(config_str, preserve_order=False):
             return yaml.load(config_str, Loader=yaml.RoundTripLoader)
         else:
             return yaml.safe_load(config_str)
-    except yaml.parser.ParserError as e:
+    except ParserError as e:
         raise InvalidParameterError(
             "Could not parse input configuration. "
             "Formatting mistake in config file? "
@@ -45,25 +47,19 @@ def parse_config(config_str, preserve_order=False):
         ) from e
 
 
-def read_config_file(filename, preserve_order=False):
+def read_config_file(config_path: str, preserve_order: bool = True) -> dict:
     """
-    Read and parse a configuration file.
+    Read config from path to file.
 
-    Parameters
-    ----------
-    filename : str
-        Path of configuration file
-
-    Returns
-    -------
-    dict
-        Configuration dictionary
+    :param config_path: path to .yml config file
+    :param preserve_order:
+    :return:
     """
-    with open(filename) as f:
-        return parse_config(f, preserve_order)
+    with open(config_path, "r") as f:
+        return parse_config(f.read(), preserve_order)
 
 
-def write_config_file(out_filename, config):
+def write_config_file(out_filename: str, config: str) -> None:
     """
     Save configuration data structure in YAML file.
 
@@ -74,7 +70,7 @@ def write_config_file(out_filename, config):
     config : dict
         Config data that will be written to file
     """
-    if isinstance(config, yaml.comments.CommentedBase):
+    if isinstance(config, CommentedBase):
         dumper = yaml.RoundTripDumper
     else:
         dumper = yaml.Dumper

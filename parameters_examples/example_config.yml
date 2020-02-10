@@ -9,15 +9,17 @@ global:
   ## Optional: file manager
   # file_manager: [*filesystem]
 
-stages:
-- embed
-- get_features
+## Stages are executed in sequential order as they are outlined in this file.
+## Stage names must be different!! If not: they will overwrite each_other
+## The same stage type (e.g. embed,..) can be executed multiple types.
+## Dependencies for a stage are defined in the dependencies parameter
 
-## Stage options
+## Stage options notation:
 ## *: denotes the default option
 ## @: denotes that the file will be downloaded
 
-embed:
+stage_1:
+  type: embed
   ## Option: seqvec, fasttext, glove, transformerxl, word2vec
   protocol: seqvec
 
@@ -36,7 +38,9 @@ embed:
   ## Optional for protocol: [fasttext, word2vec, glove]
   # model_file: @/path/to/file
 
-get_features:
+stage_2:
+  type: extract_features
+  dependes_on: stage_1
 ## Optional; inferred from embedder
 # protocol: [seqvec]
 

@@ -6,7 +6,7 @@ from hashlib import md5
 from pandas import DataFrame
 
 
-def check_required(params, keys):
+def check_required(params: dict, keys: List[str]):
     """
     Verify if required set of parameters is present in configuration
 
