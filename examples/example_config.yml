@@ -1,0 +1,49 @@
+# global options
+
+global:
+  # Required: Path to a Fasta file
+  sequences_file: /path/to/sequences.fasta
+  # Required: String for output
+  prefix: my_embeddings
+
+  ## Optional: file manager
+  # file_manager: [*filesystem]
+
+## Stages are executed in sequential order as they are outlined in this file.
+## Stage names must be different!! If not: they will overwrite each_other
+## The same stage type (e.g. embed,..) can be executed multiple types.
+## Dependencies for a stage are defined in the dependencies parameter
+
+## Stage options notation:
+## *: denotes the default option
+## @: denotes that the file will be downloaded
+
+stage_1:
+  type: embed
+  ## Option: seqvec, fasttext, glove, transformerxl, word2vec
+  protocol: seqvec
+
+  ## Optional for protocol: seqvec
+  # weights_file: @/path/to/file
+  # options_file: @/path/to/file
+  # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
+  # seqvec_version: [*1,2]
+  # reduce: True
+
+  ## Optional for protocol: transformerxl
+  # model: [*base, large]
+  # model_file: @/path/to/file
+  # vocabulary_file: @/path/to/file
+
+  ## Optional for protocol: [fasttext, word2vec, glove]
+  # model_file: @/path/to/file
+
+stage_2:
+  type: extract_features
+  dependes_on: stage_1
+## Optional; inferred from embedder
+# protocol: [seqvec]
+
+## Optional for protocol: seqvec
+# secondary_structure_checkpoint_file: @/path/to/file
+# subcellular_location_checkpoint_file: @/path/to/file

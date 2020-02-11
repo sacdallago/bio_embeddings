@@ -1,0 +1,5 @@
+from bio_embeddings.extract_features.features import Disorder
+from bio_embeddings.extract_features.features import Location
+from bio_embeddings.extract_features.features import Membrane
+from bio_embeddings.extract_features.features import SecondaryStructure
+from bio_embeddings.extract_features.features import FeaturesCollection
