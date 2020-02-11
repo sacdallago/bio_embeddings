@@ -19,7 +19,7 @@ def seqvec(**kwargs):
             file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
 
             get_model_file(
-                model='seqvecv{}'.format(str(result_kwargs['seqvec_version'])),
+                model='seqvecv{}'.format(str(result_kwargs.get('seqvec_version', 1))),
                 file=file,
                 path=file_path
             )

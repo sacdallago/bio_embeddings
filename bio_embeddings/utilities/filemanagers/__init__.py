@@ -1,4 +1,5 @@
-from bio_embeddings.utilities.filemanagers import FileSystemFileManager, FileManagerInterface
+from bio_embeddings.utilities.filemanagers.FileSystemFileManager import FileSystemFileManager
+from bio_embeddings.utilities.filemanagers.FileManagerInterface import FileManagerInterface
 
 FILE_MANAGERS = {
     'filesystem': FileSystemFileManager,
@@ -6,7 +7,9 @@ FILE_MANAGERS = {
 }
 
 
-def get_file_manager(**kwargs) -> FileManagerInterface:
-    file_manager = kwargs.get('management', {}).get('file_manager')
+def get_file_manager(**kwargs):
+    management = kwargs.get('management', {})
+    file_manager_type = management.get('file_manager')
+    file_manager = FILE_MANAGERS.get(file_manager_type)
 
-    return FILE_MANAGERS.get(file_manager)
+    return file_manager(**management)

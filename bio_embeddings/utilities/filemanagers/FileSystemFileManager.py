@@ -6,7 +6,7 @@ from bio_embeddings.utilities.filemanagers.FileManagerInterface import FileManag
 
 class FileSystemFileManager(FileManagerInterface):
 
-    def exists(self, prefix, stage, file_name, extension=None) -> bool:
+    def exists(self, prefix, stage=None, file_name=None, extension=None) -> bool:
         path = Path(prefix)
 
         if stage:
@@ -35,7 +35,8 @@ class FileSystemFileManager(FileManagerInterface):
         path /= file_name + (extension if extension else "")
 
         try:
-            os.mkdir(path)
+            with open(path, 'a'):
+                os.utime(path, None)
         except OSError:
             print("Creation of the directory %s failed" % path)
         else:

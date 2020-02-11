@@ -8,8 +8,8 @@ seqvecv1_feature_extractors:
 
 seqvecv2:
   weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
-  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.hdf5"
-  vocabulary_file: "ttp://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.hdf5"
+  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.json"
+  vocabulary_file: "ttp://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.txt"
 
 fasttext:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"

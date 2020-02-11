@@ -11,9 +11,12 @@ setuptools.setup(
     description="A package to generate or retrieve NLP embeddings for bioinformatics applications",
     long_description=long_description,
     install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas"],
+    scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/api.embed.protein.properties",
-    packages=setuptools.find_packages(exclude=["notebooks", "webserver"]),
+    packages=setuptools.find_packages(exclude=["notebooks", "webserver", "parameters_examples"]),
+    package_data={'': ['*.yml']},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

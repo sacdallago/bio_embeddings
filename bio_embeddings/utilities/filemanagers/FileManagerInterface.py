@@ -20,5 +20,5 @@ class FileManagerInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exists(self, prefix, stage, file_name, extension=None) -> bool:
+    def exists(self, prefix, stage=None, file_name=None, extension=None) -> bool:
         raise NotImplementedError

@@ -96,7 +96,7 @@ def run(config_file_path, **kwargs):
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
     write_config_file(global_in, read_config_file(config_file_path))
 
-    global_parameters *= _process_fasta_file(**global_parameters)
+    global_parameters = _process_fasta_file(**global_parameters)
 
     for stage_name in config:
         stage_parameters = config[stage_name]
@@ -114,6 +114,7 @@ def run(config_file_path, **kwargs):
 
         # Prepare to run stage
         stage_parameters['stage_name'] = stage_name
+        file_manager.create_stage(prefix, stage_name)
 
         stage_dependency = stage_parameters.get('depends_on')
 
@@ -123,11 +124,15 @@ def run(config_file_path, **kwargs):
 
         stage_dependency_parameters = config.get(stage_dependency)
 
-        stage_parameters = {**global_parameters, **stage_dependency_parameters, **stage_parameters}
+        if stage_dependency:
+            stage_parameters = {**global_parameters, **stage_dependency_parameters, **stage_parameters}
+        else:
+            stage_parameters = {**global_parameters, **stage_parameters}
+
         stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
         write_config_file(stage_in, stage_parameters)
 
-        stage_output_parameters = stage_runnable(stage_parameters)
+        stage_output_parameters = stage_runnable(**stage_parameters)
         stage_out = file_manager.create_file(prefix, stage_name, _OUT_CONFIG_NAME, extension='.yml')
         write_config_file(stage_out, stage_output_parameters)
 
