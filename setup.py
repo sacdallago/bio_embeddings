@@ -10,7 +10,7 @@ setuptools.setup(
     author_email="christian.dallago@tum.de",
     description="A package to generate or retrieve NLP embeddings for bioinformatics applications",
     long_description=long_description,
-    install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas"],
+    install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py"],
     scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/api.embed.protein.properties",

@@ -1,4 +1,4 @@
-import numpy as np
+import h5py
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
@@ -26,13 +26,15 @@ def seqvec(**kwargs):
 
             result_kwargs[file] = file_path
 
-    sequences = read_fasta_file(result_kwargs['remapped_sequences_file'])
+    proteins = read_fasta_file(result_kwargs['remapped_sequences_file'])
     embedder = SeqVecEmbedder(**result_kwargs)
 
-    embeddings = embedder.embed_many([protein.seq for protein in sequences])
+    embeddings = embedder.embed_many([protein.seq for protein in proteins])
 
-    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), 'embeddings_file', extension='.npy')
-    np.save(embeddings_file_path, embeddings)
+    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), 'embeddings_file', extension='.h5')
+    with h5py.File(embeddings_file_path, "w") as hf:
+        for i, protein in enumerate(proteins):
+            hf.create_dataset(protein.id, data=embeddings[i])
     result_kwargs['embeddings_file'] = embeddings_file_path
 
     return result_kwargs

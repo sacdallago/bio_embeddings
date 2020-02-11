@@ -32,7 +32,7 @@ def check_required(params: dict, keys: List[str]):
 
 
 def _assign_hash(sequence_record: SeqRecord) -> SeqRecord:
-    sequence_record.id = md5(sequence_record.seq.encode()).hexdigest()
+    sequence_record.id = md5(str(sequence_record.seq).encode()).hexdigest()
 
     return sequence_record
 

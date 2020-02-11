@@ -41,7 +41,7 @@ def _process_fasta_file(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta_file(kwargs['sequences_file'])
-    sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'remapped_sequences_file',
+    sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',
                                                            extension='.fasta')
     write_fasta_file(sequences, sequences_file_path)
 
@@ -138,8 +138,11 @@ def run(config_file_path, **kwargs):
         write_config_file(stage_in, stage_parameters)
 
         stage_output_parameters = stage_runnable(**stage_parameters)
+
         stage_out = file_manager.create_file(prefix, stage_name, _OUT_CONFIG_NAME, extension='.yml')
         write_config_file(stage_out, stage_output_parameters)
+        config[stage_name] = stage_output_parameters
 
-    global_out = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
+    config['global'] = global_parameters
+    global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
