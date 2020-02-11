@@ -59,7 +59,7 @@ def read_config_file(config_path: str, preserve_order: bool = True) -> dict:
         return parse_config(f.read(), preserve_order)
 
 
-def write_config_file(out_filename: str, config: str) -> None:
+def write_config_file(out_filename: str, config: dict) -> None:
     """
     Save configuration data structure in YAML file.
 

@@ -5,12 +5,15 @@ from bio_embeddings.embed.pipeline import run as run_embed
 # from bio_embeddings.extract_features.pipeline import run as run_extract_features
 from bio_embeddings.utilities import get_file_manager, read_fasta_file, reindex_sequences, write_fasta_file, \
     check_required
-from bio_embeddings.utilities.config import read_config_file
+from bio_embeddings.utilities.config import read_config_file, write_config_file
 
 _STAGES = {
     "embed": run_embed,
     # "extract_features": run_extract_features
 }
+
+_IN_CONFIG_NAME = "input_parameters_file"
+_OUT_CONFIG_NAME = "ouput_parameters_file"
 
 
 def _valid_file(file_path):
@@ -35,15 +38,14 @@ def _valid_file(file_path):
 
 def _process_fasta_file(**kwargs):
     result_kwargs = deepcopy(kwargs)
-    _FILE_MANAGER = get_file_manager(**kwargs)
+    file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta_file(kwargs['sequences_file'])
     mapping = reindex_sequences(sequences)
 
-    # TODO: _STAGE_NAME none for global?
-    mapping_file_path = _FILE_MANAGER.create_file(kwargs.get('prefix'), _STAGE_NAME, 'mapping_file', extension='.csv')
-    remapped_sequence_file_path = _FILE_MANAGER.create_file(kwargs.get('prefix'), _STAGE_NAME, 'remapped_sequences_file'
-                                                            , extension='.fasta')
+    mapping_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'mapping_file', extension='.csv')
+    remapped_sequence_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'remapped_sequences_file',
+                                                           extension='.fasta')
 
     write_fasta_file(sequences, remapped_sequence_file_path)
     mapping.to_csv(mapping_file_path)
@@ -67,6 +69,7 @@ def run(config_file_path):
         ["global"]
     )
 
+    # !! pop = remove from config!
     global_parameters = config.pop('global')
 
     check_required(
@@ -79,6 +82,10 @@ def run(config_file_path):
     # Make sure prefix exists
     prefix = global_parameters['prefix']
     file_manager.create_prefix(prefix)
+
+    # copy config to prefix. Need to re-read beacuse global was popped!
+    global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
+    write_config_file(global_in, read_config_file(config_file_path))
 
     global_parameters *= _process_fasta_file(**global_parameters)
 
@@ -108,5 +115,12 @@ def run(config_file_path):
         stage_dependency_parameters = config.get(stage_dependency)
 
         stage_parameters = {**global_parameters, **stage_dependency_parameters, **stage_parameters}
+        stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
+        write_config_file(stage_in, stage_parameters)
 
         stage_output_parameters = stage_runnable(stage_parameters)
+        stage_out = file_manager.create_file(prefix, stage_name, _OUT_CONFIG_NAME, extension='.yml')
+        write_config_file(stage_out, stage_output_parameters)
+
+    global_out = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
+    write_config_file(global_out, config)
