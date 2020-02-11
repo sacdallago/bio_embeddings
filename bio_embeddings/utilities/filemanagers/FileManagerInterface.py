@@ -16,5 +16,9 @@ class FileManagerInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_file(self, prefix, stage, file_name) -> str:
+    def get_file(self, prefix, stage, file_name, extension=None) -> str:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def exists(self, prefix, stage, file_name, extension=None) -> bool:
         raise NotImplementedError

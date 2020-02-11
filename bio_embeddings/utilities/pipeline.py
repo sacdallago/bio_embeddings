@@ -56,7 +56,7 @@ def _process_fasta_file(**kwargs):
     return result_kwargs
 
 
-def run(config_file_path):
+def run(config_file_path, **kwargs):
 
     if not _valid_file(config_file_path):
         raise Exception("No config or invalid config was passed.")
@@ -81,7 +81,16 @@ def run(config_file_path):
 
     # Make sure prefix exists
     prefix = global_parameters['prefix']
-    file_manager.create_prefix(prefix)
+
+    # If prefix already exists
+    if file_manager.exists(prefix):
+        if not kwargs.get('overwrite'):
+            raise FileExistsError("The prefix already exists & no overwrite option has been set.\n"
+                                  "Either set --overwrite, or move data from the prefix.\n"
+                                  "Prefix: {}".format(prefix))
+    else:
+        # create the prefix
+        file_manager.create_prefix(prefix)
 
     # copy config to prefix. Need to re-read beacuse global was popped!
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
