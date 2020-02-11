@@ -14,7 +14,7 @@ setuptools.setup(
     scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/api.embed.protein.properties",
-    packages=setuptools.find_packages(exclude=["notebooks", "webserver", "parameters_examples"]),
+    packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples"]),
     package_data={'': ['*.yml']},
     include_package_data=True,
     classifiers=[

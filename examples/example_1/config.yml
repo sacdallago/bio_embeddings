@@ -1,0 +1,7 @@
+global:
+  sequences_file: fasta.fa
+  prefix: test_1
+my_random_name:
+  type: embed
+  protocol: seqvec
+  
