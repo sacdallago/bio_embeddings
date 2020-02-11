@@ -28,7 +28,7 @@ stage_1:
   # options_file: @/path/to/file
   # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
   # seqvec_version: [*1,2]
-  # reduce: True
+  # reduce: [True, *False]
 
   ## Optional for protocol: transformerxl
   # model: [*base, large]
