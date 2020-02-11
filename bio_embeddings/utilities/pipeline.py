@@ -41,6 +41,11 @@ def _process_fasta_file(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta_file(kwargs['sequences_file'])
+    sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'remapped_sequences_file',
+                                                           extension='.fasta')
+    write_fasta_file(sequences, sequences_file_path)
+
+    result_kwargs['sequences_file'] = sequences_file_path
     mapping = reindex_sequences(sequences)
 
     mapping_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'mapping_file', extension='.csv')
