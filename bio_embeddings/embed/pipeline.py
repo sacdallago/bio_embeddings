@@ -31,11 +31,22 @@ def seqvec(**kwargs):
 
     embeddings = embedder.embed_many([protein.seq for protein in proteins])
 
-    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), 'embeddings_file', extension='.h5')
+    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                    'embeddings_file', extension='.h5')
     with h5py.File(embeddings_file_path, "w") as hf:
         for i, protein in enumerate(proteins):
             hf.create_dataset(protein.id, data=embeddings[i])
     result_kwargs['embeddings_file'] = embeddings_file_path
+
+    if result_kwargs.get('reduce') is True:
+        reduced_embeddings = [SeqVecEmbedder.reduce_per_protein(e) for e in embeddings]
+
+        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                        'reduced_embeddings_file', extension='.h5')
+        with h5py.File(reduced_embeddings_file_path, "w") as hf:
+            for i, protein in enumerate(proteins):
+                hf.create_dataset(protein.id, data=reduced_embeddings[i])
+        result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
 
     return result_kwargs
 

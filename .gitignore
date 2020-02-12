@@ -5,4 +5,4 @@ __pycache__/
 models/
 *.pyc
 .ipynb_checkpoints/
-examples/example_1/test_1
+examples/pipeline_example/my_job
