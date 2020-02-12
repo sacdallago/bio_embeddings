@@ -1,0 +1,7 @@
+global:
+  sequences_file: fasta.fa
+  prefix: my_job
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True  
