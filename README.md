@@ -10,7 +10,7 @@ The project includes:
 For now, this project is in beta. You can install the package via PIP like so:
 
 ```bash
-pip install git+https://github.com/sacdallago/bio_embeddings.git@pipeline
+pip install git+https://github.com/sacdallago/bio_embeddings.git
 ```
 
 ### Examples
