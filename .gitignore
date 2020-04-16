@@ -3,6 +3,7 @@
 .idea/*
 __pycache__/
 models/
+private/
 *.pyc
 .ipynb_checkpoints/
 examples/pipeline_example/my_job

@@ -59,11 +59,14 @@ def reindex_sequences(sequence_records: List[SeqRecord]) -> (SeqRecord, DataFram
     :param sequence_records: List of sequence records
     :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id.
     """
+    sequence_records[:] = sorted(sequence_records, key=lambda seq: len(seq))
+
     original_ids = [s.id for s in sequence_records]
     sequence_records[:] = map(_assign_hash, sequence_records)
     new_ids = [s.id for s in sequence_records]
 
-    df = DataFrame(original_ids, columns=['original_id'], index=new_ids)
+    df = DataFrame(zip(original_ids, [len(seq) for seq in sequence_records]), columns=['original_id', 'sequence_length'],
+                   index=new_ids)
 
     return df
 
