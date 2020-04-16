@@ -1,1 +1,1 @@
-from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
+from bio_embeddings.embed.albert.AlbertEmbedder import AlbertEmbedder
