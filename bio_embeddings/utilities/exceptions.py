@@ -39,3 +39,9 @@ class SequenceEmbeddingLengthMismatchException(Exception):
     """
     Exception when trying to embed sequences longer then the limit
     """
+
+
+class FileDoesntExistError(Exception):
+    """
+    Exception for invalid file download request
+    """

@@ -1,8 +1,10 @@
 import os
+import tempfile
+import zipfile
 from pathlib import Path
 from urllib import request
 from tqdm import tqdm
-from bio_embeddings.utilities.exceptions import MissingParameterError, CannotFindDefaultFile
+from bio_embeddings.utilities.exceptions import MissingParameterError, CannotFindDefaultFile, FileDoesntExistError
 from bio_embeddings.utilities.config import read_config_file
 from bio_embeddings.utilities.logging import Logger
 
@@ -26,14 +28,40 @@ class TqdmUpTo(tqdm):
         self.update(b * bsize - self.n)  # will also set self.n = b * bsize
 
 
+def get_model_folder_from_zip(model=None, path=None) -> None:
+    if not path:
+        raise MissingParameterError("Missing required parameter: 'path'")
+
+    url = _defaults.get(model, {}).get("model_folder_zip")
+
+    if not url:
+        raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but doesn't exist.".format("model_folder_zip", path))
+
+    os.mkdir(path)
+    f = tempfile.NamedTemporaryFile()
+
+    Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, f))
+
+    with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
+        request.urlretrieve(url, filename=f, reporthook=t.update_to)
+
+    Logger.log("Unzipping '{}' for model '{}' and storing in '{}'.".format(f, model, path))
+
+    with zipfile.ZipFile(f, 'r') as zip_ref:
+        zip_ref.extractall(path)
+
+
 def get_model_file(model=None, file=None, path=None) -> None:
     if not path:
         raise MissingParameterError("Missing required parameter: 'path'")
 
-    url = _defaults.get(model, {}).get(file, {})
+    url = _defaults.get(model, {}).get(file)
 
     if not url:
         raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but doesn't exist.".format(file, path))
+
+    if not os.path.isfile(path):
+        raise FileDoesntExistError("Trying to open file, but doesn't exist.".format(path))
 
     Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format(file, model, path))
 
