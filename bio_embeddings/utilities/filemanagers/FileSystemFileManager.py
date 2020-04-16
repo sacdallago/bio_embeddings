@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from os import path as os_path
 from bio_embeddings.utilities.filemanagers.FileManagerInterface import FileManagerInterface
+from bio_embeddings.utilities.logging import Logger
 
 
 class FileSystemFileManager(FileManagerInterface):
@@ -38,9 +39,9 @@ class FileSystemFileManager(FileManagerInterface):
             with open(path, 'a'):
                 os.utime(path, None)
         except OSError:
-            print("Creation of the directory %s failed" % path)
+            Logger.log("Creation of the directory %s failed" % path)
         else:
-            print("Successfully created the directory %s " % path)
+            Logger.log("Successfully created the directory %s " % path)
 
         return str(path)
 
@@ -50,9 +51,9 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            print("Creation of the directory %s failed" % path)
+            Logger.log("Creation of the directory %s failed" % path)
         else:
-            print("Successfully created the directory %s " % path)
+            Logger.log("Successfully created the directory %s " % path)
 
         return str(path)
 
@@ -62,8 +63,8 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            print("Creation of the directory %s failed" % path)
+            Logger.log("Creation of the directory %s failed" % path)
         else:
-            print("Successfully created the directory %s " % path)
+            Logger.log("Successfully created the directory %s " % path)
 
         return str(path)
