@@ -22,7 +22,20 @@ class InvalidParameterError(Exception):
     Exception for invalid parameter settings
     """
 
+
 class CannotFindDefaultFile(Exception):
     """
     Exception for invalid file download request
+    """
+
+
+class SequenceTooLongException(Exception):
+    """
+    Exception when trying to embed sequences longer then the limit
+    """
+
+
+class SequenceEmbeddingLengthMismatchException(Exception):
+    """
+    Exception when trying to embed sequences longer then the limit
     """
