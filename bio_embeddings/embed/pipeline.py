@@ -2,7 +2,7 @@ import h5py
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
-    check_required, get_file_manager, read_fasta_file
+    check_required, get_file_manager, read_fasta_file, Logger
 
 
 def seqvec(**kwargs):
@@ -27,26 +27,45 @@ def seqvec(**kwargs):
             result_kwargs[file] = file_path
 
     proteins = read_fasta_file(result_kwargs['remapped_sequences_file'])
-    embedder = SeqVecEmbedder(**result_kwargs)
 
-    embeddings = embedder.embed_many([protein.seq for protein in proteins])
-
+    # Create embeddings file
     embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
                                                     'embeddings_file', extension='.h5')
-    with h5py.File(embeddings_file_path, "w") as hf:
-        for i, protein in enumerate(proteins):
-            hf.create_dataset(protein.id, data=embeddings[i])
+    embeddings_file = h5py.File(embeddings_file_path, "w")
     result_kwargs['embeddings_file'] = embeddings_file_path
 
+    reduced_embeddings_file = None
     if result_kwargs.get('reduce') is True:
-        reduced_embeddings = [SeqVecEmbedder.reduce_per_protein(e) for e in embeddings]
-
-        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
-                                                        'reduced_embeddings_file', extension='.h5')
-        with h5py.File(reduced_embeddings_file_path, "w") as hf:
-            for i, protein in enumerate(proteins):
-                hf.create_dataset(protein.id, data=reduced_embeddings[i])
+        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                result_kwargs.get('stage_name'),
+                                                                'reduced_embeddings_file', extension='.h5')
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
+        reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
+
+    # Get embedder
+    embedder = SeqVecEmbedder(**result_kwargs)
+
+    # Embed iteratively (5k sequences at the time)
+    chunk_size = 5000
+    warning_size = 15000
+
+    for i in range(0, len(proteins), chunk_size):
+        if any(y > warning_size for y in [len(prot) for prot in proteins[i:i+chunk_size]]):
+            Logger.warn(
+                "Generating SeqVec embeddings for proteins with length > {} "
+                "is slow and may fail due to memory consumption!".format(warning_size)
+            )
+
+        embeddings = embedder.embed_many([protein.seq for protein in proteins[i:i+chunk_size]])
+
+        for index, protein in enumerate(proteins[i:i+chunk_size]):
+            embeddings_file.create_dataset(protein.id, data=embeddings[index])
+            if result_kwargs.get('reduce') is True:
+                reduced_embeddings_file.create_dataset(protein.id, data=SeqVecEmbedder.reduce_per_protein(embeddings[index]))
+
+    embeddings_file.close()
+    if result_kwargs.get('reduce') is True:
+        reduced_embeddings_file.close()
 
     return result_kwargs
 
