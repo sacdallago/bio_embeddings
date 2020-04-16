@@ -53,11 +53,11 @@ def read_fasta_file(file_path: str) -> List[SeqRecord]:
 
 def reindex_sequences(sequence_records: List[SeqRecord]) -> (SeqRecord, DataFrame):
     """
-    Function will re-index the sequence_records IN PLACE! (change the original list!).
+    Function will sort and re-index the sequence_records IN PLACE! (change the original list!).
     Returns a DataFrame with the mapping.
 
     :param sequence_records: List of sequence records
-    :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id.
+    :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id, and the sequence length.
     """
     sequence_records[:] = sorted(sequence_records, key=lambda seq: len(seq))
 
