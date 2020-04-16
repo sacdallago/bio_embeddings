@@ -1,8 +1,9 @@
 import h5py
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
+from bio_embeddings.embed.albert import AlbertEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
-    check_required, get_file_manager, read_fasta_file, Logger
+    check_required, get_file_manager, read_fasta_file, Logger, get_model_directories_from_zip
 
 
 def seqvec(**kwargs):
@@ -70,6 +71,68 @@ def seqvec(**kwargs):
     return result_kwargs
 
 
+def albert(**kwargs):
+    necessary_directories = ['model_directory']
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    for directory in necessary_directories:
+        if not result_kwargs.get(directory):
+            directory_path = file_manager.create_directory(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), directory)
+
+            get_model_directories_from_zip(
+                model='albert',
+                directory=directory,
+                path=directory_path
+            )
+
+            result_kwargs[directory] = directory_path
+
+    proteins = read_fasta_file(result_kwargs['remapped_sequences_file'])
+
+    # Create embeddings file
+    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                    'embeddings_file', extension='.h5')
+    embeddings_file = h5py.File(embeddings_file_path, "w")
+    result_kwargs['embeddings_file'] = embeddings_file_path
+
+    reduced_embeddings_file = None
+    if result_kwargs.get('reduce') is True:
+        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                result_kwargs.get('stage_name'),
+                                                                'reduced_embeddings_file', extension='.h5')
+        result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
+        reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
+
+    # Get embedder
+    embedder = AlbertEmbedder(**result_kwargs)
+
+    # Embed iteratively (5k sequences at the time)
+    chunk_size = 5000
+    warn_size = 510
+
+    for i in range(0, len(proteins), chunk_size):
+        if any(y > warn_size for y in [len(prot) for prot in proteins[i:i + chunk_size]]):
+            Logger.warn(
+                "Batch contains proteins longer than {}AA. "
+                "The embeddings for these proteins will be empty.".format(warn_size)
+            )
+
+        embeddings = embedder.embed_many([protein.seq for protein in proteins[i:i + chunk_size]])
+
+        for index, protein in enumerate(proteins[i:i + chunk_size]):
+            embeddings_file.create_dataset(protein.id, data=embeddings[index])
+            if result_kwargs.get('reduce') is True:
+                reduced_embeddings_file.create_dataset(protein.id,
+                                                       data=AlbertEmbedder.reduce_per_protein(embeddings[index]))
+
+    embeddings_file.close()
+    if result_kwargs.get('reduce') is True:
+        reduced_embeddings_file.close()
+
+    return result_kwargs
+
+
 def fasttext(**kwargs):
     pass
 
@@ -92,7 +155,8 @@ PROTOCOLS = {
     "fasttext": fasttext,
     "glove": glove,
     "transformerxl": transformerxl,
-    "word2vec": word2vec
+    "word2vec": word2vec,
+    "albert": albert
 }
 
 

@@ -25,7 +25,7 @@ transformerxl_base:
   vocabulary_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/vocab.pt"
 
 albert:
-  model_folder_zip: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
 
 ## TODO: add following when available!
 

@@ -1,8 +1,9 @@
+import re
 import torch
+from pathlib import Path
+from transformers import AlbertModel, AlbertTokenizer
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
 from bio_embeddings.utilities import Logger, SequenceTooLongException, SequenceEmbeddingLengthMismatchException
-from transformers import AlbertModel, AlbertTokenizer
-import re
 
 
 class AlbertEmbedder(EmbedderInterface):
@@ -12,7 +13,6 @@ class AlbertEmbedder(EmbedderInterface):
         Initialize Albert embedder.
 
         :param model_directory:
-        :param tokenizer_file:
         :param ignore_long_proteins: True will ignore proteins longer than 510. False: will throw exception if embedding sequence with length > 510. Default: True
         """
         super().__init__()
@@ -20,7 +20,6 @@ class AlbertEmbedder(EmbedderInterface):
         self._options = kwargs
 
         # Get file locations from kwargs
-        self._tokenizer_file = self._options.get('tokenizer_file')
         self._model_directory = self._options.get('model_directory')
         self._ignore_long_proteins = self._options.get('ignore_long_proteins', True)
 
@@ -31,7 +30,7 @@ class AlbertEmbedder(EmbedderInterface):
         # make model
         self._albert_model = AlbertModel.from_pretrained(self._model_directory)
         self._albert_model = self._albert_model.eval()
-        self._trokenizer = AlbertTokenizer(self._tokenizer_file, do_lower_case=False)
+        self._tokenizer = AlbertTokenizer(Path(self._model_directory) / 'albert_vocab_model.model', do_lower_case=False)
 
         pass
 
@@ -53,7 +52,7 @@ class AlbertEmbedder(EmbedderInterface):
 
         # encode sequence
         try:
-            tokenized_sequence = torch.tensor([self._trokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
+            tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
 
         # TODO: why this error? Ask MH!
         except AssertionError:

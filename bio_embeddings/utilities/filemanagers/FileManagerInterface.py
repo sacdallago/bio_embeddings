@@ -16,6 +16,10 @@ class FileManagerInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def create_directory(self, prefix, stage, directory_name) -> str:
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def get_file(self, prefix, stage, file_name, extension=None) -> str:
         raise NotImplementedError
 

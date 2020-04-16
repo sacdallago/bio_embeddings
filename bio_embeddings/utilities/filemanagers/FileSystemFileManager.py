@@ -39,6 +39,23 @@ class FileSystemFileManager(FileManagerInterface):
             with open(path, 'a'):
                 os.utime(path, None)
         except OSError:
+            Logger.log("Creation of the file %s failed" % path)
+        else:
+            Logger.log("Successfully created the file %s " % path)
+
+        return str(path)
+
+    def create_directory(self, prefix, stage, directory_name) -> str:
+        path = Path(prefix)
+
+        if stage:
+            path /= stage
+
+        path /= directory_name
+
+        try:
+            os.mkdir(path)
+        except OSError:
             Logger.log("Creation of the directory %s failed" % path)
         else:
             Logger.log("Successfully created the directory %s " % path)
@@ -51,9 +68,9 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            Logger.log("Creation of the directory %s failed" % path)
+            Logger.log("Creation of the stage directory %s failed" % path)
         else:
-            Logger.log("Successfully created the directory %s " % path)
+            Logger.log("Successfully created the stage directory %s " % path)
 
         return str(path)
 
@@ -63,8 +80,8 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            Logger.log("Creation of the directory %s failed" % path)
+            Logger.log("Creation of the prefix directory %s failed" % path)
         else:
-            Logger.log("Successfully created the directory %s " % path)
+            Logger.log("Successfully created the prefix directory %s " % path)
 
         return str(path)

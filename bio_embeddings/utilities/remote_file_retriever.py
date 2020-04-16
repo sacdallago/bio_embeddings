@@ -28,11 +28,11 @@ class TqdmUpTo(tqdm):
         self.update(b * bsize - self.n)  # will also set self.n = b * bsize
 
 
-def get_model_folder_from_zip(model=None, path=None) -> None:
+def get_model_directories_from_zip(model=None, directory=None, path=None) -> None:
     if not path:
         raise MissingParameterError("Missing required parameter: 'path'")
 
-    url = _defaults.get(model, {}).get("model_folder_zip")
+    url = _defaults.get(model, {}).get(directory)
 
     if not url:
         raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but doesn't exist.".format("model_folder_zip", path))
