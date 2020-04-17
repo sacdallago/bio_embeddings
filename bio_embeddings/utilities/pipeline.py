@@ -4,7 +4,7 @@ from copy import deepcopy
 from bio_embeddings.embed.pipeline import run as run_embed
 # from bio_embeddings.extract_features.pipeline import run as run_extract_features
 from bio_embeddings.utilities import get_file_manager, read_fasta_file, reindex_sequences, write_fasta_file, \
-    check_required
+    check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
 
 _STAGES = {
@@ -47,6 +47,11 @@ def _process_fasta_file(**kwargs):
 
     result_kwargs['sequences_file'] = sequences_file_path
     mapping = reindex_sequences(sequences)
+
+    # Check if there's the same MD5 index twice. This most likely indicates 100% sequence identity.
+    # Throw an error for MD5 hash clashes!
+    if mapping.index.has_duplicates:
+        raise MD5ClashException()
 
     mapping_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'mapping_file', extension='.csv')
     remapped_sequence_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'remapped_sequences_file',

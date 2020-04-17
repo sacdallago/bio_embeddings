@@ -68,7 +68,6 @@ def seqvec(**kwargs):
             embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
             for index, protein in enumerate(candidates):
-                print([protein.id for protein in embeddings])
                 embeddings_file.create_dataset(protein.id, data=embeddings[index])
                 if result_kwargs.get('reduce') is True:
                     reduced_embeddings_file.create_dataset(

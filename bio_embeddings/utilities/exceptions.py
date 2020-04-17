@@ -45,3 +45,9 @@ class FileDoesntExistError(Exception):
     """
     Exception for invalid file download request
     """
+
+class MD5ClashException(Exception):
+    """
+    When remapping sequences from a fasta file, if there is an MD5 clash, this will stop the execution
+    """
+
