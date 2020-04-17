@@ -1,4 +1,5 @@
 import h5py
+import tqdm
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.embed.albert import AlbertEmbedder
@@ -55,7 +56,7 @@ def seqvec(**kwargs):
     candidates = list()
     aa_count = 0
 
-    for sequence in protein_generator:
+    for sequence in tqdm(protein_generator):
         candidates.append(sequence)
         aa_count += len(sequence)
 
