@@ -36,7 +36,7 @@ class FileSystemFileManager(FileManagerInterface):
         path /= file_name + (extension if extension else "")
 
         try:
-            with open(path, 'a'):
+            with open(path, 'w'):
                 os.utime(path, None)
         except OSError:
             Logger.warn("Failed to create file %s." % path)
