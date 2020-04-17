@@ -51,7 +51,12 @@ def _process_fasta_file(**kwargs):
     # Check if there's the same MD5 index twice. This most likely indicates 100% sequence identity.
     # Throw an error for MD5 hash clashes!
     if mapping.index.has_duplicates:
-        raise MD5ClashException()
+        raise MD5ClashException("There are MD5 hash clashes. "
+                                "MD5 hashes are used to remap sequences in the mapping_file. "
+                                "This most likely indicates there are multiple sequences in the set with 100% identity. "
+                                "There's a (very) low probability of this indicating a real MD5 clash. "
+                                "If you are sure there are no identical sequences in your set, please open an issue at "
+                                "https://github.com/sacdallago/bio_embeddings/issues")
 
     mapping_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'mapping_file', extension='.csv')
     remapped_sequence_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'remapped_sequences_file',
