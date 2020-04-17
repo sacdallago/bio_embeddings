@@ -4,10 +4,11 @@ from bio_embeddings.embed import (
     Word2VecEmbedder as _Word2VecEmbedder,
     FastTextEmbedder as _FastTextEmbedder,
     GloveEmbedder as _GloveEmbedder,
-    TransformerXLEmbedder as _TransformerXLEmbedder
+    TransformerXLEmbedder as _TransformerXLEmbedder,
+    AlbertEmbedder as _AlbertEmbedder
 )
 
-from bio_embeddings.utilities import get_model_file
+from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
 
 _temporary_files = list()
 
@@ -15,102 +16,127 @@ _temporary_files = list()
 # auto-download missing files!
 
 
-def SeqVecEmbedder(**kwargs) -> _SeqVecEmbedder:
-    necessary_files = ['weights_file', 'options_file']
+class SeqVecEmbedder(_SeqVecEmbedder):
 
-    if kwargs.get('seqvec_version') == 2 or kwargs.get('vocabulary_file'):
-        necessary_files.append('vocabulary_file')
-        kwargs['seqvec_version'] = 2
+    def __init__(self, **kwargs):
+        necessary_files = ['weights_file', 'options_file']
 
-    for file in necessary_files:
-        if not kwargs.get(file):
-            f = tempfile.NamedTemporaryFile()
-            _temporary_files.append(f)
+        if kwargs.get('seqvec_version') == 2 or kwargs.get('vocabulary_file'):
+            necessary_files.append('vocabulary_file')
+            kwargs['seqvec_version'] = 2
 
-            get_model_file(
-                model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))),
-                file=file,
-                path=f.name
-            )
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+                _temporary_files.append(f)
 
-            kwargs[file] = f.name
+                get_model_file(
+                    model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))),
+                    file=file,
+                    path=f.name
+                )
 
-    return _SeqVecEmbedder(**kwargs)
-
-
-def Word2VecEmbedder(**kwargs) -> _Word2VecEmbedder:
-    necessary_files = ['model_file']
-
-    for file in necessary_files:
-        if not kwargs.get(file):
-            f = tempfile.NamedTemporaryFile()
-            _temporary_files.append(f)
-
-            get_model_file(
-                model='word2vec',
-                file=file,
-                path=f.name
-            )
-
-            kwargs[file] = f.name
-
-    return _Word2VecEmbedder(**kwargs)
+                kwargs[file] = f.name
+        super().__init__(**kwargs)
 
 
-def FastTextEmbedder(**kwargs) -> _FastTextEmbedder:
-    necessary_files = ['model_file']
+class AlbertEmbedder(_AlbertEmbedder):
 
-    for file in necessary_files:
-        if not kwargs.get(file):
-            f = tempfile.NamedTemporaryFile()
-            _temporary_files.append(f)
+    def __init__(self, **kwargs):
+        necessary_directories = ['model_directory']
 
-            get_model_file(
-                model='fasttext',
-                file=file,
-                path=f.name
-            )
+        for directory in necessary_directories:
+            if not kwargs.get(directory):
+                f = tempfile.mkdtemp()
+                _temporary_files.append(f)
 
-            kwargs[file] = f.name
+                get_model_directories_from_zip(
+                    model='albert',
+                    directory=directory,
+                    path=f
+                )
 
-    return _FastTextEmbedder(**kwargs)
-
-
-def GloveEmbedder(**kwargs) -> _GloveEmbedder:
-    necessary_files = ['model_file']
-
-    for file in necessary_files:
-        if not kwargs.get(file):
-            f = tempfile.NamedTemporaryFile()
-            _temporary_files.append(f)
-
-            get_model_file(
-                model='glove',
-                file=file,
-                path=f.name
-            )
-
-            kwargs[file] = f.name
-
-    return _GloveEmbedder(**kwargs)
+                kwargs[directory] = f
+        super().__init__(**kwargs)
 
 
-def TransformerXLEmbedder(**kwargs) -> _TransformerXLEmbedder:
-    necessary_files = ['model_file', 'vocabulary_file']
+class Word2VecEmbedder(_Word2VecEmbedder):
+    def __init__(self, **kwargs):
+        necessary_files = ['model_file']
 
-    model_size = kwargs.get('model', 'base')
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+                _temporary_files.append(f)
 
-    for file in necessary_files:
-        if not kwargs.get(file):
-            f = tempfile.NamedTemporaryFile()
-            _temporary_files.append(f)
+                get_model_file(
+                    model='word2vec',
+                    file=file,
+                    path=f.name
+                )
 
-            get_model_file(
-                model='transformerxl_{}'.format(model_size),
-                file=file,
-                path=f.name
-            )
+                kwargs[file] = f.name
 
-            kwargs[file] = f.name
+        super().__init__(**kwargs)
 
-    return _TransformerXLEmbedder(**kwargs)
+
+class FastTextEmbedder(_FastTextEmbedder):
+    def __init__(self, **kwargs):
+        necessary_files = ['model_file']
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+                _temporary_files.append(f)
+
+                get_model_file(
+                    model='fasttext',
+                    file=file,
+                    path=f.name
+                )
+
+                kwargs[file] = f.name
+
+        super().__init__(**kwargs)
+
+
+class GloveEmbedder(_GloveEmbedder):
+    def __init__(self, **kwargs):
+        necessary_files = ['model_file']
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+                _temporary_files.append(f)
+
+                get_model_file(
+                    model='glove',
+                    file=file,
+                    path=f.name
+                )
+
+                kwargs[file] = f.name
+
+        super().__init__(**kwargs)
+
+
+class TransformerXLEmbedder(_TransformerXLEmbedder):
+    def __init__(self, **kwargs):
+        necessary_files = ['model_file', 'vocabulary_file']
+
+        model_size = kwargs.get('model', 'base')
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+                _temporary_files.append(f)
+
+                get_model_file(
+                    model='transformerxl_{}'.format(model_size),
+                    file=file,
+                    path=f.name
+                )
+
+                kwargs[file] = f.name
+
+        super().__init__(**kwargs)
