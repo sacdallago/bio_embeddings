@@ -60,11 +60,11 @@ def seqvec(**kwargs):
     candidates = list()
     aa_count = 0
 
-    for sequence in tqdm(protein_generator, total=len(mapping_file)):
+    for sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
         candidates.append(sequence)
         aa_count += len(sequence)
 
-        if aa_count + 5000 > max_amino_acids_RAM:
+        if aa_count + len(sequence) > max_amino_acids_RAM:
             embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
             for index, protein in enumerate(candidates):
