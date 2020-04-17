@@ -1,5 +1,6 @@
 import re
 import torch
+import numpy as np
 from pathlib import Path
 from transformers import AlbertModel, AlbertTokenizer
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
@@ -30,7 +31,7 @@ class AlbertEmbedder(EmbedderInterface):
         # make model
         self._albert_model = AlbertModel.from_pretrained(self._model_directory)
         self._albert_model = self._albert_model.eval()
-        self._tokenizer = AlbertTokenizer(Path(self._model_directory) / 'albert_vocab_model.model', do_lower_case=False)
+        self._tokenizer = AlbertTokenizer(str(Path(self._model_directory) / 'albert_vocab_model.model'), do_lower_case=False)
 
         pass
 
@@ -40,10 +41,12 @@ class AlbertEmbedder(EmbedderInterface):
             if not self._ignore_long_proteins:
                 raise SequenceTooLongException()
             else:
-                # TODO: Return tensor of same size but empty! Important when reducing!
-                Logger.warn("A sequence was ignored because it exceeds the maximal sequence length ({})!".format(
-                    self._max_sequence_length))
-                return []
+                Logger.warn("Trying to embed a sequence of length {}, "
+                            "but maximal length allowed is {}.\n"
+                            "The embedding for this sequence will be zeroes!".format(
+                    sequence_length, self._max_sequence_length
+                ))
+                return np.zeros((sequence_length, 4096))
 
         sequence = re.sub(r"[U|Z|O|B]", "X", sequence)
 
@@ -65,6 +68,7 @@ class AlbertEmbedder(EmbedderInterface):
         return embedding.cpu().detach().numpy().squeeze()
 
     def embed_many(self, sequences):
+
         return [self.embed(sequence) for sequence in sequences]
 
     @staticmethod

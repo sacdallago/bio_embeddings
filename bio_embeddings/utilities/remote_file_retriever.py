@@ -37,17 +37,21 @@ def get_model_directories_from_zip(model=None, directory=None, path=None) -> Non
     if not url:
         raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but doesn't exist.".format("model_folder_zip", path))
 
-    os.mkdir(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     f = tempfile.NamedTemporaryFile()
 
-    Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, f))
+    file_name = f.name
+
+    Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, file_name))
 
     with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
-        request.urlretrieve(url, filename=f, reporthook=t.update_to)
+        request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
 
     Logger.log("Unzipping '{}' for model '{}' and storing in '{}'.".format(f, model, path))
 
-    with zipfile.ZipFile(f, 'r') as zip_ref:
+    with zipfile.ZipFile(file_name, 'r') as zip_ref:
         zip_ref.extractall(path)
 
 
