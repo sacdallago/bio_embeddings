@@ -1,4 +1,5 @@
 import h5py
+from pandas import read_csv
 from tqdm import tqdm
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
@@ -53,10 +54,13 @@ def seqvec(**kwargs):
     max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
     protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 
+    # Get sequence mapping to use as information source
+    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+
     candidates = list()
     aa_count = 0
 
-    for sequence in tqdm(protein_generator):
+    for sequence in tqdm(protein_generator, total=len(mapping_file)):
         candidates.append(sequence)
         aa_count += len(sequence)
 
