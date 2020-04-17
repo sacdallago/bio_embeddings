@@ -60,7 +60,7 @@ def seqvec(**kwargs):
     candidates = list()
     aa_count = 0
 
-    for sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
+    for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
         candidates.append(sequence)
         aa_count += len(sequence)
 
