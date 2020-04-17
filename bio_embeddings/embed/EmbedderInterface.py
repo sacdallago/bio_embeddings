@@ -33,7 +33,7 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def embed_many(self, sequences: List[str]) -> List[str]:
+    def embed_many(self, sequences: List[str]) -> List[List[List[float]]]:
         """
         Returns embedding for one sequence.
 
