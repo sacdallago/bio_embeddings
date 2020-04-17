@@ -50,13 +50,8 @@ class AlbertEmbedder(EmbedderInterface):
         # Tokenize sequence with spaces
         sequence = ' '.join(list(sequence))
 
-        # encode sequence
-        try:
-            tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
-
-        # TODO: why this error? Ask MH!
-        except AssertionError:
-            return None
+        # tokenize sequence
+        tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
 
         with torch.no_grad():
             # drop batch dimension
