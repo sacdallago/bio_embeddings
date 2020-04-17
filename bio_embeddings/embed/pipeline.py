@@ -1,5 +1,5 @@
 import h5py
-import tqdm
+from tqdm import tqdm
 from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.embed.albert import AlbertEmbedder
