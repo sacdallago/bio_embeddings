@@ -16,11 +16,11 @@ global:
 
 ## Stage options notation:
 ## *: denotes the default option
-## @: denotes that the file will be downloaded
+## @: denotes that the file or directory will be downloaded and stored locally if not provided
 
 stage_1:
   type: embed
-  ## Option: seqvec, fasttext, glove, transformerxl, word2vec
+  ## Required. Options: seqvec, fasttext, glove, transformerxl, word2vec, albert
   protocol: seqvec
 
   ## Optional for protocol: seqvec
@@ -28,15 +28,21 @@ stage_1:
   # options_file: @/path/to/file
   # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
   # seqvec_version: [*1,2]
-  # reduce: [True, *False]
 
   ## Optional for protocol: transformerxl
   # model: [*base, large]
   # model_file: @/path/to/file
   # vocabulary_file: @/path/to/file
 
-  ## Optional for protocol: [fasttext, word2vec, glove]
+  ## Optional for protocol: fasttext, word2vec, glove
   # model_file: @/path/to/file
+
+  ## Optional for protocol: albert
+  # model_directory: @/path/to/directory
+
+  ## Optional for protocol: seqvec, albert
+  ## This parameter will reduce the embeddings to a vector of size L (L= length of protein)
+  # reduce: [True, *False]
 
 stage_2:
   type: extract_features
