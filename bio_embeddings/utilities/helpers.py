@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Generator
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from bio_embeddings.utilities.exceptions import MissingParameterError
@@ -49,6 +49,19 @@ def read_fasta_file(file_path: str) -> List[SeqRecord]:
     sequence_records = list(SeqIO.parse(file_path, 'fasta'))
 
     return sequence_records
+
+
+def read_fasta_file_generator(file_path: str) -> Generator[SeqRecord, None, None]:
+    """
+    Helper function to read FASTA file via a generator. Useful when not wanting to load all sequences in memory at once.
+
+    Will assign MD5 hash as ID if no if provided for a sequence.
+
+    :param file_path: path to a valid FASTA file
+    :return: a generator of SeqRecord objects.
+    """
+
+    return SeqIO.parse(file_path, 'fasta')
 
 
 def reindex_sequences(sequence_records: List[SeqRecord]) -> (SeqRecord, DataFrame):

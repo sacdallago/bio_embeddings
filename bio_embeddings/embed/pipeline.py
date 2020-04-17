@@ -3,13 +3,17 @@ from copy import deepcopy
 from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.embed.albert import AlbertEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
-    check_required, get_file_manager, read_fasta_file, Logger, get_model_directories_from_zip
+    check_required, get_file_manager, read_fasta_file, Logger, get_model_directories_from_zip, read_fasta_file_generator
 
 
 def seqvec(**kwargs):
     necessary_files = ['weights_file', 'options_file']
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
+
+    # Initialize pipeline and model specific options:
+    result_kwargs['max_amino_acids'] = result_kwargs.get("max_amino_acids", 15000)
+    result_kwargs['max_amino_acids_RAM'] = result_kwargs.get("max_amino_acids_RAM", 100000)
 
     if result_kwargs.get('seqvec_version') == 2 or result_kwargs.get('vocabulary_file'):
         necessary_files.append('vocabulary_file')
@@ -26,8 +30,6 @@ def seqvec(**kwargs):
             )
 
             result_kwargs[file] = file_path
-
-    proteins = read_fasta_file(result_kwargs['remapped_sequences_file'])
 
     # Create embeddings file
     embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
@@ -47,23 +49,43 @@ def seqvec(**kwargs):
     embedder = SeqVecEmbedder(**result_kwargs)
 
     # Embed iteratively (5k sequences at the time)
-    chunk_size = 5000
-    warning_size = 15000
+    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
+    protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 
-    for i in range(0, len(proteins), chunk_size):
-        if any(y > warning_size for y in [len(prot) for prot in proteins[i:i+chunk_size]]):
-            Logger.warn(
-                "Generating SeqVec embeddings for proteins with length > {} "
-                "is slow and may fail due to memory consumption!".format(warning_size)
-            )
+    candidates = list()
+    aa_count = 0
 
-        embeddings = embedder.embed_many([protein.seq for protein in proteins[i:i+chunk_size]])
+    for sequence in protein_generator:
+        candidates.append(sequence)
+        aa_count += len(sequence)
 
-        for index, protein in enumerate(proteins[i:i+chunk_size]):
+        if aa_count + 5000 > max_amino_acids_RAM:
+            embeddings = embedder.embed_many([protein.seq for protein in candidates])
+
+            for index, protein in enumerate(candidates):
+                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                if result_kwargs.get('reduce') is True:
+                    reduced_embeddings_file.create_dataset(
+                        protein.id,
+                        data=SeqVecEmbedder.reduce_per_protein(embeddings[index])
+                    )
+
+            # Reset
+            aa_count = 0
+            candidates = list()
+
+    if candidates:
+        embeddings = embedder.embed_many([protein.seq for protein in candidates])
+
+        for index, protein in enumerate(candidates):
             embeddings_file.create_dataset(protein.id, data=embeddings[index])
             if result_kwargs.get('reduce') is True:
-                reduced_embeddings_file.create_dataset(protein.id, data=SeqVecEmbedder.reduce_per_protein(embeddings[index]))
+                reduced_embeddings_file.create_dataset(
+                    protein.id,
+                    data=SeqVecEmbedder.reduce_per_protein(embeddings[index])
+                )
 
+    # Close embeddings files
     embeddings_file.close()
     if result_kwargs.get('reduce') is True:
         reduced_embeddings_file.close()

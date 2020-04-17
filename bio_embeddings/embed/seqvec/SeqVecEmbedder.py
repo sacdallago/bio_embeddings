@@ -45,6 +45,9 @@ class SeqVecEmbedder(EmbedderInterface):
             _cuda_device = -1
             pass
 
+        # Set AA lower bound
+        self._max_amino_acids = self._options.get('max_amino_acids', 15000)
+
         self._elmo_model = _ElmoEmbedder(weight_file=self._weights_file,
                                          options_file=self._options_file,
                                          cuda_device=_cuda_device)
@@ -53,12 +56,30 @@ class SeqVecEmbedder(EmbedderInterface):
 
     def embed(self, sequence):
         embedding = self._elmo_model.embed_sentence(list(sequence))  # get embedding for sequence
-
         return embedding.tolist()
 
     def embed_many(self, sequences):
-        sentences = [list(x) for x in sequences]
-        return list(self._elmo_model.embed_sentences(sentences))
+        tokenized_sequences = [list(s) for s in sequences]
+        candidates = list()
+        result = list()
+        aa_count = 0
+
+        while tokenized_sequences:
+            if aa_count < self._max_amino_acids:
+                current = tokenized_sequences.pop()
+                aa_count += len(current)
+                candidates.append(current)
+            else:
+                result.extend(list(self._elmo_model.embed_sentences(candidates)))
+
+                # Reset
+                aa_count = 0
+                candidates = list()
+
+        if candidates:
+            result.extend(list(self._elmo_model.embed_sentences(candidates)))
+
+        return result
 
     @staticmethod
     def reduce_per_protein(embedding):

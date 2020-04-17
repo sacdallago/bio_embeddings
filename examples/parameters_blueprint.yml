@@ -28,6 +28,13 @@ stage_1:
   # options_file: @/path/to/file
   # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
   # seqvec_version: [*1,2]
+  ## The following parameter sets an upper bound on total AA to include when embedding many sequences.
+  ## Adjust this parameter if CUDA runs out of memory! The default (15.000) works for a 1080 with 8GB RAM.
+  # max_amino_acids: [*15000]
+  ## The following parameters sets the amount of AA to include in a batch before writing to disk.
+  ## Adjust this parameter if you run out of RAM! The default (100.000) works for a machine with 64GB RAM.
+  # max_amino_acids_RAM: [*100000]
+
 
   ## Optional for protocol: transformerxl
   # model: [*base, large]
