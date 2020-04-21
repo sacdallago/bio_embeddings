@@ -1,3 +1,11 @@
+# IMPORTANT
+
+There's currently a private fork of this repo being hevily developed with unpublished results. If you require access to the latest state of this repository, please ping me @sacdallago
+
+
+-----
+
+
 # Bio Embeddings
 The project includes:
 
