@@ -8,32 +8,24 @@ class SeqVecEmbedder(EmbedderInterface):
 
     def __init__(self, **kwargs):
         """
-        Initialize Elmo embedder. Can define non-positional arguments for paths of files and version of ELMO.
-
-        If no version is supplied, v1 will be assumed. If version is set to 1 but vocabulary file is supplied,
-        will throw error.
-
-        If one of the files is not supplied, all the files will be downloaded.
+        Initialize Elmo embedder. Can define non-positional arguments for paths of files and other settings.
 
         :param weights_file: path of weights file
         :param options_file: path of options file
-        :param vocabulary_file: path of vocabulary file. Only needed if seqveq v2.
+        :param use_cpu: overwrite autodiscovery and force CPU use
+        :param max_amino_acids: max # of amino acids to include in embed_many batches. Default: 15k AA
 
-        :param version: Integer. Available versions: 1, 2
         """
         super().__init__()
 
         self._options = kwargs
 
         # Get file locations from kwargs
-        self._vocabulary_file = self._options.get('vocabulary_file')
         self._weights_file = self._options.get('weights_file')
         self._options_file = self._options.get('options_file')
+        self._use_cpu = self._options.get('use_cpu', False)
 
-        # Get preferred version, if defined
-        self._version = self._options.get('seqvec_version')
-
-        if torch.cuda.is_available():
+        if torch.cuda.is_available() and not self._use_cpu:
             Logger.log("CUDA available")
 
             # Set CUDA device for ELMO machine

@@ -15,6 +15,7 @@ class AlbertEmbedder(EmbedderInterface):
 
         :param model_directory:
         :param ignore_long_proteins: True will ignore proteins longer than 510. False: will throw exception if embedding sequence with length > 510. Default: True
+        :param use_cpu: overwrite autodiscovery and force CPU use
         """
         super().__init__()
 
@@ -23,9 +24,10 @@ class AlbertEmbedder(EmbedderInterface):
         # Get file locations from kwargs
         self._model_directory = self._options.get('model_directory')
         self._ignore_long_proteins = self._options.get('ignore_long_proteins', True)
+        self._use_cpu = self._options.get('use_cpu', False)
 
         # utils
-        self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self._device = torch.device('cuda:0' if torch.cuda.is_available() and not self._use_cpu else 'cpu')
         self._max_sequence_length = 510
 
         # make model
@@ -41,9 +43,8 @@ class AlbertEmbedder(EmbedderInterface):
             if not self._ignore_long_proteins:
                 raise SequenceTooLongException()
             else:
-                Logger.warn("Trying to embed a sequence of length {}, "
-                            "but maximal length allowed is {}.\n"
-                            "The embedding for this sequence will be zeroes!".format(
+                Logger.log('''Trying to embed a sequence of length {}, but maximal length allowed is {}.
+                            The embedding for this sequence will be zeroes!'''.format(
                     sequence_length, self._max_sequence_length
                 ))
                 return np.zeros((sequence_length, 4096))

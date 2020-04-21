@@ -64,6 +64,20 @@ def seqvec(**kwargs):
         candidates.append(sequence)
         aa_count += len(sequence)
 
+        # If a single sequence has more AA than allowed in max_amino_acids, switch to CPU
+        if len(sequence) > result_kwargs['max_amino_acids']:
+            Logger.warn(
+                '''One sequence in your set has length {}, which is more than what is defined in the max_amino_acids parameter ({}).
+                
+                To avoid running out of GPU memory, the pipeline will now use the CPU instead of the GPU to calculate embeddings.
+                This allows to embed much longer sequences (since using main RAM instead of GPU RAM), but comes at a significant speed deacreas (CPU instead of GPU computing).
+                
+                If you think your GPU RAM can handle longer sequences, try increasing max_amino_acids.
+                As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(len(sequence), result_kwargs['max_amino_acids']))
+
+            result_kwargs['use_cpu'] = True
+            embedder = SeqVecEmbedder(**result_kwargs)
+
         if aa_count + len(sequence) > max_amino_acids_RAM:
             embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
@@ -72,7 +86,7 @@ def seqvec(**kwargs):
                 if result_kwargs.get('reduce') is True:
                     reduced_embeddings_file.create_dataset(
                         protein.id,
-                        data=SeqVecEmbedder.reduce_per_protein(embeddings[index])
+                        data=embedder.reduce_per_protein(embeddings[index])
                     )
 
             # Reset
@@ -87,7 +101,7 @@ def seqvec(**kwargs):
             if result_kwargs.get('reduce') is True:
                 reduced_embeddings_file.create_dataset(
                     protein.id,
-                    data=SeqVecEmbedder.reduce_per_protein(embeddings[index])
+                    data=embedder.reduce_per_protein(embeddings[index])
                 )
 
     # Close embeddings files
@@ -103,6 +117,9 @@ def albert(**kwargs):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
+    # Initialize pipeline and model specific options:
+    result_kwargs['max_amino_acids_RAM'] = result_kwargs.get("max_amino_acids_RAM", 25000)
+
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
             directory_path = file_manager.create_directory(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), directory)
@@ -114,8 +131,6 @@ def albert(**kwargs):
             )
 
             result_kwargs[directory] = directory_path
-
-    proteins = read_fasta_file(result_kwargs['remapped_sequences_file'])
 
     # Create embeddings file
     embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
@@ -135,24 +150,46 @@ def albert(**kwargs):
     embedder = AlbertEmbedder(**result_kwargs)
 
     # Embed iteratively (5k sequences at the time)
-    chunk_size = 5000
-    warn_size = 510
+    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
+    protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 
-    for i in range(0, len(proteins), chunk_size):
-        if any(y > warn_size for y in [len(prot) for prot in proteins[i:i + chunk_size]]):
-            Logger.warn(
-                "Batch contains proteins longer than {}AA. "
-                "The embeddings for these proteins will be empty.".format(warn_size)
-            )
+    # Get sequence mapping to use as information source
+    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
 
-        embeddings = embedder.embed_many([protein.seq for protein in proteins[i:i + chunk_size]])
+    candidates = list()
+    aa_count = 0
 
-        for index, protein in enumerate(proteins[i:i + chunk_size]):
+    for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
+        candidates.append(sequence)
+        aa_count += len(sequence)
+
+        if aa_count + len(sequence) > max_amino_acids_RAM:
+            embeddings = embedder.embed_many([protein.seq for protein in candidates])
+
+            for index, protein in enumerate(candidates):
+                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                if result_kwargs.get('reduce') is True:
+                    reduced_embeddings_file.create_dataset(
+                        protein.id,
+                        data=embedder.reduce_per_protein(embeddings[index])
+                    )
+
+            # Reset
+            aa_count = 0
+            candidates = list()
+
+    if candidates:
+        embeddings = embedder.embed_many([protein.seq for protein in candidates])
+
+        for index, protein in enumerate(candidates):
             embeddings_file.create_dataset(protein.id, data=embeddings[index])
             if result_kwargs.get('reduce') is True:
-                reduced_embeddings_file.create_dataset(protein.id,
-                                                       data=AlbertEmbedder.reduce_per_protein(embeddings[index]))
+                reduced_embeddings_file.create_dataset(
+                    protein.id,
+                    data=embedder.reduce_per_protein(embeddings[index])
+                )
 
+    # Close embeddings files
     embeddings_file.close()
     if result_kwargs.get('reduce') is True:
         reduced_embeddings_file.close()

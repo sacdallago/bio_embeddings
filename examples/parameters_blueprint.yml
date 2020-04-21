@@ -48,8 +48,10 @@ stage_1:
   # model_directory: @/path/to/directory
 
   ## Optional for protocol: seqvec, albert
-  ## This parameter will reduce the embeddings to a vector of size L (L= length of protein)
+  ## This parameter will create a second embeddings file with N vector of size L (N = number of proteins in remapped FASTA file, L= length of protein)
   # reduce: [True, *False]
+  ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
+  # use_cpu: [True, *False]
 
 stage_2:
   type: extract_features
