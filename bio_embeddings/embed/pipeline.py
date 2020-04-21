@@ -149,7 +149,7 @@ def albert(**kwargs):
     # Get embedder
     embedder = AlbertEmbedder(**result_kwargs)
 
-    # Embed iteratively (5k sequences at the time)
+    # Embed iteratively based on max AA in RAM at a given time
     max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
     protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 

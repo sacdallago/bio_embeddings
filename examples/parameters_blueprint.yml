@@ -1,4 +1,4 @@
-# global options
+# global options must be defined
 
 global:
   # Required: Path to a Fasta file
@@ -14,16 +14,21 @@ global:
 ## The same stage type (e.g. embed,..) can be executed multiple types.
 ## Dependencies for a stage are defined in the dependencies parameter
 
-## Stage options notation:
+## This config file includes options for initializing classes and options specific to the protocol
+
+## Options notation:
 ## *: denotes the default option
 ## @: denotes that the file or directory will be downloaded and stored locally if not provided
 
 stage_1:
   type: embed
-  ## Required. Options: seqvec, fasttext, glove, transformerxl, word2vec, albert
+  # Required: which embedder to use
+  # Options: seqvec, albert
   protocol: seqvec
 
-  ## Optional for protocol: seqvec
+  #### Optional parameters to instantiate classes
+
+  ### Optional for protocol: seqvec
   # weights_file: @/path/to/file
   # options_file: @/path/to/file
   # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
@@ -32,33 +37,38 @@ stage_1:
   ## Adjust this parameter if CUDA runs out of memory! The default (15.000) works for a 1080 with 8GB RAM.
   # max_amino_acids: [*15000]
   ## The following parameters sets the amount of AA to include in a batch before writing to disk.
-  ## Adjust this parameter if you run out of RAM! The default (100.000) works for a machine with 64GB RAM.
-  # max_amino_acids_RAM: [*100000]
 
-
-  ## Optional for protocol: transformerxl
+  ### Optional for protocol: transformerxl
   # model: [*base, large]
   # model_file: @/path/to/file
   # vocabulary_file: @/path/to/file
 
-  ## Optional for protocol: fasttext, word2vec, glove
+  ### Optional for protocol: fasttext, word2vec, glove
   # model_file: @/path/to/file
 
-  ## Optional for protocol: albert
+  ### Optional for protocol: albert
   # model_directory: @/path/to/directory
 
-  ## Optional for protocol: seqvec, albert
-  ## This parameter will create a second embeddings file with N vector of size L (N = number of proteins in remapped FASTA file, L= length of protein)
-  # reduce: [True, *False]
+  ### Optional for protocol: seqvec, albert
+  ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
+  # use_cpu: [True, *False]
+
+  #### Optional parameters for the execution of the protocol
+
+  ### Optional for protocol: seqvec
+  ## Adjust this parameter if you run out of RAM! The default (100.000) works for a machine with 64GB RAM.
+  # max_amino_acids_RAM: [*100000]
+
+  ### Optional for protocol: seqvec, albert
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
 
 stage_2:
   type: extract_features
   dependes_on: stage_1
-## Optional; inferred from embedder
-# protocol: [seqvec]
+  ## Optional; inferred from embedder
+  # protocol: [seqvec]
 
-## Optional for protocol: seqvec
-# secondary_structure_checkpoint_file: @/path/to/file
-# subcellular_location_checkpoint_file: @/path/to/file
+  ## Optional for protocol: seqvec
+  # secondary_structure_checkpoint_file: @/path/to/file
+  # subcellular_location_checkpoint_file: @/path/to/file
