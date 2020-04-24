@@ -2,6 +2,8 @@ import os
 from copy import deepcopy
 
 from bio_embeddings.embed.pipeline import run as run_embed
+from bio_embeddings.project.pipeline import run as run_project
+from bio_embeddings.visualize.pipeline import run as run_visualize
 # from bio_embeddings.extract_features.pipeline import run as run_extract_features
 from bio_embeddings.utilities import get_file_manager, read_fasta_file, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
@@ -9,6 +11,8 @@ from bio_embeddings.utilities.config import read_config_file, write_config_file
 
 _STAGES = {
     "embed": run_embed,
+    "project": run_project,
+    "visualize": run_visualize
     # "extract_features": run_extract_features
 }
 
@@ -109,7 +113,7 @@ def run(config_file_path, **kwargs):
         # create the prefix
         file_manager.create_prefix(prefix)
 
-    # copy config to prefix. Need to re-read beacuse global was popped!
+    # copy config to prefix. Need to re-read because global was popped!
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
     write_config_file(global_in, read_config_file(config_file_path))
 
@@ -135,13 +139,12 @@ def run(config_file_path, **kwargs):
 
         stage_dependency = stage_parameters.get('depends_on')
 
-        if stage_dependency and stage_dependency not in config:
-            raise Exception("Stage {} depends on {}, but dependency not found in config.".format(stage_name,
-                                                                                                 stage_dependency))
-
-        stage_dependency_parameters = config.get(stage_dependency)
-
         if stage_dependency:
+            if stage_dependency not in config:
+                raise Exception("Stage {} depends on {}, but dependency not found in config.".format(stage_name,
+                                                                                                     stage_dependency))
+
+            stage_dependency_parameters = config.get(stage_dependency)
             stage_parameters = {**global_parameters, **stage_dependency_parameters, **stage_parameters}
         else:
             stage_parameters = {**global_parameters, **stage_parameters}

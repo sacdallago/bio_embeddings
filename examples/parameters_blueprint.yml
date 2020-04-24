@@ -26,6 +26,9 @@ stage_1:
   # Options: seqvec, albert
   protocol: seqvec
 
+  # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
+  reduce: True
+
   #### Optional parameters to instantiate classes
 
   ### Optional for protocol: seqvec
@@ -64,8 +67,45 @@ stage_1:
   # use_cpu: [True, *False]
 
 stage_2:
+  type: project
+  # Required: which projection algorithm to use
+  # Options: tsne, umap
+  protocol: tsne
+  # Either depend on an embedding stage with reduced embeddings
+  depends_on: stage_1
+  # or define mapping and reduced embedding file:
+  # reduced_embeddings_file: path/to/reduced_embeddings_file.h5
+  # mapping_file: path/to/mapping_file.csv
+
+
+  ### Optional for protocol: tsne
+  # metric = *'cosine'
+  # n_components = *3
+  # perplexity = *6
+  # random_state = *420
+  # n_iter = *15000
+  # verbose = *1
+  # verbose = *1
+
+stage_3:
+  type: visualize
+  # Either depend on a project stage with projected embeddings file
+  depends_on: stage_2
+  # or define projected embeddings file:
+  # projected_embeddings_file: path/to/projected_embeddings_file.csv
+
+  # Required: csv file with annotations
+  # csv must have header: identifier, label
+  annotation_file: path/to/annotation_file.csv
+
+  # Optional: set to True if in annotation_file identifiers correspond to sequence MD5 hashes
+  # if set to False (default), mapping will be performed on original identifiers.
+  # Where missing or duplicate, will be ignored
+  # merge_via_index: [True, *False]
+
+stage_4:
   type: extract_features
-  dependes_on: stage_1
+  depends_on: stage_1
   ## Optional; inferred from embedder
   # protocol: [seqvec]
 

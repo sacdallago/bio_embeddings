@@ -1,6 +1,6 @@
 global:
   sequences_file: fasta.fa
-  prefix: my_job
+  prefix: simple
 seqvec_embeddings:
   type: embed
   protocol: seqvec
@@ -8,3 +8,9 @@ seqvec_embeddings:
 tsne_projections:
   type: project
   protocol: tsne
+  depends_on: seqvec_embeddings
+plotly_visualization:
+  type: visualize
+  protocol: plotly
+  depends_on: tsne_projections
+  annotation_file: annotation_file.csv
