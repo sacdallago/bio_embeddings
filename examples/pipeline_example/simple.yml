@@ -5,3 +5,6 @@ seqvec_embeddings:
   type: embed
   protocol: seqvec
   reduce: True  
+tsne_projections:
+  type: project
+  protocol: tsne
