@@ -1,20 +1,88 @@
-import re
+import os
+import yaml
+from tempfile import NamedTemporaryFile
+from pathlib import Path
+from pandas import read_csv
+from bio_embeddings.utilities import read_fasta_file
+from flask import abort
 
-# valid amino acid characters in input sequence
-ACCEPTABLE_CHAR_TARGET_REGEX = "[^ACDEFGHIKLMNPQRSTVWY]"
-# valid amino acid characters in any other sequence (for now, include B, X, ...)
-ACCEPTABLE_CHARS = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q',
-    'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'
-]
+# Read and load configuration file
+configuration = dict()
+module_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+
+with open(module_dir / ".." / "backend_configuration.yml", 'r') as stream:
+    try:
+        configuration = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
 
 
-def check_valid_sequence(sequence):
+def validate_file_submission(request):
+    files = request.files
 
-    m = re.search(
-        ACCEPTABLE_CHAR_TARGET_REGEX, sequence, re.IGNORECASE
+    if 'sequences' not in files or 'annotations' not in files:
+        return abort(400, "Missing files")
+
+    # Test if sequences is valid FASTA, count number of AA & get identifiers
+    AA_count = 0
+    sequences_count = 0
+    identifiers = set()
+
+    try:
+        file_io = files.get('sequences', {})
+        temp_file = NamedTemporaryFile()
+        file_io.save(temp_file.name)
+
+        sequences = read_fasta_file(temp_file.name)
+    except:
+        return abort(400, "Could not read FASTA sequence")
+
+    for sequence in sequences:
+        if sequence.id in identifiers:
+            return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty idenfifier: {})".format(sequence.id))
+
+        identifiers.add(sequence.id)
+        AA_count += len(sequence)
+        sequences_count += 1
+
+        if AA_count > configuration['max_allowed_aa']:
+            return abort(400, "Your FASTA file contains more than {}AA. The total allowed is {}AA. "
+                              "Please, exclude some sequences from your file "
+                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['max_allowed_aa']))
+
+    # Test if annotations file is valid CSV and contains necessary columns
+    try:
+        file_io = files.get('annotations', {})
+        file_io.save(temp_file.name)
+
+        annotations = read_csv(temp_file.name, index_col='identifier')
+    except:
+        return abort(400, "Could not read annotations CSV. "
+                                     "Make sure it's a CSV file with header (identifier,label).")
+
+    if not annotations.index.is_unique:
+        return abort(400, "Your CSV has multiple annotations for the same identifier. ")
+
+    # Generate statistics about overlapping annotations
+    identifiers_from_annotations = set(annotations.index.values)
+    indexes_intersection = identifiers & identifiers_from_annotations
+    indexes_intersection = list(indexes_intersection)
+
+    if len(indexes_intersection) is 0:
+        return abort(400, "There is no overlap between FASTA identifiers and annotation file identifiers.")
+
+    # Compile statistics
+    statistics = dict(
+        numberOfSequences=sequences_count,
+        numberOfAA=AA_count,
+        numberOfAnnotatedSequences=len(indexes_intersection),
+        annotatedIdentifiers=indexes_intersection
     )
-    if m:
-        return False
 
-    return True
+    result = dict(
+        sequences=sequences,
+        annotations=annotations,
+        statistics=statistics
+    )
+
+    return result

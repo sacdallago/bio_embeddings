@@ -1,15 +1,6 @@
-from flask_restplus import fields
 from webserver.endpoints import api
+from werkzeug.datastructures import FileStorage
 
-sequence_post_parameters = api.model("EmbeddingParameters", {
-    # In frontend: protein.sequence
-    "sequence": fields.String(
-        required=False,
-        description="Protein sequence in AA format",
-        example="PWIQHFFKYACFSWPFHLTKVLSMIQAYGDHVVPFVQNDWPKYQKGVVDPRFWHFEFSFRCSWTAWWCLYFHCYLMHLGFIGRIQESHRMMTTYSQGPQT"
-                "YPLMYFHMWVCVQETTYRTTYGTLSGEKKRVWITCQMGCKNPVNPDVNKTDGAVERFMQQYPICHNRFPLPCAENPSADWVKCHCNPQYIPWTEDRPYHS"
-                "EPILDHIGCLHIFQKTYIYGRTAELVGYAGWAEEGVYKEMTFQFFHGDQIYMDWEHILRQIQRIRHWTQFKRGKMFHCVGFIHGRGWPSGFSQDWPEQNI"
-                "HQMVQQSCGSWCHKWFGIKYTFKLWIGWLGHTRLELSKVSWGEANECNLMRIVVNQEACSAHAERREMWQSWNRYQYCHNFWNSWDQGMYGYSDAYAFGW"
-                "QTPILPYRCVHHFYKACG"
-    )
-})
+file_post_parser = api.parser()
+file_post_parser.add_argument('sequences', location='files', type=FileStorage, required=True)
+file_post_parser.add_argument('annotations', location='files', type=FileStorage, required=True)

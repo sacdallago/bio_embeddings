@@ -1,6 +1,6 @@
 #!/bin/bash
 
 export PYTHONPATH=.:$PYTHONPATH
-python webserver/main.py
+python webserver/backend.py
 
 exit 0
