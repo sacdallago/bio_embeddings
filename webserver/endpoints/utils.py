@@ -40,6 +40,8 @@ def validate_file_submission(request):
     for sequence in sequences:
         if sequence.id in identifiers:
             return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty idenfifier: {})".format(sequence.id))
+        if not sequence.id:
+            return abort(400, "Your FASTA sequence contains a sequence with no identifier. This is not allowed.")
 
         identifiers.add(sequence.id)
         AA_count += len(sequence)

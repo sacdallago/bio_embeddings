@@ -5,6 +5,7 @@ from flask import Flask, Blueprint
 from flask_cors import CORS
 from webserver.endpoints import api
 from webserver.endpoints.embeddings import ns as embeddings_namespace
+from webserver.endpoints.visualize import create_dash_app
 
 # Read and load configuration file
 configuration = dict()
@@ -19,6 +20,7 @@ with open(module_dir / "backend_configuration.yml", 'r') as stream:
 # Initialize API
 
 app = Flask(__name__)
+dash_app = create_dash_app(app)
 
 # Required parameters
 app.config['MAX_CONTENT_LENGTH'] = eval(configuration['max_content_length'])
