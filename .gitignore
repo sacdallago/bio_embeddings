@@ -6,5 +6,5 @@ models/
 private/
 *.pyc
 .ipynb_checkpoints/
-examples/pipeline_example/local
-examples/pipeline_example/simple
+examples/use_case_two/local
+examples/use_case_two/simple

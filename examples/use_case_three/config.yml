@@ -1,0 +1,27 @@
+global:
+  # This parameter is necessary; you can supply a dummy FASTA file.
+  sequences_file: dummy_fasta.fa
+  prefix: viz
+tsne_1:
+  type: project
+  protocol: tsne
+  reduced_embeddings_file: reduced_embeddings_file.h5
+  mapping_file: mapping_file.csv
+viz_1:
+  type: visualize
+  depends_on: tsne_1
+  annotation_file: annotations_1.csv
+tsne_2:
+  type: project
+  protocol: tsne
+  reduced_embeddings_file: reduced_embeddings_file.h5
+  mapping_file: mapping_file.csv
+  # Notice custom t-sne parameters defined below
+  metric: euclidean
+  perplexity: 2
+  n_iter: 5000
+viz_2:
+  type: visualize
+  depends_on: tsne_2
+  # Notice a different annotation file here
+  annotation_file: annotations_2.csv

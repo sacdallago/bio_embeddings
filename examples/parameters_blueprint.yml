@@ -79,13 +79,12 @@ stage_2:
 
 
   ### Optional for protocol: tsne
-  # metric = *'cosine'
-  # n_components = *3
-  # perplexity = *6
-  # random_state = *420
-  # n_iter = *15000
-  # verbose = *1
-  # verbose = *1
+  # metric: *'cosine'
+  # n_components: *3
+  # perplexity: *6
+  # random_state: *420
+  # n_iter: *15000
+  # verbose: *1
 
 stage_3:
   type: visualize
