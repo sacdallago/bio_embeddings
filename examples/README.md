@@ -31,4 +31,4 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
     - Annotation file(s): CSV files containing annotations for the proteins in the reduced embeddings file
     
   *Note*: While it is possible to use the pipeline to produce many visualizations for many different annotations, it may be more efficient to use a Notebook for this.
-  We include a notebook covering a similar use case as the one presented here in the `notebooks` folder at the root of this project.
+  We include a notebook (`project_visualize_pipeline_embeddings`) covering the same use case as the one presented here in the `notebooks` folder at the root of this project.
