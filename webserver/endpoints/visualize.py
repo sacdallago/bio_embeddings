@@ -19,32 +19,18 @@ def input_field(title, state_id, state_value, state_max, state_min):
     """Takes as parameter the title, state, default value and range of an input field, and output a Div object with
     the given specifications."""
     return html.Div([
-        html.P(title,
-               style={
-                   'display': 'inline-block',
-                   'verticalAlign': 'mid',
-                   'marginRight': '5px',
-                   'margin-bottom': '0px',
-                   'margin-top': '0px'
-               }),
-
-        html.Div([
-            dcc.Input(
-                id=state_id,
-                type='number',
-                value=state_value,
-                max=state_max,
-                min=state_min,
-                size=7
-            )
-        ],
-            style={
-                'display': 'inline-block',
-                'margin-top': '0px',
-                'margin-bottom': '0px'
-            }
+        html.P(title, className="ui label"),
+        dcc.Input(
+            id=state_id,
+            type='number',
+            value=state_value,
+            max=state_max,
+            min=state_min,
+            size=7
         )
-    ]
+
+    ],
+        className="ui left labeled input"
     )
 
 
@@ -70,46 +56,36 @@ def _create_layout():
                 't-SNE Explorer',
                 id='title',
                 style={
-                    'float': 'left',
-                    'margin-top': '20px',
-                    'margin-bottom': '0',
-                    'margin-left': '7px'
-                }
-            ),
-            html.Img(
-                src="https://s3-us-west-1.amazonaws.com/plotly-tutorials/logo/new-branding/dash-logo-by-plotly-stripe.png",
-                style={
-                    'height': '100px',
-                    'float': 'right'
                 }
             )
         ],
             className="row"
         ),
 
+
+
         html.Div([
             html.Div(
                 id="plot-div",
-                className="eight columns"
+                className="ten wide column"
             ),
-
             html.Div([
-
                 html.H4(
-                    't-SNE Parameters',
+                    'Parameters',
                     id='tsne_h4'
                 ),
 
                 input_field("Perplexity:", "perplexity-state", 20, 50, 5),
-
+                html.Br(),
                 input_field("Number of Iterations:", "n-iter-state", 400, 1000, 250),
-
+                html.Br(),
                 input_field("Learning Rate:", "lr-state", 200, 1000, 10),
 
                 html.Button(
                     id='tsne-train-button',
                     n_clicks=0,
-                    children='Start Training t-SNE'
+                    children='Recalculate t-SNE',
+                    className="positive ui button"
                 ),
 
                 dcc.Upload(
@@ -155,7 +131,7 @@ def _create_layout():
                     }
                 )
             ],
-                className="four columns"
+                className="six wide column"
             )
         ],
             className="row"
@@ -174,11 +150,9 @@ To train your own t-SNE, you can input your own high-dimensional dataset and the
             className="row"
         )
     ],
-        className="container",
+        className="ui justified grid container",
         style={
-            'width': '90%',
-            'max-width': 'none',
-            'font-size': '1.5rem'
+            "text-size": "1.2em"
         }
     )
 
@@ -205,19 +179,17 @@ def parse_content(contents, filename):
 
 
 def create_dash_app(app):
-    dash_app = dash.Dash(__name__, server=app, routes_pathname_prefix='/visualize/')
+    external_css = [
+        "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css",
+    ]
+
+    dash_app = dash.Dash(__name__,
+                         server=app,
+                         routes_pathname_prefix='/visualize/',
+                         external_stylesheets=external_css
+                         )
 
     dash_app.layout = _create_layout()
-
-    # Load external CSS
-    external_css = [
-        "https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css",
-        "https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css",
-        "//fonts.googleapis.com/css?family=Raleway:400,300,600",
-        "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-        "https://codepen.io/chriddyp/pen/brPBPO.css",
-        "https://cdn.rawgit.com/plotly/dash-app-stylesheets/2cc54b8c03f4126569a3440aae611bbef1d7a5dd/stylesheet.css"
-    ]
 
     # Uploaded data --> Hidden Data Div
     @dash_app.callback(Output('data-df-and-message', 'children'),
@@ -230,9 +202,6 @@ def create_dash_app(app):
             return [None, message]
 
         return [data_df.to_json(orient="split"), message]
-
-    for css in external_css:
-        dash_app.css.append_css({"external_url": css})
 
     # Uploaded labels --> Hidden Label div
     @dash_app.callback(Output('label-df-and-message', 'children'),
@@ -292,7 +261,7 @@ def create_dash_app(app):
             textposition="middle center",
             showlegend=False,
             mode="markers",
-            marker=dict(size=3, color="#3266c1", symbol="circle"),
+            marker=dict(size=10, color="#3266c1", symbol="circle"),
         )
 
         # Layout for the t-SNE graph
@@ -329,7 +298,7 @@ def create_dash_app(app):
                 id='tsne-3d-plot',
                 figure=figure,
                 style={
-                    'height': '80vh',
+                    'height': '600px',
                 },
             )
         ])
