@@ -88,6 +88,9 @@ stage_2:
 
 stage_3:
   type: visualize
+  # Required: which graph to render
+  # Options: plotly
+  protocol: plotly
   # Either depend on a project stage with projected embeddings file
   depends_on: stage_2
   # or define projected embeddings file:
