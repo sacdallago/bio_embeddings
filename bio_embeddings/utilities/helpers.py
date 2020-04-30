@@ -64,19 +64,26 @@ def read_fasta_file_generator(file_path: str) -> Generator[SeqRecord, None, None
     return SeqIO.parse(file_path, 'fasta')
 
 
-def reindex_sequences(sequence_records: List[SeqRecord]) -> (SeqRecord, DataFrame):
+def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRecord, DataFrame):
     """
     Function will sort and re-index the sequence_records IN PLACE! (change the original list!).
     Returns a DataFrame with the mapping.
 
     :param sequence_records: List of sequence records
+    :param simple: Bolean; if set to true use numerical index (1,2,3,4) instead of md5 hash
     :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id, and the sequence length.
     """
     sequence_records[:] = sorted(sequence_records, key=lambda seq: len(seq))
-
     original_ids = [s.id for s in sequence_records]
-    sequence_records[:] = map(_assign_hash, sequence_records)
-    new_ids = [s.id for s in sequence_records]
+
+    if simple:
+        new_ids = list()
+        for id, record in enumerate(sequence_records):
+            record.id = str(id)
+            new_ids.append(str(id))
+    else:
+        sequence_records[:] = map(_assign_hash, sequence_records)
+        new_ids = [s.id for s in sequence_records]
 
     df = DataFrame(zip(original_ids, [len(seq) for seq in sequence_records]), columns=['original_id', 'sequence_length'],
                    index=new_ids)

@@ -50,7 +50,11 @@ def _process_fasta_file(**kwargs):
     write_fasta_file(sequences, sequences_file_path)
 
     result_kwargs['sequences_file'] = sequences_file_path
-    mapping = reindex_sequences(sequences)
+
+    # Remap using sequence position rather than md5 hash -- not encouraged!
+    result_kwargs['simple_remapping'] = result_kwargs.get('simple_remapping', False)
+
+    mapping = reindex_sequences(sequences, simple=result_kwargs['simple_remapping'])
 
     # Check if there's the same MD5 index twice. This most likely indicates 100% sequence identity.
     # Throw an error for MD5 hash clashes!
