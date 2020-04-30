@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Christian Dallago",
     author_email="christian.dallago@tum.de",
-    description="A package to generate or retrieve NLP embeddings for bioinformatics applications",
+    description="A pipeline for protein embedding generation and visualization",
     long_description=long_description,
     install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py", "transformers", "plotly"],
     scripts=['bio_embeddings/utilities/bio_embeddings'],
@@ -22,7 +22,11 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9 ",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Topic :: Scientific/Engineering :: Visualization"
     ],
 )
