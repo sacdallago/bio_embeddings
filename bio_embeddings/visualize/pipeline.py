@@ -32,11 +32,13 @@ def plotly(**kwargs):
         if result_kwargs['merge_via_index']:
             if result_kwargs['display_unknown']:
                 merged_annotation_file = annotation_file.join(projected_embeddings_file, how="outer")
+                merged_annotation_file['label'].fillna('UNKNOWN', inplace=True)
             else:
                 merged_annotation_file = annotation_file.join(projected_embeddings_file)
         else:
             if result_kwargs['display_unknown']:
                 merged_annotation_file = annotation_file.join(projected_embeddings_file.set_index('original_id'), how="outer")
+                merged_annotation_file['label'].fillna('UNKNOWN', inplace=True)
             else:
                 merged_annotation_file = annotation_file.join(projected_embeddings_file.set_index('original_id'))
 
