@@ -1,7 +1,7 @@
 import os
 import yaml
 from pathlib import Path
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, render_template
 from flask_cors import CORS
 from webserver.endpoints import api
 from webserver.endpoints.embeddings import ns as embeddings_namespace
@@ -25,12 +25,16 @@ dash_app = create_dash_app(app)
 # Required parameters
 app.config['MAX_CONTENT_LENGTH'] = eval(configuration['max_content_length'])
 
-blueprint = Blueprint('api', __name__)
+blueprint = Blueprint('api', __name__, url_prefix='/api')
 cors = CORS(blueprint, origins=configuration.get('origins', []))
 
 api.init_app(blueprint)
 api.add_namespace(embeddings_namespace)
 app.register_blueprint(blueprint)
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
