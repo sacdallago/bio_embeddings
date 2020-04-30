@@ -10,7 +10,7 @@ global:
   # file_manager: [*filesystem]
 
   ## Optional: remap index simple (not via md5, this is not encouraged)
-  # simple_remapping = [True, *False]
+  # simple_remapping: [True, *False]
 
 ## Stages are executed in sequential order as they are outlined in this file.
 ## Stage names must be different!! If not: they will overwrite each_other

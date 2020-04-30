@@ -19,7 +19,7 @@ def tsne(**kwargs):
 
     with h5py.File(reduced_embeddings_file_path, 'r') as f:
         for remapped_id in mapping.index:
-            reduced_embeddings.append(np.array(f[remapped_id]))
+            reduced_embeddings.append(np.array(f[str(remapped_id)]))
 
     # Get parameters or set defaults
     result_kwargs['metric'] = kwargs.get('metric', 'cosine')
