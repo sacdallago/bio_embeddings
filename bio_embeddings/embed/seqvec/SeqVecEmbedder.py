@@ -58,7 +58,7 @@ class SeqVecEmbedder(EmbedderInterface):
 
         while tokenized_sequences:
             if aa_count < self._max_amino_acids:
-                current = tokenized_sequences.pop()
+                current = tokenized_sequences.pop(0)
                 aa_count += len(current)
                 candidates.append(current)
             else:
