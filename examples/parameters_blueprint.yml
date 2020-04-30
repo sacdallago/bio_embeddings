@@ -96,9 +96,12 @@ stage_3:
   # or define projected embeddings file:
   # projected_embeddings_file: path/to/projected_embeddings_file.csv
 
-  # Required: csv file with annotations
+  # Optional: csv file with annotations
   # csv must have header: identifier, label
-  annotation_file: path/to/annotation_file.csv
+  # annotation_file: path/to/annotation_file.csv
+
+  # Optional: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)
+  # display_unknown: [False, *True]
 
   # Optional: set to True if in annotation_file identifiers correspond to sequence MD5 hashes
   # if set to False (default), mapping will be performed on original identifiers.
