@@ -13,7 +13,7 @@ setuptools.setup(
     install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py", "transformers", "plotly"],
     scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
-    url="https://github.com/sacdallago/api.embed.protein.properties",
+    url="https://github.com/sacdallago/bio_embeddings",
     packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples"]),
     package_data={'': ['*.yml']},
     include_package_data=True,

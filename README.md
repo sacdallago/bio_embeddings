@@ -5,8 +5,7 @@ The project includes:
 - A web server that takes in sequences, embeds them and returns the embeddings OR the feature vectors.
 - General purpose library to embed protein sequences in any python app.
 
-### Install guides
-
+### Installation
 For now, this project is in beta. You can install the package via PIP like so:
 
 ```bash
