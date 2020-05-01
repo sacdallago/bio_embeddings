@@ -12,16 +12,16 @@ global:
   ## Optional: remap index simple (not via md5, this is not encouraged)
   # simple_remapping: [True, *False]
 
-## Stages are executed in sequential order as they are outlined in this file.
-## Stage names must be different!! If not: they will overwrite each_other
-## The same stage type (e.g. embed,..) can be executed multiple types.
-## Dependencies for a stage are defined in the dependencies parameter
+  ## Stages are executed in sequential order as they are outlined in this file.
+  ## Stage names must be different!! If not: they will overwrite each_other
+  ## The same stage type (e.g. embed,..) can be executed multiple types.
+  ## Dependencies for a stage are defined in the dependencies parameter
 
-## This config file includes options for initializing classes and options specific to the protocol
+  ## This config file includes options for initializing classes and options specific to the protocol
 
-## Options notation:
-## *: denotes the default option
-## @: denotes that the file or directory will be downloaded and stored locally if not provided
+  ## Options notation:
+  ## *: denotes the default option
+  ## @: denotes that the file or directory will be downloaded and stored locally if not provided
 
 stage_1:
   type: embed
@@ -31,6 +31,11 @@ stage_1:
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
   reduce: True
+
+  # Optional: discard per amino acid embeddings.
+  # Setting this parameter to True will disable storing full size embeddings (per amino acid).
+  # This parameter only works in combination with "reduce: True"
+  # discard_per_amino_acid_embeddings: [True, *False]
 
   #### Optional parameters to instantiate classes
 
