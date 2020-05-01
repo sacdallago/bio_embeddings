@@ -33,19 +33,30 @@ def seqvec(**kwargs):
 
             result_kwargs[file] = file_path
 
-    # Create embeddings file
-    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
-                                                    'embeddings_file', extension='.h5')
-    embeddings_file = h5py.File(embeddings_file_path, "w")
-    result_kwargs['embeddings_file'] = embeddings_file_path
+    # Create reduced embeddings file if set in params
+    result_kwargs['reduce'] = result_kwargs.get('reduce', False)
 
     reduced_embeddings_file = None
-    if result_kwargs.get('reduce') is True:
+    if result_kwargs['reduce'] is True:
         reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                 result_kwargs.get('stage_name'),
                                                                 'reduced_embeddings_file', extension='.h5')
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
         reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
+
+    # Create embeddings file if not discarted in params
+    embeddings_file = None
+
+    result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)
+
+    if result_kwargs['discard_per_amino_acid_embeddings'] is True:
+        if result_kwargs['reduce'] is False:
+            raise InvalidParameterError("Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True.")
+    else:
+        embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                        'embeddings_file', extension='.h5')
+        embeddings_file = h5py.File(embeddings_file_path, "w")
+        result_kwargs['embeddings_file'] = embeddings_file_path
 
     # Get embedder
     embedder = SeqVecEmbedder(**result_kwargs)
@@ -82,7 +93,9 @@ def seqvec(**kwargs):
             embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
             for index, protein in enumerate(candidates):
-                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                    embeddings_file.create_dataset(protein.id, data=embeddings[index])
+
                 if result_kwargs.get('reduce') is True:
                     reduced_embeddings_file.create_dataset(
                         protein.id,
@@ -97,7 +110,9 @@ def seqvec(**kwargs):
         embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
         for index, protein in enumerate(candidates):
-            embeddings_file.create_dataset(protein.id, data=embeddings[index])
+            if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+
             if result_kwargs.get('reduce') is True:
                 reduced_embeddings_file.create_dataset(
                     protein.id,
@@ -132,19 +147,31 @@ def albert(**kwargs):
 
             result_kwargs[directory] = directory_path
 
-    # Create embeddings file
-    embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
-                                                    'embeddings_file', extension='.h5')
-    embeddings_file = h5py.File(embeddings_file_path, "w")
-    result_kwargs['embeddings_file'] = embeddings_file_path
+    # Create reduced embeddings file if set in params
+    result_kwargs['reduce'] = result_kwargs.get('reduce', False)
 
     reduced_embeddings_file = None
-    if result_kwargs.get('reduce') is True:
+    if result_kwargs['reduce'] is True:
         reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                 result_kwargs.get('stage_name'),
                                                                 'reduced_embeddings_file', extension='.h5')
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
         reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
+
+    # Create embeddings file if not discarted in params
+    embeddings_file = None
+
+    result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)
+
+    if result_kwargs['discard_per_amino_acid_embeddings'] is True:
+        if result_kwargs['reduce'] is False:
+            raise InvalidParameterError(
+                "Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True.")
+    else:
+        embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                        'embeddings_file', extension='.h5')
+        embeddings_file = h5py.File(embeddings_file_path, "w")
+        result_kwargs['embeddings_file'] = embeddings_file_path
 
     # Get embedder
     embedder = AlbertEmbedder(**result_kwargs)
@@ -167,7 +194,9 @@ def albert(**kwargs):
             embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
             for index, protein in enumerate(candidates):
-                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                    embeddings_file.create_dataset(protein.id, data=embeddings[index])
+
                 if result_kwargs.get('reduce') is True:
                     reduced_embeddings_file.create_dataset(
                         protein.id,
@@ -182,7 +211,9 @@ def albert(**kwargs):
         embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
         for index, protein in enumerate(candidates):
-            embeddings_file.create_dataset(protein.id, data=embeddings[index])
+            if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+
             if result_kwargs.get('reduce') is True:
                 reduced_embeddings_file.create_dataset(
                     protein.id,
