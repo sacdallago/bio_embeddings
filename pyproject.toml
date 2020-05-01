@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "bio_embeddings"
+version = "0.1.0"
+description = "A pipeline for protein embedding generation and visualization"
+authors = ["Christian Dallago <christian.dallago@tum.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+allennlp = "^0.9.0" 
+numpy = "^1.18.3"
+gensim = "^3.8.2"
+biopython = "^1.76" 
+ruamel_yaml = "^0.16.10"
+pandas = "^1.0.3"
+h5py = "^2.10.0"
+transformers = "^2.8.0"
+plotly = "^4.6.0"
+umap-learn = "^0.4.2"
+matplotlib = "^3.2.1"
+scikit-learn = "^0.22.2.post1"
+scipy = "^1.4.1"
+torch = "^1.5.0"
+tqdm = "^4.45.0"
+lock = "^2018.3.25"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.4.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
