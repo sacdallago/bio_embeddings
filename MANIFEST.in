@@ -1,0 +1,8 @@
+include *.md
+include *.txt
+include *.yml
+include *.toml
+
+recursive-include tests *.py
+include bio_embeddings/utilities/defaults.yml
+exclude *.sh
