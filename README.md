@@ -73,6 +73,12 @@ After having installed the package, you can:
     - [x] Albert (unpublished)
     
 
+## Building a Distribution
+Building the packages best happens using invoke.
+If you manganage your dependecies with poetry this should be already installed.
+Simply use `poetry run invoke clean build` to update your requirements according to your current status
+and to generate the dist files
+
 ### Contributors
 
 - Christian Dallago (lead)
