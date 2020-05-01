@@ -1,13 +1,18 @@
 # Bio Embeddings
 The project includes:
 
-- A pipeline that allows to embed a FASTA file with different embedders, and then call feature extractors (eg. get secondary structure) on top of the embeddings.
-- A web server that takes in sequences, embeds them and returns the embeddings OR the feature vectors.
+- A pipeline that allows to embed a FASTA file choosing from various embedders (see below), and then project and visualize the embeddings on 3D plots.
+- A web server that takes in sequences, embeds them and returns the embeddings OR visualizes the embedding spaces on interactive plots online.
 - General purpose library to embed protein sequences in any python app.
+
+### Important information
+
+- The `albert` model weights are not publicly available yet. You can request early access by opening an issue.
+- Please help us out by opening issues and submitting PRs as you see fit, this repository is actively being developed.
 
 ### Install guides
 
-For now, this project is in beta. You can install the package via PIP like so:
+You can install the package via PIP like so:
 
 ```bash
 pip install git+https://github.com/sacdallago/bio_embeddings.git
@@ -15,7 +20,9 @@ pip install git+https://github.com/sacdallago/bio_embeddings.git
 
 ### Examples
 
-After having installed the package, you can
+We highly recommend you to check out the `examples` folder for pipeline examples, and the `notebooks` folder for post-processing pipeline runs and general purpose use of the embedders.
+
+After having installed the package, you can:
 
 1. Use the pipeline like:
 
@@ -30,32 +37,31 @@ After having installed the package, you can
     ```python
     from bio_embeddings import SeqVecEmbedder
 
-    embedder = SeqVecEmbedder
+    embedder = SeqVecEmbedder()
 
     embedding = embedder.embed("SEQVENCE")
     ```
 
     More examples can be found in the `notebooks` folder of this repository.
-### Development
+ 
+### Development status
 
-1. Pipeline types
-    - Embedders:   
-        - [x] SeqVec v1/v2
+1. Pipeline stages
+    - embed:   
+        - [x] SeqVec v1/v2 (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
         - [ ] TransformerXL
         - [ ] Fastext
         - [ ] Glove
         - [ ] Word2Vec
-        - [ ] UniRep
-    - Feature extractors:
-        - SeqVec v1
-            - [ ] DSSP8
-            - [ ] DSSP3
-            - [ ] Disorder
-            - [ ] Subcell loc
-            - [ ] Membrane boundness
+        - [ ] UniRep (https://www.nature.com/articles/s41592-019-0598-1?sfns=mo)
+        - [x] Albert (unpublished)
+    - project:
+        - [x] t-SNE
+        - [x] UMAP
+    
 1. Web server:  
-    - [ ] SecVec
-    - [ ] UniRep
+    - [x] SecVec
+    - [x] Albert (unpublished)
     
 1. General purpose objects:
     - [x] SecVec
@@ -63,17 +69,5 @@ After having installed the package, you can
     - [x] Fastext
     - [x] Glove
     - [x] Word2Vec
-    - [x] UniRep
-  
-### Next:
-
-- Add embedders in pipeline
-- Make general webserver + webservice
-
-### Improvements needed:
-
-- Accept only natural sequences?
-
-### Wanna use it now?
-  
-Use the `notebooks` folder, that will always include the latest version of the src. Note: although this is in alpha, we will try to keep the API consistent.
+    - [ ] UniRep
+    - [x] Albert (unpublished)
