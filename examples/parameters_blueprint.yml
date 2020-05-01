@@ -122,13 +122,3 @@ stage_3:
   # if set to False (default), mapping will be performed on original identifiers.
   # Where missing or duplicate, will be ignored
   # merge_via_index: [True, *False]
-
-stage_4:
-  type: extract_features
-  depends_on: stage_1
-  ## Optional; inferred from embedder
-  # protocol: [seqvec]
-
-  ## Optional for protocol: seqvec
-  # secondary_structure_checkpoint_file: @/path/to/file
-  # subcellular_location_checkpoint_file: @/path/to/file
