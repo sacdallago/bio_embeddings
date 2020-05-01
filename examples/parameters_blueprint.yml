@@ -82,11 +82,18 @@ stage_2:
 
 
   ### Optional for protocol: tsne
+  # n_iter: *15000
+  # perplexity: *6
+  # n_jobs: *-1
+
+  ### Optional for protocol: umap
+  # min_dist: *0.6
+  # n_neighbors: *15
+
+  ### Optional for protocol: tsne and umap
   # metric: *'cosine'
   # n_components: *3
-  # perplexity: *6
   # random_state: *420
-  # n_iter: *15000
   # verbose: *1
 
 stage_3:
