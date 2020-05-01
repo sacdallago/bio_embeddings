@@ -71,3 +71,10 @@ After having installed the package, you can:
     - [x] Word2Vec
     - [ ] UniRep
     - [x] Albert (unpublished)
+    
+
+### Contributors
+
+- Christian Dallago (lead)
+- Tobias Olenyi
+- Michael Heinzinger
