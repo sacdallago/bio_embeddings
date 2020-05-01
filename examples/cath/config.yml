@@ -1,0 +1,20 @@
+global:
+  sequences_file: cath-domain-seqs-S35.fa
+  prefix: cath
+  simple_remapping: True
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True
+  weights_file: /mnt/nfs/models/seqvec/weights_file
+  options_file: /mnt/nfs/models/seqvec/options_file
+  max_amino_acids: 17000
+umap_projections:
+  type: project
+  protocol: umap
+  depends_on: seqvec_embeddings
+plotly_visualization:
+  type: visualize
+  protocol: plotly
+  annotation_file: cath_classes_S35.csv
+  depends_on: umap_projections
