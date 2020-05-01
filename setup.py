@@ -15,7 +15,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/bio_embeddings",
     packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples"]),
-    package_data={'': ['*.yml']},
+    package_data={'': ['*.yml', '*.toml', '*.txt', '*.md']},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
