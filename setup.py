@@ -10,7 +10,7 @@ setuptools.setup(
     author_email="christian.dallago@tum.de",
     description="A pipeline for protein embedding generation and visualization",
     long_description=long_description,
-    install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py", "transformers", "plotly"],
+    install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py", "transformers", "plotly", "umap-learn"],
     scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/bio_embeddings",

@@ -32,3 +32,13 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
     
   *Note*: While it is possible to use the pipeline to produce many visualizations for many different annotations, it may be more efficient to use a Notebook for this.
   We include a notebook (`project_visualize_pipeline_embeddings`) covering the same use case as the one presented here in the `notebooks` folder at the root of this project.
+  
+- `cath`
+
+  This example includes sequences pulled directly from the CATH database (http://www.cathdb.info) and annotations for structural folds. To reduce the embeddings, UMAP was used.
+  Note: since the FASTA file pulled from CATH contains duplicate sequences, the remapping has been set to "simple". This is *discouraged*, as it may lead to higher computation times (embedding the same sequence multiple times), and could lead to conflicts when overlaying annotations.
+  
+- `disprot`
+
+  Similar to the `cath` example, but using the DisProt (https://www.disprot.org) database instead. Annotations contain "highly disorder" for proteins with >80% disorder, and "low disorder" for proteins with <20% disordered AA content.
+  Note that in this example we exclude proteins with unknown annotation (see visualize stage in config).
