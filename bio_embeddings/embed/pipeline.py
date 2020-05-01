@@ -120,7 +120,9 @@ def seqvec(**kwargs):
                 )
 
     # Close embeddings files
-    embeddings_file.close()
+    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+        embeddings_file.close()
+
     if result_kwargs.get('reduce') is True:
         reduced_embeddings_file.close()
 
@@ -221,7 +223,8 @@ def albert(**kwargs):
                 )
 
     # Close embeddings files
-    embeddings_file.close()
+    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+        embeddings_file.close()
     if result_kwargs.get('reduce') is True:
         reduced_embeddings_file.close()
 

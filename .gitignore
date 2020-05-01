@@ -133,9 +133,7 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python,jupyternotebooks,visualstudiocode
 
+.DS_Store
 models/
 private/
-examples/use_case_two/local
-examples/use_case_two/simple
-*.egg-info/
-build/
+.idea/
