@@ -8,3 +8,5 @@ private/
 .ipynb_checkpoints/
 examples/use_case_two/local
 examples/use_case_two/simple
+*.egg-info/
+build/
