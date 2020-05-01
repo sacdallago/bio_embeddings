@@ -12,5 +12,6 @@ parser.add_argument('config_path', metavar='/path/to/simple.yml', type=str, narg
 
 arguments = parser.parse_args()
 
+
 if __name__ == '__main__':
     run(arguments.config_path[0], overwrite=arguments.overwrite)
