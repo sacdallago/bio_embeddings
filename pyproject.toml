@@ -27,6 +27,8 @@ lock = "^2018.3.25"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"
+invoke = "^1.4.1"
+check-manifest = "^0.41"
 
 [build-system]
 requires = ["poetry>=0.12"]
