@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bio_embeddings",
-    version="0.1.0",
+    version="0.1.1",
     author="Christian Dallago",
     author_email="christian.dallago@tum.de",
     description="A pipeline for protein embedding generation and visualization",
@@ -14,7 +14,7 @@ setuptools.setup(
     scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/bio_embeddings",
-    packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples"]),
+    packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples", "tests"]),
     package_data={'': ['*.yml', '*.toml', '*.txt', '*.md']},
     include_package_data=True,
     classifiers=[

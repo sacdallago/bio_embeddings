@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.1.0"
+version = "0.1.1"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>"]
 license = "MIT"
