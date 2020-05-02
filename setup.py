@@ -11,7 +11,7 @@ setuptools.setup(
     description="A pipeline for protein embedding generation and visualization",
     long_description=long_description,
     install_requires=["torch", "allennlp", "numpy", "gensim", "biopython", "ruamel_yaml", "pandas", "h5py", "transformers", "plotly", "umap-learn", "matplotlib", "scikit-learn", "scipy", "tqdm"],
-    scripts=['bio_embeddings/utilities/bio_embeddings.py'],
+    scripts=['bio_embeddings/utilities/bio_embeddings'],
     long_description_content_type="text/markdown",
     url="https://github.com/sacdallago/bio_embeddings",
     packages=setuptools.find_packages(exclude=["notebooks", "webserver", "examples"]),

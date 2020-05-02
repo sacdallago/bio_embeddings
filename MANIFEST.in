@@ -3,6 +3,9 @@ include *.txt
 include *.yml
 include *.toml
 
-recursive-include tests *.py
-include bio_embeddings/utilities/defaults.yml
 exclude *.sh
+
+
+recursive-include tests *.py
+include bio_embeddings/utilities/bio_embeddings
+include bio_embeddings/utilities/defaults.yml
