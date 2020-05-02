@@ -1,18 +1,83 @@
-<!DOCTYPE html>
+`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Submit embedding calculation</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
 <div class="ui grid container">
     <div class="ui row">
-        <h1>Welcome</h1>
+        <div class="sixteen wide column">
+            <h2>Welcome to the <strong><pre>bio_embeddings</pre></strong> webserver</h2>
+        </div>
+    </div>
+    <div class="ui row">
+        <div class="sixteen wide column">
+            You can find out more about <pre>bio_embeddings</pre> by visiting our <a target="_blank" rel="help" href="https://github.com/sacdallago/bio_embeddings">GitHub page</a>.
+        </div>
+    </div>
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segment">
+                <div class="ui two column very relaxed grid">
+                    <div class="column">
+                        <form class="ui form" id="submit-form">
+                            <div class="field">
+                                <label>FASTA file</label>
+                                <input type="file" id="sequences" name="sequences" placeholder="FASTA file">
+                            </div>
+                            <div class="field">
+                                <label>Embed via</label>
+                                <select class="ui search dropdown">
+                                    <option value="seqvec">SeqVec</option>
+                                </select>
+                            </div>
+                            <button class="ui button" type="submit">Submit</button>
+                            <div class="error message"></div>
+                            <div class="job submission messages"></div>
+                        </form>
+                    </div>
+                    <div class="middle aligned column">
+                        <form class="ui form" id="check-form">
+                            <div class="field">
+                                <label>Job id</label>
+                                <input type="text" id="id" name="id" placeholder="Job Id">
+                            </div>
+                            <button class="ui button" type="submit">Check</button>
+                            <div class="error message"></div>
+                        </form>
+                        <div class="ui segment" id="job-id-status-card">
+                            <div id="job-id-status-message"></div>
+                                <div class="ui two buttons" id="job-id-download-options">
+                                    <a class="ui basic button" id="download-embeddings" target="_blank">Download embeddings</a>
+                                    <a class="ui basic button" id="visualize-embeddings" target="_blank">Visualize online</a>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui vertical divider">
+                    Or
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="ui row">
+        <div class="sixteen wide column">
+            Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
+        </div>
+    </div>
+    <div class="ui row">
+        <div class="sixteen wide column">
+            Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a>.
+
+        </div>
     </div>
 </div>
 <script type="application/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='semantic.min.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
-</html>
+</html>`
