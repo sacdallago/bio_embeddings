@@ -5,12 +5,12 @@ The project includes:
 - A web server that takes in sequences, embeds them and returns the embeddings OR visualizes the embedding spaces on interactive plots online.
 - General purpose library to embed protein sequences in any python app.
 
-### Important information
+## Important information
 
 - The `albert` model weights are not publicly available yet. You can request early access by opening an issue.
 - Please help us out by opening issues and submitting PRs as you see fit, this repository is actively being developed.
 
-### Install guides
+## Install guides
 
 You can install the package via PIP like so:
 
@@ -18,7 +18,14 @@ You can install the package via PIP like so:
 pip install git+https://github.com/sacdallago/bio_embeddings.git
 ```
 
-### Examples
+### Additional dependencies and steps to run the webserver
+
+If you want to run the webserver locally, you need to have some python backend deployment experience.
+You'll need a couple of dependencies if you want to run the webserver locally: `pip install dash celery pymongo flask-restx pyyaml`.
+
+Additionally, you will need to have two instances of the app run (the backend and at least one celery worker), and both instances must be granted access to a MongoDB and a RabbitMQ or Redis store for celery.
+
+## Examples
 
 We highly recommend you to check out the `examples` folder for pipeline examples, and the `notebooks` folder for post-processing pipeline runs and general purpose use of the embedders.
 
@@ -44,7 +51,7 @@ After having installed the package, you can:
 
     More examples can be found in the `notebooks` folder of this repository.
  
-### Development status
+## Development status
 
 1. Pipeline stages
     - embed:   
@@ -79,7 +86,7 @@ If you manganage your dependecies with poetry this should be already installed.
 Simply use `poetry run invoke clean build` to update your requirements according to your current status
 and to generate the dist files
 
-### Contributors
+## Contributors
 
 - Christian Dallago (lead)
 - Tobias Olenyi

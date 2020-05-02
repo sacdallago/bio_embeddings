@@ -17,6 +17,58 @@ with open(module_dir / ".." / "backend_configuration.yml", 'r') as stream:
         print(exc)
 
 
+def validate_FASTA_submission(request):
+    files = request.files
+
+    if 'sequences' not in files:
+        return abort(400, "Missing files")
+
+    # Test if sequences is valid FASTA, count number of AA & get identifiers
+    AA_count = 0
+    sequences_count = 0
+    identifiers = set()
+
+    try:
+        file_io = files.get('sequences', {})
+        temp_file = NamedTemporaryFile()
+        file_io.save(temp_file.name)
+
+        sequences = read_fasta_file(temp_file.name)
+    except:
+        return abort(400, "Could not read FASTA sequence")
+
+    for sequence in sequences:
+        if sequence.id in identifiers:
+            return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty idenfifier: {})".format(sequence.id))
+        if not sequence.id:
+            return abort(400, "Your FASTA sequence contains a sequence with no identifier. This is not allowed.")
+
+        identifiers.add(sequence.id)
+        AA_count += len(sequence)
+        sequences_count += 1
+
+        if AA_count > configuration['max_allowed_aa']:
+            return abort(400, "Your FASTA file contains more than {}AA. The total allowed is {}AA. "
+                              "Please, exclude some sequences from your file "
+                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['max_allowed_aa']))
+
+    # Compile statistics
+    statistics = dict(
+        numberOfSequences=sequences_count,
+        numberOfAA=AA_count,
+    )
+
+    if statistics['numberOfSequences'] < 1:
+        return abort(400, "No sequences submitted. Try another FASTA file.")
+
+    result = dict(
+        sequences=sequences,
+        statistics=statistics
+    )
+
+    return result
+
+
 def validate_file_submission(request):
     files = request.files
 

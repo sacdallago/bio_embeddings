@@ -1,0 +1,24 @@
+pre {
+    display: inline;
+    margin: 0;
+}
+
+.ui.grid.container {
+    padding-top: 4em;
+}
+
+#job-id-status-card{
+    display: none;
+}
+
+#job-id-status-card.show{
+    display: inherit;
+}
+
+#job-id-download-options{
+    display: none;
+}
+
+#job-id-download-options.show{
+    display: inherit;
+}
