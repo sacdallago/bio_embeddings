@@ -15,7 +15,13 @@ The project includes:
 You can install the package via PIP like so:
 
 ```bash
-pip install git+https://github.com/sacdallago/bio_embeddings.git
+pip install bio-embeddings
+```
+
+Or directly from the source (e.g. to have the latest features):
+
+```bash
+pip install -U git+https://github.com/sacdallago/bio_embeddings.git
 ```
 
 ### Additional dependencies and steps to run the webserver
