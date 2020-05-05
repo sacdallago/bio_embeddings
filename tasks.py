@@ -27,5 +27,8 @@ def build(c, update_requirements=True):
             c.run("pip freeze > requirements.txt")
 
     # Create dist files
-    c.run(f"{python_command} setup.py sdist")
-    c.run(f"{python_command} setup.py bdist_wheel")
+    if not poetry:
+        c.run(f"{python_command} setup.py sdist")
+        c.run(f"{python_command} setup.py bdist_wheel")
+    else: 
+        c.run("poetry build")
