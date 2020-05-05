@@ -20,15 +20,5 @@ word2vec:
 glove:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
 
-transformerxl_base:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/model.pt"
-  vocabulary_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/transformerxl_base/vocab.pt"
-
 albert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
-
-## TODO: add following when available!
-
-#transformerxl_large:
-#  model_file: ""
-#  vocabulary_file: ""

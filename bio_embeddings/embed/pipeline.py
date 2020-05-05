@@ -239,10 +239,6 @@ def glove(**kwargs):
     pass
 
 
-def transformerxl(**kwargs):
-    pass
-
-
 def word2vec(**kwargs):
     pass
 
@@ -252,7 +248,6 @@ PROTOCOLS = {
     "seqvec": seqvec,
     "fasttext": fasttext,
     "glove": glove,
-    "transformerxl": transformerxl,
     "word2vec": word2vec,
     "albert": albert
 }

@@ -49,11 +49,6 @@ stage_1:
   # max_amino_acids: [*15000]
   ## The following parameters sets the amount of AA to include in a batch before writing to disk.
 
-  ### Optional for protocol: transformerxl
-  # model: [*base, large]
-  # model_file: @/path/to/file
-  # vocabulary_file: @/path/to/file
-
   ### Optional for protocol: fasttext, word2vec, glove
   # model_file: @/path/to/file
 
