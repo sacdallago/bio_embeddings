@@ -72,11 +72,11 @@ After having installed the package, you can:
         - [x] UMAP
     
 1. Web server:  
-    - [x] SecVec
+    - [x] SeqVec
     - [x] Albert (unpublished)
     
 1. General purpose objects:
-    - [x] SecVec
+    - [x] SeqVec
     - [x] Fastext
     - [x] Glove
     - [x] Word2Vec
