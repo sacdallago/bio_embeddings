@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bio_embeddings",
-    version="0.1.1",
+    version="0.1.2",
     author="Christian Dallago",
     author_email="christian.dallago@tum.de",
     description="A pipeline for protein embedding generation and visualization",
