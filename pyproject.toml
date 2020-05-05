@@ -2,7 +2,7 @@
 name = "bio_embeddings"
 version = "0.1.2"
 description = "A pipeline for protein embedding generation and visualization"
-authors = ["Christian Dallago <christian.dallago@tum.de>"]
+authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>" ]
 maintainers = ["Rostlab <admin@rostlab.org>"]
 license = "MIT"
 readme = "README.md"
@@ -17,7 +17,7 @@ classifiers = [
         "Topic :: Scientific/Engineering :: Bio-Informatics",
         "Topic :: Scientific/Engineering :: Visualization"
     ]
-include = ["README.md","LICENSE.md", "environment.yml", "requirements.txt", "pyproject.toml", "bio_embeddings/utilities/defaults.yml"]
+include = ["README.md","LICENSE.md", "requirements.txt", "pyproject.toml", "bio_embeddings/utilities/defaults.yml"]
 exclude = ["tests/", "examples/", "webserver/", "notebooks/"]
 
 [tool.poetry.scripts]
