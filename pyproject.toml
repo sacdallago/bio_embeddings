@@ -3,7 +3,30 @@ name = "bio_embeddings"
 version = "0.1.1"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>"]
+maintainers = ["Rostlab <admin@rostlab.org>"]
 license = "MIT"
+readme = "README.md"
+classifiers = [
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9 ",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Topic :: Scientific/Engineering :: Visualization"
+    ]
+include = ["README.md","LICENSE.md", "environment.yml", "requirements.txt", "pyproject.toml"]
+exclude = ["tests/", "examples/", "webserver/", "notebooks/"]
+
+[tool.poetry.scripts]
+bio_embeddings = 'bio_embeddings.utilities.cli:main'
+
+[tool.poetry.urls]
+issues = "https://github.com/sacdallago/bio_embeddings/issues"
+homepage = "https://visualize.protein.properties"
+repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
 python = "^3.7"
