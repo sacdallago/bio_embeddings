@@ -17,7 +17,7 @@ classifiers = [
         "Topic :: Scientific/Engineering :: Bio-Informatics",
         "Topic :: Scientific/Engineering :: Visualization"
     ]
-include = ["README.md","LICENSE.md", "environment.yml", "requirements.txt", "pyproject.toml"]
+include = ["README.md","LICENSE.md", "environment.yml", "requirements.txt", "pyproject.toml", "bio_embeddings/utilities/defaults.yml"]
 exclude = ["tests/", "examples/", "webserver/", "notebooks/"]
 
 [tool.poetry.scripts]
