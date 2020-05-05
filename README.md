@@ -62,7 +62,6 @@ After having installed the package, you can:
 1. Pipeline stages
     - embed:   
         - [x] SeqVec v1/v2 (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
-        - [ ] TransformerXL
         - [ ] Fastext
         - [ ] Glove
         - [ ] Word2Vec
@@ -78,7 +77,6 @@ After having installed the package, you can:
     
 1. General purpose objects:
     - [x] SecVec
-    - [x] TransformerXL
     - [x] Fastext
     - [x] Glove
     - [x] Word2Vec

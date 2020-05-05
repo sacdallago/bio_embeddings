@@ -4,7 +4,6 @@ from bio_embeddings.embed import (
     Word2VecEmbedder as _Word2VecEmbedder,
     FastTextEmbedder as _FastTextEmbedder,
     GloveEmbedder as _GloveEmbedder,
-    TransformerXLEmbedder as _TransformerXLEmbedder,
     AlbertEmbedder as _AlbertEmbedder
 )
 
@@ -111,28 +110,6 @@ class GloveEmbedder(_GloveEmbedder):
 
                 get_model_file(
                     model='glove',
-                    file=file,
-                    path=f.name
-                )
-
-                kwargs[file] = f.name
-
-        super().__init__(**kwargs)
-
-
-class TransformerXLEmbedder(_TransformerXLEmbedder):
-    def __init__(self, **kwargs):
-        necessary_files = ['model_file', 'vocabulary_file']
-
-        model_size = kwargs.get('model', 'base')
-
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                _temporary_files.append(f)
-
-                get_model_file(
-                    model='transformerxl_{}'.format(model_size),
                     file=file,
                     path=f.name
                 )
