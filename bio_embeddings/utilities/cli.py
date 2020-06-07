@@ -1,11 +1,11 @@
 #!/bin/python
 
 import argparse
+
 from bio_embeddings.utilities.pipeline import run
 
 
-
-def main(): 
+def main():
     """
     Pipeline commandline entry point
     """
@@ -17,5 +17,3 @@ def main():
     arguments = parser.parse_args()
 
     run(arguments.config_path[0], overwrite=arguments.overwrite)
-
-    

@@ -1,15 +1,13 @@
 import pytest
-import os
+
 from bio_embeddings.utilities.pipeline import run
-
-
 
 ANNOTATIONS = """
 identifier,label
 QHN70907.1,pos
 """
 
-FASTA = """ 
+FASTA = """
 >QHN70907.1 spike glycoprotein [Bovine torovirus]
 MFLFFCAATILCLWVNSGGAVVVSNETLVFCEPVSYPYSLQVLRSFSQRVNLRTKRAVIIDAWSFAYQIS
 TNSLNVNGWYVNFTSPLGWSYPNGKPFGIVLGSDAMMRASQSIFTYDVISYVGQRPNLDCQINDLVNGGL
@@ -36,11 +34,12 @@ ALPSRPPLPLHLSYVNVTFNVTLPNGVNWTDLVLDYSFKDKVYEISKNITQLHEQILQVSNWASGWFQRL
 RDFLYGLIPAWITWLTLGFSLFSILISGVNIILFFEMNGKVKKS
 """
 
+
 @pytest.fixture(scope="session")
 def test_files(tmp_path):
     test_dir = tmp_path / "test_data"
     test_dir.mkdir()
-    config_file = test_dir / "config.yml"    
+    config_file = test_dir / "config.yml"
     annotations_file = test_dir / "annotation_file.csv"
     fasta_file = test_dir / "fasta.fa"
 
@@ -51,7 +50,7 @@ def test_files(tmp_path):
     seqvec_embeddings:
         type: embed
         protocol: seqvec
-        reduce: True  
+        reduce: True
     tsne_projections:
         type: project
         protocol: tsne
@@ -71,8 +70,5 @@ def test_files(tmp_path):
 
 
 def simple_behavior_test(test_files):
-    """
-    Run the pipline using a simple setup once
-
-    """
+    """ Run the pipeline using a simple setup once """
     run(test_files, overwrite=True)

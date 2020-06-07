@@ -1,7 +1,10 @@
+from typing import List
+
 import torch
+from allennlp.commands.elmo import ElmoEmbedder as _ElmoEmbedder
+
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
 from bio_embeddings.utilities import Logger
-from allennlp.commands.elmo import ElmoEmbedder as _ElmoEmbedder
 
 
 class SeqVecEmbedder(EmbedderInterface):
@@ -46,11 +49,12 @@ class SeqVecEmbedder(EmbedderInterface):
 
         pass
 
-    def embed(self, sequence):
+    def embed(self, sequence: str):
         embedding = self._elmo_model.embed_sentence(list(sequence))  # get embedding for sequence
         return embedding.tolist()
 
-    def embed_many(self, sequences):
+    def embed_many(self, sequences: List[str]):
+        # elmo expect a `List[str]` as it was meant for tokens/words with more than one character.
         tokenized_sequences = [list(s) for s in sequences]
         candidates = list()
         result = list()

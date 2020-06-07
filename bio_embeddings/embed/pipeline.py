@@ -25,11 +25,8 @@ def seqvec(**kwargs):
         if not result_kwargs.get(file):
             file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
 
-            get_model_file(
-                model='seqvecv{}'.format(str(result_kwargs.get('seqvec_version', 1))),
-                file=file,
-                path=file_path
-            )
+            get_model_file(path=file_path, model='seqvecv{}'.format(str(result_kwargs.get('seqvec_version', 1))),
+                           file=file)
 
             result_kwargs[file] = file_path
 
@@ -79,10 +76,10 @@ def seqvec(**kwargs):
         if len(sequence) > result_kwargs['max_amino_acids']:
             Logger.warn(
                 '''One sequence in your set has length {}, which is more than what is defined in the max_amino_acids parameter ({}).
-                
+
                 To avoid running out of GPU memory, the pipeline will now use the CPU instead of the GPU to calculate embeddings.
                 This allows to embed much longer sequences (since using main RAM instead of GPU RAM), but comes at a significant speed deacreas (CPU instead of GPU computing).
-                
+
                 If you think your GPU RAM can handle longer sequences, try increasing max_amino_acids.
                 As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(len(sequence), result_kwargs['max_amino_acids']))
 
@@ -122,7 +119,6 @@ def seqvec(**kwargs):
     # Close embeddings files
     if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
         embeddings_file.close()
-
     if result_kwargs.get('reduce') is True:
         reduced_embeddings_file.close()
 
@@ -141,11 +137,7 @@ def albert(**kwargs):
         if not result_kwargs.get(directory):
             directory_path = file_manager.create_directory(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), directory)
 
-            get_model_directories_from_zip(
-                model='albert',
-                directory=directory,
-                path=directory_path
-            )
+            get_model_directories_from_zip(path=directory_path, model='albert', directory=directory)
 
             result_kwargs[directory] = directory_path
 
@@ -160,7 +152,7 @@ def albert(**kwargs):
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
         reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
 
-    # Create embeddings file if not discarted in params
+    # Create embeddings file if not discarded in params
     embeddings_file = None
 
     result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)
