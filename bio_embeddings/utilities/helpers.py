@@ -41,21 +41,15 @@ def read_fasta_file(file_path: str) -> List[SeqRecord]:
     """
     Helper function to read FASTA file.
 
-    Will assign MD5 hash as ID if no if provided for a sequence.
-
     :param file_path: path to a valid FASTA file
     :return: a list of SeqRecord objects.
     """
-    sequence_records = list(SeqIO.parse(file_path, 'fasta'))
-
-    return sequence_records
+    return list(SeqIO.parse(file_path, 'fasta'))
 
 
 def read_fasta_file_generator(file_path: str) -> Generator[SeqRecord, None, None]:
     """
     Helper function to read FASTA file via a generator. Useful when not wanting to load all sequences in memory at once.
-
-    Will assign MD5 hash as ID if no if provided for a sequence.
 
     :param file_path: path to a valid FASTA file
     :return: a generator of SeqRecord objects.

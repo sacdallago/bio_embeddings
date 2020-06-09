@@ -8,8 +8,6 @@ Authors:
 import abc
 from typing import List
 
-from bio_embeddings.utilities.exceptions import NoEmbeddingException
-
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
 

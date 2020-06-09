@@ -1,13 +1,14 @@
 import tempfile
-from bio_embeddings.utilities.remote_file_retriever import get_model_file, get_model_directories_from_zip
 
-from bio_embeddings.embed.seqvec import SeqVecEmbedder as _SeqVecEmbedder
-from bio_embeddings.embed.word2vec import Word2VecEmbedder as _Word2VecEmbedder
+from bio_embeddings.embed.albert import AlbertEmbedder as _AlbertEmbedder
 from bio_embeddings.embed.fasttext import FastTextEmbedder as _FastTextEmbedder
 from bio_embeddings.embed.glove import GloveEmbedder as _GloveEmbedder
-from bio_embeddings.embed.albert import AlbertEmbedder as _AlbertEmbedder
+from bio_embeddings.embed.seqvec import SeqVecEmbedder as _SeqVecEmbedder
+from bio_embeddings.embed.word2vec import Word2VecEmbedder as _Word2VecEmbedder
+from bio_embeddings.utilities.remote_file_retriever import get_model_file, get_model_directories_from_zip
 
 _temporary_files = list()
+
 
 # To make it easier for end-users of the embeddings as a package,
 # auto-download missing files!
@@ -27,11 +28,7 @@ class SeqVecEmbedder(_SeqVecEmbedder):
                 f = tempfile.NamedTemporaryFile()
                 _temporary_files.append(f)
 
-                get_model_file(
-                    model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))),
-                    file=file,
-                    path=f.name
-                )
+                get_model_file(path=f.name, model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))), file=file)
 
                 kwargs[file] = f.name
         super().__init__(**kwargs)
@@ -47,11 +44,7 @@ class AlbertEmbedder(_AlbertEmbedder):
                 f = tempfile.mkdtemp()
                 _temporary_files.append(f)
 
-                get_model_directories_from_zip(
-                    model='albert',
-                    directory=directory,
-                    path=f
-                )
+                get_model_directories_from_zip(path=f, model='albert', directory=directory)
 
                 kwargs[directory] = f
         super().__init__(**kwargs)
@@ -66,11 +59,7 @@ class Word2VecEmbedder(_Word2VecEmbedder):
                 f = tempfile.NamedTemporaryFile()
                 _temporary_files.append(f)
 
-                get_model_file(
-                    model='word2vec',
-                    file=file,
-                    path=f.name
-                )
+                get_model_file(path=f.name, model='word2vec', file=file)
 
                 kwargs[file] = f.name
 
@@ -86,11 +75,7 @@ class FastTextEmbedder(_FastTextEmbedder):
                 f = tempfile.NamedTemporaryFile()
                 _temporary_files.append(f)
 
-                get_model_file(
-                    model='fasttext',
-                    file=file,
-                    path=f.name
-                )
+                get_model_file(path=f.name, model='fasttext', file=file)
 
                 kwargs[file] = f.name
 
@@ -106,11 +91,7 @@ class GloveEmbedder(_GloveEmbedder):
                 f = tempfile.NamedTemporaryFile()
                 _temporary_files.append(f)
 
-                get_model_file(
-                    model='glove',
-                    file=file,
-                    path=f.name
-                )
+                get_model_file(path=f.name, model='glove', file=file)
 
                 kwargs[file] = f.name
 

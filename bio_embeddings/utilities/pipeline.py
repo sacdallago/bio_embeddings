@@ -41,6 +41,9 @@ def _valid_file(file_path):
 
 
 def _process_fasta_file(**kwargs):
+    """
+    Will assign MD5 hash as ID if no if provided for a sequence.
+    """
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 

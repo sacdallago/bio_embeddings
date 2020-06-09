@@ -30,10 +30,10 @@ repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-allennlp = "^0.9.0" 
+allennlp = "^0.9.0"
 numpy = "^1.18.3"
 gensim = "^3.8.2"
-biopython = "^1.76" 
+biopython = "^1.76"
 ruamel_yaml = "^0.16.10"
 pandas = "^1.0.3"
 h5py = "^2.10.0"
@@ -53,7 +53,8 @@ pytest = "^5.4.1"
 invoke = "^1.4.1"
 check-manifest = "^0.41"
 wheel = "^0.34.2"
+jupyter = "^1.0.0"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry~=1.0.0"]
 build-backend = "poetry.masonry.api"
