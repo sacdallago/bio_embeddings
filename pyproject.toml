@@ -55,6 +55,18 @@ check-manifest = "^0.41"
 wheel = "^0.34.2"
 jupyter = "^1.0.0"
 
+[tool.black]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.pytest_cache
+  | \.tox
+  | \.venv
+  | \dist
+  | \webserver
+)/
+'''
+
 [build-system]
 requires = ["poetry~=1.0.0"]
 build-backend = "poetry.masonry.api"
