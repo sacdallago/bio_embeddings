@@ -2,16 +2,17 @@ import os
 import tempfile
 import zipfile
 from pathlib import Path
+from typing import Dict, Optional
 from urllib import request
 
 from tqdm import tqdm
 
 from bio_embeddings.utilities.config import read_config_file
-from bio_embeddings.utilities.exceptions import CannotFindDefaultFile, FileDoesntExistError
+from bio_embeddings.utilities.exceptions import CannotFindDefaultFile
 from bio_embeddings.utilities.logging import Logger
 
-_module_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-_defaults = read_config_file(_module_dir / 'defaults.yml')
+_module_dir: Path = Path(os.path.dirname(os.path.abspath(__file__)))
+_defaults: Dict[str, Dict[str, str]] = read_config_file(_module_dir / 'defaults.yml')
 
 
 class TqdmUpTo(tqdm):
@@ -36,7 +37,7 @@ def get_model_directories_from_zip(path, model=None, directory=None) -> None:
 
     if not url:
         raise CannotFindDefaultFile(
-            "Trying to get file '{}' for model '{}', but doesn't exist.".format("model_folder_zip", path))
+            "Trying to get file '{}' for model '{}', but it doesn't exist.".format("model_folder_zip", path))
 
     os.makedirs(path, exist_ok=True)
 
@@ -54,14 +55,14 @@ def get_model_directories_from_zip(path, model=None, directory=None) -> None:
             zip_ref.extractall(path)
 
 
-def get_model_file(path, model=None, file=None) -> None:
+def get_model_file(path: str, model: Optional[str] = None, file: Optional[str] = None) -> None:
     url = _defaults.get(model, {}).get(file)
 
     if not url:
-        raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but doesn't exist.".format(file, path))
+        raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but it doesn't exist.".format(file, path))
 
     if not os.path.isfile(path):
-        raise FileDoesntExistError("Trying to open file, but doesn't exist.".format(path))
+        raise FileNotFoundError("Trying to open file '{}', but it doesn't exist.".format(path))
 
     Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format(file, model, path))
 
