@@ -25,7 +25,7 @@ def seqvec(**kwargs):
         if not result_kwargs.get(file):
             file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
 
-            get_model_file(path=file_path, model='seqvecv{}'.format(str(result_kwargs.get('seqvec_version', 1))),
+            get_model_file(path=file_path, model='seqvecv{}'.format(result_kwargs.get('seqvec_version', 1)),
                            file=file)
 
             result_kwargs[file] = file_path
