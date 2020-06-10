@@ -3,7 +3,7 @@ import tempfile
 from bio_embeddings.embed.albert import AlbertEmbedder as _AlbertEmbedder
 from bio_embeddings.embed.fasttext import FastTextEmbedder as _FastTextEmbedder
 from bio_embeddings.embed.glove import GloveEmbedder as _GloveEmbedder
-from bio_embeddings.embed.seqvec import SeqVecEmbedder as _SeqVecEmbedder
+from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder as _SeqVecEmbedder
 from bio_embeddings.embed.word2vec import Word2VecEmbedder as _Word2VecEmbedder
 from bio_embeddings.utilities.remote_file_retriever import get_model_file, get_model_directories_from_zip
 

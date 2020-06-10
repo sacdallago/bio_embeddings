@@ -16,7 +16,7 @@ class FileSystemFileManager(FileManagerInterface):
         if stage:
             path /= stage
         if file_name:
-            path /= file_name + (extension if extension else "")
+            path /= file_name + (extension or "")
 
         return os_path.exists(path)
 
@@ -26,7 +26,7 @@ class FileSystemFileManager(FileManagerInterface):
         if stage:
             path /= stage
         if file_name:
-            path /= file_name + (extension if extension else "")
+            path /= file_name + (extension or "")
 
         return str(path)
 
@@ -36,7 +36,7 @@ class FileSystemFileManager(FileManagerInterface):
         if stage:
             path /= stage
 
-        path /= file_name + (extension if extension else "")
+        path /= file_name + (extension or "")
 
         try:
             with open(path, 'w'):

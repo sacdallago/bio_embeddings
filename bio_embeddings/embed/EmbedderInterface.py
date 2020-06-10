@@ -17,8 +17,6 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         """
         self._options = None
 
-        pass
-
     @abc.abstractmethod
     def embed(self, sequence: str):
         """
