@@ -1,8 +1,11 @@
+import logging
 import os
-from pathlib import Path
 from os import path as os_path
+from pathlib import Path
+
 from bio_embeddings.utilities.filemanagers.FileManagerInterface import FileManagerInterface
-from bio_embeddings.utilities.logging import Logger
+
+logger = logging.getLogger(__name__)
 
 
 class FileSystemFileManager(FileManagerInterface):
@@ -39,9 +42,9 @@ class FileSystemFileManager(FileManagerInterface):
             with open(path, 'w'):
                 os.utime(path, None)
         except OSError:
-            Logger.warn("Failed to create file %s." % path)
+            logger.warning("Failed to create file %s." % path)
         else:
-            Logger.log("Successfully created the file %s." % path)
+            logger.info("Successfully created the file %s." % path)
 
         return str(path)
 
@@ -56,9 +59,9 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            Logger.warn("Failed to create directory %s." % path)
+            logger.warning("Failed to create directory %s." % path)
         else:
-            Logger.log("Successfully created the directory %s." % path)
+            logger.info("Successfully created the directory %s." % path)
 
         return str(path)
 
@@ -68,9 +71,9 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            Logger.warn("Failed to create stage directory %s." % path)
+            logger.warning("Failed to create stage directory %s." % path)
         else:
-            Logger.log("Successfully created the stage directory %s." % path)
+            logger.info("Successfully created the stage directory %s." % path)
 
         return str(path)
 
@@ -80,8 +83,8 @@ class FileSystemFileManager(FileManagerInterface):
         try:
             os.mkdir(path)
         except OSError:
-            Logger.warn("Failed to create prefix directory %s." % path)
+            logger.warning("Failed to create prefix directory %s." % path)
         else:
-            Logger.log("Successfully created the prefix directory %s." % path)
+            logger.info("Successfully created the prefix directory %s." % path)
 
         return str(path)

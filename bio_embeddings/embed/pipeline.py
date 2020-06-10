@@ -1,11 +1,16 @@
+import logging
+from copy import deepcopy
+
 import h5py
 from pandas import read_csv
 from tqdm import tqdm
-from copy import deepcopy
-from bio_embeddings.embed.seqvec import SeqVecEmbedder
+
 from bio_embeddings.embed.albert import AlbertEmbedder
+from bio_embeddings.embed.seqvec import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
-    check_required, get_file_manager, Logger, get_model_directories_from_zip, read_fasta_file_generator
+    check_required, get_file_manager, get_model_directories_from_zip, read_fasta_file_generator
+
+logger = logging.getLogger(__name__)
 
 
 def seqvec(**kwargs):
@@ -48,7 +53,8 @@ def seqvec(**kwargs):
 
     if result_kwargs['discard_per_amino_acid_embeddings'] is True:
         if result_kwargs['reduce'] is False:
-            raise InvalidParameterError("Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True.")
+            raise InvalidParameterError(
+                "Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True.")
     else:
         embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
                                                         'embeddings_file', extension='.h5')
@@ -74,14 +80,15 @@ def seqvec(**kwargs):
 
         # If a single sequence has more AA than allowed in max_amino_acids, switch to CPU
         if len(sequence) > result_kwargs['max_amino_acids']:
-            Logger.warn(
+            logger.warning(
                 '''One sequence in your set has length {}, which is more than what is defined in the max_amino_acids parameter ({}).
 
                 To avoid running out of GPU memory, the pipeline will now use the CPU instead of the GPU to calculate embeddings.
                 This allows to embed much longer sequences (since using main RAM instead of GPU RAM), but comes at a significant speed deacreas (CPU instead of GPU computing).
 
                 If you think your GPU RAM can handle longer sequences, try increasing max_amino_acids.
-                As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(len(sequence), result_kwargs['max_amino_acids']))
+                As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(
+                    len(sequence), result_kwargs['max_amino_acids']))
 
             result_kwargs['use_cpu'] = True
             embedder = SeqVecEmbedder(**result_kwargs)
@@ -135,7 +142,8 @@ def albert(**kwargs):
 
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
-            directory_path = file_manager.create_directory(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), directory)
+            directory_path = file_manager.create_directory(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
+                                                           directory)
 
             get_model_directories_from_zip(path=directory_path, model='albert', directory=directory)
 
