@@ -1,3 +1,4 @@
+import logging
 import os
 import tempfile
 import zipfile
@@ -9,10 +10,11 @@ from tqdm import tqdm
 
 from bio_embeddings.utilities.config import read_config_file
 from bio_embeddings.utilities.exceptions import CannotFindDefaultFile
-from bio_embeddings.utilities.logging import Logger
 
 _module_dir: Path = Path(os.path.dirname(os.path.abspath(__file__)))
 _defaults: Dict[str, Dict[str, str]] = read_config_file(_module_dir / 'defaults.yml')
+
+logger = logging.getLogger(__name__)
 
 
 class TqdmUpTo(tqdm):
@@ -44,12 +46,12 @@ def get_model_directories_from_zip(path, model=None, directory=None) -> None:
     with tempfile.NamedTemporaryFile() as f:
         file_name = f.name
 
-        Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, file_name))
+        logger.info("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, file_name))
 
         with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
             request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
 
-        Logger.log("Unzipping '{}' for model '{}' and storing in '{}'.".format(f, model, path))
+        logger.info("Unzipping '{}' for model '{}' and storing in '{}'.".format(f, model, path))
 
         with zipfile.ZipFile(file_name, 'r') as zip_ref:
             zip_ref.extractall(path)
@@ -64,7 +66,7 @@ def get_model_file(path: str, model: Optional[str] = None, file: Optional[str] =
     if not os.path.isfile(path):
         raise FileNotFoundError("Trying to open file '{}', but it doesn't exist.".format(path))
 
-    Logger.log("Downloading '{}' for model '{}' and storing in '{}'.".format(file, model, path))
+    logger.info("Downloading '{}' for model '{}' and storing in '{}'.".format(file, model, path))
 
     with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
         request.urlretrieve(url, filename=path, reporthook=t.update_to)

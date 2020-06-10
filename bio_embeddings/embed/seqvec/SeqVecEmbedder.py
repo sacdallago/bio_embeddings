@@ -1,10 +1,12 @@
+import logging
 from typing import List
 
 import torch
 from allennlp.commands.elmo import ElmoEmbedder as _ElmoEmbedder
 
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from bio_embeddings.utilities import Logger
+
+logger = logging.getLogger(__name__)
 
 
 class SeqVecEmbedder(EmbedderInterface):
@@ -29,12 +31,12 @@ class SeqVecEmbedder(EmbedderInterface):
         self._use_cpu = self._options.get('use_cpu', False)
 
         if torch.cuda.is_available() and not self._use_cpu:
-            Logger.log("CUDA available")
+            logger.info("CUDA available")
 
             # Set CUDA device for ELMO machine
             _cuda_device = 0
         else:
-            Logger.log("CUDA NOT available")
+            logger.info("CUDA NOT available")
 
             # Set CUDA device for ELMO machine
             _cuda_device = -1

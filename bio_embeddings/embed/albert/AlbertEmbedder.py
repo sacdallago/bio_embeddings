@@ -1,10 +1,15 @@
+import logging
 import re
-import torch
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import torch
 from transformers import AlbertModel, AlbertTokenizer
+
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from bio_embeddings.utilities import Logger, SequenceTooLongException, SequenceEmbeddingLengthMismatchException
+from bio_embeddings.utilities import SequenceTooLongException, SequenceEmbeddingLengthMismatchException
+
+logger = logging.getLogger(__name__)
 
 
 class AlbertEmbedder(EmbedderInterface):
@@ -43,7 +48,7 @@ class AlbertEmbedder(EmbedderInterface):
             if not self._ignore_long_proteins:
                 raise SequenceTooLongException()
             else:
-                Logger.log('''Trying to embed a sequence of length {}, but maximal length allowed is {}.
+                logger.info('''Trying to embed a sequence of length {}, but maximal length allowed is {}.
                             The embedding for this sequence will be zeroes!'''.format(
                     sequence_length, self._max_sequence_length
                 ))
