@@ -1,19 +1,20 @@
 import logging
 from copy import deepcopy
+from typing import Dict, Any
 
 import h5py
 from pandas import read_csv
 from tqdm import tqdm
 
 from bio_embeddings.embed.albert import AlbertEmbedder
-from bio_embeddings.embed.seqvec import SeqVecEmbedder
+from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
     check_required, get_file_manager, get_model_directories_from_zip, read_fasta_file_generator
 
 logger = logging.getLogger(__name__)
 
 
-def seqvec(**kwargs):
+def seqvec(**kwargs) -> Dict[str, Any]:
     necessary_files = ['weights_file', 'options_file']
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
@@ -46,7 +47,7 @@ def seqvec(**kwargs):
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
         reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
 
-    # Create embeddings file if not discarted in params
+    # Create embeddings file if not discarded in params
     embeddings_file = None
 
     result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)

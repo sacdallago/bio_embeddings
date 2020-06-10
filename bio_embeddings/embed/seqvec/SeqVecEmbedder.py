@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 import torch
-from allennlp.commands.elmo import ElmoEmbedder as _ElmoEmbedder
+from allennlp.commands.elmo import ElmoEmbedder
 
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
 
@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class SeqVecEmbedder(EmbedderInterface):
+    _weights_file: str
+    _options_file: str
+    _use_cpu: bool
 
     def __init__(self, **kwargs):
         """
@@ -19,37 +22,33 @@ class SeqVecEmbedder(EmbedderInterface):
         :param options_file: path of options file
         :param use_cpu: overwrite autodiscovery and force CPU use
         :param max_amino_acids: max # of amino acids to include in embed_many batches. Default: 15k AA
-
         """
         super().__init__()
 
         self._options = kwargs
 
         # Get file locations from kwargs
-        self._weights_file = self._options.get('weights_file')
-        self._options_file = self._options.get('options_file')
+        self._weights_file = self._options['weights_file']
+        self._options_file = self._options['options_file']
         self._use_cpu = self._options.get('use_cpu', False)
 
         if torch.cuda.is_available() and not self._use_cpu:
             logger.info("CUDA available")
 
             # Set CUDA device for ELMO machine
-            _cuda_device = 0
+            cuda_device = 0
         else:
             logger.info("CUDA NOT available")
 
             # Set CUDA device for ELMO machine
-            _cuda_device = -1
-            pass
+            cuda_device = -1
 
         # Set AA lower bound
         self._max_amino_acids = self._options.get('max_amino_acids', 15000)
 
-        self._elmo_model = _ElmoEmbedder(weight_file=self._weights_file,
-                                         options_file=self._options_file,
-                                         cuda_device=_cuda_device)
-
-        pass
+        self._elmo_model = ElmoEmbedder(weight_file=self._weights_file,
+                                        options_file=self._options_file,
+                                        cuda_device=cuda_device)
 
     def embed(self, sequence: str):
         embedding = self._elmo_model.embed_sentence(list(sequence))  # get embedding for sequence
