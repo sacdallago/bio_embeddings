@@ -1,6 +1,6 @@
 import os
 from copy import deepcopy
-
+from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.visualize.pipeline import run as run_visualize
@@ -156,13 +156,26 @@ def run(config_file_path, **kwargs):
         else:
             stage_parameters = {**global_parameters, **stage_parameters}
 
+        # Register start time
+        start_time = datetime.now()
+        stage_parameters['start_time'] = str(start_time)
+
         stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
         write_config_file(stage_in, stage_parameters)
 
         stage_output_parameters = stage_runnable(**stage_parameters)
 
+        # Register end time
+        end_time = datetime.now()
+        stage_output_parameters['end_time'] = str(end_time)
+
+        # Register elapsed time
+        stage_output_parameters['elapsed_time'] = str(end_time - start_time)
+
         stage_out = file_manager.create_file(prefix, stage_name, _OUT_CONFIG_NAME, extension='.yml')
         write_config_file(stage_out, stage_output_parameters)
+
+        # Store in global_out config for later retrieval (e.g. depends_on)
         config[stage_name] = stage_output_parameters
 
     config['global'] = global_parameters
