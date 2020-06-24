@@ -1,3 +1,4 @@
+import contextlib
 import logging
 from copy import deepcopy
 from typing import Dict, Any
@@ -9,46 +10,41 @@ from tqdm import tqdm
 from bio_embeddings.embed.albert import AlbertEmbedder
 from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
 from bio_embeddings.utilities import InvalidParameterError, get_model_file, \
-    check_required, get_file_manager, get_model_directories_from_zip, read_fasta_file_generator
+    check_required, get_file_manager, get_model_directories_from_zip, read_fasta_file_generator, FileManagerInterface
 
 logger = logging.getLogger(__name__)
 
 
-def seqvec(**kwargs) -> Dict[str, Any]:
-    necessary_files = ['weights_file', 'options_file']
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
+def _get_reduced_embeddings_file_context(file_manager: FileManagerInterface, result_kwargs: Dict):
+    """
 
-    # Initialize pipeline and model specific options:
-    result_kwargs['max_amino_acids'] = result_kwargs.get("max_amino_acids", 15000)
-    result_kwargs['max_amino_acids_RAM'] = result_kwargs.get("max_amino_acids_RAM", 100000)
+    :param file_manager: The FileManager derived class which will be used to create the file
+    :param result_kwargs: A dictionary which will be updated in-place to include the path to the newly created file
 
-    if result_kwargs.get('seqvec_version') == 2 or result_kwargs.get('vocabulary_file'):
-        necessary_files.append('vocabulary_file')
-        result_kwargs['seqvec_version'] = 2
-
-    for file in necessary_files:
-        if not result_kwargs.get(file):
-            file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
-
-            get_model_file(path=file_path, model='seqvecv{}'.format(result_kwargs.get('seqvec_version', 1)),
-                           file=file)
-
-            result_kwargs[file] = file_path
+    :return: a file context
+    """
 
     # Create reduced embeddings file if set in params
     result_kwargs['reduce'] = result_kwargs.get('reduce', False)
 
-    reduced_embeddings_file = None
     if result_kwargs['reduce'] is True:
         reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                 result_kwargs.get('stage_name'),
                                                                 'reduced_embeddings_file', extension='.h5')
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
-        reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
+        return h5py.File(reduced_embeddings_file_path, "w")
 
-    # Create embeddings file if not discarded in params
-    embeddings_file = None
+    return contextlib.nullcontext()
+
+
+def _get_embeddings_file_context(file_manager: FileManagerInterface, result_kwargs: Dict):
+    """
+
+    :param file_manager: The FileManager derived class which will be used to create the file
+    :param result_kwargs: A dictionary which will be updated in-place to include the path to the newly created file
+
+    :return: a file context
+    """
 
     result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)
 
@@ -59,76 +55,101 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     else:
         embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
                                                         'embeddings_file', extension='.h5')
-        embeddings_file = h5py.File(embeddings_file_path, "w")
         result_kwargs['embeddings_file'] = embeddings_file_path
+        return h5py.File(embeddings_file_path, "w")
+
+    return contextlib.nullcontext()
+
+
+def seqvec(**kwargs) -> Dict[str, Any]:
+    necessary_files = ['weights_file', 'options_file']
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Initialize pipeline and model specific options:
+    result_kwargs['max_amino_acids'] = result_kwargs.get("max_amino_acids", 15000)
+    result_kwargs['max_amino_acids_RAM'] = result_kwargs.get("max_amino_acids_RAM", 100000)
+    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
+
+    if result_kwargs.get('seqvec_version') == 2 or result_kwargs.get('vocabulary_file'):
+        necessary_files.append('vocabulary_file')
+        result_kwargs['seqvec_version'] = 2
+
+    # Download neccessary files if needed
+    for file in necessary_files:
+        if not result_kwargs.get(file):
+            file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
+
+            get_model_file(path=file_path, model='seqvecv{}'.format(result_kwargs.get('seqvec_version', 1)),
+                           file=file)
+
+            result_kwargs[file] = file_path
 
     # Get embedder
     embedder = SeqVecEmbedder(**result_kwargs)
 
-    # Embed iteratively (5k sequences at the time)
-    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
+    # Get proteins
     protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 
     # Get sequence mapping to use as information source
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
 
+    # Initialize candidates list
     candidates = list()
     aa_count = 0
 
-    for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
-        candidates.append(sequence)
-        aa_count += len(sequence)
+    # Open embedding files or null contexts and iteratively save embeddings to file
+    with _get_embeddings_file_context(file_manager, result_kwargs) as embeddings_file:
+        with _get_reduced_embeddings_file_context(file_manager, result_kwargs) as reduced_embeddings_file:
 
-        # If a single sequence has more AA than allowed in max_amino_acids, switch to CPU
-        if len(sequence) > result_kwargs['max_amino_acids']:
-            logger.warning(
-                '''One sequence in your set has length {}, which is more than what is defined in the max_amino_acids parameter ({}).
+            for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
+                candidates.append(sequence)
+                aa_count += len(sequence)
 
-                To avoid running out of GPU memory, the pipeline will now use the CPU instead of the GPU to calculate embeddings.
-                This allows to embed much longer sequences (since using main RAM instead of GPU RAM), but comes at a significant speed deacreas (CPU instead of GPU computing).
+                # If a single sequence has more AA than allowed in max_amino_acids, switch to CPU
+                if len(sequence) > result_kwargs['max_amino_acids']:
+                    logger.warning(
+                        '''One sequence in your set has length {}, which is more than what is defined in the max_amino_acids parameter ({}).
+        
+                        To avoid running out of GPU memory, the pipeline will now use the CPU instead of the GPU to calculate embeddings.
+                        This allows to embed much longer sequences (since using main RAM instead of GPU RAM), but comes at a significant speed deacreas (CPU instead of GPU computing).
+        
+                        If you think your GPU RAM can handle longer sequences, try increasing max_amino_acids.
+                        As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(
+                            len(sequence), result_kwargs['max_amino_acids']))
 
-                If you think your GPU RAM can handle longer sequences, try increasing max_amino_acids.
-                As a rule of thumb: ~15000 AA require 5.5GB of GPU RAM and can be embedded on a GTX1080 with 8GB.'''.format(
-                    len(sequence), result_kwargs['max_amino_acids']))
+                    result_kwargs['use_cpu'] = True
+                    embedder = SeqVecEmbedder(**result_kwargs)
 
-            result_kwargs['use_cpu'] = True
-            embedder = SeqVecEmbedder(**result_kwargs)
+                if aa_count + len(sequence) > max_amino_acids_RAM:
+                    embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
-        if aa_count + len(sequence) > max_amino_acids_RAM:
-            embeddings = embedder.embed_many([protein.seq for protein in candidates])
+                    for index, protein in enumerate(candidates):
+                        if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                            embeddings_file.create_dataset(protein.id, data=embeddings[index])
 
-            for index, protein in enumerate(candidates):
-                if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-                    embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                        if result_kwargs.get('reduce') is True:
+                            reduced_embeddings_file.create_dataset(
+                                protein.id,
+                                data=embedder.reduce_per_protein(embeddings[index])
+                            )
 
-                if result_kwargs.get('reduce') is True:
-                    reduced_embeddings_file.create_dataset(
-                        protein.id,
-                        data=embedder.reduce_per_protein(embeddings[index])
-                    )
+                    # Reset
+                    aa_count = 0
+                    candidates = list()
 
-            # Reset
-            aa_count = 0
-            candidates = list()
+            if candidates:
+                embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
-    if candidates:
-        embeddings = embedder.embed_many([protein.seq for protein in candidates])
+                for index, protein in enumerate(candidates):
+                    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                        embeddings_file.create_dataset(protein.id, data=embeddings[index])
 
-        for index, protein in enumerate(candidates):
-            if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-                embeddings_file.create_dataset(protein.id, data=embeddings[index])
-
-            if result_kwargs.get('reduce') is True:
-                reduced_embeddings_file.create_dataset(
-                    protein.id,
-                    data=embedder.reduce_per_protein(embeddings[index])
-                )
-
-    # Close embeddings files
-    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-        embeddings_file.close()
-    if result_kwargs.get('reduce') is True:
-        reduced_embeddings_file.close()
+                    if result_kwargs.get('reduce') is True:
+                        reduced_embeddings_file.create_dataset(
+                            protein.id,
+                            data=embedder.reduce_per_protein(embeddings[index])
+                        )
 
     return result_kwargs
 
@@ -140,6 +161,7 @@ def albert(**kwargs):
 
     # Initialize pipeline and model specific options:
     result_kwargs['max_amino_acids_RAM'] = result_kwargs.get("max_amino_acids_RAM", 25000)
+    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
 
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
@@ -150,37 +172,10 @@ def albert(**kwargs):
 
             result_kwargs[directory] = directory_path
 
-    # Create reduced embeddings file if set in params
-    result_kwargs['reduce'] = result_kwargs.get('reduce', False)
-
-    reduced_embeddings_file = None
-    if result_kwargs['reduce'] is True:
-        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                result_kwargs.get('stage_name'),
-                                                                'reduced_embeddings_file', extension='.h5')
-        result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
-        reduced_embeddings_file = h5py.File(reduced_embeddings_file_path, "w")
-
-    # Create embeddings file if not discarded in params
-    embeddings_file = None
-
-    result_kwargs['discard_per_amino_acid_embeddings'] = result_kwargs.get('discard_per_amino_acid_embeddings', False)
-
-    if result_kwargs['discard_per_amino_acid_embeddings'] is True:
-        if result_kwargs['reduce'] is False:
-            raise InvalidParameterError(
-                "Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True.")
-    else:
-        embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'),
-                                                        'embeddings_file', extension='.h5')
-        embeddings_file = h5py.File(embeddings_file_path, "w")
-        result_kwargs['embeddings_file'] = embeddings_file_path
-
     # Get embedder
     embedder = AlbertEmbedder(**result_kwargs)
 
-    # Embed iteratively based on max AA in RAM at a given time
-    max_amino_acids_RAM = result_kwargs['max_amino_acids_RAM']
+    # Get proteins
     protein_generator = read_fasta_file_generator(result_kwargs['remapped_sequences_file'])
 
     # Get sequence mapping to use as information source
