@@ -157,7 +157,7 @@ def run(config_file_path, **kwargs):
             stage_parameters = {**global_parameters, **stage_parameters}
 
         # Register start time
-        start_time = datetime.now()
+        start_time = datetime.now().astimezone()
         stage_parameters['start_time'] = str(start_time)
 
         stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
@@ -166,7 +166,7 @@ def run(config_file_path, **kwargs):
         stage_output_parameters = stage_runnable(**stage_parameters)
 
         # Register end time
-        end_time = datetime.now()
+        end_time = datetime.now().astimezone()
         stage_output_parameters['end_time'] = str(end_time)
 
         # Register elapsed time
