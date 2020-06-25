@@ -184,45 +184,41 @@ def albert(**kwargs):
     candidates = list()
     aa_count = 0
 
-    for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
-        candidates.append(sequence)
-        aa_count += len(sequence)
+    with _get_embeddings_file_context(file_manager, result_kwargs) as embeddings_file:
+        with _get_reduced_embeddings_file_context(file_manager, result_kwargs) as reduced_embeddings_file:
+            for _, sequence in tqdm(enumerate(protein_generator), total=len(mapping_file)):
+                candidates.append(sequence)
+                aa_count += len(sequence)
 
-        if aa_count + len(sequence) > max_amino_acids_RAM:
-            embeddings = embedder.embed_many([protein.seq for protein in candidates])
+                if aa_count + len(sequence) > max_amino_acids_RAM:
+                    embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
-            for index, protein in enumerate(candidates):
-                if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-                    embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                    for index, protein in enumerate(candidates):
+                        if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                            embeddings_file.create_dataset(protein.id, data=embeddings[index])
 
-                if result_kwargs.get('reduce') is True:
-                    reduced_embeddings_file.create_dataset(
-                        protein.id,
-                        data=embedder.reduce_per_protein(embeddings[index])
-                    )
+                        if result_kwargs.get('reduce') is True:
+                            reduced_embeddings_file.create_dataset(
+                                protein.id,
+                                data=embedder.reduce_per_protein(embeddings[index])
+                            )
 
-            # Reset
-            aa_count = 0
-            candidates = list()
+                    # Reset
+                    aa_count = 0
+                    candidates = list()
 
-    if candidates:
-        embeddings = embedder.embed_many([protein.seq for protein in candidates])
+            if candidates:
+                embeddings = embedder.embed_many([protein.seq for protein in candidates])
 
-        for index, protein in enumerate(candidates):
-            if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-                embeddings_file.create_dataset(protein.id, data=embeddings[index])
+                for index, protein in enumerate(candidates):
+                    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
+                        embeddings_file.create_dataset(protein.id, data=embeddings[index])
 
-            if result_kwargs.get('reduce') is True:
-                reduced_embeddings_file.create_dataset(
-                    protein.id,
-                    data=embedder.reduce_per_protein(embeddings[index])
-                )
-
-    # Close embeddings files
-    if result_kwargs.get('discard_per_amino_acid_embeddings') is False:
-        embeddings_file.close()
-    if result_kwargs.get('reduce') is True:
-        reduced_embeddings_file.close()
+                    if result_kwargs.get('reduce') is True:
+                        reduced_embeddings_file.create_dataset(
+                            protein.id,
+                            data=embedder.reduce_per_protein(embeddings[index])
+                        )
 
     return result_kwargs
 
