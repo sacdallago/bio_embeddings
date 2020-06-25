@@ -4,7 +4,7 @@ from bio_embeddings.utilities.filemanagers.FileManagerInterface import FileManag
 
 def get_file_manager(**kwargs):
 
-    # A useless call to pacify the lintners
+    # A useless call to pacify the linters
     # TODO: when new FileManagers are available, parse the file manager type from "management".
     kwargs.get('management', {})
 
