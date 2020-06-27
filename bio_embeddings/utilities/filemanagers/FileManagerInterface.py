@@ -4,6 +4,10 @@ import abc
 class FileManagerInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
+    def __init__(self):
+        pass
+
+    @abc.abstractmethod
     def create_prefix(self, prefix) -> str:
         raise NotImplementedError
 
