@@ -1,9 +1,11 @@
+from hashlib import md5
 from typing import List, Generator
+
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
-from bio_embeddings.utilities.exceptions import MissingParameterError
-from hashlib import md5
 from pandas import DataFrame
+
+from bio_embeddings.utilities.exceptions import MissingParameterError
 
 
 def check_required(params: dict, keys: List[str]):
@@ -37,25 +39,20 @@ def _assign_hash(sequence_record: SeqRecord) -> SeqRecord:
     return sequence_record
 
 
-def read_fasta_file(file_path: str) -> List[SeqRecord]:
+def read_fasta(path: str) -> List[SeqRecord]:
     """
     Helper function to read FASTA file.
 
-    :param file_path: path to a valid FASTA file
+    :param path: path to a valid FASTA file
     :return: a list of SeqRecord objects.
     """
-    return list(SeqIO.parse(file_path, 'fasta'))
+    return list(SeqIO.parse(path, 'fasta'))
 
 
-def read_fasta_file_generator(file_path: str) -> Generator[SeqRecord, None, None]:
-    """
-    Helper function to read FASTA file via a generator. Useful when not wanting to load all sequences in memory at once.
-
-    :param file_path: path to a valid FASTA file
-    :return: a generator of SeqRecord objects.
-    """
-
-    return SeqIO.parse(file_path, 'fasta')
+def read_fasta_generator(path: str) -> Generator[str, None, None]:
+    """ Iterate over the sequence in a fasta file lazily """
+    for entry in SeqIO.parse(path, 'fasta'):
+        yield str(entry.seq)
 
 
 def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRecord, DataFrame):
@@ -79,7 +76,8 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
         sequence_records[:] = map(_assign_hash, sequence_records)
         new_ids = [s.id for s in sequence_records]
 
-    df = DataFrame(zip(original_ids, [len(seq) for seq in sequence_records]), columns=['original_id', 'sequence_length'],
+    df = DataFrame(zip(original_ids, [len(seq) for seq in sequence_records]),
+                   columns=['original_id', 'sequence_length'],
                    index=new_ids)
 
     return df
@@ -87,4 +85,3 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
 
 def write_fasta_file(sequence_records: List[SeqRecord], file_path: str) -> None:
     SeqIO.write(sequence_records, file_path, 'fasta')
-    pass

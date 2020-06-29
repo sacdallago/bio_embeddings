@@ -1,19 +1,23 @@
 import logging
 import re
 from pathlib import Path
+from typing import Iterable, Optional, Generator
 
 import numpy as np
 import torch
 from transformers import AlbertModel, AlbertTokenizer
 
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from bio_embeddings.utilities import SequenceTooLongException, SequenceEmbeddingLengthMismatchException
+from bio_embeddings.utilities import (
+    SequenceTooLongException,
+    SequenceEmbeddingLengthMismatchException,
+)
+from numpy import ndarray
 
 logger = logging.getLogger(__name__)
 
 
 class AlbertEmbedder(EmbedderInterface):
-
     def __init__(self, **kwargs):
         """
         Initialize Albert embedder.
@@ -32,7 +36,9 @@ class AlbertEmbedder(EmbedderInterface):
         self._use_cpu = self._options.get('use_cpu', False)
 
         # utils
-        self._device = torch.device('cuda:0' if torch.cuda.is_available() and not self._use_cpu else 'cpu')
+        self._device = torch.device(
+            "cuda:0" if torch.cuda.is_available() and not self._use_cpu else "cpu"
+        )
         self._max_sequence_length = 510
 
         # make model
@@ -42,7 +48,7 @@ class AlbertEmbedder(EmbedderInterface):
 
         pass
 
-    def embed(self, sequence):
+    def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)
         if sequence_length > self._max_sequence_length:
             if not self._ignore_long_proteins:
@@ -57,7 +63,7 @@ class AlbertEmbedder(EmbedderInterface):
         sequence = re.sub(r"[U|Z|O|B]", "X", sequence)
 
         # Tokenize sequence with spaces
-        sequence = ' '.join(list(sequence))
+        sequence = " ".join(list(sequence))
 
         # tokenize sequence
         tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
@@ -66,16 +72,17 @@ class AlbertEmbedder(EmbedderInterface):
             # drop batch dimension
             embedding = self._albert_model(tokenized_sequence)[0].squeeze()
             # remove special tokens added to start/end
-            embedding = embedding[1:sequence_length + 1]
+            embedding = embedding[1 : sequence_length + 1]
 
         if not sequence_length == embedding.shape[0]:
             raise SequenceEmbeddingLengthMismatchException()
 
         return embedding.cpu().detach().numpy().squeeze()
 
-    def embed_many(self, sequences):
-
-        return [self.embed(sequence) for sequence in sequences]
+    def embed_many(
+        self, sequences: Iterable[str], batchsize: Optional[int] = None
+    ) -> Generator[ndarray, None, None]:
+        return (self.embed(sequence) for sequence in sequences)
 
     @staticmethod
     def reduce_per_protein(embedding):

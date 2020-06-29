@@ -20,3 +20,7 @@ def main():
     arguments = parser.parse_args()
 
     run(arguments.config_path[0], overwrite=arguments.overwrite)
+
+
+if __name__ == '__main__':
+    main()

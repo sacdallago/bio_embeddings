@@ -1,9 +1,12 @@
-import h5py
 from io import StringIO
 from os import path
-from tempfile import NamedTemporaryFile
 from pathlib import Path
-from bio_embeddings.utilities import read_fasta_file_generator, read_fasta_file
+from tempfile import NamedTemporaryFile
+from typing import Iterable
+
+import h5py
+from Bio import SeqIO, SeqRecord
+
 from bio_embeddings.embed import SeqVecEmbedder, AlbertEmbedder
 from webserver.database import get_file, write_file
 from webserver.tasks import task_keeper
@@ -18,38 +21,16 @@ _seqvec_options_file = path.join(_model_dir, 'elmov1', 'options.json')
 _albert_model_dir = path.join(_model_dir, 'albert')
 
 
-def _get_embeddings(protein_generator, embedder, reduced_embeddings_file):
-    # Embed iteratively (5k sequences at the time)
-    max_amino_acids_RAM = 15000
+def _get_embeddings(protein_generator: Iterable[SeqRecord], embedder, reduced_embeddings_file):
+    max_amino_acids = 15000
+    protein_data = [(entry.id, str(entry.seq)) for entry in protein_generator]
+    ids, sequences = zip(*protein_data)
 
-    candidates = list()
-    aa_count = 0
-
-    for sequence in protein_generator:
-        candidates.append(sequence)
-        aa_count += len(sequence)
-
-        if aa_count + len(sequence) > max_amino_acids_RAM:
-            embeddings = embedder.embed_many([protein.seq for protein in candidates])
-
-            for index, protein in enumerate(candidates):
-                reduced_embeddings_file.create_dataset(
-                    protein.id,
-                    data=embedder.reduce_per_protein(embeddings[index])
-                )
-
-            # Reset
-            aa_count = 0
-            candidates = list()
-
-    if candidates:
-        embeddings = embedder.embed_many([protein.seq for protein in candidates])
-
-        for index, protein in enumerate(candidates):
-            reduced_embeddings_file.create_dataset(
-                protein.id,
-                data=embedder.reduce_per_protein(embeddings[index])
-            )
+    for sequence_id, embedding in zip(ids, embedder.embed_many(sequences, max_amino_acids)):
+        reduced_embeddings_file.create_dataset(
+            sequence_id,
+            data=embedder.reduce_per_protein(embedding)
+        )
 
 
 @task_keeper.task()
@@ -61,7 +42,7 @@ def get_embeddings(job_identifier, embedder='seqvec'):
 
     with get_file(job_identifier, "sequences_file") as db_file:
         file_content = StringIO(db_file.read().decode("utf-8"))
-        protein_generator = read_fasta_file(file_content)
+        protein_generator: Iterable[SeqRecord] = SeqIO.parse(file_content, 'fasta')
         db_file.close()
 
     with NamedTemporaryFile() as temp_file:
