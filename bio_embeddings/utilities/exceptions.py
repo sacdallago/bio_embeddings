@@ -47,7 +47,7 @@ class MD5ClashException(Exception):
     """
 
 
-class TooFewComponentsException(Exception):
+class TooFewComponentsException(InvalidParameterError):
     """
     Thrown when n_components is nonsensical (e.g. < 2)
     """
