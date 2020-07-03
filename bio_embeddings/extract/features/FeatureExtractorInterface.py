@@ -6,7 +6,7 @@ Authors:
 """
 
 import abc
-from bio_embeddings.extract_features.features import FeaturesCollection
+from bio_embeddings.extract.features import FeaturesCollection
 
 
 class FeatureExtractorInterface(object, metaclass=abc.ABCMeta):

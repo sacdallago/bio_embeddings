@@ -2,10 +2,10 @@ import logging
 
 import torch
 
-from bio_embeddings.extract_features.FeatureExtractorInterface import FeatureExtractorInterface
-from bio_embeddings.extract_features.features import Location, Membrane, Disorder, SecondaryStructure, \
+from bio_embeddings.extract.features.FeatureExtractorInterface import FeatureExtractorInterface
+from bio_embeddings.extract.features import Location, Membrane, Disorder, SecondaryStructure, \
     FeaturesCollection
-from bio_embeddings.extract_features.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
+from bio_embeddings.extract.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 from bio_embeddings.utilities import NoEmbeddingException
 
 logger = logging.getLogger(__name__)

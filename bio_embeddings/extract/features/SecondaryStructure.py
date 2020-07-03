@@ -1,4 +1,4 @@
-from bio_embeddings.extract_features.features import FeatureInterface
+from bio_embeddings.extract.features import FeatureInterface
 
 
 class SecondaryStructure(FeatureInterface):

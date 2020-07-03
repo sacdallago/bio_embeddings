@@ -1,4 +1,4 @@
-from bio_embeddings.extract_features.features import FeatureInterface, InvalidFeatureException
+from bio_embeddings.extract.features import FeatureInterface, InvalidFeatureException
 
 
 class Membrane(FeatureInterface):
