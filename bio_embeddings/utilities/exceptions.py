@@ -40,7 +40,14 @@ class SequenceEmbeddingLengthMismatchException(Exception):
     Exception when trying to embed sequences longer then the limit
     """
 
+
 class MD5ClashException(Exception):
     """
     When remapping sequences from a fasta file, if there is an MD5 clash, this will stop the execution
+    """
+
+
+class TooFewComponentsException(Exception):
+    """
+    Thrown when n_components is nonsensical (e.g. < 2)
     """
