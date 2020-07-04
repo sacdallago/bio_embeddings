@@ -117,3 +117,6 @@ stage_3:
   # if set to False (default), mapping will be performed on original identifiers.
   # Where missing or duplicate, will be ignored
   # merge_via_index: [True, *False]
+
+  # Optional: 2D vs 3D plot
+  # n_components: [2,*3]
