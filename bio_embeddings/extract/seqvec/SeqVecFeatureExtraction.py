@@ -3,8 +3,9 @@ import torch
 
 from typing import List
 from numpy import ndarray
+from enum import Enum
 
-from bio_embeddings.extract.features import Location, Membrane, Disorder, SecondaryStructure, FeatureInterface
+from bio_embeddings.extract.features import Location, Membrane, Disorder, SecondaryStructure
 from bio_embeddings.extract.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 
 logger = logging.getLogger(__name__)
@@ -122,7 +123,7 @@ class SeqVecFeatureExtractor(object):
         return pred_dssp3, pred_dssp8, pred_disor
 
     @staticmethod
-    def _class2label(label_dict, yhat) -> List[FeatureInterface]:
+    def _class2label(label_dict, yhat) -> List[Enum]:
         # get index of output node with max. activation (=predicted class)
         class_indices = torch.max(yhat, dim=1)[1].squeeze()
         return [label_dict[class_idx.item()] for class_idx in class_indices]

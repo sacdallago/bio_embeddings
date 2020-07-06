@@ -1,7 +1,7 @@
-from bio_embeddings.extract.features import FeatureInterface, InvalidFeatureException
+from enum import Enum
 
 
-class Location(FeatureInterface):
+class Location(Enum):
 
     CELL_MEMBRANE = 'Cell-Membrane'
     CYTOPLASM = 'Cytoplasm'
@@ -15,5 +15,6 @@ class Location(FeatureInterface):
     EXTRACELLULAR = 'Extra - cellular'
     UNKNOWN = '?'
 
-    def isAAFeature(self):
+    @staticmethod
+    def isAAFeature():
         return False

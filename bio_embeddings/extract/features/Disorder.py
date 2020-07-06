@@ -1,10 +1,11 @@
-from bio_embeddings.extract.features import FeatureInterface
+from enum import Enum
 
 
-class Disorder(FeatureInterface):
+class Disorder(Enum):
     DISORDER = 'X'
     ORDER = '-'
     UNKNOWN = '?'
 
-    def isAAFeature(self):
+    @staticmethod
+    def isAAFeature():
         return True

@@ -3,8 +3,8 @@ seqvecv1:
   options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
 
 seqvec_from_publication_feature_extractors:
-  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
-  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
 
 seqvecv2:
   weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"

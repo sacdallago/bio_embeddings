@@ -1,0 +1,12 @@
+global:
+  sequences_file: fasta.fa
+  prefix: simple
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  weights_file: /Users/chdallago/git/api.embed.protein.properties/models/elmov1/weights.hdf5
+  options_file: /Users/chdallago/git/api.embed.protein.properties/models/elmov1/options.json
+features_from_seqvec:
+  type: extract
+  protocol: seqvec_from_publication
+  depends_on: seqvec_embeddings

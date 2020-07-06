@@ -1,11 +1,12 @@
-from bio_embeddings.extract.features import FeatureInterface, InvalidFeatureException
+from enum import Enum
 
 
-class Membrane(FeatureInterface):
+class Membrane(Enum):
 
     MEMBRANE = 'Membrane bound'
     SOLUBLE = 'Soluble'
     UNKONWN = "?"
 
-    def isAAFeature(self):
+    @staticmethod
+    def isAAFeature():
         return False

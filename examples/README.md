@@ -32,7 +32,12 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
     
   *Note*: While it is possible to use the pipeline to produce many visualizations for many different annotations, it may be more efficient to use a Notebook for this.
   We include a notebook (`project_visualize_pipeline_embeddings`) covering the same use case as the one presented here in the `notebooks` folder at the root of this project.
+
+- `use_case_four`
+
+  You have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
   
+
 - `cath`
 
   This example includes sequences pulled directly from the CATH database (http://www.cathdb.info) and annotations for structural folds. To reduce the embeddings, UMAP was used.

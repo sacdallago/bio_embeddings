@@ -74,7 +74,7 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     DSSP8_sequences = list()
     disorder_sequences = list()
 
-    with h5py.File(result_kwargs['reduced_embeddings_file'], 'r') as embedding_file:
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
         for protein_sequence in read_fasta_file_generator(result_kwargs['remapped_sequences_file']):
 
             # Per-AA features: DSSP3, DSSP8 and disorder

@@ -1,7 +1,7 @@
-from bio_embeddings.extract.features import FeatureInterface
+from enum import Enum
 
 
-class SecondaryStructure(FeatureInterface):
+class SecondaryStructure(Enum):
     # From https://swift.cmbi.umcn.nl/gv/dssp/
 
     ALPHA_HELIX = "H"
@@ -14,5 +14,6 @@ class SecondaryStructure(FeatureInterface):
     IRREGULAR = "C"
     UNKNOWN = "?"
 
-    def isAAFeature(self):
+    @staticmethod
+    def isAAFeature():
         return True
