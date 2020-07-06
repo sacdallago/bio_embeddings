@@ -1,4 +1,5 @@
 from typing import List, Generator
+from enum import Enum
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from bio_embeddings.utilities.exceptions import MissingParameterError
@@ -88,3 +89,7 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
 def write_fasta_file(sequence_records: List[SeqRecord], file_path: str) -> None:
     SeqIO.write(sequence_records, file_path, 'fasta')
     pass
+
+
+def convert_list_of_enum_to_string(list_of_enums: List[Enum]) -> str:
+    return "".join([e.value for e in list_of_enums])

@@ -1,1 +1,0 @@
-from bio_embeddings.extract.seqvec.SeqVecFeatureExtractor import SeqVecFeatureExtractor

@@ -117,3 +117,23 @@ stage_3:
   # if set to False (default), mapping will be performed on original identifiers.
   # Where missing or duplicate, will be ignored
   # merge_via_index: [True, *False]
+
+stage_4:
+  type: extract
+  # Required: which method to use.
+  # Current options:
+  #   - seqvec_from_publication (Uses models used for evaluation in https://doi.org/10.1186/s12859-019-3220-8 )
+  #   - unsupervised
+  protocol: seqvec_from_publication
+
+  # Either depend on an embed stage, or supply reduced or raw embeddings
+  depends_on: stage_2
+
+  # Optional for protocol: seqvec_from_publication
+  # will be downloaded if not supplied
+  # secondary_structure_checkpoint_file: path/to/checkpoint.pt
+  # subcellular_location_checkpoint_file: path/to/checkpoint.pt
+
+  # Required for protocol: unsupervised
+  # reference_embeddings: path/to/embeddings.hd5
+  # reference_annotations: path/to/annotation_file.csv

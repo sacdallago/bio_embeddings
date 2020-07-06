@@ -3,39 +3,17 @@ from bio_embeddings.extract.features import FeatureInterface, InvalidFeatureExce
 
 class Location(FeatureInterface):
 
-    def __init__(self):
-        super().__init__()
-        self._location = None
+    CELL_MEMBRANE = 'Cell-Membrane'
+    CYTOPLASM = 'Cytoplasm'
+    ENDOPLASMATIC_RETICULUM = 'Endoplasmic reticulum'
+    GOLGI_APPARATUS = 'Golgi - Apparatus'
+    LYSOSOME_OR_VACUOLE = 'Lysosome / Vacuole'
+    MITOCHONDRION = 'Mitochondrion'
+    NUCLEUS = 'Nucleus'
+    PEROXISOME = 'Peroxisome'
+    PLASTID = 'Plastid'
+    EXTRACELLULAR = 'Extra - cellular'
+    UNKNOWN = '?'
 
     def isAAFeature(self):
         return False
-
-    def set_location(self, location):
-        """
-        :param location: A string representing the protein's sub-cellular location. Accepted locations are:
-                Cell-Membrane
-                Cytoplasm
-                Endoplasmic reticulum
-                Golgi-Apparatus
-                Lysosome/Vacuole
-                Mitochondrion
-                Nucleus
-                Peroxisome
-                Plastid
-                Extra-cellular
-        :return: void
-        """
-
-        # TODO: check that string only equals accepted locations
-
-        if location not in ['Cell-Membrane', 'Cytoplasm', 'Endoplasmic reticulum', 'Golgi-Apparatus',
-                     'Lysosome/Vacuole', 'Mitochondrion', 'Nucleus', 'Peroxisome', 'Plastid', 'Extra-cellular']:
-            raise InvalidFeatureException
-
-        self._location = location
-
-        pass
-
-    def get_location(self):
-        return self._location
-
