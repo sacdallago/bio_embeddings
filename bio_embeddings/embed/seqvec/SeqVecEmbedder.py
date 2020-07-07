@@ -96,7 +96,7 @@ class SeqVecEmbedder(EmbedderInterface):
                 logger.error(
                     f"Error processing batch of {len(batch)} sequences: {e}. "
                     f"You might want to consider adjusting the `batch_size` parameter. "
-                    f"This batch will now be process sequence by sequence"
+                    f"Will try to embed each sequence in the set individually on the GPU."
                 )
                 for seq in batch:
                     try:
