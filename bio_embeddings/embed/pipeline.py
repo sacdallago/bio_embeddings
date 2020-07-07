@@ -104,7 +104,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
         file_manager, result_kwargs
     ) as reduced_embeddings_file:
         embedding_generator = embedder.embed_many(
-            (str(seq.seq) for seq in sequences), result_kwargs["max_amino_acids"]
+            (str(seq) for seq in sequences), result_kwargs["max_amino_acids"]
         )
         for sequence_id, embedding in zip(
             mapping_file.index, tqdm(embedding_generator, total=len(mapping_file))

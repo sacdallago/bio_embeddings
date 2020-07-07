@@ -41,7 +41,7 @@ class MockElmoMemory:
 def test_fallbacks(caplog):
     """ Check that the fallbacks to single sequence processing and/or the CPU are working.
 
-    batchsize is 18, actual GPU limit 15, so that we get a case where a too
+    batch_size is 18, actual GPU limit 15, so that we get a case where a too
     big batch has to be handled
 
     Procedure:
@@ -82,11 +82,14 @@ def test_fallbacks(caplog):
     ]
 
     assert caplog.messages == [
-        "A sequence is 20 residues long, which is longer than your batchsize of 18",
+        "A sequence is 20 residues long, which is longer than your `batch_size` "
+        "parameter which is 18",
         "RuntimeError for sequence with 20 residues: Too big for the GPU: [20]. This "
         "most likely means that you don't have enough GPU RAM to embed a protein this "
-        "long.",
-        "Embedding sequence on the CPU now. This is very slow.",
-        "Error processing batch of 2 sequences: Too big for the GPU: [8, 8]. Starting "
-        "single sequence processing",
+        "long. Embedding on the CPU instead, which is very slow",
+        "Loading model for CPU into RAM. Embedding on the CPU is very slow and you "
+        "should avoid it.",
+        "Error processing batch of 2 sequences: Too big for the GPU: [8, 8]. You "
+        "might want to consider adjusting the `batch_size` parameter. This batch will "
+        "now be process sequence by sequence",
     ]

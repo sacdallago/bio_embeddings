@@ -30,12 +30,12 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def embed_many(self, sequences: List[str], batchsize: Optional[int] = None) -> Generator[ndarray, None, None]:
+    def embed_many(self, sequences: List[str], batch_size: Optional[int] = None) -> Generator[ndarray, None, None]:
         """
         Returns embedding for one sequence.
 
         :param sequences: List of proteins as AA strings
-        :param batchsize: For embedders that profit from batching, this is maximum number of AA per batch
+        :param batch_size: For embedders that profit from batching, this is maximum number of AA per batch
         :return: A list object with embeddings of the sequences.
         """
 

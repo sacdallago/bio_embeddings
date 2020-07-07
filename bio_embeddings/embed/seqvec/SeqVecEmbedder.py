@@ -15,8 +15,8 @@ class SeqVecEmbedder(EmbedderInterface):
     _options_file: str
     _use_cpu: bool
     _elmo_model: ElmoEmbedder
-    # The fallback model, which will be initialized if needed
-    _elmo_model_cpu: Optional[ElmoEmbedder] = None
+    # The fallback model running on the cpu, which will be initialized if needed
+    _elmo_model_fallback: Optional[ElmoEmbedder] = None
 
     def __init__(self, **kwargs):
         """
@@ -47,9 +47,6 @@ class SeqVecEmbedder(EmbedderInterface):
             # Set CUDA device for ELMO machine
             cuda_device = -1
 
-        # Set AA lower bound
-        self._max_amino_acids = self._options.get("max_amino_acids", 15000)
-
         self._elmo_model = ElmoEmbedder(
             weight_file=self._weights_file,
             options_file=self._options_file,
@@ -59,17 +56,17 @@ class SeqVecEmbedder(EmbedderInterface):
     def embed(self, sequence: str) -> ndarray:
         return self._elmo_model.embed_sentence(list(sequence))
 
-    def embed_cpu(self, sequence: str) -> ndarray:
-        logger.warning(
-            "Embedding sequence on the CPU now. This is very slow."
-        )
-        if not self._elmo_model_cpu:
-            self._elmo_model_cpu = ElmoEmbedder(
+    def embed_fallback(self, sequence: str) -> ndarray:
+        if not self._elmo_model_fallback:
+            logger.warning(
+                "Loading model for CPU into RAM. Embedding on the CPU is very slow and you should avoid it."
+            )
+            self._elmo_model_fallback = ElmoEmbedder(
                 weight_file=self._weights_file,
                 options_file=self._options_file,
                 cuda_device=-1,
             )
-        return self._elmo_model_cpu.embed_sentence(list(sequence))
+        return self._elmo_model_fallback.embed_sentence(list(sequence))
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
         """ Tries to get the embeddings in this order:
@@ -79,7 +76,7 @@ class SeqVecEmbedder(EmbedderInterface):
 
         Single sequence processing is done in case of runtime error due to
         a) very long sequence or b) too large batch size
-        If this fails, you might want to consider lowering batchsize and/or
+        If this fails, you might want to consider lowering batch_size and/or
         cutting very long sequences into smaller chunks
 
         Returns unprocessed embeddings
@@ -91,12 +88,15 @@ class SeqVecEmbedder(EmbedderInterface):
             if len(batch) == 1:
                 logger.error(
                     f"RuntimeError for sequence with {len(batch[0])} residues: {e}. "
-                    f"This most likely means that you don't have enough GPU RAM to embed a protein this long."
+                    f"This most likely means that you don't have enough GPU RAM to embed a protein this long. "
+                    f"Embedding on the CPU instead, which is very slow"
                 )
-                yield self.embed_cpu(batch[0])
+                yield self.embed_fallback(batch[0])
             else:
                 logger.error(
-                    f"Error processing batch of {len(batch)} sequences: {e}. Starting single sequence processing"
+                    f"Error processing batch of {len(batch)} sequences: {e}. "
+                    f"You might want to consider adjusting the `batch_size` parameter. "
+                    f"This batch will now be process sequence by sequence"
                 )
                 for seq in batch:
                     try:
@@ -106,25 +106,23 @@ class SeqVecEmbedder(EmbedderInterface):
                             f"RuntimeError for sequence with {len(seq)} residues: {e}. "
                             f"This most likely means that you don't have enough GPU RAM to embed a protein this long."
                         )
-                        yield self.embed_cpu(seq)
+                        yield self.embed_fallback(seq)
 
     def embed_many(
-        self, sequences: Iterable[str], batchsize: Optional[int] = None
+        self, sequences: Iterable[str], batch_size: Optional[int] = None
     ) -> Generator[ndarray, None, None]:
-        has_warned = False
-        if batchsize:
+        if batch_size:
             batch = []
             length = 0
             for sequence in sequences:
-                if len(sequence) > batchsize and not has_warned:
+                if len(sequence) > batch_size:
                     logger.warning(
                         f"A sequence is {len(sequence)} residues long, "
-                        f"which is longer than your batchsize of {batchsize}"
+                        f"which is longer than your `batch_size` parameter which is {batch_size}"
                     )
                     yield from self.embed_batch([sequence])
-                    has_warned = True
                     continue
-                if length + len(sequence) >= batchsize:
+                if length + len(sequence) >= batch_size:
                     yield from self.embed_batch(batch)
                     batch = []
                     length = 0

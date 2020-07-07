@@ -80,7 +80,7 @@ class AlbertEmbedder(EmbedderInterface):
         return embedding.cpu().detach().numpy().squeeze()
 
     def embed_many(
-        self, sequences: Iterable[str], batchsize: Optional[int] = None
+        self, sequences: Iterable[str], batch_size: Optional[int] = None
     ) -> Generator[ndarray, None, None]:
         return (self.embed(sequence) for sequence in sequences)
 
