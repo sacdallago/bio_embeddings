@@ -1,0 +1,16 @@
+image: "python:3.7"
+
+before_script:
+  - python --version
+  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+  - $HOME/.poetry/bin/poetry config virtualenvs.in-project true
+  - $HOME/.poetry/bin/poetry install # TODO: Caching
+
+stages:
+  - Test
+
+pytest:
+  stage: Test
+  script:
+  - .venv/bin/pytest
+
