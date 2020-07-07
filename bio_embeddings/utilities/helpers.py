@@ -1,5 +1,5 @@
 from hashlib import md5
-from typing import List, Generator
+from typing import List
 
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
@@ -47,12 +47,6 @@ def read_fasta(path: str) -> List[SeqRecord]:
     :return: a list of SeqRecord objects.
     """
     return list(SeqIO.parse(path, 'fasta'))
-
-
-def read_fasta_generator(path: str) -> Generator[str, None, None]:
-    """ Iterate over the sequence in a fasta file lazily """
-    for entry in SeqIO.parse(path, 'fasta'):
-        yield str(entry.seq)
 
 
 def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRecord, DataFrame):

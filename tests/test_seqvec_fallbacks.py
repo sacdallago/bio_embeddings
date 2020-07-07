@@ -90,6 +90,6 @@ def test_fallbacks(caplog):
         "Loading model for CPU into RAM. Embedding on the CPU is very slow and you "
         "should avoid it.",
         "Error processing batch of 2 sequences: Too big for the GPU: [8, 8]. You "
-        "might want to consider adjusting the `batch_size` parameter. This batch will "
-        "now be process sequence by sequence",
+        "might want to consider adjusting the `batch_size` parameter. Will try to "
+        "embed each sequence in the set individually on the GPU.",
     ]

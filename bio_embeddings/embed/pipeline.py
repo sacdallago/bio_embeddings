@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import Dict, Any
 
 import h5py
+from Bio import SeqIO
 from pandas import read_csv
 from tqdm import tqdm
 
@@ -15,7 +16,6 @@ from bio_embeddings.utilities import (
     check_required,
     get_file_manager,
     get_model_directories_from_zip,
-    read_fasta_generator,
     FileManagerInterface,
 )
 
@@ -94,7 +94,8 @@ def seqvec(**kwargs) -> Dict[str, Any]:
             result_kwargs[file] = file_path
 
     embedder = SeqVecEmbedder(**result_kwargs)
-    sequences = read_fasta_generator(result_kwargs["remapped_sequences_file"])
+    # Lazy fasta file reader. The mapping file contains the corresponding ids in the same order
+    sequences = (str(entry.seq) for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], 'fasta'))
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
 
     # Open embedding files or null contexts and iteratively save embeddings to file
@@ -103,9 +104,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     ) as embeddings_file, _get_reduced_embeddings_file_context(
         file_manager, result_kwargs
     ) as reduced_embeddings_file:
-        embedding_generator = embedder.embed_many(
-            (str(seq) for seq in sequences), result_kwargs["max_amino_acids"]
-        )
+        embedding_generator = embedder.embed_many(sequences, result_kwargs["max_amino_acids"])
         for sequence_id, embedding in zip(
             mapping_file.index, tqdm(embedding_generator, total=len(mapping_file))
         ):
@@ -137,9 +136,9 @@ def albert(**kwargs):
 
             result_kwargs[directory] = directory_path
 
-    # Get embedder
     embedder = AlbertEmbedder(**result_kwargs)
-    sequences = read_fasta_generator(result_kwargs["remapped_sequences_file"])
+    # Lazy fasta file reader. The mapping file contains the corresponding ids in the same order
+    sequences = (str(entry.seq) for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], 'fasta'))
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
 
     # Open embedding files or null contexts and iteratively save embeddings to file
@@ -148,9 +147,7 @@ def albert(**kwargs):
     ) as embeddings_file, _get_reduced_embeddings_file_context(
         file_manager, result_kwargs
     ) as reduced_embeddings_file:
-        embedding_generator = embedder.embed_many(
-            (str(seq.seq) for seq in sequences), result_kwargs["max_amino_acids"]
-        )
+        embedding_generator = embedder.embed_many(sequences, result_kwargs["max_amino_acids"])
         for sequence_id, embedding in zip(
             mapping_file.index, tqdm(embedding_generator, total=len(mapping_file))
         ):
