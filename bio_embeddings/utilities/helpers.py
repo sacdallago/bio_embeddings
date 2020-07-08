@@ -58,7 +58,7 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
     :param simple: Bolean; if set to true use numerical index (1,2,3,4) instead of md5 hash
     :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id, and the sequence length.
     """
-    sequence_records[:] = sorted(sequence_records, key=lambda seq: len(seq))
+    sequence_records[:] = sorted(sequence_records, key=lambda seq: -len(seq))
     original_ids = [s.id for s in sequence_records]
 
     if simple:
