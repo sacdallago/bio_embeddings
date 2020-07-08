@@ -37,12 +37,12 @@ class SeqVecEmbedder(EmbedderInterface):
         self._use_cpu = self._options.get("use_cpu", False)
 
         if torch.cuda.is_available() and not self._use_cpu:
-            logger.info("CUDA available")
+            logger.info("CUDA available, using the GPU")
 
             # Set CUDA device for ELMO machine
             cuda_device = 0
         else:
-            logger.info("CUDA NOT available")
+            logger.info("CUDA NOT available, using the CPU. This is slow")
 
             # Set CUDA device for ELMO machine
             cuda_device = -1
