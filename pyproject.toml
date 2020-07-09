@@ -29,7 +29,7 @@ homepage = "https://visualize.protein.properties"
 repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "~ 3.6.6 || ^3.7 || 3.8"
 allennlp = "^0.9.0"
 numpy = "^1.18.3"
 gensim = "^3.8.2"
@@ -48,12 +48,14 @@ tqdm = "^4.45.0"
 lock = "^2018.3.25"
 
 
+
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"
 invoke = "^1.4.1"
 check-manifest = "^0.41"
 wheel = "^0.34.2"
 jupyter = "^1.0.0"
+tox = "^3.16.1"
 
 [tool.black]
 include = '\.pyi?$'
