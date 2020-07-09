@@ -24,7 +24,7 @@ stages:
   <<: *install-deps
   stage: tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
-  script: poetry run pytest -v --run_download --run_slow
+  script: poetry run pytest -v
 
 python3.6:
   <<: *test
