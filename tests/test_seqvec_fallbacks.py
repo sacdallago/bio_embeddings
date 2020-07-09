@@ -56,6 +56,9 @@ def test_fallbacks(caplog):
         lambda weight_file, options_file, cuda_device: MockElmoMemory(
             cuda_device, elmo_log
         ),
+    ), mock.patch(
+        "bio_embeddings.embed.seqvec.SeqVecEmbedder.torch.cuda.is_available",
+        lambda: True,
     ):
         sequences = [
             "M" * 20,

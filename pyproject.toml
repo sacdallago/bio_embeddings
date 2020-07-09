@@ -2,7 +2,7 @@
 name = "bio_embeddings"
 version = "0.1.3"
 description = "A pipeline for protein embedding generation and visualization"
-authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>",  "Konstantin Schuetze <placeholder@email.com>"]
+authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>",  "Konstantin Schuetze <schuetze@in.tum.de>"]
 maintainers = ["Rostlab <admin@rostlab.org>"]
 license = "MIT"
 readme = "README.md"
