@@ -13,10 +13,10 @@ class MockElmoEmbedder:
     def __init__(self, options_file: str, weight_file: str, cuda_device: int = -1):
         self.embeddedings = numpy.load("test-data/embeddings.npz")
 
-    def embed_sentences(self, many: List[List[str]]) -> List[ndarray]:
+    def embed_batch(self, many: List[str]) -> List[ndarray]:
         return [self.embed_sentence(i) for i in many]
 
-    def embed_sentence(self, _sentence: List[str]) -> ndarray:
+    def embed_sentence(self, _sentence: str) -> ndarray:
         return list(self.embeddedings)[0]  # TODO
 
 

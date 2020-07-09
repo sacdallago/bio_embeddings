@@ -45,10 +45,10 @@ class FileSystemFileManager(FileManagerInterface):
             with open(path, 'w'):
                 os.utime(path, None)
         except OSError as e:
-            logger.error("Failed to create file %s." % path)
+            logger.error("Failed to create file %s" % path)
             raise e
         else:
-            logger.info("Successfully created the file %s." % path)
+            logger.info("Created the file %s" % path)
 
         return str(path)
 
@@ -65,10 +65,10 @@ class FileSystemFileManager(FileManagerInterface):
         except FileExistsError:
             logger.info("Directory %s already exists." % path)
         except OSError as e:
-            logger.error("Failed to create directory %s." % path)
+            logger.error("Failed to create directory %s" % path)
             raise e
         else:
-            logger.info("Successfully created the directory %s." % path)
+            logger.info("Created the directory %s" % path)
 
         return str(path)
 
@@ -80,10 +80,10 @@ class FileSystemFileManager(FileManagerInterface):
         except FileExistsError:
             logger.info("Stage directory %s already exists." % path)
         except OSError as e:
-            logger.error("Failed to create stage directory %s." % path)
+            logger.error("Failed to create stage directory %s" % path)
             raise e
         else:
-            logger.info("Successfully created the stage directory %s." % path)
+            logger.info("Created the stage directory %s" % path)
 
         return str(path)
 
@@ -95,9 +95,9 @@ class FileSystemFileManager(FileManagerInterface):
         except FileExistsError:
             logger.info("Prefix directory %s already exists." % path)
         except OSError as e:
-            logger.error("Failed to create prefix directory %s." % path)
+            logger.error("Failed to create prefix directory %s" % path)
             raise e
         else:
-            logger.info("Successfully created the prefix directory %s." % path)
+            logger.info("Created the prefix directory %s" % path)
 
         return str(path)
