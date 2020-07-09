@@ -1,8 +1,14 @@
+import logging
+
 import torch
+
 from bio_embeddings.extract_features.FeatureExtractorInterface import FeatureExtractorInterface
+from bio_embeddings.extract_features.features import Location, Membrane, Disorder, SecondaryStructure, \
+    FeaturesCollection
 from bio_embeddings.extract_features.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
-from bio_embeddings.extract_features.features import Location, Membrane, Disorder, SecondaryStructure, FeaturesCollection
-from bio_embeddings.utilities import Logger, NoEmbeddingException
+from bio_embeddings.utilities import NoEmbeddingException
+
+logger = logging.getLogger(__name__)
 
 # Label mappings
 _loc_labels = {0: 'Cell-Membrane',
@@ -59,13 +65,13 @@ class SeqVecFeatureExtractor(FeatureExtractorInterface):
         self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
         if torch.cuda.is_available():
-            Logger.log("CUDA available")
+            logger.info("CUDA available")
 
             # load pre-trained weights for feature machines
             subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
         else:
-            Logger.log("CUDA NOT available")
+            logger.info("CUDA NOT available")
 
             # load pre-trained weights for feature machines
             subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
@@ -79,7 +85,6 @@ class SeqVecFeatureExtractor(FeatureExtractorInterface):
         # ensure that model is in evaluation mode (important for batchnorm and dropout)
         self._subcellular_location_model.eval()
         self._secondary_structure_model.eval()
-
 
         pass
 

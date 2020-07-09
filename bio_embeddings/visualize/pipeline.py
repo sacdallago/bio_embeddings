@@ -1,12 +1,24 @@
+import logging
+
 from copy import deepcopy
 from pandas import read_csv
-from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager
-from bio_embeddings.visualize.plotly_plots import render_3D_scatter_plotly, save_plotly_figure_to_html
+from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, TooFewComponentsException
+from bio_embeddings.visualize.plotly_plots import render_3D_scatter_plotly, render_scatter_plotly,\
+    save_plotly_figure_to_html
+
+logger = logging.getLogger(__name__)
 
 
 def plotly(**kwargs):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
+
+    # 2 or 3D plot? Usually, this is directly fetched from "project" stage via "depends_on"
+    result_kwargs['n_components'] = kwargs.get('n_components', 3)
+    if result_kwargs['n_components'] < 2:
+        raise TooFewComponentsException(f"n_components is set to {result_kwargs['n_components']}. It should be >1.\n"
+                                        f"If set to 2, will render 2D scatter plot.\n"
+                                        f"If set to >3, will render 3D scatter plot.")
 
     # Get projected_embeddings_file containing x,y,z coordinates and identifiers
     projected_embeddings_file = read_csv(result_kwargs['projected_embeddings_file'], index_col=0)
@@ -50,11 +62,10 @@ def plotly(**kwargs):
         merged_annotation_file.to_csv(merged_annotation_file_path)
         result_kwargs['merged_annotation_file'] = merged_annotation_file_path
 
-        figure = render_3D_scatter_plotly(merged_annotation_file)
-
+    if result_kwargs['n_components'] == 2:
+        figure = render_scatter_plotly(merged_annotation_file)
     else:
-
-        figure = render_3D_scatter_plotly(projected_embeddings_file)
+        figure = render_3D_scatter_plotly(merged_annotation_file)
 
     plot_file_path = file_manager.create_file(kwargs.get('prefix'),
                                               result_kwargs.get('stage_name'),

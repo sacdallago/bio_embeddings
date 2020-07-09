@@ -1,11 +1,11 @@
 import os
 from copy import deepcopy
-
+from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.visualize.pipeline import run as run_visualize
 # from bio_embeddings.extract_features.pipeline import run as run_extract_features
-from bio_embeddings.utilities import get_file_manager, read_fasta_file, reindex_sequences, write_fasta_file, \
+from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
 
@@ -41,10 +41,13 @@ def _valid_file(file_path):
 
 
 def _process_fasta_file(**kwargs):
+    """
+    Will assign MD5 hash as ID if no if provided for a sequence.
+    """
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    sequences = read_fasta_file(kwargs['sequences_file'])
+    sequences = read_fasta(kwargs['sequences_file'])
     sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',
                                                            extension='.fasta')
     write_fasta_file(sequences, sequences_file_path)
@@ -153,13 +156,26 @@ def run(config_file_path, **kwargs):
         else:
             stage_parameters = {**global_parameters, **stage_parameters}
 
+        # Register start time
+        start_time = datetime.now().astimezone()
+        stage_parameters['start_time'] = str(start_time)
+
         stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
         write_config_file(stage_in, stage_parameters)
 
         stage_output_parameters = stage_runnable(**stage_parameters)
 
+        # Register end time
+        end_time = datetime.now().astimezone()
+        stage_output_parameters['end_time'] = str(end_time)
+
+        # Register elapsed time
+        stage_output_parameters['elapsed_time'] = str(end_time - start_time)
+
         stage_out = file_manager.create_file(prefix, stage_name, _OUT_CONFIG_NAME, extension='.yml')
         write_config_file(stage_out, stage_output_parameters)
+
+        # Store in global_out config for later retrieval (e.g. depends_on)
         config[stage_name] = stage_output_parameters
 
     config['global'] = global_parameters

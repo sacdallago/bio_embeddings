@@ -5,6 +5,8 @@ The project includes:
 - A web server that takes in sequences, embeds them and returns the embeddings OR visualizes the embedding spaces on interactive plots online.
 - General purpose library to embed protein sequences in any python app.
 
+We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find it on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and a copy of the poster will soon be available on [F1000](https://f1000research.com/).
+
 ## Important information
 
 - The `albert` model weights are not publicly available yet. You can request early access by opening an issue.
@@ -12,7 +14,7 @@ The project includes:
 
 ## Install guides
 
-You can install the package via PIP like so:
+You can install the package via pip like so:
 
 ```bash
 pip install bio-embeddings
@@ -23,13 +25,6 @@ Or directly from the source (e.g. to have the latest features):
 ```bash
 pip install -U git+https://github.com/sacdallago/bio_embeddings.git
 ```
-
-### Additional dependencies and steps to run the webserver
-
-If you want to run the webserver locally, you need to have some python backend deployment experience.
-You'll need a couple of dependencies if you want to run the webserver locally: `pip install dash celery pymongo flask-restx pyyaml`.
-
-Additionally, you will need to have two instances of the app run (the backend and at least one celery worker), and both instances must be granted access to a MongoDB and a RabbitMQ or Redis store for celery.
 
 ## Examples
 
@@ -56,11 +51,11 @@ After having installed the package, you can:
     ```
 
     More examples can be found in the `notebooks` folder of this repository.
- 
+
 ## Development status
 
 1. Pipeline stages
-    - embed:   
+    - embed:
         - [x] SeqVec v1/v2 (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
         - [ ] Fastext
         - [ ] Glove
@@ -71,18 +66,18 @@ After having installed the package, you can:
         - [x] t-SNE
         - [x] UMAP
     
-1. Web server:  
-    - [x] SecVec
+1. Web server (unpublished):
+    - [x] SeqVec
     - [x] Albert (unpublished)
-    
+
 1. General purpose objects:
-    - [x] SecVec
+    - [x] SeqVec
     - [x] Fastext
     - [x] Glove
     - [x] Word2Vec
     - [ ] UniRep
     - [x] Albert (unpublished)
-    
+
 
 ## Building a Distribution
 Building the packages best happens using invoke.
@@ -90,8 +85,16 @@ If you manganage your dependecies with poetry this should be already installed.
 Simply use `poetry run invoke clean build` to update your requirements according to your current status
 and to generate the dist files
 
+### Additional dependencies and steps to run the webserver
+
+If you want to run the webserver locally, you need to have some python backend deployment experience.
+You'll need a couple of dependencies if you want to run the webserver locally: `pip install dash celery pymongo flask-restx pyyaml`.
+
+Additionally, you will need to have two instances of the app run (the backend and at least one celery worker), and both instances must be granted access to a MongoDB and a RabbitMQ or Redis store for celery.
+
 ## Contributors
 
 - Christian Dallago (lead)
+- Konstantin Schütze
 - Tobias Olenyi
 - Michael Heinzinger

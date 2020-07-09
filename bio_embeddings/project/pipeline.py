@@ -34,9 +34,8 @@ def tsne(**kwargs):
 
     projected_embeddings = tsne_reduce(reduced_embeddings, **kwargs)
 
-    mapping['x'] = projected_embeddings[:, 0]
-    mapping['y'] = projected_embeddings[:, 1]
-    mapping['z'] = projected_embeddings[:, 2]
+    for i in range(result_kwargs['n_components']):
+        mapping[f'component_{i}'] = projected_embeddings[:, i]
 
     projected_embeddings_file_path = file_manager.create_file(kwargs.get('prefix'),
                                                               result_kwargs.get('stage_name'),
@@ -75,9 +74,8 @@ def umap(**kwargs):
 
     projected_embeddings = umap_reduce(reduced_embeddings, **kwargs)
 
-    mapping['x'] = projected_embeddings[:, 0]
-    mapping['y'] = projected_embeddings[:, 1]
-    mapping['z'] = projected_embeddings[:, 2]
+    for i in range(result_kwargs['n_components']):
+        mapping[f'component_{i}'] = projected_embeddings[:, i]
 
     projected_embeddings_file_path = file_manager.create_file(kwargs.get('prefix'),
                                                               result_kwargs.get('stage_name'),

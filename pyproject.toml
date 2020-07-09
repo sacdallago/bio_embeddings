@@ -1,17 +1,40 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.1.1"
+version = "0.1.3"
 description = "A pipeline for protein embedding generation and visualization"
-authors = ["Christian Dallago <christian.dallago@tum.de>"]
+authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>",  "Konstantin Schuetze <placeholder@email.com>"]
+maintainers = ["Rostlab <admin@rostlab.org>"]
 license = "MIT"
+readme = "README.md"
+classifiers = [
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9 ",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Topic :: Scientific/Engineering :: Visualization"
+    ]
+include = ["README.md","LICENSE.md", "requirements.txt", "pyproject.toml", "bio_embeddings/utilities/defaults.yml"]
+exclude = ["tests/", "examples/", "webserver/", "notebooks/"]
+
+[tool.poetry.scripts]
+bio_embeddings = 'bio_embeddings.utilities.cli:main'
+
+[tool.poetry.urls]
+issues = "https://github.com/sacdallago/bio_embeddings/issues"
+homepage = "https://visualize.protein.properties"
+repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-allennlp = "^0.9.0" 
+allennlp = "^0.9.0"
 numpy = "^1.18.3"
 gensim = "^3.8.2"
-biopython = "^1.76" 
-ruamel_yaml = "^0.16.10"
+biopython = "^1.76"
+"ruamel.yaml" = "^0.16.10"
 pandas = "^1.0.3"
 h5py = "^2.10.0"
 transformers = "^2.8.0"
@@ -30,7 +53,20 @@ pytest = "^5.4.1"
 invoke = "^1.4.1"
 check-manifest = "^0.41"
 wheel = "^0.34.2"
+jupyter = "^1.0.0"
+
+[tool.black]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.pytest_cache
+  | \.tox
+  | \.venv
+  | \dist
+  | \webserver
+)/
+'''
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry~=1.0.0"]
 build-backend = "poetry.masonry.api"

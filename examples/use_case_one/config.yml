@@ -4,7 +4,7 @@ global:
 seqvec_embeddings:
   type: embed
   protocol: seqvec
-  reduce: True  
+  reduce: True
 tsne_projections:
   type: project
   protocol: tsne

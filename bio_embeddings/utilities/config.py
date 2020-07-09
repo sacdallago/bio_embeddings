@@ -9,6 +9,8 @@ Configuration handling
 Authors:
   Thomas A. Hopf
 """
+from pathlib import Path
+from typing import Union
 
 import ruamel.yaml as yaml
 from ruamel.yaml.parser import ParserError
@@ -47,7 +49,7 @@ def parse_config(config_str: str, preserve_order: bool = True) -> dict:
         ) from e
 
 
-def read_config_file(config_path: str, preserve_order: bool = True) -> dict:
+def read_config_file(config_path: Union[str, Path], preserve_order: bool = True) -> dict:
     """
     Read config from path to file.
 

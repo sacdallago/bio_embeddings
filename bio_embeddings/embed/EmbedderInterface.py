@@ -6,23 +6,20 @@ Authors:
 """
 
 import abc
-from typing import List
+from typing import List, Generator, Optional
 
-from bio_embeddings.utilities.exceptions import NoEmbeddingException
+from numpy import ndarray
 
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
-
     def __init__(self):
         """
         Initializer accepts location of a pre-trained model and options
         """
         self._options = None
 
-        pass
-
     @abc.abstractmethod
-    def embed(self, sequence: str):
+    def embed(self, sequence: str) -> ndarray:
         """
         Returns embedding for one sequence.
 
@@ -33,11 +30,12 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def embed_many(self, sequences: List[str]) -> List[List[List[float]]]:
+    def embed_many(self, sequences: List[str], batch_size: Optional[int] = None) -> Generator[ndarray, None, None]:
         """
         Returns embedding for one sequence.
 
         :param sequences: List of proteins as AA strings
+        :param batch_size: For embedders that profit from batching, this is maximum number of AA per batch
         :return: A list object with embeddings of the sequences.
         """
 
@@ -45,7 +43,7 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def reduce_per_protein(embedding):
+    def reduce_per_protein(embedding: ndarray) -> ndarray:
         """
         For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.
 
