@@ -3,7 +3,7 @@ import yaml
 from tempfile import NamedTemporaryFile
 from pathlib import Path
 from pandas import read_csv
-from bio_embeddings.utilities import read_fasta_file
+from bio_embeddings.utilities import read_fasta
 from flask import abort
 
 # Read and load configuration file
@@ -33,7 +33,7 @@ def validate_FASTA_submission(request):
         temp_file = NamedTemporaryFile()
         file_io.save(temp_file.name)
 
-        sequences = read_fasta_file(temp_file.name)
+        sequences = read_fasta(temp_file.name)
     except:
         return abort(400, "Could not read FASTA sequence")
 
@@ -85,7 +85,7 @@ def validate_file_submission(request):
         temp_file = NamedTemporaryFile()
         file_io.save(temp_file.name)
 
-        sequences = read_fasta_file(temp_file.name)
+        sequences = read_fasta(temp_file.name)
     except:
         return abort(400, "Could not read FASTA sequence")
 

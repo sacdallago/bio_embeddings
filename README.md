@@ -12,7 +12,7 @@ The project includes:
 
 ## Install guides
 
-You can install the package via PIP like so:
+You can install the package via pip like so:
 
 ```bash
 pip install bio-embeddings
@@ -56,11 +56,11 @@ After having installed the package, you can:
     ```
 
     More examples can be found in the `notebooks` folder of this repository.
- 
+
 ## Development status
 
 1. Pipeline stages
-    - embed:   
+    - embed:
         - [x] SeqVec v1/v2 (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
         - [ ] Fastext
         - [ ] Glove
@@ -70,11 +70,11 @@ After having installed the package, you can:
     - project:
         - [x] t-SNE
         - [x] UMAP
-    
-1. Web server:  
+
+1. Web server:
     - [x] SeqVec
     - [x] Albert (unpublished)
-    
+
 1. General purpose objects:
     - [x] SeqVec
     - [x] Fastext
@@ -82,7 +82,7 @@ After having installed the package, you can:
     - [x] Word2Vec
     - [ ] UniRep
     - [x] Albert (unpublished)
-    
+
 
 ## Building a Distribution
 Building the packages best happens using invoke.

@@ -61,10 +61,6 @@ stage_1:
 
   #### Optional parameters for the execution of the protocol
 
-  ### Optional for protocol: seqvec
-  ## Adjust this parameter if you run out of RAM! The default (100.000) works for a machine with 64GB RAM.
-  # max_amino_acids_RAM: [*100000]
-
   ### Optional for protocol: seqvec, albert
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
