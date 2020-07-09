@@ -1,16 +1,38 @@
 image: "python:3.7"
 
-before_script:
-  - python --version
-  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-  - $HOME/.poetry/bin/poetry config virtualenvs.in-project true
-  - $HOME/.poetry/bin/poetry install # TODO: Caching
+variables:
+  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip"
+
+cache:
+  key: "${CI_JOB_NAME}"
+  paths:
+    - .cache/pip
+    - .venv
 
 stages:
-  - Test
+  - tests
 
-pytest:
-  stage: Test
-  script:
-  - .venv/bin/pytest
+.install-deps-template: &install-deps
+  before_script:
+    - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+    - poetry --version
+    - poetry config virtualenvs.in-project true
+    - poetry install -vv
 
+.test-template: &test
+  <<: *install-deps
+  stage: tests
+  coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
+  script: poetry run pytest -v --run_download --run_slow
+
+python3.6:
+  <<: *test
+  image: python:3.6
+
+python3.7:
+  <<: *test
+  image: python:3.7
+
+python3.8:
+  <<: *test
+  image: python:3.8
