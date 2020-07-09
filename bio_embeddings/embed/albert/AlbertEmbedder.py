@@ -44,6 +44,7 @@ class AlbertEmbedder(EmbedderInterface):
         # make model
         self._albert_model = AlbertModel.from_pretrained(self._model_directory)
         self._albert_model = self._albert_model.eval()
+        self._albert_model = self._albert_model.to(self._device)
         self._tokenizer = AlbertTokenizer(str(Path(self._model_directory) / 'albert_vocab_model.model'), do_lower_case=False)
 
         pass
