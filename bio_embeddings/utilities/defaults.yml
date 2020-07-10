@@ -20,5 +20,14 @@ word2vec:
 glove:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
 
+bert:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/bert/bert.zip"
+
+xlnet:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/XLNet.zip"
+
 albert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
+
+albert_short:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert_limited510.zip"
