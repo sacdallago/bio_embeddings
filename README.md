@@ -56,7 +56,11 @@ After having installed the package, you can:
 
 1. Pipeline stages
     - embed:
-        - [x] SeqVec v1/v2 (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
+        - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
+        - [x] Albert (link to biorxiv)
+        - [x] Bert (link to biorxiv)
+        - [x] XLNet (link to biorxiv)
+        - [x] Albert short (unpublished Albert limited to sequences of length 510. Performance ~ Albert)
         - [ ] Fastext
         - [ ] Glove
         - [ ] Word2Vec
@@ -71,12 +75,15 @@ After having installed the package, you can:
     - [x] Albert (unpublished)
 
 1. General purpose objects:
-    - [x] SeqVec
+    - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
     - [x] Fastext
     - [x] Glove
     - [x] Word2Vec
     - [ ] UniRep
-    - [x] Albert (unpublished)
+    - [x] Albert short (unpublished)
+    - [x] Albert (link to biorxiv)
+    - [x] Albert (link to biorxiv)
+    - [x] Albert (link to biorxiv)
 
 
 ## Building a Distribution
