@@ -11,6 +11,7 @@ from tqdm import tqdm
 from bio_embeddings.embed import EmbedderInterface
 from bio_embeddings.embed.albert import AlbertEmbedder, ShortAlbertEmbedder
 from bio_embeddings.embed.bert import BertEmbedder
+from bio_embeddings.embed.xlnet import XLNetEmbedder
 from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -205,6 +206,29 @@ def bert(**kwargs):
             result_kwargs[directory] = directory_path
 
     embedder = BertEmbedder(**result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+
+
+def xlnet(**kwargs):
+    necessary_directories = ["model_directory"]
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    result_kwargs.setdefault("max_amino_acids", 15000)
+
+    for directory in necessary_directories:
+        if not result_kwargs.get(directory):
+            directory_path = file_manager.create_directory(
+                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
+            )
+
+            get_model_directories_from_zip(
+                path=directory_path, model="xlnet", directory=directory
+            )
+
+            result_kwargs[directory] = directory_path
+
+    embedder = XLNetEmbedder(**result_kwargs)
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 

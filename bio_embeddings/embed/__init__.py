@@ -3,6 +3,7 @@ import tempfile
 from bio_embeddings.embed.albert import AlbertEmbedder as _AlbertEmbedder
 from bio_embeddings.embed.albert import ShortAlbertEmbedder as _ShortAlbertEmbedder
 from bio_embeddings.embed.bert import BertEmbedder as _BertEmbedder
+from bio_embeddings.embed.xlnet import XLNetEmbedder as _XLNetEmbedder
 from bio_embeddings.embed.fasttext import FastTextEmbedder as _FastTextEmbedder
 from bio_embeddings.embed.glove import GloveEmbedder as _GloveEmbedder
 from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder as _SeqVecEmbedder
@@ -79,6 +80,22 @@ class BertEmbedder(_BertEmbedder):
                 _temporary_files.append(f)
 
                 get_model_directories_from_zip(path=f, model='bert', directory=directory)
+
+                kwargs[directory] = f
+        super().__init__(**kwargs)
+
+
+class XLNetEmbedder(_XLNetEmbedder):
+
+    def __init__(self, **kwargs):
+        necessary_directories = ['model_directory']
+
+        for directory in necessary_directories:
+            if not kwargs.get(directory):
+                f = tempfile.mkdtemp()
+                _temporary_files.append(f)
+
+                get_model_directories_from_zip(path=f, model='xlnet', directory=directory)
 
                 kwargs[directory] = f
         super().__init__(**kwargs)
