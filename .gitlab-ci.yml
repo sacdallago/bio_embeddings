@@ -1,12 +1,11 @@
 image: "python:3.7"
 
-variables:
-  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip"
-
 cache:
-  key: "${CI_JOB_NAME}"
+  key:
+    files:
+      - poetry.lock
+    prefix: "${CI_JOB_NAME}"
   paths:
-    - .cache/pip
     - .venv
 
 stages:
