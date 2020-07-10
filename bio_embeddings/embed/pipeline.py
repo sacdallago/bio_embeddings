@@ -1,4 +1,3 @@
-import contextlib
 import logging
 from copy import deepcopy
 from typing import Dict, Any
@@ -19,6 +18,7 @@ from bio_embeddings.utilities import (
     get_model_directories_from_zip,
     FileManagerInterface,
 )
+from bio_embeddings.utilities.backports import nullcontext
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ def _get_reduced_embeddings_file_context(file_manager: FileManagerInterface, res
         result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
         return h5py.File(reduced_embeddings_file_path, "w")
 
-    return contextlib.nullcontext()
+    return nullcontext()
 
 
 def _get_embeddings_file_context(
@@ -61,7 +61,7 @@ def _get_embeddings_file_context(
             raise InvalidParameterError(
                 "Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True."
             )
-        return contextlib.nullcontext()
+        return nullcontext()
     else:
         embeddings_file_path = file_manager.create_file(
             result_kwargs.get("prefix"),
