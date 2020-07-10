@@ -82,8 +82,8 @@ After having installed the package, you can:
     - [ ] UniRep
     - [x] Albert short (unpublished)
     - [x] Albert (link to biorxiv)
-    - [x] Albert (link to biorxiv)
-    - [x] Albert (link to biorxiv)
+    - [x] Bert (link to biorxiv)
+    - [x] XLNet (link to biorxiv)
 
 
 ## Building a Distribution
