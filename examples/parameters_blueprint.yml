@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, albert
+  # Options: seqvec, albert, bert, xlnet, short_albert
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -52,16 +52,16 @@ stage_1:
   ### Optional for protocol: fasttext, word2vec, glove
   # model_file: @/path/to/file
 
-  ### Optional for protocol: albert
+  ### Optional for protocol: albert, bert, xlnet, short_albert
   # model_directory: @/path/to/directory
 
-  ### Optional for protocol: seqvec, albert
+  ### Optional for protocol: seqvec, albert, bert, xlnet, short_albert
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
 
   #### Optional parameters for the execution of the protocol
 
-  ### Optional for protocol: seqvec, albert
+  ### Optional for protocol: seqvec, albert, bert, xlnet, short_albert
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
 

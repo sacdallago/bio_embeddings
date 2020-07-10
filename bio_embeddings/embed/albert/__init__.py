@@ -1,1 +1,2 @@
 from bio_embeddings.embed.albert.AlbertEmbedder import AlbertEmbedder
+from bio_embeddings.embed.albert.ShortAlbertEmbedder import ShortAlbertEmbedder

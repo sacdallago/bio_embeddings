@@ -9,7 +9,8 @@ from pandas import read_csv
 from tqdm import tqdm
 
 from bio_embeddings.embed import EmbedderInterface
-from bio_embeddings.embed.albert import AlbertEmbedder
+from bio_embeddings.embed.albert import AlbertEmbedder, ShortAlbertEmbedder
+from bio_embeddings.embed.bert import BertEmbedder
 from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -78,7 +79,7 @@ def embed_and_write_batched(
     file_manager: FileManagerInterface,
     result_kwargs: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """ The shared code between the SeqVec and the Albert pipeline """
+    """ The shared code between the SeqVec, Albert, Bert and XLNet pipelines """
     # Lazy fasta file reader. The mapping file contains the corresponding ids in the same order
     sequences = (
         str(entry.seq)
@@ -138,12 +139,35 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
+def short_albert(**kwargs):
+    necessary_directories = ["model_directory"]
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    result_kwargs.setdefault("max_amino_acids", 510)
+
+    for directory in necessary_directories:
+        if not result_kwargs.get(directory):
+            directory_path = file_manager.create_directory(
+                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
+            )
+
+            get_model_directories_from_zip(
+                path=directory_path, model="albert_short", directory=directory
+            )
+
+            result_kwargs[directory] = directory_path
+
+    embedder = ShortAlbertEmbedder(**result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+
+
 def albert(**kwargs):
     necessary_directories = ["model_directory"]
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    result_kwargs.setdefault("max_amino_acids", 500)
+    result_kwargs.setdefault("max_amino_acids", 15000)
 
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
@@ -161,25 +185,36 @@ def albert(**kwargs):
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
-def fasttext(**kwargs):
-    pass
+def bert(**kwargs):
+    necessary_directories = ["model_directory"]
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
 
+    result_kwargs.setdefault("max_amino_acids", 15000)
 
-def glove(**kwargs):
-    pass
+    for directory in necessary_directories:
+        if not result_kwargs.get(directory):
+            directory_path = file_manager.create_directory(
+                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
+            )
 
+            get_model_directories_from_zip(
+                path=directory_path, model="bert", directory=directory
+            )
 
-def word2vec(**kwargs):
-    pass
+            result_kwargs[directory] = directory_path
+
+    embedder = BertEmbedder(**result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
-    "fasttext": fasttext,
-    "glove": glove,
-    "word2vec": word2vec,
+    "short_albert": short_albert,
     "albert": albert,
+    "bert": bert,
+    "xlnet": xlnet
 }
 
 
