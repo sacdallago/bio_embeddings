@@ -9,7 +9,10 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find i
 
 ## Important information
 
-- The `albert` model weights are not publicly available yet. You can request early access by opening an issue.
+- Develop now includes new models from [ProtTrans](https://doi.org/10.1101/2020.07.12.199554). The models are `albert`, `bert` and `xlnet`. They will officially be included in release `0.1.4`, but you can use them by installing the pipeline from GitHub like so:
+  ```bash
+  pip install -U git+https://github.com/sacdallago/bio_embeddings.git
+  ```
 - Please help us out by opening issues and submitting PRs as you see fit, this repository is actively being developed.
 
 ## Install guides
