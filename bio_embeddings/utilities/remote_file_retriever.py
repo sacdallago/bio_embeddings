@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import tempfile
 import zipfile
 from pathlib import Path
@@ -51,10 +52,20 @@ def get_model_directories_from_zip(path, model=None, directory=None) -> None:
         with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
             request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
 
-        logger.info("Unzipping '{}' for model '{}' and storing in '{}'.".format(f, model, path))
+        logger.info("Unzipping '{}' for model '{}' and storing in '{}'.".format(file_name, model, path))
 
         with zipfile.ZipFile(file_name, 'r') as zip_ref:
             zip_ref.extractall(path)
+
+        logger.info("Moving the weights into the right tree structure.")
+
+        source = str(Path(path) / model)
+        files = os.listdir(source)
+
+        for model_file_name in files:
+            shutil.move(str(Path(source) / model_file_name), path)
+
+        shutil.rmtree(source)
 
 
 def get_model_file(path: str, model: Optional[str] = None, file: Optional[str] = None) -> None:
