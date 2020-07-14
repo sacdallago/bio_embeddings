@@ -57,15 +57,14 @@ After having installed the package, you can:
 1. Pipeline stages
     - embed:
         - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
-        - [x] Albert (link to biorxiv)
-        - [x] Bert (link to biorxiv)
-        - [x] XLNet (link to biorxiv)
+        - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
+        - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
+        - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
         - [x] Albert short (unpublished Albert limited to sequences of length 510. Performance ~ Albert)
         - [ ] Fastext
         - [ ] Glove
         - [ ] Word2Vec
         - [ ] UniRep (https://www.nature.com/articles/s41592-019-0598-1?sfns=mo)
-        - [x] Albert (unpublished)
     - project:
         - [x] t-SNE
         - [x] UMAP
@@ -81,9 +80,9 @@ After having installed the package, you can:
     - [x] Word2Vec
     - [ ] UniRep
     - [x] Albert short (unpublished)
-    - [x] Albert (link to biorxiv)
-    - [x] Bert (link to biorxiv)
-    - [x] XLNet (link to biorxiv)
+    - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
+    - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
+    - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
 
 
 ## Building a Distribution
