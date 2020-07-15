@@ -1,12 +1,13 @@
 import re
 import logging
 from pathlib import Path
-from typing import Iterable, Optional, Generator
+from typing import Iterable, Optional, Generator, List
 
 import torch
 from transformers import BertModel, BertTokenizer
 
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.helper import embed_batch_berts
 from bio_embeddings.utilities import (
     SequenceEmbeddingLengthMismatchException,
 )
@@ -70,10 +71,8 @@ class BertEmbedder(EmbedderInterface):
 
         return embedding.cpu().detach().numpy().squeeze()
 
-    def embed_many(
-        self, sequences: Iterable[str], batch_size: Optional[int] = None
-    ) -> Generator[ndarray, None, None]:
-        return (self.embed(sequence) for sequence in sequences)
+    def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
+        return embed_batch_berts(self, batch)
 
     @staticmethod
     def reduce_per_protein(embedding):

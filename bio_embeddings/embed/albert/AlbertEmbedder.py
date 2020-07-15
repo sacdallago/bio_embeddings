@@ -1,11 +1,12 @@
 import re
 from pathlib import Path
-from typing import Iterable, Optional, Generator
+from typing import Iterable, Optional, Generator, List
 
 import torch
 from transformers import AlbertModel, AlbertTokenizer
 
 from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.helper import embed_batch_berts
 from bio_embeddings.utilities import (
     SequenceEmbeddingLengthMismatchException,
 )
@@ -34,12 +35,10 @@ class AlbertEmbedder(EmbedderInterface):
         )
 
         # make model
-        self._albert_model = AlbertModel.from_pretrained(self._model_directory)
-        self._albert_model = self._albert_model.eval()
-        self._albert_model = self._albert_model.to(self._device)
+        self._model = AlbertModel.from_pretrained(self._model_directory)
+        self._model = self._model.eval()
+        self._model = self._model.to(self._device)
         self._tokenizer = AlbertTokenizer(str(Path(self._model_directory) / 'albert_vocab_model.model'), do_lower_case=False)
-
-        pass
 
     def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)
@@ -53,7 +52,7 @@ class AlbertEmbedder(EmbedderInterface):
 
         with torch.no_grad():
             # drop batch dimension
-            embedding = self._albert_model(tokenized_sequence)[0].squeeze()
+            embedding = self._model(tokenized_sequence)[0].squeeze()
             # remove special tokens added to start/end
             embedding = embedding[1: sequence_length + 1]
 
@@ -62,10 +61,8 @@ class AlbertEmbedder(EmbedderInterface):
 
         return embedding.cpu().detach().numpy().squeeze()
 
-    def embed_many(
-        self, sequences: Iterable[str], batch_size: Optional[int] = None
-    ) -> Generator[ndarray, None, None]:
-        return (self.embed(sequence) for sequence in sequences)
+    def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
+        return embed_batch_berts(self, batch)
 
     @staticmethod
     def reduce_per_protein(embedding):
