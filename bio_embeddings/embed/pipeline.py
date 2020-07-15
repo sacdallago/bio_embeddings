@@ -1,16 +1,15 @@
 import logging
 from copy import deepcopy
-from typing import Dict, Any
+from typing import Dict, Any, Type
 
 import h5py
 from Bio import SeqIO
 from pandas import read_csv
 from tqdm import tqdm
 
-from bio_embeddings.embed import EmbedderInterface
+from bio_embeddings.embed import EmbedderInterface, XLNetEmbedder
 from bio_embeddings.embed.albert import AlbertEmbedder, ShortAlbertEmbedder
 from bio_embeddings.embed.bert import BertEmbedder
-from bio_embeddings.embed.xlnet import XLNetEmbedder
 from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -25,7 +24,9 @@ from bio_embeddings.utilities.backports import nullcontext
 logger = logging.getLogger(__name__)
 
 
-def _get_reduced_embeddings_file_context(file_manager: FileManagerInterface, result_kwargs: Dict):
+def _get_reduced_embeddings_file_context(
+    file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]
+):
     """
     :param file_manager: The FileManager derived class which will be used to create the file
     :param result_kwargs: A dictionary which will be updated in-place to include the path to the newly created file
@@ -34,13 +35,16 @@ def _get_reduced_embeddings_file_context(file_manager: FileManagerInterface, res
     """
 
     # Create reduced embeddings file if set in params
-    result_kwargs.setdefault('reduce', False)
+    result_kwargs.setdefault("reduce", False)
 
-    if result_kwargs['reduce'] is True:
-        reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                result_kwargs.get('stage_name'),
-                                                                'reduced_embeddings_file', extension='.h5')
-        result_kwargs['reduced_embeddings_file'] = reduced_embeddings_file_path
+    if result_kwargs["reduce"] is True:
+        reduced_embeddings_file_path = file_manager.create_file(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "reduced_embeddings_file",
+            extension=".h5",
+        )
+        result_kwargs["reduced_embeddings_file"] = reduced_embeddings_file_path
         return h5py.File(reduced_embeddings_file_path, "w")
 
     return nullcontext()
@@ -104,7 +108,7 @@ def embed_and_write_batched(
 
             if result_kwargs.get("reduce") is True:
                 reduced_embeddings_file.create_dataset(
-                    sequence_id, data=embedder.reduce_per_protein(embedding),
+                    sequence_id, data=embedder.reduce_per_protein(embedding)
                 )
     return result_kwargs
 
@@ -140,13 +144,14 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
-def short_albert(**kwargs):
-    necessary_directories = ["model_directory"]
+def transformer(
+    embedder_class: Type[EmbedderInterface], model: str, max_amino_acids: int, **kwargs
+):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
+    result_kwargs.setdefault("max_amino_acids", max_amino_acids)
 
-    result_kwargs.setdefault("max_amino_acids", 510)
-
+    necessary_directories = ["model_directory"]
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
             directory_path = file_manager.create_directory(
@@ -154,82 +159,29 @@ def short_albert(**kwargs):
             )
 
             get_model_directories_from_zip(
-                path=directory_path, model="albert_short", directory=directory
+                path=directory_path, model=model, directory=directory
             )
 
             result_kwargs[directory] = directory_path
 
-    embedder = ShortAlbertEmbedder(**result_kwargs)
+    embedder = embedder_class(**result_kwargs)
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
+
+
+def short_albert(**kwargs):
+    return transformer(ShortAlbertEmbedder, "short_albert", 510, **kwargs)
 
 
 def albert(**kwargs):
-    necessary_directories = ["model_directory"]
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-
-    result_kwargs.setdefault("max_amino_acids", 200000)
-
-    for directory in necessary_directories:
-        if not result_kwargs.get(directory):
-            directory_path = file_manager.create_directory(
-                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
-            )
-
-            get_model_directories_from_zip(
-                path=directory_path, model="albert", directory=directory
-            )
-
-            result_kwargs[directory] = directory_path
-
-    embedder = AlbertEmbedder(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+    return transformer(AlbertEmbedder, "albert", 200000, **kwargs)
 
 
 def bert(**kwargs):
-    necessary_directories = ["model_directory"]
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-
-    result_kwargs.setdefault("max_amino_acids", 400000)
-
-    for directory in necessary_directories:
-        if not result_kwargs.get(directory):
-            directory_path = file_manager.create_directory(
-                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
-            )
-
-            get_model_directories_from_zip(
-                path=directory_path, model="bert", directory=directory
-            )
-
-            result_kwargs[directory] = directory_path
-
-    embedder = BertEmbedder(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+    return transformer(BertEmbedder, "bert", 400000, **kwargs)
 
 
 def xlnet(**kwargs):
-    necessary_directories = ["model_directory"]
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-
-    result_kwargs.setdefault("max_amino_acids", 15000)
-
-    for directory in necessary_directories:
-        if not result_kwargs.get(directory):
-            directory_path = file_manager.create_directory(
-                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
-            )
-
-            get_model_directories_from_zip(
-                path=directory_path, model="xlnet", directory=directory
-            )
-
-            result_kwargs[directory] = directory_path
-
-    embedder = XLNetEmbedder(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+    return transformer(XLNetEmbedder, "xlnet", 15000, **kwargs)
 
 
 # list of available embedding protocols
@@ -238,7 +190,7 @@ PROTOCOLS = {
     "short_albert": short_albert,
     "albert": albert,
     "bert": bert,
-    "xlnet": xlnet
+    "xlnet": xlnet,
 }
 
 
@@ -259,7 +211,10 @@ def run(**kwargs):
     -------
     Dictionary with results of stage
     """
-    check_required(kwargs, ['protocol', 'prefix', 'stage_name', 'remapped_sequences_file', 'mapping_file'])
+    check_required(
+        kwargs,
+        ["protocol", "prefix", "stage_name", "remapped_sequences_file", "mapping_file"],
+    )
 
     if kwargs["protocol"] not in PROTOCOLS:
         raise InvalidParameterError(
