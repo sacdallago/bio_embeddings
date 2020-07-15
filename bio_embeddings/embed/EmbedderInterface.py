@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
-    def __init__(self):
+    def __init__(self, **kwargs):
         """
         Initializer accepts location of a pre-trained model and options
         """
