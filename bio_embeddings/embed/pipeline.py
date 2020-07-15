@@ -168,7 +168,7 @@ def albert(**kwargs):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    result_kwargs.setdefault("max_amino_acids", 15000)
+    result_kwargs.setdefault("max_amino_acids", 200000)
 
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
@@ -191,7 +191,7 @@ def bert(**kwargs):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    result_kwargs.setdefault("max_amino_acids", 15000)
+    result_kwargs.setdefault("max_amino_acids", 400000)
 
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
