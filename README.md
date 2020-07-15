@@ -59,10 +59,10 @@ After having installed the package, you can:
 
 1. Pipeline stages
     - embed:
+        - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
         - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
         - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
-        - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
-        - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
+        - [x] XLNet (Note that XLNet requires the `xlnet` extra, e.g. `pip install bio_embeddings[xlnet]`, https://doi.org/10.1101/2020.07.12.199554)
         - [x] Albert short (unpublished Albert limited to sequences of length 510. Performance ~ Albert)
         - [ ] Fastext
         - [ ] Glove

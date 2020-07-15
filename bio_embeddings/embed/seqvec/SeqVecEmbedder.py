@@ -108,30 +108,6 @@ class SeqVecEmbedder(EmbedderInterface):
                         )
                         yield self.embed_fallback(seq)
 
-    def embed_many(
-        self, sequences: Iterable[str], batch_size: Optional[int] = None
-    ) -> Generator[ndarray, None, None]:
-        if batch_size:
-            batch = []
-            length = 0
-            for sequence in sequences:
-                if len(sequence) > batch_size:
-                    logger.warning(
-                        f"A sequence is {len(sequence)} residues long, "
-                        f"which is longer than your `batch_size` parameter which is {batch_size}"
-                    )
-                    yield from self.embed_batch([sequence])
-                    continue
-                if length + len(sequence) >= batch_size:
-                    yield from self.embed_batch(batch)
-                    batch = []
-                    length = 0
-                batch.append(sequence)
-                length += len(sequence)
-            yield from self.embed_batch(batch)
-        else:
-            yield from (self.embed(seq) for seq in sequences)
-
     @staticmethod
     def reduce_per_protein(embedding):
         return embedding.sum(0).mean(0)
