@@ -1,16 +1,20 @@
 import logging
-from typing import List, Optional, Generator, Iterable
+import tempfile
+from typing import List, Optional, Generator
 
 import torch
 from allennlp.commands.elmo import ElmoEmbedder
 from numpy import ndarray
 
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.utilities import get_model_file
 
 logger = logging.getLogger(__name__)
 
 
 class SeqVecEmbedder(EmbedderInterface):
+    name = "seqvec"
+
     _weights_file: str
     _options_file: str
     _use_cpu: bool
@@ -52,6 +56,23 @@ class SeqVecEmbedder(EmbedderInterface):
             options_file=self._options_file,
             cuda_device=cuda_device,
         )
+
+    @classmethod
+    def with_download(cls, **kwargs):
+        necessary_files = ['weights_file', 'options_file']
+
+        if kwargs.get('seqvec_version') == 2 or kwargs.get('vocabulary_file'):
+            necessary_files.append('vocabulary_file')
+            kwargs['seqvec_version'] = 2
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+
+                get_model_file(path=f.name, model=cls.name.format(str(kwargs.get('seqvec_version', 1))), file=file)
+
+                kwargs[file] = f.name
+        return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
         return self._elmo_model.embed_sentence(list(sequence))

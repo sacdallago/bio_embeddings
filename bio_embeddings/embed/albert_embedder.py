@@ -1,25 +1,25 @@
 import re
-import logging
+import tempfile
 from pathlib import Path
-from typing import Iterable, Optional, Generator, List
+from typing import Generator, List
 
 import torch
-from transformers import BertModel, BertTokenizer
+from numpy import ndarray
+from transformers import AlbertModel, AlbertTokenizer
 
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 from bio_embeddings.embed.helper import embed_batch_berts
 from bio_embeddings.utilities import (
-    SequenceEmbeddingLengthMismatchException,
+    SequenceEmbeddingLengthMismatchException, get_model_directories_from_zip,
 )
-from numpy import ndarray
-
-logger = logging.getLogger(__name__)
 
 
-class BertEmbedder(EmbedderInterface):
+class AlbertEmbedder(EmbedderInterface):
+    name = "albert"
+
     def __init__(self, **kwargs):
         """
-        Initialize Bert embedder.
+        Initialize Albert embedder.
 
         :param model_directory:
         :param use_cpu: overwrite autodiscovery and force CPU use
@@ -38,12 +38,24 @@ class BertEmbedder(EmbedderInterface):
         )
 
         # make model
-        self._model = BertModel.from_pretrained(self._model_directory)
+        self._model = AlbertModel.from_pretrained(self._model_directory)
         self._model = self._model.eval()
         self._model = self._model.to(self._device)
-        self._tokenizer = BertTokenizer(str(Path(self._model_directory) / 'vocab.txt'), do_lower_case=False)
+        self._tokenizer = AlbertTokenizer(str(Path(self._model_directory) / 'albert_vocab_model.model'),
+                                          do_lower_case=False)
 
-        pass
+    @classmethod
+    def with_download(cls, **kwargs):
+        necessary_directories = ['model_directory']
+
+        for directory in necessary_directories:
+            if not kwargs.get(directory):
+                f = tempfile.mkdtemp()
+
+                get_model_directories_from_zip(path=f, model=cls.name, directory=directory)
+
+                kwargs[directory] = f
+        return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)
@@ -56,13 +68,8 @@ class BertEmbedder(EmbedderInterface):
         tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
 
         with torch.no_grad():
-            #TODO: Konstantin, you might want to have a look at this!
-            try:
-                # drop batch dimension
-                embedding = self._model(tokenized_sequence)[0].squeeze()
-            except RuntimeError:
-                logger.error("Wasn't able to embed one sequence (probably run out of RAM).")
-
+            # drop batch dimension
+            embedding = self._model(tokenized_sequence)[0].squeeze()
             # remove special tokens added to start/end
             embedding = embedding[1: sequence_length + 1]
 
