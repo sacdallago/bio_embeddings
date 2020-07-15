@@ -1,4 +1,5 @@
 import re
+import tempfile
 from pathlib import Path
 from typing import Generator, List
 
@@ -9,11 +10,13 @@ from transformers import AlbertModel, AlbertTokenizer
 from bio_embeddings.embed.embedder_interface import EmbedderInterface
 from bio_embeddings.embed.helper import embed_batch_berts
 from bio_embeddings.utilities import (
-    SequenceEmbeddingLengthMismatchException,
+    SequenceEmbeddingLengthMismatchException, get_model_directories_from_zip,
 )
 
 
 class AlbertEmbedder(EmbedderInterface):
+    name = "albert"
+
     def __init__(self, **kwargs):
         """
         Initialize Albert embedder.
@@ -40,6 +43,19 @@ class AlbertEmbedder(EmbedderInterface):
         self._model = self._model.to(self._device)
         self._tokenizer = AlbertTokenizer(str(Path(self._model_directory) / 'albert_vocab_model.model'),
                                           do_lower_case=False)
+
+    @classmethod
+    def with_download(cls, **kwargs):
+        necessary_directories = ['model_directory']
+
+        for directory in necessary_directories:
+            if not kwargs.get(directory):
+                f = tempfile.mkdtemp()
+
+                get_model_directories_from_zip(path=f, model=cls.name, directory=directory)
+
+                kwargs[directory] = f
+        return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)

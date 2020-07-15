@@ -7,7 +7,7 @@ Authors:
 
 import abc
 import logging
-from typing import List, Generator, Optional, Iterable
+from typing import List, Generator, Optional, Iterable, ClassVar
 
 from numpy import ndarray
 
@@ -15,11 +15,19 @@ logger = logging.getLogger(__name__)
 
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
+    name: ClassVar[str]
+
     def __init__(self, **kwargs):
         """
         Initializer accepts location of a pre-trained model and options
         """
         self._options = None
+
+    @classmethod
+    @abc.abstractmethod
+    def with_download(cls, **kwargs):
+        """ Convenience function to create an instance after downloading files. """
+        raise NotImplementedError
 
     @abc.abstractmethod
     def embed(self, sequence: str) -> ndarray:

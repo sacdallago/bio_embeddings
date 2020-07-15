@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class ShortAlbertEmbedder(AlbertEmbedder):
+    name = "albert_short"
+
     def __init__(self, **kwargs):
         """
         Initialize Short Albert embedder. This will extend the standard Albert embedder, but additionally throw consider length limitations

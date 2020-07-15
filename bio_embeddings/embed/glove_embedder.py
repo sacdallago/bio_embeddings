@@ -1,10 +1,14 @@
+import tempfile
+
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
 
 from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.utilities import get_model_file
 
 
 class GloveEmbedder(EmbedderInterface):
+    name = "glove"
 
     def __init__(self, **kwargs):
         """
@@ -22,7 +26,19 @@ class GloveEmbedder(EmbedderInterface):
         self._zero_vector = np.zeros(self._vector_size, dtype=np.float32)
         self._window_size = 3
 
-        pass
+    @classmethod
+    def with_download(cls, **kwargs):
+        necessary_files = ['model_file']
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+
+                get_model_file(path=f.name, model=cls.name, file=file)
+
+                kwargs[file] = f.name
+
+        return cls(**kwargs)
 
     def embed(self, sequence):
         # pad sequence with special character (only 3-mers are considered)
