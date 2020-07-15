@@ -1,18 +1,17 @@
-import re
 import logging
+import re
 from pathlib import Path
 from typing import Iterable, Optional, Generator
 
 import torch
-
+from numpy import ndarray
 # TODO: didn't have transformers installed when writing this, so no idea if XLNetConfig can be imported as such
 from transformers import XLNetModel, XLNetTokenizer, XLNetConfig
 
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 from bio_embeddings.utilities import (
     SequenceEmbeddingLengthMismatchException,
 )
-from numpy import ndarray
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +62,7 @@ class XLNetEmbedder(EmbedderInterface):
         tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
 
         with torch.no_grad():
-            #TODO: Konstantin, you might want to have a look at this!
+            # TODO: Konstantin, you might want to have a look at this!
             try:
                 # drop batch dimension
                 embedding = self._model(tokenized_sequence)[0].squeeze()

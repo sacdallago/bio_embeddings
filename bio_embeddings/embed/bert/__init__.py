@@ -1,1 +1,0 @@
-from bio_embeddings.embed.bert.BertEmbedder import BertEmbedder

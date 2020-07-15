@@ -1,11 +1,11 @@
 import logging
-from typing import List, Optional, Generator, Iterable
+from typing import List, Optional, Generator
 
 import torch
 from allennlp.commands.elmo import ElmoEmbedder
 from numpy import ndarray
 
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 
 logger = logging.getLogger(__name__)
 

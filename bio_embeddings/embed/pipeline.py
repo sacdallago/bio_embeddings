@@ -7,11 +7,14 @@ from Bio import SeqIO
 from pandas import read_csv
 from tqdm import tqdm
 
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from bio_embeddings.embed.albert import AlbertEmbedder, ShortAlbertEmbedder
-from bio_embeddings.embed.bert import BertEmbedder
-from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
-from bio_embeddings.embed.xlnet import XLNetEmbedder
+from bio_embeddings.embed import (
+    AlbertEmbedder,
+    BertEmbedder,
+    EmbedderInterface,
+    SeqVecEmbedder,
+    ShortAlbertEmbedder,
+    XLNetEmbedder,
+)
 from bio_embeddings.utilities import (
     InvalidParameterError,
     get_model_file,
@@ -146,7 +149,10 @@ def seqvec(**kwargs) -> Dict[str, Any]:
 
 
 def transformer(
-    embedder_class: Type[EmbedderInterface], model: str, max_amino_acids_default: int, **kwargs
+    embedder_class: Type[EmbedderInterface],
+    model: str,
+    max_amino_acids_default: int,
+    **kwargs
 ):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)

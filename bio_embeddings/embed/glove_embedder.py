@@ -1,9 +1,10 @@
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from gensim.models.keyedvectors import KeyedVectors
 import numpy as np
+from gensim.models.keyedvectors import KeyedVectors
+
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 
 
-class Word2VecEmbedder(EmbedderInterface):
+class GloveEmbedder(EmbedderInterface):
 
     def __init__(self, **kwargs):
         """
@@ -16,7 +17,7 @@ class Word2VecEmbedder(EmbedderInterface):
 
         self._model_file = self._options.get('model_file')
 
-        self._model = KeyedVectors.load(str(self._model_file), mmap='r')
+        self._model = KeyedVectors.load_word2vec_format(self._model_file, binary=False)
         self._vector_size = 512
         self._zero_vector = np.zeros(self._vector_size, dtype=np.float32)
         self._window_size = 3

@@ -1,11 +1,12 @@
 import logging
-import numpy as np
 
-from bio_embeddings.embed.albert.AlbertEmbedder import AlbertEmbedder
+import numpy as np
+from numpy import ndarray
+
+from bio_embeddings.embed.albert_embedder import AlbertEmbedder
 from bio_embeddings.utilities import (
     SequenceTooLongException,
 )
-from numpy import ndarray
 
 logger = logging.getLogger(__name__)
 

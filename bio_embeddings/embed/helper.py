@@ -5,7 +5,7 @@ from typing import List, Generator
 import torch
 from numpy import ndarray
 
-from bio_embeddings.embed import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 
 
 def embed_batch_berts(
@@ -23,5 +23,5 @@ def embed_batch_berts(
     embedding = embedding[0].cpu().numpy()
     for seq_num in range(len(embedding)):
         seq_len = (attention_mask[seq_num] == 1).sum()
-        seq_emd = embedding[seq_num][1 : seq_len - 1]
+        seq_emd = embedding[seq_num][1: seq_len - 1]
         yield seq_emd

@@ -1,9 +1,10 @@
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from gensim.models.keyedvectors import KeyedVectors
 import numpy as np
+from gensim.models.keyedvectors import KeyedVectors
+
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
 
 
-class GloveEmbedder(EmbedderInterface):
+class FastTextEmbedder(EmbedderInterface):
 
     def __init__(self, **kwargs):
         """
