@@ -68,6 +68,7 @@ After having installed the package, you can:
 <details>
 <summary>Pipeline stages</summary>
 <br>
+
 - embed:
   - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
   - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
@@ -86,13 +87,15 @@ After having installed the package, you can:
 <details>
 <summary>Web server (unpublished)</summary>
 <br>
-  - [x] SeqVec
-  - [x] Albert (unpublished)
+
+- [x] SeqVec
+- [x] Albert (unpublished)
 </details>
 
 <details>
 <summary>General purpose embedders</summary>
 <br>
+
 - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
 - [x] Fastext
 - [x] Glove
