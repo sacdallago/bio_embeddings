@@ -33,7 +33,7 @@ For some language models, additional dependencies are needed. We make it easy fo
 
 ## What model is right for you?
 
-Each models has it's strengths and weaknesses (speed, specificity, memory footprint...). There isn't a "one-fits-all" and we encourage you to at least try two different models when attempting a new exploratory project.
+Each models has its strengths and weaknesses (speed, specificity, memory footprint...). There isn't a "one-fits-all" and we encourage you to at least try two different models when attempting a new exploratory project.
 
 The models `albert`, `bert`, `seqvec` and `xlnet` were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be `bert`, followed by `seqvec`, which has been established for longer and uses a different principle (LSTM vs Transformer).
 
