@@ -14,7 +14,7 @@ def embed_batch_berts(
     """ Embed batch code shared between Bert and Albert """
     batch    = [ re.sub(r"[UZOB]", "X", sequence) for sequence in batch ]
     seq_lens = [ len(seq)  for seq in batch ]
-    batch    = [ list(seq) for seq in batch ]
+    batch    = [ ' '.join(list(seq)) for seq in batch ]
 
     ids = embedder._tokenizer.batch_encode_plus(
         batch, add_special_tokens=True, pad_to_max_length=True
