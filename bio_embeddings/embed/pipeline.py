@@ -51,11 +51,11 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
     embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
     reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
 
-    if result_kwargs["reduce"] is True:
+    if result_kwargs.get("reduce") is True:
         logger.info(f"The minimum expected size for the reduced_embedding_file is "
                     f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
 
-    if not (result_kwargs["reduce"] and result_kwargs["discard_per_amino_acid_embeddings"]):
+    if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
         logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
 
     logger.info(f"Please make sure you minimally have as much storage space as indicated above available.")
@@ -131,7 +131,6 @@ def embed_and_write_batched(
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
-
 
     # Open embedding files or null contexts and iteratively save embeddings to file
     with _get_embeddings_file_context(
