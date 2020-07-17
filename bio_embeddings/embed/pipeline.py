@@ -1,10 +1,12 @@
 import logging
+import sys
+import h5py
+import numpy as np
+
 from copy import deepcopy
 from typing import Dict, Any, Type
-
-import h5py
 from Bio import SeqIO
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.embed import (
@@ -26,6 +28,37 @@ from bio_embeddings.utilities import (
 from bio_embeddings.utilities.backports import nullcontext
 
 logger = logging.getLogger(__name__)
+
+
+def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFrame,
+                               result_kwargs: Dict[str, Any]) -> None:
+    """
+    Logs the lower bound size of embeddings_file and reduced_embedding_file
+
+    :param embedder: the embedder being used
+    :param mapping_file: the mapping file of the sequences
+    :param result_kwargs: the kwargs passed to the pipeline --> will decide what to print
+
+    :return: Nothing.
+    """
+    per_amino_acid_size_in_bytes = sys.getsizeof(np.random.random_sample((embedder.embedding_dimension,
+                                                                          embedder.number_of_layers)))
+    per_protein_size_in_bytes = sys.getsizeof(np.random.random_sample((embedder.embedding_dimension,)))
+
+    total_number_of_proteins = len(mapping_file)
+    total_aa = mapping_file['sequence_length'].sum()
+
+    embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
+    reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
+
+    if result_kwargs["reduce"] is True:
+        logger.info(f"The minimum expected size for the reduced_embedding_file is "
+                    f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
+
+    if not (result_kwargs["reduce"] and result_kwargs["discard_per_amino_acid_embeddings"]):
+        logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
+
+    logger.info(f"Please make sure you minimally have as much storage space as indicated above available.")
 
 
 def _get_reduced_embeddings_file_context(
@@ -95,6 +128,11 @@ def embed_and_write_batched(
         for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], "fasta")
     )
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
+
+    # Print the minimum required file sizes
+    _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
+
+
     # Open embedding files or null contexts and iteratively save embeddings to file
     with _get_embeddings_file_context(
         file_manager, result_kwargs

@@ -16,6 +16,8 @@ from bio_embeddings.utilities import (
 
 class AlbertEmbedder(EmbedderInterface):
     name = "albert"
+    embedding_dimension = 1024
+    number_of_layers = 1
 
     def __init__(self, **kwargs):
         """

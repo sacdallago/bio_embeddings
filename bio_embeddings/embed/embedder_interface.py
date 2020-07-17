@@ -17,6 +17,11 @@ logger = logging.getLogger(__name__)
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
     name: ClassVar[str]
 
+    # An integer representing the size of the embedding.
+    embedding_dimension: ClassVar[int]
+    # An integer representing the number of layers from the RAW output of the LM.
+    number_of_layers: ClassVar[int]
+
     def __init__(self, **kwargs):
         """
         Initializer accepts location of a pre-trained model and options

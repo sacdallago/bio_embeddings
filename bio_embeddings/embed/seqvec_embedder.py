@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 class SeqVecEmbedder(EmbedderInterface):
     name = "seqvec"
+    embedding_dimension = 1024
+    number_of_layers = 3
 
     _weights_file: str
     _options_file: str

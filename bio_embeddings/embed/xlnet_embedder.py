@@ -6,7 +6,6 @@ from typing import Iterable, Optional, Generator
 
 import torch
 from numpy import ndarray
-# TODO: didn't have transformers installed when writing this, so no idea if XLNetConfig can be imported as such
 from transformers import XLNetModel, XLNetTokenizer, XLNetConfig
 
 from bio_embeddings.embed.embedder_interface import EmbedderInterface
@@ -19,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 class XLNetEmbedder(EmbedderInterface):
     name = "xlnet"
+    embedding_dimension = 1024
+    number_of_layers = 1
 
     def __init__(self, **kwargs):
         """
