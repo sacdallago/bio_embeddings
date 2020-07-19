@@ -60,7 +60,7 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
     if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
         logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
 
-        reduced_embeddings_file_size_in_MB += embeddings_file_size_in_MB
+        required_space_in_MB += embeddings_file_size_in_MB
 
     _, _, available_space_in_bytes = shutil.disk_usage(result_kwargs.get('prefix'))
 
