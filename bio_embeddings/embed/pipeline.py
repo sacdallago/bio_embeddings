@@ -1,5 +1,6 @@
 import logging
 import h5py
+import shutil
 
 from copy import deepcopy
 from typing import Dict, Any, Type
@@ -48,14 +49,32 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
     embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
     reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
 
+    required_space_in_MB = 0
+
     if result_kwargs.get("reduce") is True:
         logger.info(f"The minimum expected size for the reduced_embedding_file is "
                     f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
 
+        required_space_in_MB += reduced_embeddings_file_size_in_MB
+
     if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
         logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
 
-    logger.info(f"Please make sure you minimally have as much storage space as indicated above available.")
+        reduced_embeddings_file_size_in_MB += embeddings_file_size_in_MB
+
+    _, _, available_space_in_bytes = shutil.disk_usage(result_kwargs.get('prefix'))
+
+    available_space_in_MB = available_space_in_bytes * pow(10, -6)
+
+    if available_space_in_MB < required_space_in_MB:
+        logger.warning(f"You are attempting to generate {required_space_in_MB}MB worth of embeddings, "
+                       f"but only {available_space_in_MB}MB are available at "
+                       f"the prefix({result_kwargs.get('prefix')}). \n"
+                       f"We suggest you stop execution NOW and double check you have enough free space available. "
+                       f"Alternatively, try reducing the input FASTA file.")
+    else:
+        logger.info(f"You are going to generate a total of {required_space_in_MB}MB of embeddings, and have "
+                    f"{available_space_in_MB}MB available at {result_kwargs.get('prefix')}.")
 
 
 def _get_reduced_embeddings_file_context(
