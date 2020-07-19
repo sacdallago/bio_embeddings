@@ -41,9 +41,8 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
 
     :return: Nothing.
     """
-    per_amino_acid_size_in_bytes = sys.getsizeof(np.random.random_sample((embedder.embedding_dimension,
-                                                                          embedder.number_of_layers)))
-    per_protein_size_in_bytes = sys.getsizeof(np.random.random_sample((embedder.embedding_dimension,)))
+    per_amino_acid_size_in_bytes = 4 * embedder.embedding_dimension * embedder.number_of_layers
+    per_protein_size_in_bytes = 4 * embedder.embedding_dimension
 
     total_number_of_proteins = len(mapping_file)
     total_aa = mapping_file['sequence_length'].sum()
