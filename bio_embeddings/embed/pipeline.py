@@ -67,7 +67,7 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
     available_space_in_MB = available_space_in_bytes * pow(10, -6)
 
     if available_space_in_MB < required_space_in_MB:
-        logger.warning(f"You are attempting to generate {required_space_in_MBL:.3f}MB worth of embeddings, "
+        logger.warning(f"You are attempting to generate {required_space_in_MB:.3f}MB worth of embeddings, "
                        f"but only {available_space_in_MB:.3f}MB are available at "
                        f"the prefix({result_kwargs.get('prefix')}). \n"
                        f"We suggest you stop execution NOW and double check you have enough free space available. "
