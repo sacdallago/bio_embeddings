@@ -67,14 +67,14 @@ def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFr
     available_space_in_MB = available_space_in_bytes * pow(10, -6)
 
     if available_space_in_MB < required_space_in_MB:
-        logger.warning(f"You are attempting to generate {required_space_in_MB}MB worth of embeddings, "
-                       f"but only {available_space_in_MB}MB are available at "
+        logger.warning(f"You are attempting to generate {required_space_in_MBL:.3f}MB worth of embeddings, "
+                       f"but only {available_space_in_MB:.3f}MB are available at "
                        f"the prefix({result_kwargs.get('prefix')}). \n"
                        f"We suggest you stop execution NOW and double check you have enough free space available. "
                        f"Alternatively, try reducing the input FASTA file.")
     else:
-        logger.info(f"You are going to generate a total of {required_space_in_MB}MB of embeddings, and have "
-                    f"{available_space_in_MB}MB available at {result_kwargs.get('prefix')}.")
+        logger.info(f"You are going to generate a total of {required_space_in_MB:.3f}MB of embeddings, and have "
+                    f"{available_space_in_MB:.3f}MB available at {result_kwargs.get('prefix')}.")
 
 
 def _get_reduced_embeddings_file_context(
