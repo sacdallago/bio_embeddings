@@ -1,5 +1,6 @@
 # TODO: Move this once everything works
 import re
+from itertools import zip_longest
 from typing import List, Generator
 
 import torch
@@ -12,24 +13,26 @@ def embed_batch_berts(
     embedder: EmbedderInterface, batch: List[str]
 ) -> Generator[ndarray, None, None]:
     """ Embed batch code shared between Bert and Albert """
-    batch    = [ re.sub(r"[UZOB]", "X", sequence) for sequence in batch ]
-    seq_lens = [ len(seq)  for seq in batch ]
-    batch    = [ ' '.join(list(seq)) for seq in batch ]
+    seq_lens = [len(seq) for seq in batch]
+    # Remove rare amino acids
+    batch = [re.sub(r"[UZOB]", "X", sequence) for sequence in batch]
+    # transformers needs spaces between the amino acids
+    batch = [" ".join(list(seq)) for seq in batch]
 
     ids = embedder._tokenizer.batch_encode_plus(
         batch, add_special_tokens=True, pad_to_max_length=True
     )
-    
-    input_ids      = torch.tensor(ids["input_ids"]).to(embedder._device)
+
+    input_ids = torch.tensor(ids["input_ids"]).to(embedder._device)
     attention_mask = torch.tensor(ids["attention_mask"]).to(embedder._device)
-    
+
     with torch.no_grad():
-        embedding = embedder._model(input_ids=input_ids, attention_mask=attention_mask)
-        
-    embedding = embedding[0].cpu().numpy()
-    
-    for seq_num in range(len(embedding)):
-        seq_len = seq_lens[seq_num]
-        assert seq_len == embedding[seq_num].shape[0]+2 # add two to account for special tokens
-        seq_emd = embedding[seq_num][1:-1] # slice off first and last positions (special tokens)
-        yield seq_emd
+        embeddings = embedder._model(input_ids=input_ids, attention_mask=attention_mask)
+
+    embeddings = embeddings[0].cpu().numpy()
+
+    for seq_num, seq_len in zip_longest(range(len(embeddings)), seq_lens):
+        # slice off first and last positions (special tokens)
+        embedding = embeddings[seq_num][1:-1]
+        assert seq_len == embedding.shape[0]
+        yield embedding

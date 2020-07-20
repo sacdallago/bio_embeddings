@@ -60,12 +60,14 @@ class SeqVecEmbedder(EmbedderInterface):
         )
 
     @classmethod
-    def with_download(cls, **kwargs):
-        necessary_files = ['weights_file', 'options_file']
+    def with_download(cls, **kwargs) -> "SeqVecEmbedder":
+        necessary_files = ["weights_file", "options_file"]
+
 
         for file in necessary_files:
             if not kwargs.get(file):
                 f = tempfile.NamedTemporaryFile()
+                keep_tempfiles_alive.append(f)
 
                 get_model_file(path=f.name, model=cls.name, file=file)
 

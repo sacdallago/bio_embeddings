@@ -47,7 +47,7 @@ class AlbertEmbedder(EmbedderInterface):
                                           do_lower_case=False)
 
     @classmethod
-    def with_download(cls, **kwargs):
+    def with_download(cls, **kwargs) -> "AlbertEmbedder":
         necessary_directories = ['model_directory']
 
         for directory in necessary_directories:

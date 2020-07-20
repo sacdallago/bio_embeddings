@@ -49,12 +49,14 @@ class BertEmbedder(EmbedderInterface):
         self._tokenizer = BertTokenizer(str(Path(self._model_directory) / 'vocab.txt'), do_lower_case=False)
 
     @classmethod
-    def with_download(cls, **kwargs):
+    def with_download(cls, **kwargs) -> "BertEmbedder":
         necessary_directories = ['model_directory']
 
+        keep_tempfiles_alive = []
         for directory in necessary_directories:
             if not kwargs.get(directory):
                 f = tempfile.mkdtemp()
+                keep_tempfiles_alive.append(f)
 
                 get_model_directories_from_zip(path=f, model=cls.name, directory=directory)
 

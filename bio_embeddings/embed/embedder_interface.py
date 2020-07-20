@@ -8,8 +8,12 @@ Authors:
 import abc
 import logging
 from typing import List, Generator, Optional, Iterable, ClassVar
+from typing import Type, TypeVar
 
 from numpy import ndarray
+
+# https://stackoverflow.com/a/39205612/3549270
+T = TypeVar("T", bound="EmbedderInterface")
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +34,7 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def with_download(cls, **kwargs):
+    def with_download(cls: Type[T], **kwargs) -> T:
         """ Convenience function to create an instance after downloading files. """
         raise NotImplementedError
 
