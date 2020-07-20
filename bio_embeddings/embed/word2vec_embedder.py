@@ -9,6 +9,8 @@ from bio_embeddings.utilities import get_model_file
 
 class Word2VecEmbedder(EmbedderInterface):
     name = "word2vec"
+    embedding_dimension = 1024
+    number_of_layers = 1
 
     def __init__(self, **kwargs):
         """

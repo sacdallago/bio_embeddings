@@ -1,10 +1,11 @@
 import logging
+import h5py
+import shutil
+
 from copy import deepcopy
 from typing import Dict, Any, Type
-
-import h5py
 from Bio import SeqIO
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.embed import (
@@ -26,6 +27,54 @@ from bio_embeddings.utilities import (
 from bio_embeddings.utilities.backports import nullcontext
 
 logger = logging.getLogger(__name__)
+
+
+def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFrame,
+                               result_kwargs: Dict[str, Any]) -> None:
+    """
+    Logs the lower bound size of embeddings_file and reduced_embedding_file
+
+    :param embedder: the embedder being used
+    :param mapping_file: the mapping file of the sequences
+    :param result_kwargs: the kwargs passed to the pipeline --> will decide what to print
+
+    :return: Nothing.
+    """
+    per_amino_acid_size_in_bytes = 4 * embedder.embedding_dimension * embedder.number_of_layers
+    per_protein_size_in_bytes = 4 * embedder.embedding_dimension
+
+    total_number_of_proteins = len(mapping_file)
+    total_aa = mapping_file['sequence_length'].sum()
+
+    embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
+    reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
+
+    required_space_in_MB = 0
+
+    if result_kwargs.get("reduce") is True:
+        logger.info(f"The minimum expected size for the reduced_embedding_file is "
+                    f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
+
+        required_space_in_MB += reduced_embeddings_file_size_in_MB
+
+    if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
+        logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
+
+        required_space_in_MB += embeddings_file_size_in_MB
+
+    _, _, available_space_in_bytes = shutil.disk_usage(result_kwargs.get('prefix'))
+
+    available_space_in_MB = available_space_in_bytes * pow(10, -6)
+
+    if available_space_in_MB < required_space_in_MB:
+        logger.warning(f"You are attempting to generate {required_space_in_MB:.3f}MB worth of embeddings, "
+                       f"but only {available_space_in_MB:.3f}MB are available at "
+                       f"the prefix({result_kwargs.get('prefix')}). \n"
+                       f"We suggest you stop execution NOW and double check you have enough free space available. "
+                       f"Alternatively, try reducing the input FASTA file.")
+    else:
+        logger.info(f"You are going to generate a total of {required_space_in_MB:.3f}MB of embeddings, and have "
+                    f"{available_space_in_MB:.3f}MB available at {result_kwargs.get('prefix')}.")
 
 
 def _get_reduced_embeddings_file_context(
@@ -95,6 +144,10 @@ def embed_and_write_batched(
         for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], "fasta")
     )
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
+
+    # Print the minimum required file sizes
+    _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
+
     # Open embedding files or null contexts and iteratively save embeddings to file
     with _get_embeddings_file_context(
         file_manager, result_kwargs

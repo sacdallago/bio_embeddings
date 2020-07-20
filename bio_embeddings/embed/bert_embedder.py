@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 class BertEmbedder(EmbedderInterface):
     name = "bert"
+    embedding_dimension = 1024
+    number_of_layers = 1
 
     def __init__(self, **kwargs):
         """
