@@ -1,5 +1,6 @@
 import logging
 import tempfile
+from pathlib import Path
 from typing import List, Optional, Generator
 
 import torch
@@ -30,6 +31,7 @@ class SeqVecEmbedder(EmbedderInterface):
 
         :param weights_file: path of weights file
         :param options_file: path of options file
+        :param model_directory: Alternative of weights_file/options_file
         :param use_cpu: overwrite autodiscovery and force CPU use
         :param max_amino_acids: max # of amino acids to include in embed_many batches. Default: 15k AA
         """
@@ -38,8 +40,16 @@ class SeqVecEmbedder(EmbedderInterface):
         self._options = kwargs
 
         # Get file locations from kwargs
-        self._weights_file = self._options["weights_file"]
-        self._options_file = self._options["options_file"]
+        if "model_directory" in self._options:
+            self._weights_file = str(
+                Path(self._options["model_directory"]).joinpath("weights_file")
+            )
+            self._options_file = str(
+                Path(self._options["model_directory"]).joinpath("options_file")
+            )
+        else:
+            self._weights_file = self._options["weights_file"]
+            self._options_file = self._options["options_file"]
         self._use_cpu = self._options.get("use_cpu", False)
 
         if torch.cuda.is_available() and not self._use_cpu:
