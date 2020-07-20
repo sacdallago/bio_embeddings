@@ -224,15 +224,15 @@ def transformer(
 
 
 def albert(**kwargs):
-    return transformer(AlbertEmbedder, "albert", 200000, **kwargs)
+    return transformer(AlbertEmbedder, "albert", 3035, **kwargs)
 
 
 def bert(**kwargs):
-    return transformer(BertEmbedder, "bert", 400000, **kwargs)
+    return transformer(BertEmbedder, "bert", 6024, **kwargs)
 
 
 def xlnet(**kwargs):
-    return transformer(XLNetEmbedder, "xlnet", 15000, **kwargs)
+    return transformer(XLNetEmbedder, "xlnet", 4000, **kwargs)
 
 
 # list of available embedding protocols
