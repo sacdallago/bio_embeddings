@@ -9,7 +9,7 @@ from bio_embeddings.embed import SeqVecEmbedder
 from bio_embeddings.extract.seqvec.SeqVecFeatureExtraction import SeqVecFeatureExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
-from bio_embeddings.utilities.helpers import check_required, read_fasta_file_generator, convert_list_of_enum_to_string, \
+from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
     write_fasta_file
 from bio_embeddings.utilities.exceptions import InvalidParameterError
 
@@ -75,7 +75,7 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     disorder_sequences = list()
 
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
-        for protein_sequence in read_fasta_file_generator(result_kwargs['remapped_sequences_file']):
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
 
             # Per-AA features: DSSP3, DSSP8 and disorder
             embedding = np.array(embedding_file[protein_sequence.id])
