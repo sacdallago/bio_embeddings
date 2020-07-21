@@ -4,9 +4,8 @@ import numpy as np
 from copy import deepcopy
 from pandas import read_csv
 from typing import Dict, Any
-from Bio.Seq import Seq
 from bio_embeddings.embed import SeqVecEmbedder
-from bio_embeddings.extract.seqvec.SeqVecFeatureExtraction import SeqVecFeatureExtractor
+from bio_embeddings.extract.seqvec.SeqVecAnnotationExtraction import SeqVecAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
@@ -43,12 +42,12 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     for file in necessary_files:
         if not result_kwargs.get(file):
             file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
-            get_model_file(path=file_path, model='seqvec_from_publication_feature_extractors', file=file)
+            get_model_file(path=file_path, model='seqvec_from_publication_annotations_extractors', file=file)
             result_kwargs[file] = file_path
 
-    feature_extractor = SeqVecFeatureExtractor(**result_kwargs)
+    annotation_extractor = SeqVecAnnotationExtractor(**result_kwargs)
 
-    # mapping file will be needed for protein-wide features
+    # mapping file will be needed for protein-wide annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
 
     # Try to create final files (if this fails, now is better than later
@@ -77,10 +76,10 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
         for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
 
-            # Per-AA features: DSSP3, DSSP8 and disorder
+            # Per-AA annotations: DSSP3, DSSP8 and disorder
             embedding = np.array(embedding_file[protein_sequence.id])
 
-            predicted_DSSP3, predicted_DSSP8, predicted_disorder = feature_extractor.get_secondary_structure(embedding)
+            predicted_DSSP3, predicted_DSSP8, predicted_disorder = annotation_extractor.get_secondary_structure(embedding)
 
             DSSP3_sequence = deepcopy(protein_sequence)
             DSSP3_sequence.seq = convert_list_of_enum_to_string(predicted_DSSP3)
@@ -94,9 +93,9 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
             disorder_sequence.seq = convert_list_of_enum_to_string(predicted_disorder)
             disorder_sequences.append(disorder_sequence)
 
-            # Per-sequence features, e.g. subcell loc & membrane boundness
+            # Per-sequence annotations, e.g. subcell loc & membrane boundness
             reduced_embedding = SeqVecEmbedder.reduce_per_protein(embedding)
-            subcellular_location, membrane_or_soluble = feature_extractor.get_subcellular_location(reduced_embedding)
+            subcellular_location, membrane_or_soluble = annotation_extractor.get_subcellular_location(reduced_embedding)
 
             mapping_file.at[protein_sequence.id, 'subcellular_location'] = subcellular_location.value
             mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = membrane_or_soluble.value

@@ -1,12 +1,13 @@
 import logging
 import torch
+import collections
 
 from typing import List
 from numpy import ndarray
 from enum import Enum
 
-from bio_embeddings.extract.features import Location, Membrane, Disorder, SecondaryStructure
-from bio_embeddings.extract.seqvec.feature_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
+from bio_embeddings.extract.annotations import Location, Membrane, Disorder, SecondaryStructure
+from bio_embeddings.extract.seqvec.annotation_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 
 logger = logging.getLogger(__name__)
 
@@ -51,12 +52,16 @@ _disor_labels = {
     1: Disorder.DISORDER
 }
 
+SecondaryStructureResult = collections.namedtuple('SecondaryStructure', 'DSSP3 DSSP8 disorder')
+SubcellularLocalizationResult = collections.namedtuple('SubcellularLocalization', 'localization membrane')
+SeqVecExtractedFeatures = collections.namedtuple('SeqVecExtractedFeatures', 'DSSP3 DSSP8 disorder localization membrane')
 
-class SeqVecFeatureExtractor(object):
+
+class SeqVecAnnotationExtractor(object):
 
     def __init__(self, **kwargs):
         """
-        Initialize SeqVec feature extractor. Must define non-positional arguments for paths of files.
+        Initialize SeqVec annotation extractor. Must define non-positional arguments for paths of files.
 
         :param secondary_structure_checkpoint_file: path of secondary structure checkpoint file
         :param subcellular_location_checkpoint_file: path of the subcellular location checkpoint file
@@ -83,13 +88,13 @@ class SeqVecFeatureExtractor(object):
         if torch.cuda.is_available():
             logger.info("CUDA available")
 
-            # load pre-trained weights for feature machines
+            # load pre-trained weights for annotation machines
             subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
         else:
             logger.info("CUDA NOT available")
 
-            # load pre-trained weights for feature machines
+            # load pre-trained weights for annotation machines
             subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location='cpu')
             pass
@@ -102,25 +107,32 @@ class SeqVecFeatureExtractor(object):
         self._subcellular_location_model.eval()
         self._secondary_structure_model.eval()
 
-    def get_subcellular_location(self, raw_embedding: ndarray):
+    def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationResult:
         embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
-        return pred_loc, pred_mem
+        return SubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
 
-    def get_secondary_structure(self, embedding):
-
-        embedding = torch.tensor(embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
+    def get_secondary_structure(self, raw_embedding: ndarray) -> SecondaryStructureResult:
+        embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
         yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
 
         pred_dssp3 = self._class2label(_dssp3_labels, yhat_dssp3)
         pred_dssp8 = self._class2label(_dssp8_labels, yhat_dssp8)
         pred_disor = self._class2label(_disor_labels, yhat_disor)
 
-        return pred_dssp3, pred_dssp8, pred_disor
+        return SecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
+
+    def get_annotations(self, raw_embedding: ndarray) -> SeqVecExtractedFeatures:
+        secstruct = self.get_secondary_structure(raw_embedding)
+        subcell = self.get_subcellular_location(raw_embedding)
+
+        return SeqVecExtractedFeatures(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
+                                       DSSP3=secstruct.DSSP3, localization=subcell.localization,
+                                       membrane=subcell.membrane)
 
     @staticmethod
     def _class2label(label_dict, yhat) -> List[Enum]:
