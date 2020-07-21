@@ -54,7 +54,7 @@ _disor_labels = {
 
 SecondaryStructureResult = collections.namedtuple('SecondaryStructure', 'DSSP3 DSSP8 disorder')
 SubcellularLocalizationResult = collections.namedtuple('SubcellularLocalization', 'localization membrane')
-SeqVecExtractedFeatures = collections.namedtuple('SeqVecExtractedFeatures', 'DSSP3 DSSP8 disorder localization membrane')
+SeqVecExtractedAnnotations = collections.namedtuple('SeqVecExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
 
 
 class SeqVecAnnotationExtractor(object):
@@ -126,13 +126,13 @@ class SeqVecAnnotationExtractor(object):
 
         return SecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
 
-    def get_annotations(self, raw_embedding: ndarray) -> SeqVecExtractedFeatures:
+    def get_annotations(self, raw_embedding: ndarray) -> SeqVecExtractedAnnotations:
         secstruct = self.get_secondary_structure(raw_embedding)
         subcell = self.get_subcellular_location(raw_embedding)
 
-        return SeqVecExtractedFeatures(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
-                                       DSSP3=secstruct.DSSP3, localization=subcell.localization,
-                                       membrane=subcell.membrane)
+        return SeqVecExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
+                                          DSSP3=secstruct.DSSP3, localization=subcell.localization,
+                                          membrane=subcell.membrane)
 
     @staticmethod
     def _class2label(label_dict, yhat) -> List[Enum]:

@@ -4,7 +4,6 @@ import numpy as np
 from copy import deepcopy
 from pandas import read_csv
 from typing import Dict, Any
-from bio_embeddings.embed import SeqVecEmbedder
 from bio_embeddings.extract.seqvec.SeqVecAnnotationExtraction import SeqVecAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
