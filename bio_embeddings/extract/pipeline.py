@@ -2,6 +2,8 @@ import logging
 import h5py
 import numpy as np
 from copy import deepcopy
+
+from Bio.Seq import Seq
 from pandas import read_csv
 from typing import Dict, Any
 from bio_embeddings.extract.seqvec.SeqVecAnnotationExtraction import SeqVecAnnotationExtractor
@@ -81,15 +83,15 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
             annotations = annotation_extractor.get_annotations(embedding)
 
             DSSP3_sequence = deepcopy(protein_sequence)
-            DSSP3_sequence.seq = convert_list_of_enum_to_string(annotations.DSSP3)
+            DSSP3_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP3))
             DSSP3_sequences.append(DSSP3_sequence)
 
             DSSP8_sequence = deepcopy(protein_sequence)
-            DSSP8_sequence.seq = convert_list_of_enum_to_string(annotations.DSSP8)
+            DSSP8_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP8))
             DSSP8_sequences.append(DSSP8_sequence)
 
             disorder_sequence = deepcopy(protein_sequence)
-            disorder_sequence.seq = convert_list_of_enum_to_string(annotations.disorder)
+            disorder_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.disorder))
             disorder_sequences.append(disorder_sequence)
 
             # Per-sequence annotations, e.g. subcell loc & membrane boundness
