@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, albert, bert, xlnet, short_albert
+  # Options: seqvec, albert, bert, xlnet
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -42,8 +42,6 @@ stage_1:
   ### Optional for protocol: seqvec
   # weights_file: @/path/to/file
   # options_file: @/path/to/file
-  # vocabulary_file: @/path/to/file (must specify seqvec_version=2)
-  # seqvec_version: [*1,2]
   ## The following parameter sets an upper bound on total AA to include when embedding many sequences.
   ## Adjust this parameter if CUDA runs out of memory! The default (15.000) works for a 1080 with 8GB RAM.
   # max_amino_acids: [*15000]
@@ -52,16 +50,16 @@ stage_1:
   ### Optional for protocol: fasttext, word2vec, glove
   # model_file: @/path/to/file
 
-  ### Optional for protocol: albert, bert, xlnet, short_albert
+  ### Optional for protocol: albert, bert, xlnet
   # model_directory: @/path/to/directory
 
-  ### Optional for protocol: seqvec, albert, bert, xlnet, short_albert
+  ### Optional for protocol: seqvec, albert, bert, xlnet
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
 
   #### Optional parameters for the execution of the protocol
 
-  ### Optional for protocol: seqvec, albert, bert, xlnet, short_albert
+  ### Optional for protocol: seqvec, albert, bert, xlnet
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
   # use_cpu: [True, *False]
 
