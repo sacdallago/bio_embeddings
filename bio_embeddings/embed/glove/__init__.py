@@ -1,1 +1,0 @@
-from bio_embeddings.embed.glove.GloveEmbedder import GloveEmbedder

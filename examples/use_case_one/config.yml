@@ -1,14 +1,14 @@
 global:
   sequences_file: fasta.fa
   prefix: simple
-seqvec_embeddings:
+bert_embeddings:
   type: embed
-  protocol: seqvec
+  protocol: bert
   reduce: True
 tsne_projections:
   type: project
   protocol: tsne
-  depends_on: seqvec_embeddings
+  depends_on: bert_embeddings
 plotly_visualization:
   type: visualize
   protocol: plotly

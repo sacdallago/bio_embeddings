@@ -1,9 +1,16 @@
-from bio_embeddings.embed.EmbedderInterface import EmbedderInterface
-from gensim.models.keyedvectors import KeyedVectors
+import tempfile
+
 import numpy as np
+from gensim.models.keyedvectors import KeyedVectors
+
+from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.utilities import get_model_file
 
 
-class Word2VecEmbedder(EmbedderInterface):
+class FastTextEmbedder(EmbedderInterface):
+    name = "fasttext"
+    embedding_dimension = 1024
+    number_of_layers = 1
 
     def __init__(self, **kwargs):
         """
@@ -16,12 +23,24 @@ class Word2VecEmbedder(EmbedderInterface):
 
         self._model_file = self._options.get('model_file')
 
-        self._model = KeyedVectors.load(str(self._model_file), mmap='r')
+        self._model = KeyedVectors.load_word2vec_format(self._model_file, binary=False)
         self._vector_size = 512
         self._zero_vector = np.zeros(self._vector_size, dtype=np.float32)
         self._window_size = 3
 
-        pass
+    @classmethod
+    def with_download(cls, **kwargs):
+        necessary_files = ['model_file']
+
+        for file in necessary_files:
+            if not kwargs.get(file):
+                f = tempfile.NamedTemporaryFile()
+
+                get_model_file(path=f.name, model=cls.name, file=file)
+
+                kwargs[file] = f.name
+
+        return cls(**kwargs)
 
     def embed(self, sequence):
         # pad sequence with special character (only 3-mers are considered)
