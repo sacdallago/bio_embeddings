@@ -74,7 +74,6 @@ After having installed the package, you can:
   - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
   - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
   - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
-  - [x] Albert short (unpublished Albert limited to sequences of length 510. Performance ~ Albert)
   - [ ] Fastext
   - [ ] Glove
   - [ ] Word2Vec
@@ -89,7 +88,7 @@ After having installed the package, you can:
 <br>
 
 - [x] SeqVec
-- [x] Albert (unpublished)
+- [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
 </details>
 
 <details>
@@ -101,7 +100,6 @@ After having installed the package, you can:
 - [x] Glove
 - [x] Word2Vec
 - [ ] UniRep
-- [x] Albert short (unpublished)
 - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)

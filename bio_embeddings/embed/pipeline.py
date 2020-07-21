@@ -13,7 +13,6 @@ from bio_embeddings.embed import (
     BertEmbedder,
     EmbedderInterface,
     SeqVecEmbedder,
-    ShortAlbertEmbedder,
     XLNetEmbedder,
 )
 from bio_embeddings.utilities import (
@@ -178,10 +177,6 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     # Initialize pipeline and model specific options:
     result_kwargs.setdefault("max_amino_acids", 15000)
 
-    if result_kwargs.get("seqvec_version") == 2 or result_kwargs.get("vocabulary_file"):
-        necessary_files.append("vocabulary_file")
-        result_kwargs["seqvec_version"] = 2
-
     # Download necessary files if needed
     for file in necessary_files:
         if not result_kwargs.get(file):
@@ -191,7 +186,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
 
             get_model_file(
                 path=file_path,
-                model="seqvecv{}".format(result_kwargs.get("seqvec_version", 1)),
+                model="seqvec",
                 file=file,
             )
 
@@ -228,10 +223,6 @@ def transformer(
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
-def short_albert(**kwargs):
-    return transformer(ShortAlbertEmbedder, "short_albert", 510, **kwargs)
-
-
 def albert(**kwargs):
     return transformer(AlbertEmbedder, "albert", 200000, **kwargs)
 
@@ -247,7 +238,6 @@ def xlnet(**kwargs):
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
-    "short_albert": short_albert,
     "albert": albert,
     "bert": bert,
     "xlnet": xlnet,

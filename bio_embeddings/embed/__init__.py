@@ -4,6 +4,5 @@ from bio_embeddings.embed.embedder_interface import EmbedderInterface
 from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
 from bio_embeddings.embed.glove_embedder import GloveEmbedder
 from bio_embeddings.embed.seqvec_embedder import SeqVecEmbedder
-from bio_embeddings.embed.short_albert_embedder import ShortAlbertEmbedder
 from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder
 from bio_embeddings.embed.xlnet_embedder import XLNetEmbedder
