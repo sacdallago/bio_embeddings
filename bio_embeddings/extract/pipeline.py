@@ -79,26 +79,23 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
             # Per-AA annotations: DSSP3, DSSP8 and disorder
             embedding = np.array(embedding_file[protein_sequence.id])
 
-            predicted_DSSP3, predicted_DSSP8, predicted_disorder = annotation_extractor.get_secondary_structure(embedding)
+            annotations = annotation_extractor.get_annotations(embedding)
 
             DSSP3_sequence = deepcopy(protein_sequence)
-            DSSP3_sequence.seq = convert_list_of_enum_to_string(predicted_DSSP3)
+            DSSP3_sequence.seq = convert_list_of_enum_to_string(annotations.DSSP3)
             DSSP3_sequences.append(DSSP3_sequence)
 
             DSSP8_sequence = deepcopy(protein_sequence)
-            DSSP8_sequence.seq = convert_list_of_enum_to_string(predicted_DSSP8)
+            DSSP8_sequence.seq = convert_list_of_enum_to_string(annotations.DSSP8)
             DSSP8_sequences.append(DSSP8_sequence)
 
             disorder_sequence = deepcopy(protein_sequence)
-            disorder_sequence.seq = convert_list_of_enum_to_string(predicted_disorder)
+            disorder_sequence.seq = convert_list_of_enum_to_string(annotations.disorder)
             disorder_sequences.append(disorder_sequence)
 
             # Per-sequence annotations, e.g. subcell loc & membrane boundness
-            reduced_embedding = SeqVecEmbedder.reduce_per_protein(embedding)
-            subcellular_location, membrane_or_soluble = annotation_extractor.get_subcellular_location(reduced_embedding)
-
-            mapping_file.at[protein_sequence.id, 'subcellular_location'] = subcellular_location.value
-            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = membrane_or_soluble.value
+            mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
+            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
 
     # Write files
     mapping_file.to_csv(per_sequence_predictions_file_path)
