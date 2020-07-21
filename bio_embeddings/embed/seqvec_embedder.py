@@ -63,15 +63,11 @@ class SeqVecEmbedder(EmbedderInterface):
     def with_download(cls, **kwargs):
         necessary_files = ['weights_file', 'options_file']
 
-        if kwargs.get('seqvec_version') == 2 or kwargs.get('vocabulary_file'):
-            necessary_files.append('vocabulary_file')
-            kwargs['seqvec_version'] = 2
-
         for file in necessary_files:
             if not kwargs.get(file):
                 f = tempfile.NamedTemporaryFile()
 
-                get_model_file(path=f.name, model=cls.name.format(str(kwargs.get('seqvec_version', 1))), file=file)
+                get_model_file(path=f.name, model=cls.name, file=file)
 
                 kwargs[file] = f.name
         return cls(**kwargs)
