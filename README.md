@@ -10,6 +10,8 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find i
 ## News (current development cycle)
 
 - Develop now includes new models from [ProtTrans](https://doi.org/10.1101/2020.07.12.199554). The models are `albert`, `bert` and `xlnet`. They will officially be included in release `0.1.4`, but can be installed by installing the pipeline from GitHub (see _Install Guides_)
+- Release `0.1.4` will be installable on Google Colab. In the meantime, [check out this Google Colab](https://colab.research.google.com/drive/1h5izTF07GjHMkekmGNUj32Sbb1gccJxd?usp=sharing) to get started on-demand GPU computing today! (thanks to Prof. Georgina Stegmayer for helpful input)
+- Release `0.1.4` will include embedding similarity transfer and supervised annotation extraction via a new stage called `extract`.
 
 ## Install guides
 
