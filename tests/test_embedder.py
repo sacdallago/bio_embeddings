@@ -22,7 +22,6 @@ from bio_embeddings.embed import (
     "name,embedder_class",
     [
         ("seqvec", SeqVecEmbedder),
-        ("short_albert", ShortAlbertEmbedder),
         ("albert", AlbertEmbedder),
         ("bert", BertEmbedder),
         ("xlnet", XLNetEmbedder),

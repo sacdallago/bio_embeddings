@@ -11,7 +11,6 @@ from bio_embeddings.embed.xlnet_embedder import XLNetEmbedder
 
 name_to_embedder: Dict[str, Type[EmbedderInterface]] = {
     "seqvec": SeqVecEmbedder,
-    "short_albert": ShortAlbertEmbedder,
     "albert": AlbertEmbedder,
     "bert": BertEmbedder,
     "xlnet": XLNetEmbedder,
