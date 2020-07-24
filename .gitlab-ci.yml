@@ -17,7 +17,7 @@ stages:
     - source $HOME/.poetry/env
     - poetry --version
     - poetry config virtualenvs.in-project true
-    - poetry install -vv
+    - poetry install -vv -E xlnet
 
 .test-template: &test
   <<: *install-deps

@@ -73,7 +73,7 @@ class SeqVecEmbedder(EmbedderInterface):
     def with_download(cls, **kwargs) -> "SeqVecEmbedder":
         necessary_files = ["weights_file", "options_file"]
 
-
+        keep_tempfiles_alive = []
         for file in necessary_files:
             if not kwargs.get(file):
                 f = tempfile.NamedTemporaryFile()
