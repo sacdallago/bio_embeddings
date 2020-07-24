@@ -35,8 +35,8 @@ def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
     else:
         embedder = embedder_class.with_download(use_cpu=use_cpu)
     [protein, seqwence] = embedder.embed_many(["PROTEIN", "SEQWENCE"])
-    assert numpy.allclose(expected["test_case 1"], protein)
-    assert numpy.allclose(expected["test_case 2"], seqwence)
+    assert numpy.allclose(expected["test_case 1"], protein, rtol=1.0e-3, atol=1.0e-5)
+    assert numpy.allclose(expected["test_case 2"], seqwence, rtol=1.0e-3, atol=1.0e-5)
 
 
 @pytest.mark.skipif(
