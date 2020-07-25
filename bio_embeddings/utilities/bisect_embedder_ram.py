@@ -18,10 +18,14 @@ def bisect_embedder_memory(embedder_name: str, model_directory: Optional[str]):
     titin = "".join(fasta_lines[1:]).replace("\n", "")
     embedder = name_to_embedder[embedder_name]
     if model_directory:
-        embedder = embedder(model_directory=model_directory)
+        embedder = embedder(
+            model_directory=str(Path(model_directory).joinpath(embedder.name))
+        )
     else:
         logger.info("Model directory not given, downloading model")
         embedder = embedder.with_download()
+    # Evil Hack: `not model_fallback` will now evaluate to False, but using it will still fail
+    embedder.model_fallback = True
 
     # Binary search
     low = 0
