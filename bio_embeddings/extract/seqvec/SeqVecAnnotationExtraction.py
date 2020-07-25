@@ -108,6 +108,8 @@ class SeqVecAnnotationExtractor(object):
         self._secondary_structure_model.eval()
 
     def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationResult:
+        # Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --> 1024).
+        # This is similar to embedder.reduce_per_protein(), but more efficient since may be run in GPU (see self._device)
         embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
