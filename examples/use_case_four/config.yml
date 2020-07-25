@@ -4,8 +4,8 @@ global:
 seqvec_embeddings:
   type: embed
   protocol: seqvec
-  weights_file: /Users/chdallago/git/api.embed.protein.properties/models/seqvec/weights_file
-  options_file: /Users/chdallago/git/api.embed.protein.properties/models/seqvec/options_file
+  weights_file: /mnt/nfs/models/seqvec/weights_file
+  options_file: /mnt/nfs/models/seqvec/options_file
 annotations_from_seqvec:
   type: extract
   protocol: seqvec_from_publication
