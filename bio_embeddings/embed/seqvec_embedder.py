@@ -81,7 +81,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
     def embed(self, sequence: str) -> ndarray:
         return self.model.embed_sentence(list(sequence))
 
-    def get_fallback_model(self) -> ElmoEmbedder:
+    def _get_fallback_model(self) -> ElmoEmbedder:
         if not self.model_fallback:
             logger.warning(
                 "Loading model for CPU into RAM. Embedding on the CPU is very slow and you should avoid it."

@@ -40,7 +40,7 @@ class BertBaseEmbedder(EmbedderWithFallback):
                 kwargs[directory] = f
         return cls(**kwargs)
 
-    def get_fallback_model(self) -> Union[BertModel, AlbertModel]:
+    def _get_fallback_model(self) -> Union[BertModel, AlbertModel]:
         raise NotImplementedError
 
     def _embed_batch_impl(

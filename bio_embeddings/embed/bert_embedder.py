@@ -33,7 +33,7 @@ class BertEmbedder(BertBaseEmbedder):
             str(Path(self._model_directory) / "vocab.txt"), do_lower_case=False
         )
 
-    def get_fallback_model(self) -> BertModel:
+    def _get_fallback_model(self) -> BertModel:
         """ Returns the CPU model """
         if not self.model_fallback:
             self.model_fallback = BertModel.from_pretrained(

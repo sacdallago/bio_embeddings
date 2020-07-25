@@ -31,7 +31,7 @@ class AlbertEmbedder(BertBaseEmbedder):
             do_lower_case=False,
         )
 
-    def get_fallback_model(self) -> AlbertModel:
+    def _get_fallback_model(self) -> AlbertModel:
         """ Returns the CPU model """
         if not self.model_fallback:
             self.model_fallback = AlbertModel.from_pretrained(

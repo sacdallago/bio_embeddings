@@ -125,7 +125,7 @@ class EmbedderWithFallback(Embedder, abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_fallback_model(self):
+    def _get_fallback_model(self):
         ...
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
@@ -155,7 +155,7 @@ class EmbedderWithFallback(Embedder, abc.ABC):
                     f"This most likely means that you don't have enough GPU RAM to embed a protein this long. "
                     f"Embedding on the CPU instead, which is very slow"
                 )
-                yield from self._embed_batch_impl(batch, self.get_fallback_model())
+                yield from self._embed_batch_impl(batch, self._get_fallback_model())
             else:
                 logger.error(
                     f"Error processing batch of {len(batch)} sequences: {e}. "
@@ -171,5 +171,5 @@ class EmbedderWithFallback(Embedder, abc.ABC):
                             f"This most likely means that you don't have enough GPU RAM to embed a protein this long."
                         )
                         yield from self._embed_batch_impl(
-                            [sequence], self.get_fallback_model()
+                            [sequence], self._get_fallback_model()
                         )
