@@ -57,11 +57,11 @@ class BertBaseEmbedder(EmbedderWithFallback):
             batch, add_special_tokens=True, pad_to_max_length=True
         )
 
-        input_ids = torch.tensor(ids["input_ids"]).to(model.device)
+        tokenized_sequences = torch.tensor(ids["input_ids"]).to(model.device)
         attention_mask = torch.tensor(ids["attention_mask"]).to(model.device)
 
         with torch.no_grad():
-            embeddings = model(input_ids=input_ids, attention_mask=attention_mask)
+            embeddings = model(input_ids=tokenized_sequences, attention_mask=attention_mask)
 
         embeddings = embeddings[0].cpu().numpy()
 
