@@ -8,13 +8,13 @@ import torch
 from numpy import ndarray
 from transformers import XLNetModel, XLNetTokenizer, XLNetConfig
 
-from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import Embedder
 from bio_embeddings.utilities import get_model_directories_from_zip
 
 logger = logging.getLogger(__name__)
 
 
-class XLNetEmbedder(EmbedderInterface):
+class XLNetEmbedder(Embedder):
     name = "xlnet"
     embedding_dimension = 1024
     number_of_layers = 1

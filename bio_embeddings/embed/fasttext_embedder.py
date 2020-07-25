@@ -3,11 +3,11 @@ import tempfile
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
 
-from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import Embedder
 from bio_embeddings.utilities import get_model_file
 
 
-class FastTextEmbedder(EmbedderInterface):
+class FastTextEmbedder(Embedder):
     name = "fasttext"
     embedding_dimension = 1024
     number_of_layers = 1

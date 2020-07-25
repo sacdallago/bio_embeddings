@@ -26,8 +26,17 @@ class BertEmbedder(BertBaseEmbedder):
         self._model_directory = self._options.get("model_directory")
 
         # make model
-        self._model = BertModel.from_pretrained(self._model_directory)
-        self._model = self._model.eval().to(self.device)
+        self.model = BertModel.from_pretrained(self._model_directory)
+        self.model = self.model.eval().to(self.device)
+        self.model_fallback = None
         self._tokenizer = BertTokenizer(
             str(Path(self._model_directory) / "vocab.txt"), do_lower_case=False
         )
+
+    def get_fallback_model(self) -> BertModel:
+        """ Returns the CPU model """
+        if not self.model_fallback:
+            self.model_fallback = BertModel.from_pretrained(
+                self._model_directory
+            ).eval()
+        return self.model_fallback

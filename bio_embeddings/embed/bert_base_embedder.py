@@ -2,29 +2,29 @@ import logging
 import re
 import tempfile
 from itertools import zip_longest
-from typing import List, Generator, TypeVar, Union
+from typing import List, Generator, TypeVar, Union, Type
 
 import torch
 from numpy import ndarray
 from transformers import BertTokenizer, AlbertTokenizer, BertModel, AlbertModel
 
-from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.embed.embedder_interface import EmbedderWithFallback
 from bio_embeddings.utilities import get_model_directories_from_zip
 
 # https://stackoverflow.com/a/39205612/3549270
-T = TypeVar("T", bound="BertBaseEmbedder")
+RealBertEmbedder = TypeVar("RealBertEmbedder", bound="BertBaseEmbedder")
 
 logger = logging.getLogger(__name__)
 
 
-class BertBaseEmbedder(EmbedderInterface):
+class BertBaseEmbedder(EmbedderWithFallback):
     """ Shared code between Bert and ALbert """
 
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
-    _model: Union[AlbertModel, BertModel]
+    model: Union[AlbertModel, BertModel]
 
     @classmethod
-    def with_download(cls, **kwargs) -> T:
+    def with_download(cls: Type[RealBertEmbedder], **kwargs) -> RealBertEmbedder:
         necessary_directories = ["model_directory"]
 
         keep_tempfiles_alive = []
@@ -40,7 +40,12 @@ class BertBaseEmbedder(EmbedderInterface):
                 kwargs[directory] = f
         return cls(**kwargs)
 
-    def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
+    def get_fallback_model(self) -> Union[BertModel, AlbertModel]:
+        raise NotImplementedError
+
+    def _embed_batch_impl(
+        self, batch: List[str], model: Union[BertModel, AlbertModel]
+    ) -> Generator[ndarray, None, None]:
         """ Embed batch code shared between Bert and Albert """
         seq_lens = [len(seq) for seq in batch]
         # Remove rare amino acids
@@ -52,18 +57,21 @@ class BertBaseEmbedder(EmbedderInterface):
             batch, add_special_tokens=True, pad_to_max_length=True
         )
 
-        input_ids = torch.tensor(ids["input_ids"]).to(self.device)
-        attention_mask = torch.tensor(ids["attention_mask"]).to(self.device)
+        input_ids = torch.tensor(ids["input_ids"]).to(model.device)
+        attention_mask = torch.tensor(ids["attention_mask"]).to(model.device)
 
         with torch.no_grad():
-            embeddings = self._model(input_ids=input_ids, attention_mask=attention_mask)
+            embeddings = model(input_ids=input_ids, attention_mask=attention_mask)
 
         embeddings = embeddings[0].cpu().numpy()
 
         for seq_num, seq_len in zip_longest(range(len(embeddings)), seq_lens):
             # slice off first and last positions (special tokens)
-            embedding = embeddings[seq_num][1:-1]
-            assert seq_len == embedding.shape[0]
+            embedding = embeddings[seq_num][1 : seq_len + 1]
+            assert (
+                seq_len == embedding.shape[0]
+            ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
+
             yield embedding
 
     @staticmethod
@@ -71,25 +79,5 @@ class BertBaseEmbedder(EmbedderInterface):
         return embedding.mean(axis=0)
 
     def embed(self, sequence: str) -> ndarray:
-        sequence_length = len(sequence)
-        sequence = re.sub(r"[UZOB]", "X", sequence)
-
-        # Tokenize sequence with spaces
-        sequence = " ".join(list(sequence))
-
-        # tokenize sequence
-        tokenized_sequence = torch.tensor(
-            [self._tokenizer.encode(sequence, add_special_tokens=True)]
-        ).to(self.device)
-
-        with torch.no_grad():
-            # drop batch dimension
-            embedding = self._model(tokenized_sequence)[0].squeeze()
-            # remove special tokens added to start/end
-            embedding = embedding[1 : sequence_length + 1]
-
-        assert (
-            sequence_length == embedding.shape[0]
-        ), f"Sequence length mismatch: {sequence_length} vs {embedding.shape[0]}"
-
-        return embedding.cpu().detach().numpy().squeeze()
+        [embedding] = self.embed_batch([sequence])
+        return embedding

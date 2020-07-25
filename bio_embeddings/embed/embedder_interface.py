@@ -11,15 +11,18 @@ from typing import List, Generator, Optional, Iterable, ClassVar, Any, Dict
 from typing import Type, TypeVar
 
 import torch
+
 from numpy import ndarray
 
 # https://stackoverflow.com/a/39205612/3549270
-T = TypeVar("T", bound="EmbedderInterface")
+EmbedderInterfaceSubclass = TypeVar(
+    "EmbedderInterfaceSubclass", bound="EmbedderInterface"
+)
 
 logger = logging.getLogger(__name__)
 
 
-class EmbedderInterface(object, metaclass=abc.ABCMeta):
+class Embedder(abc.ABC):
     name: ClassVar[str]
     # An integer representing the size of the embedding.
     embedding_dimension: ClassVar[int]
@@ -41,7 +44,9 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def with_download(cls: Type[T], **kwargs) -> T:
+    def with_download(
+        cls: Type[EmbedderInterfaceSubclass], **kwargs
+    ) -> EmbedderInterfaceSubclass:
         """ Convenience function to create an instance after downloading files. """
         raise NotImplementedError
 
@@ -108,3 +113,63 @@ class EmbedderInterface(object, metaclass=abc.ABCMeta):
         """
 
         raise NotImplementedError
+
+
+class EmbedderWithFallback(Embedder, abc.ABC):
+    model: Any
+
+    @abc.abstractmethod
+    def _embed_batch_impl(
+        self, batch: List[str], model: Any
+    ) -> Generator[ndarray, None, None]:
+        ...
+
+    @abc.abstractmethod
+    def get_fallback_model(self):
+        ...
+
+    def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
+        """ Tries to get the embeddings in this order:
+          * Full batch GPU
+          * Single Sequence GPU
+          * Single Sequence CPU
+
+        Single sequence processing is done in case of runtime error due to
+        a) very long sequence or b) too large batch size
+        If this fails, you might want to consider lowering batch_size and/or
+        cutting very long sequences into smaller chunks
+
+        Returns unprocessed embeddings
+        """
+        # No point in having a fallback model when the normal model is CPU already
+        if self.use_cpu:
+            yield from self._embed_batch_impl(batch, self.model)
+            return
+
+        try:
+            yield from self._embed_batch_impl(batch, self.model)
+        except RuntimeError as e:
+            if len(batch) == 1:
+                logger.error(
+                    f"RuntimeError for sequence with {len(batch[0])} residues: {e}. "
+                    f"This most likely means that you don't have enough GPU RAM to embed a protein this long. "
+                    f"Embedding on the CPU instead, which is very slow"
+                )
+                yield from self._embed_batch_impl(batch, self.get_fallback_model())
+            else:
+                logger.error(
+                    f"Error processing batch of {len(batch)} sequences: {e}. "
+                    f"You might want to consider adjusting the `batch_size` parameter. "
+                    f"Will try to embed each sequence in the set individually on the GPU."
+                )
+                for sequence in batch:
+                    try:
+                        yield from self._embed_batch_impl([sequence], self.model)
+                    except RuntimeError as e:
+                        logger.error(
+                            f"RuntimeError for sequence with {len(sequence)} residues: {e}. "
+                            f"This most likely means that you don't have enough GPU RAM to embed a protein this long."
+                        )
+                        yield from self._embed_batch_impl(
+                            [sequence], self.get_fallback_model()
+                        )
