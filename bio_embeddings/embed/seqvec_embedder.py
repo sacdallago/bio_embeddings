@@ -20,7 +20,7 @@ class SeqVecEmbedder(EmbedderInterface):
 
     _weights_file: str
     _options_file: str
-    _use_cpu: bool
+    use_cpu: bool
     _elmo_model: ElmoEmbedder
     # The fallback model running on the cpu, which will be initialized if needed
     _elmo_model_fallback: Optional[ElmoEmbedder] = None
@@ -35,9 +35,7 @@ class SeqVecEmbedder(EmbedderInterface):
         :param use_cpu: overwrite autodiscovery and force CPU use
         :param max_amino_acids: max # of amino acids to include in embed_many batches. Default: 15k AA
         """
-        super().__init__()
-
-        self._options = kwargs
+        super().__init__(**kwargs)
 
         # Get file locations from kwargs
         if "model_directory" in self._options:
@@ -50,17 +48,14 @@ class SeqVecEmbedder(EmbedderInterface):
         else:
             self._weights_file = self._options["weights_file"]
             self._options_file = self._options["options_file"]
-        self._use_cpu = self._options.get("use_cpu", False)
 
-        if torch.cuda.is_available() and not self._use_cpu:
+        # TODO: Only SeqVec is checking for cuda availibilty, this should be done by all or none instead
+        # Additionally, this should use self.device.index
+        if torch.cuda.is_available() and not self.use_cpu:
             logger.info("CUDA available, using the GPU")
-
-            # Set CUDA device for ELMO machine
             cuda_device = 0
         else:
             logger.info("CUDA NOT available, using the CPU. This is slow")
-
-            # Set CUDA device for ELMO machine
             cuda_device = -1
 
         self._elmo_model = ElmoEmbedder(

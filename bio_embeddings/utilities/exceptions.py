@@ -28,10 +28,6 @@ class SequenceTooLongException(Exception):
     """
 
 
-class SequenceEmbeddingLengthMismatchException(Exception):
-    """
-    Exception when trying to embed sequences longer then the limit
-    """
 
 
 class MD5ClashException(Exception):

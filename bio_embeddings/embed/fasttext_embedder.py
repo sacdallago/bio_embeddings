@@ -17,9 +17,7 @@ class FastTextEmbedder(EmbedderInterface):
 
         :param model_file: path of model file. If not supplied, will be downloaded.
         """
-        super().__init__()
-
-        self._options = kwargs
+        super().__init__(**kwargs)
 
         self._model_file = self._options.get('model_file')
 

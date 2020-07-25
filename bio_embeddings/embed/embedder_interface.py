@@ -7,9 +7,10 @@ Authors:
 
 import abc
 import logging
-from typing import List, Generator, Optional, Iterable, ClassVar
+from typing import List, Generator, Optional, Iterable, ClassVar, Any, Dict
 from typing import Type, TypeVar
 
+import torch
 from numpy import ndarray
 
 # https://stackoverflow.com/a/39205612/3549270
@@ -20,17 +21,23 @@ logger = logging.getLogger(__name__)
 
 class EmbedderInterface(object, metaclass=abc.ABCMeta):
     name: ClassVar[str]
-
     # An integer representing the size of the embedding.
     embedding_dimension: ClassVar[int]
     # An integer representing the number of layers from the RAW output of the LM.
     number_of_layers: ClassVar[int]
+    use_cpu: bool
+    device: torch.device
+    _options: Dict[str, Any]
 
-    def __init__(self, **kwargs):
+    def __init__(self, use_cpu: bool = False, **kwargs):
         """
         Initializer accepts location of a pre-trained model and options
         """
-        self._options = None
+        self._options = kwargs
+        self.use_cpu = use_cpu
+        self.device = torch.device(
+            "cuda:0" if torch.cuda.is_available() and not self.use_cpu else "cpu"
+        )
 
     @classmethod
     @abc.abstractmethod

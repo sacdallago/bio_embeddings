@@ -10,9 +10,7 @@ from transformers import BertModel, BertTokenizer
 
 from bio_embeddings.embed.embedder_interface import EmbedderInterface
 from bio_embeddings.embed.helper import embed_batch_berts
-from bio_embeddings.utilities import (
-    SequenceEmbeddingLengthMismatchException, get_model_directories_from_zip,
-)
+from bio_embeddings.utilities import get_model_directories_from_zip
 
 logger = logging.getLogger(__name__)
 
@@ -29,28 +27,21 @@ class BertEmbedder(EmbedderInterface):
         :param model_directory:
         :param use_cpu: overwrite autodiscovery and force CPU use
         """
-        super().__init__()
-
-        self._options = kwargs
+        super().__init__(**kwargs)
 
         # Get file locations from kwargs
-        self._model_directory = self._options.get('model_directory')
-        self._use_cpu = self._options.get('use_cpu', False)
-
-        # utils
-        self._device = torch.device(
-            "cuda:0" if torch.cuda.is_available() and not self._use_cpu else "cpu"
-        )
+        self._model_directory = self._options.get("model_directory")
 
         # make model
         self._model = BertModel.from_pretrained(self._model_directory)
-        self._model = self._model.eval()
-        self._model = self._model.to(self._device)
-        self._tokenizer = BertTokenizer(str(Path(self._model_directory) / 'vocab.txt'), do_lower_case=False)
+        self._model = self._model.eval().to(self.device)
+        self._tokenizer = BertTokenizer(
+            str(Path(self._model_directory) / "vocab.txt"), do_lower_case=False
+        )
 
     @classmethod
     def with_download(cls, **kwargs) -> "BertEmbedder":
-        necessary_directories = ['model_directory']
+        necessary_directories = ["model_directory"]
 
         keep_tempfiles_alive = []
         for directory in necessary_directories:
@@ -58,7 +49,9 @@ class BertEmbedder(EmbedderInterface):
                 f = tempfile.mkdtemp()
                 keep_tempfiles_alive.append(f)
 
-                get_model_directories_from_zip(path=f, model=cls.name, directory=directory)
+                get_model_directories_from_zip(
+                    path=f, model=cls.name, directory=directory
+                )
 
                 kwargs[directory] = f
         return cls(**kwargs)
@@ -71,21 +64,19 @@ class BertEmbedder(EmbedderInterface):
         sequence = " ".join(list(sequence))
 
         # tokenize sequence
-        tokenized_sequence = torch.tensor([self._tokenizer.encode(sequence, add_special_tokens=True)]).to(self._device)
+        tokenized_sequence = torch.tensor(
+            [self._tokenizer.encode(sequence, add_special_tokens=True)]
+        ).to(self.device)
 
         with torch.no_grad():
-            # TODO: Konstantin, you might want to have a look at this!
-            try:
-                # drop batch dimension
-                embedding = self._model(tokenized_sequence)[0].squeeze()
-            except RuntimeError:
-                logger.error("Wasn't able to embed one sequence (probably run out of RAM).")
-
+            # drop batch dimension
+            embedding = self._model(tokenized_sequence)[0].squeeze()
             # remove special tokens added to start/end
-            embedding = embedding[1: sequence_length + 1]
+            embedding = embedding[1 : sequence_length + 1]
 
-        if not sequence_length == embedding.shape[0]:
-            raise SequenceEmbeddingLengthMismatchException()
+        assert (
+            sequence_length == embedding.shape[0]
+        ), f"Sequence length mismatch: {sequence_length} vs {embedding.shape[0]}"
 
         return embedding.cpu().detach().numpy().squeeze()
 
