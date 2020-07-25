@@ -5,8 +5,8 @@ seqvec_embeddings:
   type: embed
   protocol: seqvec
   reduce: True
-  weights_file: ../../models/elmov1/weights.hdf5
-  options_file: ../../models/elmov1/options.json
+  weights_file: /mnt/nfs/models/seqvec/weights_file
+  options_file: /mnt/nfs/models/seqvec/options_file
 tsne_projections:
   type: project
   protocol: tsne

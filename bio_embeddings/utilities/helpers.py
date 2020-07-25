@@ -1,3 +1,4 @@
+from enum import Enum
 from hashlib import md5
 from typing import List
 
@@ -79,3 +80,7 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
 
 def write_fasta_file(sequence_records: List[SeqRecord], file_path: str) -> None:
     SeqIO.write(sequence_records, file_path, 'fasta')
+
+
+def convert_list_of_enum_to_string(list_of_enums: List[Enum]) -> str:
+    return "".join([e.value for e in list_of_enums])

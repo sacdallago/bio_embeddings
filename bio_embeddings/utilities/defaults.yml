@@ -2,9 +2,9 @@ seqvec:
   weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
   options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
 
-seqvec_feature_extractors:
-  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
-  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+seqvec_from_publication_annotations_extractors:
+  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
 
 fasttext:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"

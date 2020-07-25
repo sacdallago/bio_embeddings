@@ -4,7 +4,7 @@ from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.visualize.pipeline import run as run_visualize
-# from bio_embeddings.extract_features.pipeline import run as run_extract_features
+from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
@@ -12,8 +12,8 @@ from bio_embeddings.utilities.config import read_config_file, write_config_file
 _STAGES = {
     "embed": run_embed,
     "project": run_project,
-    "visualize": run_visualize
-    # "extract_features": run_extract_features
+    "visualize": run_visualize,
+    "extract": run_extract
 }
 
 _IN_CONFIG_NAME = "input_parameters_file"
