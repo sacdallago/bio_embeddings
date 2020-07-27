@@ -44,7 +44,7 @@ class XLNetEmbedder(Embedder):
             config=config,
         )
         self._model = self._model.eval()
-        self._model = self._model.to(self.device)
+        self._model = self._model.to(self._device)
         self._tokenizer = XLNetTokenizer(
             str(Path(self._model_directory) / "spm_model.model"), do_lower_case=False
         )
@@ -74,7 +74,7 @@ class XLNetEmbedder(Embedder):
         # tokenize sequence
         tokenized_sequence = torch.tensor(
             [self._tokenizer.encode(sequence, add_special_tokens=True)]
-        ).to(self.device)
+        ).to(self._device)
 
         with torch.no_grad():
             # drop batch dimension

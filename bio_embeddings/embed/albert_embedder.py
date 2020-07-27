@@ -24,7 +24,7 @@ class AlbertEmbedder(BertBaseEmbedder):
 
         # make model
         self.model = AlbertModel.from_pretrained(self._model_directory)
-        self.model = self.model.eval().to(self.device)
+        self.model = self.model.eval().to(self._device)
         self.model_fallback = None
         self._tokenizer = AlbertTokenizer(
             str(Path(self._model_directory) / "albert_vocab_model.model"),

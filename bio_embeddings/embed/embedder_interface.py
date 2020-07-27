@@ -28,8 +28,8 @@ class Embedder(abc.ABC):
     embedding_dimension: ClassVar[int]
     # An integer representing the number of layers from the RAW output of the LM.
     number_of_layers: ClassVar[int]
-    use_cpu: bool
-    device: torch.device
+    _use_cpu: bool
+    _device: torch.device
     _options: Dict[str, Any]
 
     def __init__(self, use_cpu: bool = False, **kwargs):
@@ -37,9 +37,9 @@ class Embedder(abc.ABC):
         Initializer accepts location of a pre-trained model and options
         """
         self._options = kwargs
-        self.use_cpu = use_cpu
-        self.device = torch.device(
-            "cuda:0" if torch.cuda.is_available() and not self.use_cpu else "cpu"
+        self._use_cpu = use_cpu
+        self._device = torch.device(
+            "cuda:0" if torch.cuda.is_available() and not self._use_cpu else "cpu"
         )
 
     @classmethod
@@ -142,7 +142,7 @@ class EmbedderWithFallback(Embedder, abc.ABC):
         Returns unprocessed embeddings
         """
         # No point in having a fallback model when the normal model is CPU already
-        if self.use_cpu:
+        if self._use_cpu:
             yield from self._embed_batch_impl(batch, self.model)
             return
 

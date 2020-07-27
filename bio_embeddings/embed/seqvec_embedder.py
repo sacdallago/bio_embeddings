@@ -50,7 +50,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
 
         # TODO: Only SeqVec is checking for cuda availibilty, this should be done by all or none instead
         # Additionally, this should use self.device.index
-        if torch.cuda.is_available() and not self.use_cpu:
+        if torch.cuda.is_available() and not self._use_cpu:
             logger.info("CUDA available, using the GPU")
             cuda_device = 0
         else:

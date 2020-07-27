@@ -27,7 +27,7 @@ class BertEmbedder(BertBaseEmbedder):
 
         # make model
         self.model = BertModel.from_pretrained(self._model_directory)
-        self.model = self.model.eval().to(self.device)
+        self.model = self.model.eval().to(self._device)
         self.model_fallback = None
         self._tokenizer = BertTokenizer(
             str(Path(self._model_directory) / "vocab.txt"), do_lower_case=False
