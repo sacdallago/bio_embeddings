@@ -63,9 +63,11 @@ class SeqVecEmbedder(EmbedderInterface):
     def with_download(cls, **kwargs):
         necessary_files = ['weights_file', 'options_file']
 
+        keep_tempfiles_alive = []
         for file in necessary_files:
             if not kwargs.get(file):
                 f = tempfile.NamedTemporaryFile()
+                keep_tempfiles_alive.append(f)
 
                 get_model_file(path=f.name, model=cls.name, file=file)
 
