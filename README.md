@@ -56,7 +56,7 @@ After having installed the package, you can:
 1. Use the general purpose embedder objects via python, e.g.:
 
     ```python
-    from bio_embeddings import SeqVecEmbedder
+    from bio_embeddings.embed import SeqVecEmbedder
 
     embedder = SeqVecEmbedder()
 
