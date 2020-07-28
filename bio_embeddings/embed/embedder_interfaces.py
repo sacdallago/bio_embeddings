@@ -22,7 +22,7 @@ EmbedderInterfaceSubclass = TypeVar(
 logger = logging.getLogger(__name__)
 
 
-class Embedder(abc.ABC):
+class EmbedderInterface(abc.ABC):
     name: ClassVar[str]
     # An integer representing the size of the embedding.
     embedding_dimension: ClassVar[int]
@@ -115,7 +115,8 @@ class Embedder(abc.ABC):
         raise NotImplementedError
 
 
-class EmbedderWithFallback(Embedder, abc.ABC):
+class EmbedderWithFallback(EmbedderInterface, abc.ABC):
+    """ Batching embedder that will fallback to the CPU if the embedding on the GPU failed """
     model: Any
 
     @abc.abstractmethod
@@ -126,6 +127,7 @@ class EmbedderWithFallback(Embedder, abc.ABC):
 
     @abc.abstractmethod
     def _get_fallback_model(self):
+        """ Returns a (cached) cpu model """
         ...
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:

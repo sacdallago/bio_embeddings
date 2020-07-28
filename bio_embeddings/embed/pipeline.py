@@ -11,7 +11,7 @@ from tqdm import tqdm
 from bio_embeddings.embed import (
     AlbertEmbedder,
     BertEmbedder,
-    Embedder,
+    EmbedderInterface,
     SeqVecEmbedder,
     XLNetEmbedder,
 )
@@ -28,7 +28,7 @@ from bio_embeddings.utilities.backports import nullcontext
 logger = logging.getLogger(__name__)
 
 
-def _print_expected_file_sizes(embedder: Embedder, mapping_file: DataFrame,
+def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFrame,
                                result_kwargs: Dict[str, Any]) -> None:
     """
     Logs the lower bound size of embeddings_file and reduced_embedding_file
@@ -132,7 +132,7 @@ def _get_embeddings_file_context(
 
 
 def embed_and_write_batched(
-    embedder: Embedder,
+    embedder: EmbedderInterface,
     file_manager: FileManagerInterface,
     result_kwargs: Dict[str, Any],
 ) -> Dict[str, Any]:
@@ -197,7 +197,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
 
 
 def transformer(
-    embedder_class: Type[Embedder],
+    embedder_class: Type[EmbedderInterface],
     model: str,
     max_amino_acids_default: int,
     **kwargs

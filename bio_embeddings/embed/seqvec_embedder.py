@@ -7,7 +7,7 @@ import torch
 from allennlp.commands.elmo import ElmoEmbedder
 from numpy import ndarray
 
-from bio_embeddings.embed.embedder_interface import EmbedderWithFallback
+from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 from bio_embeddings.utilities import get_model_file
 
 logger = logging.getLogger(__name__)

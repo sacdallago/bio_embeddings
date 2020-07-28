@@ -13,13 +13,13 @@ from bio_embeddings.embed import (
     AlbertEmbedder,
     BertEmbedder,
     XLNetEmbedder,
-    Embedder,
+    EmbedderInterface,
 )
 
 all_embedders = [SeqVecEmbedder, AlbertEmbedder, BertEmbedder, XLNetEmbedder]
 
 
-def embedder_test_impl(embedder_class: Type[Embedder], use_cpu: bool):
+def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
     """ Compute embeddings and check them against a stored reference file """
     expected_file = Path("test-data/reference-embeddings").joinpath(
         embedder_class.name + ".npz"
@@ -43,10 +43,10 @@ def embedder_test_impl(embedder_class: Type[Embedder], use_cpu: bool):
     not torch.cuda.is_available(), reason="Can't test the GPU if there isn't any"
 )
 @pytest.mark.parametrize("embedder_class", all_embedders)
-def test_embedder_gpu(embedder_class: Type[Embedder]):
+def test_embedder_gpu(embedder_class: Type[EmbedderInterface]):
     embedder_test_impl(embedder_class, False)
 
 
 @pytest.mark.parametrize("embedder_class", all_embedders)
-def test_embedder_cpu(embedder_class: Type[Embedder]):
+def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
     embedder_test_impl(embedder_class, True)

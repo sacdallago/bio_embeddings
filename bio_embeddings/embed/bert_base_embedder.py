@@ -8,7 +8,7 @@ import torch
 from numpy import ndarray
 from transformers import BertTokenizer, AlbertTokenizer, BertModel, AlbertModel
 
-from bio_embeddings.embed.embedder_interface import EmbedderWithFallback
+from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 from bio_embeddings.utilities import get_model_directories_from_zip
 
 # https://stackoverflow.com/a/39205612/3549270
