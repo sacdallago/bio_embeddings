@@ -34,16 +34,18 @@ class XLNetEmbedder(EmbedderInterface):
         self._model = (
             XLNetModel.from_pretrained(self._model_directory).to(self._device).eval()
         )
-        spm_model = str(Path(self._model_directory).joinpath("/spm_model.model"))
+        spm_model = str(Path(self._model_directory).joinpath("spm_model.model"))
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
 
     @classmethod
     def with_download(cls, **kwargs):
         necessary_directories = ["model_directory"]
 
+        keep_tempfiles_alive = []
         for directory in necessary_directories:
             if not kwargs.get(directory):
                 f = tempfile.mkdtemp()
+                keep_tempfiles_alive.append(f)
 
                 get_model_directories_from_zip(
                     path=f, model=cls.name, directory=directory
