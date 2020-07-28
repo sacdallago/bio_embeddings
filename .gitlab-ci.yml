@@ -17,11 +17,11 @@ stages:
     - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
     - source $HOME/.poetry/env
     - poetry --version
-    # Force a recent pip version inside the virtualenv so that installing tensorflow doesn't fail
+    # Force a recent pip version inside the virtualenv
     - virtualenv .venv
     - .venv/bin/pip install --upgrade pip
     - poetry config virtualenvs.in-project true
-    - poetry install -vv -E xlnet
+    - poetry install
 
 .test-template: &test
   <<: *install-deps

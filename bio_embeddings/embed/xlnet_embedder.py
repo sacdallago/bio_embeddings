@@ -31,23 +31,11 @@ class XLNetEmbedder(EmbedderInterface):
         # Get file locations from kwargs
         self._model_directory = self._options.get("model_directory")
 
-        # make model
-        config = XLNetConfig.from_json_file(
-            str(Path(self._model_directory) / "config.json")
+        self._model = (
+            XLNetModel.from_pretrained(self._model_directory).to(self._device).eval()
         )
-        # MH: for some reason this has to be set manually. Otherwise, AssertionError during model loading
-        config.vocab_size = 37
-
-        self._model = XLNetModel.from_pretrained(
-            str(Path(self._model_directory) / "model.ckpt-847000"),
-            from_tf=True,
-            config=config,
-        )
-        self._model = self._model.eval()
-        self._model = self._model.to(self._device)
-        self._tokenizer = XLNetTokenizer(
-            str(Path(self._model_directory) / "spm_model.model"), do_lower_case=False
-        )
+        spm_model = str(Path(self._model_directory).joinpath("/spm_model.model"))
+        self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
 
     @classmethod
     def with_download(cls, **kwargs):
