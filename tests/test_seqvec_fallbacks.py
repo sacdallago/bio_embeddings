@@ -33,10 +33,6 @@ class MockElmoMemory:
             self.log.append((lengths, True, True))
             return [numpy.zeros((3, length, 1024)) for length in lengths]
 
-    def embed_sentence(self, sentence: List[str]) -> numpy.ndarray:
-        # That's what the original elmo does
-        return self.embed_batch([sentence])[0]
-
 
 def test_fallbacks(caplog):
     """ Check that the fallbacks to single sequence processing and/or the CPU are working.

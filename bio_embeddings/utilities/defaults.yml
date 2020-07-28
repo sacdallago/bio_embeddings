@@ -19,7 +19,7 @@ bert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/bert/bert.zip"
 
 xlnet:
-  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/XLNet.zip"
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/xlnet.zip"
 
 albert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"

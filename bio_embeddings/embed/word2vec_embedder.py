@@ -3,7 +3,7 @@ import tempfile
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
 
-from bio_embeddings.embed.embedder_interface import EmbedderInterface
+from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
 from bio_embeddings.utilities import get_model_file
 
 
@@ -17,9 +17,7 @@ class Word2VecEmbedder(EmbedderInterface):
 
         :param model_file: path of model file. If not supplied, will be downloaded.
         """
-        super().__init__()
-
-        self._options = kwargs
+        super().__init__(**kwargs)
 
         self._model_file = self._options.get('model_file')
 
