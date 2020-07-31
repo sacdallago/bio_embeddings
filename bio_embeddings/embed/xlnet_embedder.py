@@ -2,11 +2,11 @@ import logging
 import re
 import tempfile
 from pathlib import Path
-from typing import Iterable, Optional, Generator, List
+from typing import Optional, Generator, List
 
 import torch
 from numpy import ndarray
-from transformers import XLNetModel, XLNetTokenizer, XLNetConfig
+from transformers import XLNetModel, XLNetTokenizer
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
 from bio_embeddings.utilities import get_model_directories_from_zip
@@ -18,6 +18,8 @@ class XLNetEmbedder(EmbedderInterface):
     name = "xlnet"
     embedding_dimension = 1024
     number_of_layers = 1
+    model: XLNetModel
+    model_fallback: Optional[XLNetModel]
 
     def __init__(self, **kwargs):
         """
@@ -29,13 +31,21 @@ class XLNetEmbedder(EmbedderInterface):
         super().__init__(**kwargs)
 
         # Get file locations from kwargs
-        self._model_directory = self._options.get("model_directory")
+        self.model_directory = self._options.get("model_directory")
 
-        self._model = (
-            XLNetModel.from_pretrained(self._model_directory).to(self._device).eval()
+        self.model = (
+            XLNetModel.from_pretrained(self.model_directory).to(self._device).eval()
         )
-        spm_model = str(Path(self._model_directory).joinpath("spm_model.model"))
+        self.model_fallback = None
+        spm_model = str(Path(self.model_directory).joinpath("spm_model.model"))
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
+
+    def _get_fallback_model(self) -> XLNetModel:
+        if not self.model_fallback:
+            self.model_fallback = XLNetModel.from_pretrained(
+                self.model_directory
+            ).eval()
+        return self.model_fallback
 
     @classmethod
     def with_download(cls, **kwargs):
@@ -67,10 +77,13 @@ class XLNetEmbedder(EmbedderInterface):
         ).to(self._device)
 
         with torch.no_grad():
-            # drop batch dimension
-            embedding = self._model(tokenized_sequence)[0].squeeze()
-            # remove special tokens added to end
-            embedding = embedding[:-2]
+            try:
+                embedding = self.model(tokenized_sequence)
+            except RuntimeError:
+                embedding = self._get_fallback_model()(tokenized_sequence)
+
+            # drop batch dimension and remove special tokens added to end
+            embedding = embedding[0].squeeze()[:-2]
 
         assert (
             sequence_length == embedding.shape[0]
