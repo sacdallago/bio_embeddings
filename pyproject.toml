@@ -46,6 +46,9 @@ scipy = "^1.4.1"
 torch = "^1.5.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
+# Help the version resolver with allennlp
+boto3 = "1.14.18"
+botocore = "1.17.18"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"
