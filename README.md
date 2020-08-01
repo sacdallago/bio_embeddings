@@ -5,7 +5,7 @@ The project includes:
 - General purpose library to embed protein sequences in any python app.
 - A web server that takes in sequences, embeds them and returns the embeddings OR visualizes the embedding spaces on interactive plots online.
 
-We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find it on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and a copy of the poster will soon be available on [F1000](https://f1000research.com/).
+We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
 
 ## News (current development cycle)
 
