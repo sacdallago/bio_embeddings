@@ -37,6 +37,10 @@ class XLNetEmbedder(EmbedderInterface):
             XLNetModel.from_pretrained(self.model_directory).to(self._device).eval()
         )
         self._model_fallback = None
+
+        # sentence piece model
+        # A standard text tokenizer which creates the input for NNs trained on text.
+        # This one is just indexing single amino acids because we only have words of L=1.
         spm_model = str(Path(self.model_directory).joinpath("spm_model.model"))
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
 
