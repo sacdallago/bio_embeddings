@@ -20,9 +20,9 @@ class SeqVecEmbedder(EmbedderWithFallback):
 
     _weights_file: str
     _options_file: str
-    model: ElmoEmbedder
+    _model: ElmoEmbedder
     # The fallback model running on the cpu, which will be initialized if needed
-    model_fallback: Optional[ElmoEmbedder] = None
+    _model_fallback: Optional[ElmoEmbedder] = None
 
     def __init__(self, **kwargs):
         """
