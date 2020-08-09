@@ -57,7 +57,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
             logger.info("CUDA NOT available, using the CPU. This is slow")
             cuda_device = -1
 
-        self.model = ElmoEmbedder(
+        self._model = ElmoEmbedder(
             weight_file=self._weights_file,
             options_file=self._options_file,
             cuda_device=cuda_device,
@@ -79,19 +79,19 @@ class SeqVecEmbedder(EmbedderWithFallback):
         return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
-        return self.model.embed_sentence(list(sequence))
+        return self._model.embed_sentence(list(sequence))
 
     def _get_fallback_model(self) -> ElmoEmbedder:
-        if not self.model_fallback:
+        if not self._model_fallback:
             logger.warning(
                 "Loading model for CPU into RAM. Embedding on the CPU is very slow and you should avoid it."
             )
-            self.model_fallback = ElmoEmbedder(
+            self._model_fallback = ElmoEmbedder(
                 weight_file=self._weights_file,
                 options_file=self._options_file,
                 cuda_device=-1,
             )
-        return self.model_fallback
+        return self._model_fallback
 
     def _embed_batch_impl(
         self, batch: List[str], model: ElmoEmbedder

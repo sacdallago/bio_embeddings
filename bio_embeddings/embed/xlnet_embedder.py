@@ -18,8 +18,8 @@ class XLNetEmbedder(EmbedderInterface):
     name = "xlnet"
     embedding_dimension = 1024
     number_of_layers = 1
-    model: XLNetModel
-    model_fallback: Optional[XLNetModel]
+    _model: XLNetModel
+    _model_fallback: Optional[XLNetModel]
 
     def __init__(self, **kwargs):
         """
@@ -33,19 +33,19 @@ class XLNetEmbedder(EmbedderInterface):
         # Get file locations from kwargs
         self.model_directory = self._options.get("model_directory")
 
-        self.model = (
+        self._model = (
             XLNetModel.from_pretrained(self.model_directory).to(self._device).eval()
         )
-        self.model_fallback = None
+        self._model_fallback = None
         spm_model = str(Path(self.model_directory).joinpath("spm_model.model"))
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
 
     def _get_fallback_model(self) -> XLNetModel:
-        if not self.model_fallback:
-            self.model_fallback = XLNetModel.from_pretrained(
+        if not self._model_fallback:
+            self._model_fallback = XLNetModel.from_pretrained(
                 self.model_directory
             ).eval()
-        return self.model_fallback
+        return self._model_fallback
 
     @classmethod
     def with_download(cls, **kwargs):
@@ -78,7 +78,7 @@ class XLNetEmbedder(EmbedderInterface):
 
         with torch.no_grad():
             try:
-                embedding = self.model(tokenized_sequence)
+                embedding = self._model(tokenized_sequence)
             except RuntimeError:
                 embedding = self._get_fallback_model()(tokenized_sequence)
 

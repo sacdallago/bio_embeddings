@@ -117,7 +117,7 @@ class EmbedderInterface(abc.ABC):
 
 class EmbedderWithFallback(EmbedderInterface, abc.ABC):
     """ Batching embedder that will fallback to the CPU if the embedding on the GPU failed """
-    model: Any
+    _model: Any
 
     @abc.abstractmethod
     def _embed_batch_impl(
@@ -145,11 +145,11 @@ class EmbedderWithFallback(EmbedderInterface, abc.ABC):
         """
         # No point in having a fallback model when the normal model is CPU already
         if self._use_cpu:
-            yield from self._embed_batch_impl(batch, self.model)
+            yield from self._embed_batch_impl(batch, self._model)
             return
 
         try:
-            yield from self._embed_batch_impl(batch, self.model)
+            yield from self._embed_batch_impl(batch, self._model)
         except RuntimeError as e:
             if len(batch) == 1:
                 logger.error(
@@ -166,7 +166,7 @@ class EmbedderWithFallback(EmbedderInterface, abc.ABC):
                 )
                 for sequence in batch:
                     try:
-                        yield from self._embed_batch_impl([sequence], self.model)
+                        yield from self._embed_batch_impl([sequence], self._model)
                     except RuntimeError as e:
                         logger.error(
                             f"RuntimeError for sequence with {len(sequence)} residues: {e}. "
