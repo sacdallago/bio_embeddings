@@ -6,7 +6,7 @@ from copy import deepcopy
 from Bio.Seq import Seq
 from pandas import read_csv
 from typing import Dict, Any
-from bio_embeddings.extract.seqvec.SeqVecAnnotationExtraction import SeqVecAnnotationExtractor
+from bio_embeddings.extract.basic.AnnotationExtraction import AnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
@@ -27,11 +27,12 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
+def predict_features(**kwargs) -> Dict[str, Any]:
     """
     Protocol extracts secondary structure (DSSP3 and DSSP8), disorder, subcellular location and membrane boundness
-    from "embeddings_file". Embeddings MUST be generate with SeqVec v1 for results to be compatible.
-    Models are used in this publication: https://doi.org/10.1186/s12859-019-3220-8
+    from "embeddings_file". Embeddings can either be generated with SeqVec or ProtBert.
+    SeqVec models are used in this publication: https://doi.org/10.1186/s12859-019-3220-8
+    ProtTrans models are used in this publication: https://doi.org/10.1101/2020.07.12.199554 
     """
 
     check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
@@ -43,10 +44,14 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     for file in necessary_files:
         if not result_kwargs.get(file):
             file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
-            get_model_file(path=file_path, model='seqvec_from_publication_annotations_extractors', file=file)
+            # xxmh TODO: here we would need to check which embedder is used to load the correct annotation_extractor models
+            if model == "SeqVec": # TODO: might need adjustment
+                get_model_file(path=file_path, model='seqvec_from_publication_annotations_extractors', file=file)
+            else: # Load Bert annotation extractors here
+                pass
             result_kwargs[file] = file_path
 
-    annotation_extractor = SeqVecAnnotationExtractor(**result_kwargs)
+    annotation_extractor = AnnotationExtractor(**result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
@@ -54,24 +59,28 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     # Try to create final files (if this fails, now is better than later
     DSSP3_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
-                                                           'DSSP3_predictions_file', extension='.fasta')
+                                                           'DSSP3_predictions_file', 
+                                                           extension='.fasta')
     result_kwargs['DSSP3_predictions_file'] = DSSP3_predictions_file_path
     DSSP8_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
-                                                           'DSSP8_predictions_file', extension='.fasta')
+                                                           'DSSP8_predictions_file', 
+                                                           extension='.fasta')
     result_kwargs['DSSP8_predictions_file'] = DSSP8_predictions_file_path
     disorder_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                               result_kwargs.get('stage_name'),
-                                                              'disorder_predictions_file', extension='.fasta')
+                                                              'disorder_predictions_file', 
+                                                              extension='.fasta')
     result_kwargs['disorder_predictions_file'] = disorder_predictions_file_path
     per_sequence_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                   result_kwargs.get('stage_name'),
-                                                                  'per_sequence_predictions_file', extension='.csv')
+                                                                  'per_sequence_predictions_file', 
+                                                                  extension='.csv')
     result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
 
     # Create sequence containers
-    DSSP3_sequences = list()
-    DSSP8_sequences = list()
+    DSSP3_sequences    = list()
+    DSSP8_sequences    = list()
     disorder_sequences = list()
 
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
@@ -82,21 +91,21 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
 
             annotations = annotation_extractor.get_annotations(embedding)
 
-            DSSP3_sequence = deepcopy(protein_sequence)
+            DSSP3_sequence     = deepcopy(protein_sequence)
             DSSP3_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP3))
             DSSP3_sequences.append(DSSP3_sequence)
 
-            DSSP8_sequence = deepcopy(protein_sequence)
+            DSSP8_sequence     = deepcopy(protein_sequence)
             DSSP8_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP8))
             DSSP8_sequences.append(DSSP8_sequence)
 
-            disorder_sequence = deepcopy(protein_sequence)
+            disorder_sequence     = deepcopy(protein_sequence)
             disorder_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.disorder))
             disorder_sequences.append(disorder_sequence)
 
             # Per-sequence annotations, e.g. subcell loc & membrane boundness
             mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
-            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
+            mapping_file.at[protein_sequence.id, 'membrane_or_soluble']  = annotations.membrane.value
 
     # Write files
     mapping_file.to_csv(per_sequence_predictions_file_path)
@@ -107,9 +116,9 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-# list of available extract protocols
+# list of available extraction protocols
 PROTOCOLS = {
-    "seqvec_from_publication": seqvec_from_publication,
+    "predict_features": predict_features,
     "unsupervised": unsupervised
 }
 
