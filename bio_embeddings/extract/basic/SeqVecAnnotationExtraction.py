@@ -7,7 +7,7 @@ from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import Location, Membrane, Disorder, SecondaryStructure
-from bio_embeddings.extract.seqvec.annotation_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
+from bio_embeddings.extract.basic.annotation_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
 
 logger = logging.getLogger(__name__)
 
@@ -52,24 +52,24 @@ _disor_labels = {
     1: Disorder.DISORDER
 }
 
-SecondaryStructureResult = collections.namedtuple('SecondaryStructure', 'DSSP3 DSSP8 disorder')
+SecondaryStructureResult      = collections.namedtuple('SecondaryStructure', 'DSSP3 DSSP8 disorder')
 SubcellularLocalizationResult = collections.namedtuple('SubcellularLocalization', 'localization membrane')
-SeqVecExtractedAnnotations = collections.namedtuple('SeqVecExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
+ExtractedAnnotations          = collections.namedtuple('ExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
 
 
-class SeqVecAnnotationExtractor(object):
+class BasicAnnotationExtractor(object):
 
     def __init__(self, **kwargs):
         """
-        Initialize SeqVec annotation extractor. Must define non-positional arguments for paths of files.
+        Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
-        :param secondary_structure_checkpoint_file: path of secondary structure checkpoint file
-        :param subcellular_location_checkpoint_file: path of the subcellular location checkpoint file
+        :param secondary_structure_checkpoint_file: path of secondary structure inference model checkpoint file
+        :param subcellular_location_checkpoint_file: path of the subcellular location inference model checkpoint file
         """
 
         self._options = kwargs
 
-        self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
+        self._secondary_structure_checkpoint_file  = self._options.get('secondary_structure_checkpoint_file')
         self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
 
         # use GPU if available, otherwise run on CPU
@@ -77,25 +77,26 @@ class SeqVecAnnotationExtractor(object):
         # This is especially useful if using an old CUDA device which is not supported by pytorch!
 
         # TODO: this needs to be done better!!
+        # xxmh: not sure why this is not good but up2you
         self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # Read in pre-trained model
 
         # Create un-trained (raw) model
         self._subcellular_location_model = SUBCELL_FNN().to(self._device)
-        self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
+        self._secondary_structure_model  = SECSTRUCT_CNN().to(self._device)
 
         if torch.cuda.is_available():
             logger.info("CUDA available")
 
             # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
+            subcellular_state         = torch.load(self._subcellular_location_checkpoint_file)
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
         else:
             logger.info("CUDA NOT available")
 
             # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
+            subcellular_state         = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location='cpu')
             pass
 
@@ -110,7 +111,16 @@ class SeqVecAnnotationExtractor(object):
     def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationResult:
         # Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --> 1024).
         # This is similar to embedder.reduce_per_protein(), but more efficient since may be run in GPU (see self._device)
-        embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
+        
+        # TODO: xxmh I forgot that SeqVec requires different pooling to derive fixed size rep.
+        # SeqVec requires summing over 3 layers, ProtTrans models only extract last layers
+        # Quick&Dirty solution is to check for shape of embedding tensors as SeqVec has 3 dims and ProtTrans should only have 2 dims
+        # Better way would be to access some internal variable (probably I just missed this flag)
+        if len(raw_embedding.shape) == 3:
+            embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
+        else:
+            embedding = torch.tensor(raw_embedding).to(self._device).mean(dim=0, keepdim=True)
+
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
@@ -119,7 +129,12 @@ class SeqVecAnnotationExtractor(object):
         return SubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
 
     def get_secondary_structure(self, raw_embedding: ndarray) -> SecondaryStructureResult:
-        embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
+        # TODO: xxmh: same as for subcell loc.: SeqVec requires summing over layers while ProtTrans models only extract last layers
+        if len(raw_embedding.shape)==3:
+            embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
+        else: # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
+            embedding = torch.tensor(raw_embedding).to(self._device).T.unsqueeze(dim=-1)
+
         yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
 
         pred_dssp3 = self._class2label(_dssp3_labels, yhat_dssp3)
@@ -128,11 +143,11 @@ class SeqVecAnnotationExtractor(object):
 
         return SecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
 
-    def get_annotations(self, raw_embedding: ndarray) -> SeqVecExtractedAnnotations:
+    def get_annotations(self, raw_embedding: ndarray) -> ExtractedAnnotations:
         secstruct = self.get_secondary_structure(raw_embedding)
-        subcell = self.get_subcellular_location(raw_embedding)
+        subcell   = self.get_subcellular_location(raw_embedding)
 
-        return SeqVecExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
+        return ExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
                                           DSSP3=secstruct.DSSP3, localization=subcell.localization,
                                           membrane=subcell.membrane)
 
