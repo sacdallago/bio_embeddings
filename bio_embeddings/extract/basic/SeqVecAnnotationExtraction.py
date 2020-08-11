@@ -57,7 +57,7 @@ SubcellularLocalizationResult = collections.namedtuple('SubcellularLocalization'
 ExtractedAnnotations          = collections.namedtuple('ExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
 
 
-class BasicAnnotationExtractor(object):
+class AnnotationExtractor(object):
 
     def __init__(self, **kwargs):
         """
