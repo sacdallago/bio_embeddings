@@ -59,7 +59,7 @@ BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 
 
 class BasicAnnotationExtractor(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self, model_type, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -68,6 +68,7 @@ class BasicAnnotationExtractor(object):
         """
 
         self._options = kwargs
+        self._model_type = model_type
 
         self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
         self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
@@ -82,7 +83,14 @@ class BasicAnnotationExtractor(object):
         # Read in pre-trained model
 
         # Create un-trained (raw) model
-        self._subcellular_location_model = SUBCELL_FNN().to(self._device)
+        if self._model_type == "seqvec_from_publication":
+            self._subcellular_location_model = SUBCELL_FNN().to(self._device)
+        elif self._model_type == "bert_from_publication": # Drop batchNorm for ProtTrans models
+            self._subcellular_location_model = SUBCELL_FNN(use_batch_norm=False).to(self._device)
+        else:
+            print("You first need to define your custom model architecture.")
+            raise NotImplementedError
+
         self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
         if torch.cuda.is_available():
@@ -118,12 +126,14 @@ class BasicAnnotationExtractor(object):
         #   while ProtTrans should only have 2 dims.
         #   Better way would be to access some internal variable (probably I just missed this flag)
         #   XXCD: can check embedder type via protol in embed config, but this may become complicated...
-        if len(raw_embedding.shape) == 3:
+        if self._model_type == "seqvec_from_publication":
             # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
-        else:
+        elif self._model_type == "bert_from_publication":
             # Bert case
             embedding = torch.tensor(raw_embedding).to(self._device).mean(dim=0, keepdim=True)
+        else:
+            raise NotImplementedError
 
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
@@ -135,13 +145,15 @@ class BasicAnnotationExtractor(object):
     def get_secondary_structure(self, raw_embedding: ndarray) -> BasicSecondaryStructureResult:
         # TODO: xxmh: same as for subcell loc.:
         #       SeqVec requires summing over layers while ProtTrans models only extract last layers
-        if len(raw_embedding.shape) == 3:
+        if self._model_type == "seqvec_from_publication":
             # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
-        else:
+        elif self._model_type == "bert_from_publication":
             # Bert case
             # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
             embedding = torch.tensor(raw_embedding).to(self._device).T.unsqueeze(dim=-1)
+        else:
+            raise NotImplementedError
 
         yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
 
