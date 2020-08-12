@@ -83,6 +83,10 @@ After having installed the package, you can:
 - project:
   - [x] t-SNE
   - [x] UMAP
+- extract:
+  - supervised:
+    - [x] SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8
+    - [x] Bert: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://doi.org/10.1101/2020.07.12.199554
 </details>
 
 <details>

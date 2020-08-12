@@ -10,3 +10,11 @@ annotations_from_seqvec:
   type: extract
   protocol: seqvec_from_publication
   depends_on: seqvec_embeddings
+bert_embeddings:
+  type: embed
+  protocol: bert
+  model_directory: /mnt/nfs/models/bert
+annotations_from_bert:
+  type: extract
+  protocol: bert_from_publication
+  depends_on: bert_embeddings

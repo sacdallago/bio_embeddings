@@ -119,14 +119,15 @@ stage_4:
   type: extract
   # Required: which method to use.
   # Current options:
-  #   - seqvec_from_publication (Uses models used for evaluation in https://doi.org/10.1186/s12859-019-3220-8 )
+  #   - seqvec_from_publication (Uses models evaluated in https://doi.org/10.1186/s12859-019-3220-8 )
+  #   - bert_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )
   #   - unsupervised
   protocol: seqvec_from_publication
 
   # Either depend on an embed stage, or supply reduced or raw embeddings
   depends_on: stage_2
 
-  # Optional for protocol: seqvec_from_publication
+  # Optional for protocol: seqvec_from_publication, bert_from_publication
   # will be downloaded if not supplied
   # secondary_structure_checkpoint_file: path/to/checkpoint.pt
   # subcellular_location_checkpoint_file: path/to/checkpoint.pt
