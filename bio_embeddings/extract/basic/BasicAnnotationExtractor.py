@@ -52,12 +52,12 @@ _disor_labels = {
     1: Disorder.DISORDER
 }
 
-SecondaryStructureResult      = collections.namedtuple('SecondaryStructure', 'DSSP3 DSSP8 disorder')
-SubcellularLocalizationResult = collections.namedtuple('SubcellularLocalization', 'localization membrane')
-ExtractedAnnotations          = collections.namedtuple('ExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
+BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder')
+BasicSubcellularLocalizationResult = collections.namedtuple('BasicSubcellularLocalizationResult', 'localization membrane')
+BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
 
 
-class AnnotationExtractor(object):
+class BasicAnnotationExtractor(object):
 
     def __init__(self, **kwargs):
         """
@@ -69,34 +69,33 @@ class AnnotationExtractor(object):
 
         self._options = kwargs
 
-        self._secondary_structure_checkpoint_file  = self._options.get('secondary_structure_checkpoint_file')
+        self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
         self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
 
         # use GPU if available, otherwise run on CPU
         # !important: GPU visibility can easily be hidden using this env variable: CUDA_VISIBLE_DEVICES=""
         # This is especially useful if using an old CUDA device which is not supported by pytorch!
 
-        # TODO: this needs to be done better!!
-        # xxmh: not sure why this is not good but up2you
+        # TODO: better handling of CUDA device (instead of 0; available). To be done when multi-GPU machine available
         self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # Read in pre-trained model
 
         # Create un-trained (raw) model
         self._subcellular_location_model = SUBCELL_FNN().to(self._device)
-        self._secondary_structure_model  = SECSTRUCT_CNN().to(self._device)
+        self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
         if torch.cuda.is_available():
             logger.info("CUDA available")
 
             # load pre-trained weights for annotation machines
-            subcellular_state         = torch.load(self._subcellular_location_checkpoint_file)
+            subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
         else:
             logger.info("CUDA NOT available")
 
             # load pre-trained weights for annotation machines
-            subcellular_state         = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
+            subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
             secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location='cpu')
             pass
 
@@ -108,17 +107,22 @@ class AnnotationExtractor(object):
         self._subcellular_location_model.eval()
         self._secondary_structure_model.eval()
 
-    def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationResult:
+    def get_subcellular_location(self, raw_embedding: ndarray) -> BasicSubcellularLocalizationResult:
         # Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --> 1024).
-        # This is similar to embedder.reduce_per_protein(), but more efficient since may be run in GPU (see self._device)
-        
+        # This is similar to embedder.reduce_per_protein(),
+        # but more efficient since may be run in GPU (see self._device)
+
         # TODO: xxmh I forgot that SeqVec requires different pooling to derive fixed size rep.
-        # SeqVec requires summing over 3 layers, ProtTrans models only extract last layers
-        # Quick&Dirty solution is to check for shape of embedding tensors as SeqVec has 3 dims and ProtTrans should only have 2 dims
-        # Better way would be to access some internal variable (probably I just missed this flag)
+        #   SeqVec requires summing over 3 layers, ProtTrans models only extract last layers
+        #   Quick&Dirty solution is to check for shape of embedding tensors as SeqVec has 3 dims,
+        #   while ProtTrans should only have 2 dims.
+        #   Better way would be to access some internal variable (probably I just missed this flag)
+        #   XXCD: can check embedder type via protol in embed config, but this may become complicated...
         if len(raw_embedding.shape) == 3:
+            # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
         else:
+            # Bert case
             embedding = torch.tensor(raw_embedding).to(self._device).mean(dim=0, keepdim=True)
 
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
@@ -126,13 +130,17 @@ class AnnotationExtractor(object):
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
-        return SubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
+        return BasicSubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
 
-    def get_secondary_structure(self, raw_embedding: ndarray) -> SecondaryStructureResult:
-        # TODO: xxmh: same as for subcell loc.: SeqVec requires summing over layers while ProtTrans models only extract last layers
-        if len(raw_embedding.shape)==3:
+    def get_secondary_structure(self, raw_embedding: ndarray) -> BasicSecondaryStructureResult:
+        # TODO: xxmh: same as for subcell loc.:
+        #       SeqVec requires summing over layers while ProtTrans models only extract last layers
+        if len(raw_embedding.shape) == 3:
+            # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
-        else: # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
+        else:
+            # Bert case
+            # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
             embedding = torch.tensor(raw_embedding).to(self._device).T.unsqueeze(dim=-1)
 
         yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
@@ -141,15 +149,15 @@ class AnnotationExtractor(object):
         pred_dssp8 = self._class2label(_dssp8_labels, yhat_dssp8)
         pred_disor = self._class2label(_disor_labels, yhat_disor)
 
-        return SecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
+        return BasicSecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
 
-    def get_annotations(self, raw_embedding: ndarray) -> ExtractedAnnotations:
+    def get_annotations(self, raw_embedding: ndarray) -> BasicExtractedAnnotations:
         secstruct = self.get_secondary_structure(raw_embedding)
-        subcell   = self.get_subcellular_location(raw_embedding)
+        subcell = self.get_subcellular_location(raw_embedding)
 
-        return ExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
-                                          DSSP3=secstruct.DSSP3, localization=subcell.localization,
-                                          membrane=subcell.membrane)
+        return BasicExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
+                                         DSSP3=secstruct.DSSP3, localization=subcell.localization,
+                                         membrane=subcell.membrane)
 
     @staticmethod
     def _class2label(label_dict, yhat) -> List[Enum]:
