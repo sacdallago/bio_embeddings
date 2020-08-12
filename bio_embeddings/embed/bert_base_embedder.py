@@ -18,10 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 class BertBaseEmbedder(EmbedderWithFallback):
-    """ Shared code between Bert and ALbert """
+    """ Shared code between Bert and Albert """
 
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
-    model: Union[AlbertModel, BertModel]
+    _model: Union[AlbertModel, BertModel]
 
     @classmethod
     def with_download(cls: Type[RealBertEmbedder], **kwargs) -> RealBertEmbedder:

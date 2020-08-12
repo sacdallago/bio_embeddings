@@ -19,7 +19,7 @@ class FastTextEmbedder(EmbedderInterface):
         """
         super().__init__(**kwargs)
 
-        self._model_file = self._options.get('model_file')
+        self._model_file = self._options.get("model_file")
 
         self._model = KeyedVectors.load_word2vec_format(self._model_file, binary=False)
         self._vector_size = 512
@@ -28,7 +28,7 @@ class FastTextEmbedder(EmbedderInterface):
 
     @classmethod
     def with_download(cls, **kwargs):
-        necessary_files = ['model_file']
+        necessary_files = ["model_file"]
 
         for file in necessary_files:
             if not kwargs.get(file):
@@ -42,7 +42,7 @@ class FastTextEmbedder(EmbedderInterface):
 
     def embed(self, sequence):
         # pad sequence with special character (only 3-mers are considered)
-        padded_sequence = '-' + sequence + '-'
+        padded_sequence = "-" + sequence + "-"
 
         # container
         embedding = np.zeros((len(sequence), self._vector_size), dtype=np.float32)
@@ -50,14 +50,11 @@ class FastTextEmbedder(EmbedderInterface):
         # for each aa in the sequence, retrieve k-mer
         for index in range(len(padded_sequence)):
             try:
-                k_mer = ''.join(padded_sequence[index: index + self._window_size])
+                k_mer = "".join(padded_sequence[index : index + self._window_size])
                 embedding[index, :] = self._get_kmer_representation(k_mer)
             # end of sequence reached
             except IndexError:
                 return embedding
-
-    def embed_many(self, sequences):
-        return [self.embed(sequence) for sequence in sequences]
 
     def _get_kmer_representation(self, k_mer):
         # try to retrieve embedding for k-mer
@@ -69,7 +66,7 @@ class FastTextEmbedder(EmbedderInterface):
             if len(k_mer) <= 1:
                 return self._zero_vector
             # handle border cases at start/end of seq
-            elif '-' in k_mer:
+            elif "-" in k_mer:
                 idx_center = int(len(k_mer) / 2)
                 return self._get_kmer_representation(k_mer[idx_center])
 

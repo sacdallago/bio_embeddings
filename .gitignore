@@ -138,3 +138,4 @@ models/
 private/
 .idea/
 .venv
+sync.sh

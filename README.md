@@ -18,13 +18,13 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find t
 You can install the pipeline via pip like so:
 
 ```bash
-pip install bio-embeddings
+pip install bio-embeddings[all]
 ```
 
 To get the latest features, please install the pipeline like so:
 
 ```bash
-pip install -U git+https://github.com/sacdallago/bio_embeddings.git
+pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"
 ```
 
 For some language models, additional dependencies are needed. We make it easy for you to install them by running the following additional `pip install` commands **after having installed the pipeline**:
