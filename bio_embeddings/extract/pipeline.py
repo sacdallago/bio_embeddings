@@ -57,7 +57,7 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
             get_model_file(path=file_path, model=f'{model}_annotations_extractors', file=file)
             result_kwargs[file] = file_path
 
-    annotation_extractor = BasicAnnotationExtractor(**result_kwargs)
+    annotation_extractor = BasicAnnotationExtractor(model, **result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
