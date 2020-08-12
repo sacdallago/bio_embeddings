@@ -35,7 +35,7 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
 
 - `use_case_four`
 
-  You have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
+  You have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec and Bert (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
   
 
 - `cath`
