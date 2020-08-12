@@ -1,2 +1,2 @@
-from bio_embeddings.extract.seqvec.SeqVecAnnotationExtraction import SeqVecAnnotationExtractor, \
-    SecondaryStructureResult, SubcellularLocalizationResult, SeqVecExtractedAnnotations
+from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicAnnotationExtractor, \
+    BasicSecondaryStructureResult, BasicExtractedAnnotations, BasicSubcellularLocalizationResult
