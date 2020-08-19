@@ -17,6 +17,10 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find t
 
 ## Install guides
 
+You cam install bio_embeddings with pip or use it through docker
+
+## Pip
+
 You can install the pipeline via pip like so:
 
 ```bash
@@ -29,11 +33,18 @@ To get the latest features, please install the pipeline like so:
 pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"
 ```
 
-For some language models, additional dependencies are needed. We make it easy for you to install them by running the following additional `pip install` commands **after having installed the pipeline**:
-- XLnet
-  ```
-  pip install bio_embeddings[xlnet]
-  ```
+### Docker
+
+We will provide a docker image at `rostlab/bio_embeddings`. Simple usage example:
+
+```shell_script
+docker run --rm --gpus all \
+    -v "$(pwd)/examples/docker":/mnt \
+    -u $(id -u ${USER}):$(id -g ${USER}) \
+    rostlab/bio_embeddings /mnt/config.yml
+```
+
+See the docker example in the examples folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
 
 ## What model is right for you?
 
@@ -68,6 +79,7 @@ After having installed the package, you can:
     More examples can be found in the `notebooks` folder of this repository.
 
 ## Development status
+
 
 <details>
 <summary>Pipeline stages</summary>
