@@ -15,6 +15,12 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find t
   - [Check out this other Google Colab](https://colab.research.google.com/drive/1h5izTF07GjHMkekmGNUj32Sbb1gccJxd?usp=sharing) to get embeddings for sequences in a FASTA file (you can then download them and use them as input features for prediction models).
 - Release `0.1.4` will include embedding similarity transfer and supervised annotation extraction via a new stage called `extract`.
 
+## Cite
+
+While we are working on a proper publication, if you are already using this tool, we would appreciate if you could cite the following poster:
+
+> Dallago C, Schütze K, Heinzinger M et al. bio_embeddings: python pipeline for fast visualization of protein features extracted by language models [version 1; not peer reviewed]. F1000Research 2020, 9(ISCB Comm J):876 (poster) (doi: [10.7490/f1000research.1118163.1](https://doi.org/10.7490/f1000research.1118163.1))
+
 ## Install guides
 
 You cam install bio_embeddings with pip or use it through docker
