@@ -151,7 +151,7 @@ class BasicAnnotationExtractor(object):
         elif self._model_type == "bert_from_publication":
             # Bert case
             # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
-            embedding = torch.tensor(raw_embedding).to(self._device).T.unsqueeze(dim=-1)
+            embedding = torch.tensor(raw_embedding).to(self._device).T[None, :, :, None]
         else:
             raise NotImplementedError
 
