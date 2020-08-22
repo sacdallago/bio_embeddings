@@ -25,7 +25,6 @@ def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
         embedder_class.name + ".npz"
     )
 
-    expected = numpy.load(str(expected_file))
     # TODO: Change this once GH-20 is solved
     if os.environ.get("MODEL_DIRECTORY"):
         model_directory = Path(os.environ["MODEL_DIRECTORY"]).joinpath(
@@ -35,6 +34,7 @@ def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
     else:
         embedder = embedder_class.with_download(use_cpu=use_cpu)
     [protein, seqwence] = embedder.embed_many(["PROTEIN", "SEQWENCE"], 100)
+    expected = numpy.load(str(expected_file))
     assert numpy.allclose(expected["test_case 1"], protein, rtol=1.0e-3, atol=1.0e-5)
     assert numpy.allclose(expected["test_case 2"], seqwence, rtol=1.0e-3, atol=1.0e-5)
 
@@ -49,4 +49,4 @@ def test_embedder_gpu(embedder_class: Type[EmbedderInterface]):
 
 @pytest.mark.parametrize("embedder_class", all_embedders)
 def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
-    embedder_test_impl(embedder_class, True)
+   embedder_test_impl(embedder_class, True)
