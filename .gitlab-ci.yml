@@ -33,10 +33,11 @@ python3.6:
   <<: *test
   image: python:3.6
 
-python3.7:
-  <<: *test
-  image: python:3.7
-
-python3.8:
-  <<: *test
-  image: python:3.8
+# FIXME: Temporarily deactivated due to OOM on the ci machine
+#python3.7:
+#  <<: *test
+#  image: python:3.7
+#
+#python3.8:
+#  <<: *test
+#  image: python:3.8
