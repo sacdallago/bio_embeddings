@@ -185,4 +185,4 @@ def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
     # read configuration and execute
     config = read_config_file(config_file_path)
 
-    execute_pipeline_from_config_dictionary(config, **kwargs)
+    execute_pipeline_from_config(config, **kwargs)
