@@ -91,9 +91,7 @@ def _null_function(config: Dict) -> None:
 
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
-                                 post_run: Callable[[Dict], None] = _null_function,
-                                 **kwargs
-                                 ):
+                                 **kwargs) -> Dict:
 
     original_config = deepcopy(config)
 
@@ -190,8 +188,7 @@ def execute_pipeline_from_config(config: Dict,
     global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
 
-    # Execute post-run function, if provided
-    post_run(config)
+    return config
 
 
 def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
