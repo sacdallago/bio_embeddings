@@ -5,7 +5,6 @@ import numpy
 from numpy import ndarray
 
 from bio_embeddings.embed import EmbedderInterface
-from bio_embeddings.embed.embedder_interfaces import EmbedderInterfaceSubclass
 from bio_embeddings.embed.pipeline import embed_and_write_batched
 from bio_embeddings.utilities.filemanagers import FileSystemFileManager
 
@@ -16,12 +15,6 @@ from bio_embeddings.utilities.pipeline import _process_fasta_file
 class FakeEmbedder(EmbedderInterface):
     embedding_dimension = 1024
     number_of_layers = 1
-
-    @classmethod
-    def with_download(
-        cls: Type[EmbedderInterfaceSubclass], **kwargs
-    ) -> EmbedderInterfaceSubclass:
-        raise NotImplemented
 
     def embed(self, sequence: str) -> ndarray:
         return numpy.asarray([])
