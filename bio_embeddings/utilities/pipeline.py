@@ -1,5 +1,6 @@
 import os
 from copy import deepcopy
+from typing import Dict
 from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
@@ -84,14 +85,7 @@ def _process_fasta_file(**kwargs):
     return result_kwargs
 
 
-def run(config_file_path, **kwargs):
-
-    if not _valid_file(config_file_path):
-        raise Exception("No config or invalid config was passed.")
-
-    # read configuration and execute
-    config = read_config_file(config_file_path)
-
+def execute_pipeline_from_config(config: Dict, **kwargs):
     check_required(
         config,
         ["global"]
@@ -181,3 +175,14 @@ def run(config_file_path, **kwargs):
     config['global'] = global_parameters
     global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
+
+
+def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
+
+    if not _valid_file(config_file_path):
+        raise Exception("No config or invalid config was passed.")
+
+    # read configuration and execute
+    config = read_config_file(config_file_path)
+
+    execute_pipeline_from_config_dictionary(config, **kwargs)
