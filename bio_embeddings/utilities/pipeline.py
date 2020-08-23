@@ -1,6 +1,6 @@
 import os
 from copy import deepcopy
-from typing import Dict
+from typing import Dict, Callable
 from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
@@ -85,7 +85,16 @@ def _process_fasta_file(**kwargs):
     return result_kwargs
 
 
-def execute_pipeline_from_config(config: Dict, **kwargs):
+def _null_function(config: Dict) -> None:
+    pass
+
+
+def execute_pipeline_from_config(config: Dict,
+                                 post_stage: Callable[[Dict], None] = _null_function,
+                                 post_run: Callable[[Dict], None] = _null_function,
+                                 **kwargs
+                                 ):
+
     original_config = deepcopy(config)
 
     check_required(
@@ -174,9 +183,15 @@ def execute_pipeline_from_config(config: Dict, **kwargs):
         # Store in global_out config for later retrieval (e.g. depends_on)
         config[stage_name] = stage_output_parameters
 
+        # Execute post-stage function, if provided
+        post_stage(stage_output_parameters)
+
     config['global'] = global_parameters
     global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
+
+    # Execute post-run function, if provided
+    post_run(config)
 
 
 def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
