@@ -1,5 +1,4 @@
 import logging
-import tempfile
 from pathlib import Path
 from typing import List, Optional, Generator
 
@@ -8,7 +7,6 @@ from allennlp.commands.elmo import ElmoEmbedder
 from numpy import ndarray
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
-from bio_embeddings.utilities import get_model_file
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +21,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
     _model: ElmoEmbedder
     # The fallback model running on the cpu, which will be initialized if needed
     _model_fallback: Optional[ElmoEmbedder] = None
+    _necessary_files = ["weights_file", "options_file"]
 
     def __init__(self, **kwargs):
         """
@@ -48,7 +47,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
             self._weights_file = self._options["weights_file"]
             self._options_file = self._options["options_file"]
 
-        # TODO: Only SeqVec is checking for cuda availibilty, this should be done by all or none instead
+        # TODO: Only SeqVec is checking for cuda availability, this should be done by all or none instead
         # Additionally, this should use self.device.index
         if torch.cuda.is_available() and not self._use_cpu:
             logger.info("CUDA available, using the GPU")
@@ -62,21 +61,6 @@ class SeqVecEmbedder(EmbedderWithFallback):
             options_file=self._options_file,
             cuda_device=cuda_device,
         )
-
-    @classmethod
-    def with_download(cls, **kwargs) -> "SeqVecEmbedder":
-        necessary_files = ["weights_file", "options_file"]
-
-        keep_tempfiles_alive = []
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                keep_tempfiles_alive.append(f)
-
-                get_model_file(path=f.name, model=cls.name, file=file)
-
-                kwargs[file] = f.name
-        return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
         return self._model.embed_sentence(list(sequence))

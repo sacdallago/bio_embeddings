@@ -53,8 +53,7 @@ def test_fallbacks(caplog):
             cuda_device, elmo_log
         ),
     ), mock.patch(
-        "bio_embeddings.embed.seqvec_embedder.torch.cuda.is_available",
-        lambda: True,
+        "bio_embeddings.embed.seqvec_embedder.torch.cuda.is_available", lambda: True,
     ):
         sequences = [
             "M" * 20,

@@ -23,7 +23,7 @@ def bisect_embedder_memory(embedder_name: str, model_directory: Optional[str]):
         )
     else:
         logger.info("Model directory not given, downloading model")
-        embedder = embedder.with_download()
+        embedder = embedder()
     # Evil Hack: `not model_fallback` will now evaluate to False, but using it will still fail
     embedder.model_fallback = True
 

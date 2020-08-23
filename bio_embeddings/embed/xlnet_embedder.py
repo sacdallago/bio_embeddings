@@ -1,6 +1,5 @@
 import logging
 import re
-import tempfile
 from pathlib import Path
 from typing import Optional, Generator, List
 
@@ -9,7 +8,6 @@ from numpy import ndarray
 from transformers import XLNetModel, XLNetTokenizer
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
-from bio_embeddings.utilities import get_model_directories_from_zip
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +18,7 @@ class XLNetEmbedder(EmbedderInterface):
     number_of_layers = 1
     _model: XLNetModel
     _model_fallback: Optional[XLNetModel]
+    _necessary_directories = ["model_directory"]
 
     def __init__(self, **kwargs):
         """
@@ -43,30 +42,6 @@ class XLNetEmbedder(EmbedderInterface):
         # This one is just indexing single amino acids because we only have words of L=1.
         spm_model = str(Path(self.model_directory).joinpath("spm_model.model"))
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
-
-    def _get_fallback_model(self) -> XLNetModel:
-        if not self._model_fallback:
-            self._model_fallback = XLNetModel.from_pretrained(
-                self.model_directory
-            ).eval()
-        return self._model_fallback
-
-    @classmethod
-    def with_download(cls, **kwargs):
-        necessary_directories = ["model_directory"]
-
-        keep_tempfiles_alive = []
-        for directory in necessary_directories:
-            if not kwargs.get(directory):
-                f = tempfile.mkdtemp()
-                keep_tempfiles_alive.append(f)
-
-                get_model_directories_from_zip(
-                    path=f, model=cls.name, directory=directory
-                )
-
-                kwargs[directory] = f
-        return cls(**kwargs)
 
     def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)

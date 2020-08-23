@@ -1,12 +1,12 @@
+import os
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Type
+from unittest import mock
 
 import numpy
 import pytest
-
 import torch
-import os
-
 
 from bio_embeddings.embed import (
     SeqVecEmbedder,
@@ -32,7 +32,7 @@ def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
         )
         embedder = embedder_class(model_directory=model_directory, use_cpu=use_cpu)
     else:
-        embedder = embedder_class.with_download(use_cpu=use_cpu)
+        embedder = embedder_class(use_cpu=use_cpu)
     [protein, seqwence] = embedder.embed_many(["PROTEIN", "SEQWENCE"], 100)
     expected = numpy.load(str(expected_file))
     assert numpy.allclose(expected["test_case 1"], protein, rtol=1.0e-3, atol=1.0e-5)
@@ -49,4 +49,56 @@ def test_embedder_gpu(embedder_class: Type[EmbedderInterface]):
 
 @pytest.mark.parametrize("embedder_class", all_embedders)
 def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
-   embedder_test_impl(embedder_class, True)
+    embedder_test_impl(embedder_class, True)
+
+
+@pytest.mark.parametrize(
+    "embedder_class", [AlbertEmbedder, BertEmbedder, XLNetEmbedder]
+)
+def test_model_download(embedder_class):
+    """ We want to check that models are downloaded if the model_directory isn't given """
+    module_name = embedder_class.__module__
+    base_name = embedder_class.__name__.replace("Embedder", "")
+    model_name = f"{module_name}.{base_name}Model"
+    tokenizer_name = f"{module_name}.{base_name}Tokenizer"
+    with mock.patch(
+        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip"
+    ) as get_model_mock, mock.patch(model_name, mock.MagicMock()), mock.patch(
+        tokenizer_name, mock.MagicMock()
+    ):
+        embedder_class()
+    get_model_mock.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "embedder_class", [AlbertEmbedder, BertEmbedder, XLNetEmbedder]
+)
+def test_model_no_download(embedder_class):
+    """ We want to check that models aren't downloaded if the model_directory is given """
+    with mock.patch(
+        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip"
+    ) as get_model_mock:
+        with pytest.raises(OSError):
+            embedder_class(model_directory="/none/existent/path")
+        get_model_mock.assert_not_called()
+
+
+def test_model_parameters_seqvec(caplog):
+    with mock.patch(
+        "bio_embeddings.embed.embedder_interfaces.get_model_file"
+    ) as get_model_mock:
+        # Since we're not actually downloading, the json options file is empty
+        with pytest.raises(JSONDecodeError):
+            SeqVecEmbedder(weights_file="/none/existent/path")
+    get_model_mock.assert_called_once()
+    assert caplog.messages == [
+        "You should pass either all necessary files or directories, or none, while "
+        "you provide 1 of 2"
+    ]
+
+    with pytest.raises(FileNotFoundError):
+        SeqVecEmbedder(model_directory="/none/existent/path")
+    with pytest.raises(FileNotFoundError):
+        SeqVecEmbedder(
+            weights_file="/none/existent/path", options_file="/none/existent/path"
+        )
