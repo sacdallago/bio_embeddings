@@ -86,6 +86,8 @@ def _process_fasta_file(**kwargs):
 
 
 def execute_pipeline_from_config(config: Dict, **kwargs):
+    original_config = deepcopy(config)
+
     check_required(
         config,
         ["global"]
@@ -114,9 +116,9 @@ def execute_pipeline_from_config(config: Dict, **kwargs):
         # create the prefix
         file_manager.create_prefix(prefix)
 
-    # copy config to prefix. Need to re-read because global was popped!
+    # Copy original config to prefix
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
-    write_config_file(global_in, read_config_file(config_file_path))
+    write_config_file(global_in, original_config)
 
     global_parameters = _process_fasta_file(**global_parameters)
 
