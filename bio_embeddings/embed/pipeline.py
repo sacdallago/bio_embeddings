@@ -144,11 +144,8 @@ def embed_and_write_batched(
     )
     # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
     # https://stackoverflow.com/a/29793294/3549270
-    mapping_file = (
-        read_csv(result_kwargs["mapping_file"], dtype={0: "str"})
-        .set_index("Unnamed: 0")
-        .rename_axis(None)
-    )
+    mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
+    mapping_file.index = mapping_file.index.astype('str')
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
