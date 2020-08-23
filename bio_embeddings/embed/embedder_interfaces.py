@@ -7,17 +7,13 @@ Authors:
 
 import abc
 import logging
+import tempfile
 from typing import List, Generator, Optional, Iterable, ClassVar, Any, Dict
-from typing import Type, TypeVar
 
 import torch
-
 from numpy import ndarray
 
-# https://stackoverflow.com/a/39205612/3549270
-EmbedderInterfaceSubclass = TypeVar(
-    "EmbedderInterfaceSubclass", bound="EmbedderInterface"
-)
+from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +24,13 @@ class EmbedderInterface(abc.ABC):
     embedding_dimension: ClassVar[int]
     # An integer representing the number of layers from the RAW output of the LM.
     number_of_layers: ClassVar[int]
+    # The files or directories with weights and config
+    _necessary_files: ClassVar[List[str]] = []
+    _necessary_directories: ClassVar[List[str]] = []
+    # When downloading model files, we store them in temporary files and directories
+    # which can and must be cleared after the instance using was deallocated
+    _keep_tempfiles_alive = []
+
     _use_cpu: bool
     _device: torch.device
     _options: Dict[str, Any]
@@ -42,13 +45,41 @@ class EmbedderInterface(abc.ABC):
             "cuda:0" if torch.cuda.is_available() and not self._use_cpu else "cpu"
         )
 
-    @classmethod
-    @abc.abstractmethod
-    def with_download(
-        cls: Type[EmbedderInterfaceSubclass], **kwargs
-    ) -> EmbedderInterfaceSubclass:
-        """ Convenience function to create an instance after downloading files. """
-        raise NotImplementedError
+        # Special case because SeqVec can currently be used with either a model directory or two files
+        if self.__class__.__name__ == "SeqVecEmbedder":
+            # No need to download weights_file/options_file if model_directory is given
+            if "model_directory" in self._options:
+                return
+
+        files_loaded = 0
+        for file in self._necessary_files:
+            if not self._options.get(file):
+                f = tempfile.NamedTemporaryFile()
+                self._keep_tempfiles_alive.append(f)
+
+                get_model_file(path=f.name, model=self.name, file=file)
+
+                self._options[file] = f.name
+                files_loaded += 1
+
+        for directory in self._necessary_directories:
+            if not self._options.get(directory):
+                f = tempfile.mkdtemp()
+                self._keep_tempfiles_alive.append(f)
+
+                get_model_directories_from_zip(
+                    path=f, model=self.name, directory=directory
+                )
+
+                self._options[directory] = f
+                files_loaded += 1
+
+        total_necessary = len(self._necessary_files) + len(self._necessary_directories)
+        if 0 < files_loaded < total_necessary:
+            logger.warning(
+                f"You should pass either all necessary files or directories, or none, "
+                f"while you provide {files_loaded} of {total_necessary}"
+            )
 
     @abc.abstractmethod
     def embed(self, sequence: str) -> ndarray:
@@ -117,6 +148,7 @@ class EmbedderInterface(abc.ABC):
 
 class EmbedderWithFallback(EmbedderInterface, abc.ABC):
     """ Batching embedder that will fallback to the CPU if the embedding on the GPU failed """
+
     _model: Any
 
     @abc.abstractmethod

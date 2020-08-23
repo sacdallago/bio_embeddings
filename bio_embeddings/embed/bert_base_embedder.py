@@ -1,15 +1,13 @@
 import logging
 import re
-import tempfile
 from itertools import zip_longest
-from typing import List, Generator, TypeVar, Union, Type
+from typing import List, Generator, TypeVar, Union
 
 import torch
 from numpy import ndarray
 from transformers import BertTokenizer, AlbertTokenizer, BertModel, AlbertModel
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
-from bio_embeddings.utilities import get_model_directories_from_zip
 
 # https://stackoverflow.com/a/39205612/3549270
 RealBertEmbedder = TypeVar("RealBertEmbedder", bound="BertBaseEmbedder")
@@ -23,22 +21,7 @@ class BertBaseEmbedder(EmbedderWithFallback):
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
     _model: Union[AlbertModel, BertModel]
 
-    @classmethod
-    def with_download(cls: Type[RealBertEmbedder], **kwargs) -> RealBertEmbedder:
-        necessary_directories = ["model_directory"]
-
-        keep_tempfiles_alive = []
-        for directory in necessary_directories:
-            if not kwargs.get(directory):
-                f = tempfile.mkdtemp()
-                keep_tempfiles_alive.append(f)
-
-                get_model_directories_from_zip(
-                    path=f, model=cls.name, directory=directory
-                )
-
-                kwargs[directory] = f
-        return cls(**kwargs)
+    _necessary_directories = ["model_directory"]
 
     def _get_fallback_model(self) -> Union[BertModel, AlbertModel]:
         raise NotImplementedError
@@ -61,7 +44,9 @@ class BertBaseEmbedder(EmbedderWithFallback):
         attention_mask = torch.tensor(ids["attention_mask"]).to(model.device)
 
         with torch.no_grad():
-            embeddings = model(input_ids=tokenized_sequences, attention_mask=attention_mask)
+            embeddings = model(
+                input_ids=tokenized_sequences, attention_mask=attention_mask
+            )
 
         embeddings = embeddings[0].cpu().numpy()
 

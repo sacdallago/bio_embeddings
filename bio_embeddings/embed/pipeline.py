@@ -1,9 +1,9 @@
 import logging
-import h5py
 import shutil
-
 from copy import deepcopy
 from typing import Dict, Any, Type
+
+import h5py
 from Bio import SeqIO
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
