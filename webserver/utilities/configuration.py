@@ -7,7 +7,8 @@ configuration = {
 
         # Max content length determines the maximum size of files to be uploaded: 16 * 1024 * 1024 = 16MB
         "max_content_length": int(eval(environ.get('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))),
-        "mongo_url": environ.get('MONGO_URL', "mongodb://localhost:27017")
+        "mongo_url": environ.get('MONGO_URL', "mongodb://localhost:27017"),
+        "celery_broker_url": environ['CELERY_BROKER_URL']
     },
 
     # Bert stuff
