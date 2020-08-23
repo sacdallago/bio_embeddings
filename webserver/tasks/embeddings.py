@@ -1,10 +1,6 @@
-import h5py
-
 from os import path
-from io import StringIO
 from pathlib import Path
-from Bio import SeqIO, SeqRecord
-from typing import Iterable, Dict
+from typing import Dict
 from tempfile import TemporaryDirectory
 
 from bio_embeddings.utilities import write_fasta_file
@@ -12,7 +8,7 @@ from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 from bio_embeddings.utilities.config import read_config_file
 
 
-from webserver.database import get_file, write_file
+from webserver.database import write_file
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
 

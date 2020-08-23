@@ -1,8 +1,7 @@
 import uuid
 from flask import request, jsonify, send_file, abort
 from flask_restx import Resource
-from tempfile import NamedTemporaryFile
-from webserver.database import write_file, get_file
+from webserver.database import get_file
 from webserver.endpoints import api
 from webserver.endpoints.utils import validate_FASTA_submission
 from webserver.tasks.embeddings import get_embeddings
@@ -56,4 +55,5 @@ class Embeddings(Resource):
     def get(self):
         job_id = request.args.get('id')
 
+        # TODO: add a list of available files for the job (aka mongo search by job id)
         return {"status": get_embeddings.AsyncResult(job_id).status}
