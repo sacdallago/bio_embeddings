@@ -3,7 +3,7 @@
 import argparse
 import logging
 
-from bio_embeddings.utilities.pipeline import run
+from bio_embeddings.utilities.pipeline import parse_config_file_and_execute_run
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
                         help='The path to the config. For examples, see folder "parameter examples".')
     arguments = parser.parse_args()
 
-    run(arguments.config_path[0], overwrite=arguments.overwrite)
+    parse_config_file_and_execute_run(arguments.config_path[0], overwrite=arguments.overwrite)
 
 
 if __name__ == '__main__':

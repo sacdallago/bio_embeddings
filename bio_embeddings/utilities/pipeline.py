@@ -1,5 +1,6 @@
 import os
 from copy import deepcopy
+from typing import Dict, Callable
 from datetime import datetime
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.project.pipeline import run as run_project
@@ -84,13 +85,15 @@ def _process_fasta_file(**kwargs):
     return result_kwargs
 
 
-def run(config_file_path, **kwargs):
+def _null_function(config: Dict) -> None:
+    pass
 
-    if not _valid_file(config_file_path):
-        raise Exception("No config or invalid config was passed.")
 
-    # read configuration and execute
-    config = read_config_file(config_file_path)
+def execute_pipeline_from_config(config: Dict,
+                                 post_stage: Callable[[Dict], None] = _null_function,
+                                 **kwargs) -> Dict:
+
+    original_config = deepcopy(config)
 
     check_required(
         config,
@@ -120,9 +123,9 @@ def run(config_file_path, **kwargs):
         # create the prefix
         file_manager.create_prefix(prefix)
 
-    # copy config to prefix. Need to re-read because global was popped!
+    # Copy original config to prefix
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
-    write_config_file(global_in, read_config_file(config_file_path))
+    write_config_file(global_in, original_config)
 
     global_parameters = _process_fasta_file(**global_parameters)
 
@@ -178,6 +181,22 @@ def run(config_file_path, **kwargs):
         # Store in global_out config for later retrieval (e.g. depends_on)
         config[stage_name] = stage_output_parameters
 
+        # Execute post-stage function, if provided
+        post_stage(stage_output_parameters)
+
     config['global'] = global_parameters
     global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
+
+    return config
+
+
+def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
+
+    if not _valid_file(config_file_path):
+        raise Exception("No config or invalid config was passed.")
+
+    # read configuration and execute
+    config = read_config_file(config_file_path)
+
+    execute_pipeline_from_config(config, **kwargs)
