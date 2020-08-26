@@ -133,5 +133,5 @@ stage_4:
   # subcellular_location_checkpoint_file: path/to/checkpoint.pt
 
   # Required for protocol: unsupervised
-  # reference_embeddings: path/to/embeddings.hd5
-  # reference_annotations: path/to/annotation_file.csv
+  # reference_embeddings_file: path/to/embeddings.hd5
+  # reference_annotations_file: path/to/annotation_file.csv
