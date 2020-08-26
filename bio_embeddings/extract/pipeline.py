@@ -90,9 +90,9 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     # Save a copy of the reference embeddings file with only necessary embeddings
     input_reference_embeddings_file_path = file_manager.create_file(kwargs.get('prefix'),
-                                                                     result_kwargs.get('stage_name'),
-                                                                     'input_reference_embeddings_file',
-                                                                     extension='.h5')
+                                                                    result_kwargs.get('stage_name'),
+                                                                    'input_reference_embeddings_file',
+                                                                    extension='.h5')
 
     result_kwargs['input_reference_embeddings_file'] = input_reference_embeddings_file_path
 
