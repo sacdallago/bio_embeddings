@@ -131,11 +131,13 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         reference_embeddings,
         norm=result_kwargs['pairwise_distance_norm'])
 
+    pairwise_distances = pairwise_distances.numpy()
+
     pairwise_distances_matrix_file_path = file_manager.create_file(kwargs.get('prefix'),
                                                                    result_kwargs.get('stage_name'),
                                                                    'pairwise_distances_matrix_file',
                                                                    extension='.csv')
-    pairwise_distances_matrix_file = DataFrame(pairwise_distances.numpy(),
+    pairwise_distances_matrix_file = DataFrame(pairwise_distances,
                                                index=reference_identifiers,
                                                columns=target_identifiers)
     pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
@@ -144,7 +146,6 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # TODO: transfer & store annotations
     result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
     result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
-
 
     return result_kwargs
 
