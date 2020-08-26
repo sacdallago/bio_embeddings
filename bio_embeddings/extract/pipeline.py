@@ -5,7 +5,7 @@ import numpy as np
 from copy import deepcopy
 
 from Bio.Seq import Seq
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from typing import Dict, Any
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
@@ -115,8 +115,6 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         for identifier in target_identifiers:
             target_embeddings.append(reduced_embeddings_file[identifier])
 
-    # TODO: probably turn into tensors and compute pairwaise distances
-
     # TODO: !!!! IMPORTANT !!!!
     #       KS: for consistency, please make the same changes here, as you are doing on
     #       https://gitlab.lrz.de/sacdallago/bio_embeddings/-/merge_requests/39
@@ -125,7 +123,25 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     reference_embeddings = torch.tensor(reference_embeddings, device=device).squeeze()
     target_embeddings = torch.tensor(target_embeddings, device=device).squeeze()
 
-    _pairwise_distance_matrix(reference_embeddings, target_embeddings)
+    result_kwargs['pairwise_distance_norm'] = result_kwargs.get('pairwise_distance_norm', 2)
+
+    pairwise_distances = _pairwise_distance_matrix(
+        target_embeddings,
+        reference_embeddings,
+        norm=result_kwargs['pairwise_distance_norm'])
+
+    pairwise_distances_matrix_file_path = file_manager.create_file(kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'pairwise_distances_matrix_file',
+                                                                   extension='.csv')
+
+    pairwise_distances_matrix_file = DataFrame(pairwise_distances.numpy(),
+                                               index=reference_identifiers,
+                                               columns=target_identifiers)
+
+    pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
+
+    result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
 
     # TODO: store annotations
     result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path

@@ -135,3 +135,6 @@ stage_4:
   # Required for protocol: unsupervised
   # reference_embeddings_file: path/to/embeddings.hd5
   # reference_annotations_file: path/to/annotation_file.csv
+
+  # Optional for protocol: unsupervised
+  # pairwise_distance_norm: [2*]
