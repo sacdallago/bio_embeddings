@@ -120,6 +120,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     #       https://gitlab.lrz.de/sacdallago/bio_embeddings/-/merge_requests/39
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # Calculate the pairwise distances and store them as matrix (in CSV format)
     reference_embeddings = torch.tensor(reference_embeddings, device=device).squeeze()
     target_embeddings = torch.tensor(target_embeddings, device=device).squeeze()
 
@@ -134,17 +135,16 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                                                                    result_kwargs.get('stage_name'),
                                                                    'pairwise_distances_matrix_file',
                                                                    extension='.csv')
-
     pairwise_distances_matrix_file = DataFrame(pairwise_distances.numpy(),
                                                index=reference_identifiers,
                                                columns=target_identifiers)
-
     pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
-
     result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
 
-    # TODO: store annotations
+    # TODO: transfer & store annotations
+    result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
     result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
+
 
     return result_kwargs
 
