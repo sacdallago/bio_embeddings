@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 # From https://github.com/josipd/torch-two-sample/blob/master/torch_two_sample/util.py
 # and https://github.com/Rostlab/goPredSim/blob/master/two_sample_util.py
-def _pairwise_distance(sample_1: torch.Tensor, sample_2: torch.Tensor, norm: int = 2, eps=1e-5):
+def _pairwise_distance_matrix(sample_1: torch.Tensor, sample_2: torch.Tensor, norm: int = 2, eps=1e-5):
     r"""Compute the matrix of all squared pairwise distances.
     Arguments
     ---------
@@ -60,10 +60,10 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     file_manager = get_file_manager(**kwargs)
 
     # Try to create final files (if this fails, now is better than later
-    transferred_annotations_file = file_manager.create_file(result_kwargs.get('prefix'),
-                                                            result_kwargs.get('stage_name'),
-                                                            'transferred_annotations_file',
-                                                            extension='.csv')
+    transferred_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                 result_kwargs.get('stage_name'),
+                                                                 'transferred_annotations_file',
+                                                                 extension='.csv')
 
     # Read the reference annotations and reference embeddings
 
@@ -72,14 +72,37 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # ** identifier doesn't need to be unique **
     reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
 
+    # Save a copy of the annotation file with only necessary cols cols
+    input_reference_annotations_file_path = file_manager.create_file(kwargs.get('prefix'),
+                                                                     result_kwargs.get('stage_name'),
+                                                                     'input_reference_annotations_file',
+                                                                     extension='.csv')
+
+    reference_annotations_file.to_csv(input_reference_annotations_file_path,
+                                      columns=['identifier', 'label'],
+                                      index=False)
+
+    result_kwargs['input_reference_annotations_file'] = input_reference_annotations_file_path
+
     # Starting from here order is super important!
     reference_identifiers = reference_annotations_file['identifier'].unique().sort()
     reference_embeddings = list()
 
+    # Save a copy of the reference embeddings file with only necessary embeddings
+    input_reference_embeddings_file_path = file_manager.create_file(kwargs.get('prefix'),
+                                                                     result_kwargs.get('stage_name'),
+                                                                     'input_reference_embeddings_file',
+                                                                     extension='.h5')
+
+    result_kwargs['input_reference_embeddings_file'] = input_reference_embeddings_file_path
+
     # Only read in embeddings for annotated sequences! This will save RAM/GPU_RAM.
     with h5py.File(result_kwargs['reference_embeddings_file'], 'r') as reference_embeddings_file:
-        for identifier in reference_identifiers:
-            reference_embeddings.append(reference_embeddings_file[identifier])
+        with h5py.File(result_kwargs['input_reference_embeddings_file'], 'w') as input_reference_embeddings_file:
+            for identifier in reference_identifiers:
+                current_embedding = reference_embeddings_file[identifier]
+                reference_embeddings.append(current_embedding)
+                input_reference_embeddings_file.create_dataset(identifier, data=current_embedding)
 
     # mapping file will be needed to transfer annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
@@ -93,6 +116,19 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
             target_embeddings.append(reduced_embeddings_file[identifier])
 
     # TODO: probably turn into tensors and compute pairwaise distances
+
+    # TODO: !!!! IMPORTANT !!!!
+    #       KS: for consistency, please make the same changes here, as you are doing on
+    #       https://gitlab.lrz.de/sacdallago/bio_embeddings/-/merge_requests/39
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    reference_embeddings = torch.tensor(reference_embeddings, device=device).squeeze()
+    target_embeddings = torch.tensor(target_embeddings, device=device).squeeze()
+
+    _pairwise_distance_matrix(reference_embeddings, target_embeddings)
+
+    # TODO: store annotations
+    result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
 
     return result_kwargs
 
