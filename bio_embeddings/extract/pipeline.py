@@ -84,6 +84,16 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # mapping file will be needed to transfer annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
 
+    # Important to have consistent ordering!
+    target_identifiers = mapping_file.index.values.sort()
+    target_embeddings = list()
+
+    with h5py.File(result_kwargs['reduced_embeddings_file'], 'r') as reduced_embeddings_file:
+        for identifier in target_identifiers:
+            target_embeddings.append(reduced_embeddings_file[identifier])
+
+    # TODO: probably turn into tensors and compute pairwaise distances
+
     return result_kwargs
 
 
