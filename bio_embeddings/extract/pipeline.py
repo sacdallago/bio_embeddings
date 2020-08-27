@@ -101,7 +101,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     with h5py.File(result_kwargs['reference_embeddings_file'], 'r') as reference_embeddings_file:
         with h5py.File(result_kwargs['input_reference_embeddings_file'], 'w') as input_reference_embeddings_file:
             for identifier in reference_identifiers:
-                current_embedding = reference_embeddings_file[identifier]
+                current_embedding = np.array(reference_embeddings_file[identifier])
                 reference_embeddings.append(current_embedding)
                 input_reference_embeddings_file.create_dataset(identifier, data=current_embedding)
 
@@ -115,7 +115,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     with h5py.File(result_kwargs['reduced_embeddings_file'], 'r') as reduced_embeddings_file:
         for identifier in target_identifiers:
-            target_embeddings.append(reduced_embeddings_file[identifier])
+            target_embeddings.append(np.array(reduced_embeddings_file[identifier]))
 
     # TODO: !!!! IMPORTANT !!!!
     #       KS: for consistency, please make the same changes here, as you are doing on
@@ -140,8 +140,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                                                                    'pairwise_distances_matrix_file',
                                                                    extension='.csv')
     pairwise_distances_matrix_file = DataFrame(pairwise_distances,
-                                               index=reference_identifiers,
-                                               columns=target_identifiers)
+                                               index=target_identifiers,
+                                               columns=reference_identifiers)
     pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
     result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
 
