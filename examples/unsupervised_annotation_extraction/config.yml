@@ -10,6 +10,6 @@ transferred_annotations:
   type: extract
   protocol: unsupervised
   depends_on: seqvec_embeddings
-  reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.hd5
+  reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.h5
   reference_annotations_file: disprot_2019_09_labelled_0.2_0.8.csv
   k_nearest_neighbours: 3
