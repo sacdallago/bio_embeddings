@@ -146,6 +146,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     # TODO: transfer & store annotations
     result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
+
+    # https://stackoverflow.com/a/34226816
     result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
 
     return result_kwargs
