@@ -46,6 +46,10 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
 
   Similar to the `cath` example, but using the DisProt (https://www.disprot.org) database instead. Annotations contain "highly disorder" for proteins with >80% disorder, and "low disorder" for proteins with <20% disordered AA content.
   Note that in this example we exclude proteins with unknown annotation (see visualize stage in config).
+  
+- `unsupervised_annotation_extraction`
+
+  This example uses the reduced_embeddings calculated in `disprot`, and annotations from the CSV file there to transfer annotations onto an unknown dataset.
 
 - `docker`
 
