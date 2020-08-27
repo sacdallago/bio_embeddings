@@ -79,9 +79,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                                                                      'input_reference_annotations_file',
                                                                      extension='.csv')
 
-    reference_annotations_file.to_csv(input_reference_annotations_file_path,
-                                      columns=['identifier', 'label'],
-                                      index=False)
+    reference_annotations_file.to_csv(input_reference_annotations_file_path, index=False)
 
     result_kwargs['input_reference_annotations_file'] = input_reference_annotations_file_path
 
