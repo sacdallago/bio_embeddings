@@ -5,7 +5,7 @@ import numpy as np
 
 from math import isclose
 from copy import deepcopy
-from typing import Dict, Any
+from typing import Dict, Any, List
 from Bio.Seq import Seq
 from pandas import read_csv, DataFrame
 
@@ -52,6 +52,10 @@ def _pairwise_distance_matrix(sample_1: torch.Tensor, sample_2: torch.Tensor, no
         differences = torch.abs(expanded_1 - expanded_2) ** norm
         inner = torch.sum(differences, dim=2, keepdim=False)
         return (eps + inner) ** (1. / norm)
+
+
+def _flatten_2d_list(l: List[List[str]]) -> List[str]:
+    return [item for sublist in l for item in sublist]
 
 
 def unsupervised(**kwargs) -> Dict[str, Any]:
@@ -144,10 +148,53 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
     result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
 
-    # TODO: transfer & store annotations
+    # transfer & store annotations
     result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
 
-    # https://stackoverflow.com/a/34226816
+    transferred_annotations = list()
+
+    for index in range(len(target_identifiers)):
+        current_annotation = {
+            'identifier': target_identifiers[index]
+        }
+
+        target_to_reference_distances = pairwise_distances[index:]
+        nearest_neighbour_indices = np.argpartition(
+            target_to_reference_distances,
+            result_kwargs['k_nearest_neighbours'])[:result_kwargs['k_nearest_neighbours']]
+
+        nearest_neighbour_identifiers = list()
+        nearest_neighbour_distances = list()
+        nearest_neighbour_annotations = list()
+
+        for i in nearest_neighbour_indices:
+            nearest_neighbour_identifiers.append(reference_identifiers[i])
+            nearest_neighbour_distances.append(target_to_reference_distances[i])
+            reference_annotations_rows = reference_annotations_file[
+                reference_annotations_file['identifier'] == reference_identifiers[i]
+                ]
+            nearest_neighbour_annotations.append(reference_annotations_rows['label'].values)
+
+        current_annotation['transferred_annotations'] = ";".join(_flatten_2d_list(nearest_neighbour_annotations))
+
+        for i, (distance, identifier, annotations) in enumerate(
+                sorted(
+                    list(
+                        zip(nearest_neighbour_distances, nearest_neighbour_identifiers, nearest_neighbour_annotations)
+                    ),
+                    key=lambda x: x[0]
+                )):
+            current_annotation[f'k_nn_{i}_identifier'] = identifier
+            current_annotation[f'k_nn_{i}_distance'] = identifier
+            current_annotation[f'k_nn_{i}_annotations'] = ";".join(annotations)
+
+        transferred_annotations.append(current_annotation)
+
+    transferred_annotations_dataframe = DataFrame(transferred_annotations)
+    transferred_annotations_dataframe = transferred_annotations_dataframe.set_index('identifier')
+    transferred_annotations_dataframe = mapping_file.join(transferred_annotations_dataframe)
+    transferred_annotations_dataframe.to_csv(transferred_annotations_file_path, index=True)
+
     result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
 
     return result_kwargs
