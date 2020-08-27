@@ -31,7 +31,7 @@ except ImportError:
 
 if not name_to_embedder:
     logger.warning(
-        "No extra is installed, so none of the context dependent embedders are available!"
+        "No extra is installed, so none of the context dependent embedders are available! "
         "Please run `pip install bio-embeddings[all]`!"
     )
 
