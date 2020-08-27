@@ -2,11 +2,13 @@ import logging
 import h5py
 import torch
 import numpy as np
-from copy import deepcopy
 
+from math import isclose
+from copy import deepcopy
+from typing import Dict, Any
 from Bio.Seq import Seq
 from pandas import read_csv, DataFrame
-from typing import Dict, Any
+
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -19,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 # From https://github.com/josipd/torch-two-sample/blob/master/torch_two_sample/util.py
 # and https://github.com/Rostlab/goPredSim/blob/master/two_sample_util.py
-def _pairwise_distance_matrix(sample_1: torch.Tensor, sample_2: torch.Tensor, norm: int = 2, eps=1e-5):
+def _pairwise_distance_matrix(sample_1: torch.Tensor, sample_2: torch.Tensor, norm: float = 2.0, eps=1e-5):
     r"""Compute the matrix of all squared pairwise distances.
     Arguments
     ---------
@@ -36,8 +38,7 @@ def _pairwise_distance_matrix(sample_1: torch.Tensor, sample_2: torch.Tensor, no
         Matrix of shape (n_1, n_2). The [i, j]-th entry is equal to
         ``|| sample_1[i, :] - sample_2[j, :] ||_p``."""
     n_1, n_2 = sample_1.size(0), sample_2.size(0)
-    norm = float(norm)
-    if norm == 2.:
+    if isclose(norm, 2.0):
         norms_1 = torch.sum(sample_1**2, dim=1, keepdim=True)
         norms_2 = torch.sum(sample_2**2, dim=1, keepdim=True)
         norms = (norms_1.expand(n_1, n_2) +
@@ -126,7 +127,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     reference_embeddings = torch.tensor(reference_embeddings, device=device).squeeze()
     target_embeddings = torch.tensor(target_embeddings, device=device).squeeze()
 
-    result_kwargs['pairwise_distance_norm'] = result_kwargs.get('pairwise_distance_norm', 2)
+    result_kwargs['pairwise_distance_norm'] = result_kwargs.get('pairwise_distance_norm', 2.0)
 
     pairwise_distances = _pairwise_distance_matrix(
         target_embeddings,
