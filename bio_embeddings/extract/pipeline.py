@@ -85,7 +85,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     result_kwargs['input_reference_annotations_file'] = input_reference_annotations_file_path
 
     # Starting from here order is super important!
-    reference_identifiers = reference_annotations_file['identifier'].unique().sort()
+    reference_identifiers = reference_annotations_file['identifier'].unique()
+    reference_identifiers.sort()
     reference_embeddings = list()
 
     # Save a copy of the reference embeddings file with only necessary embeddings
@@ -108,7 +109,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
 
     # Important to have consistent ordering!
-    target_identifiers = mapping_file.index.values.sort()
+    target_identifiers = mapping_file.index.values
+    target_identifiers.sort()
     target_embeddings = list()
 
     with h5py.File(result_kwargs['reduced_embeddings_file'], 'r') as reduced_embeddings_file:
