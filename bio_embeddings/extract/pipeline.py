@@ -158,7 +158,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
             'identifier': target_identifiers[index]
         }
 
-        target_to_reference_distances = pairwise_distances[index:]
+        target_to_reference_distances = pairwise_distances[index, :]
         nearest_neighbour_indices = np.argpartition(
             target_to_reference_distances,
             result_kwargs['k_nearest_neighbours'])[:result_kwargs['k_nearest_neighbours']]
@@ -175,7 +175,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                 ]
             nearest_neighbour_annotations.append(reference_annotations_rows['label'].values)
 
-        current_annotation['transferred_annotations'] = ";".join(_flatten_2d_list(nearest_neighbour_annotations))
+        current_annotation['transferred_annotations'] = ";".join(list(set(_flatten_2d_list(nearest_neighbour_annotations))))
 
         for i, (distance, identifier, annotations) in enumerate(
                 sorted(
@@ -185,7 +185,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                     key=lambda x: x[0]
                 )):
             current_annotation[f'k_nn_{i}_identifier'] = identifier
-            current_annotation[f'k_nn_{i}_distance'] = identifier
+            current_annotation[f'k_nn_{i}_distance'] = distance
             current_annotation[f'k_nn_{i}_annotations'] = ";".join(annotations)
 
         transferred_annotations.append(current_annotation)
