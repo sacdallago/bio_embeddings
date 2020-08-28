@@ -108,16 +108,16 @@ def reindex_h5_file(h5_file_path: str, mapping_file_path: str):
 
     mapping_file = read_csv(mapping_file_path, index_col=0)
     mapping_file['original_id'] = mapping_file['original_id'].astype(str)
-    conversion_table = zip(mapping_file.index.values, mapping_file['original_id'].values)
-    unique_froms = set([e[0]] for e in conversion_table)
-    unique_tos = set([e[1]] for e in conversion_table if e is not None and e is not "")
+    conversion_table = list(zip(mapping_file.index.values, mapping_file['original_id'].values))
+    unique_froms = set([e[0] for e in conversion_table])
+    unique_tos = set([e[1] for e in conversion_table if e])
 
     if len(unique_froms) != len(unique_tos):
         raise ConversionUniqueMismatch(f"Conversion unique count mismatch.\n"
                                        f"Your mapping file contains {len(unique_froms)} unique ids, which you are truing to convert to {len(unique_tos)} unique original_ids.\n"
                                        f"These numbers *must* match. You likely have: duplicate original_id's, or empty strings in original_id.")
 
-    with h5py.File(h5_file_path, "w") as h5_file:
+    with h5py.File(h5_file_path, "r+") as h5_file:
         keys_set = set(h5_file.keys())
         unchanged_set = keys_set - unique_froms
 
@@ -125,5 +125,13 @@ def reindex_h5_file(h5_file_path: str, mapping_file_path: str):
             logger.warning(f"There are some keys in your h5 file which won't be re-indexed!\n"
                            f"These are: {unchanged_set}.")
 
-        for (from_index, to_index) in conversion_table:
-            h5_file.move(from_index, to_index)
+        changeable_set = unique_froms.union(keys_set)
+
+        if len(changeable_set) == 0:
+            logger.info("Nothing was re-indexed.")
+
+        else:
+            logger.info(f"Reindexing the following keys: {changeable_set}")
+
+            for (from_index, to_index) in filter(lambda item: item[0] in keys_set, conversion_table):
+                h5_file.move(from_index, to_index)
