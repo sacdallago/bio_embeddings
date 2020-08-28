@@ -14,7 +14,7 @@ from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
     write_fasta_file
-from bio_embeddings.utilities.exceptions import InvalidParameterError
+from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError
 
 logger = logging.getLogger(__name__)
 
@@ -102,6 +102,22 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     # Only read in embeddings for annotated sequences! This will save RAM/GPU_RAM.
     with h5py.File(result_kwargs['reference_embeddings_file'], 'r') as reference_embeddings_file:
+        # Sanity check: check that all identifiers in reference_annotation_file are present as embeddings
+
+        unembedded_identifiers = set(reference_identifiers) - set(reference_embeddings_file.keys())
+
+        if len(unembedded_identifiers) > 0:
+            raise UnrecognizedEmbeddingError("Your reference_annotations_file includes identifiers for which "
+                                             "no embedding can be found in your reference_embeddings_file.\n"
+                                             "We require the set of identifiers in the reference_annotations_file "
+                                             "to be a equal or a subset of the embeddings present in the "
+                                             "reference_embeddings_file.\n"
+                                             "To fix this issue, you can use the "
+                                             "bio_embeddings.utilities.remove_identifiers_from_annotations_file "
+                                             "function (see notebooks). "
+                                             "The faulty identifiers are:\n['" +
+                                             "','".join(unembedded_identifiers) + "']")
+
         with h5py.File(result_kwargs['input_reference_embeddings_file'], 'w') as input_reference_embeddings_file:
             for identifier in reference_identifiers:
                 current_embedding = np.array(reference_embeddings_file[identifier])
