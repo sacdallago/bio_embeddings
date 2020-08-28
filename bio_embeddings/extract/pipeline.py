@@ -184,9 +184,9 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                     ),
                     key=lambda x: x[0]
                 )):
-            current_annotation[f'k_nn_{i}_identifier'] = identifier
-            current_annotation[f'k_nn_{i}_distance'] = distance
-            current_annotation[f'k_nn_{i}_annotations'] = ";".join(annotations)
+            current_annotation[f'k_nn_{i+1}_identifier'] = identifier
+            current_annotation[f'k_nn_{i+1}_distance'] = distance
+            current_annotation[f'k_nn_{i+1}_annotations'] = ";".join(annotations)
 
         transferred_annotations.append(current_annotation)
 
