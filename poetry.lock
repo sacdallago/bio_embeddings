@@ -2423,12 +2423,12 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [extras]
 all = ["allennlp", "transformers", "jax-unirep"]
-seqvec = ["allennlp"]
+seqvec = ["allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
 unirep = ["jax-unirep"]
 
 [metadata]
-content-hash = "fc5248809c54d94a378de1b3073513246e7ceb5a4425460a3784149b80782495"
+content-hash = "5a04ab1b8bdab119a2bff420eaec828ef28c98f34d017797ea4ae0664310033d"
 lock-version = "1.0"
 python-versions = "~ 3.6.6 || ^3.7 || 3.8"
 
