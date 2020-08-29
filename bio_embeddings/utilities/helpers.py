@@ -107,6 +107,7 @@ def reindex_h5_file(h5_file_path: str, mapping_file_path: str):
     """
 
     mapping_file = read_csv(mapping_file_path, index_col=0)
+    mapping_file.index = mapping_file.index.map(str)
     mapping_file['original_id'] = mapping_file['original_id'].astype(str)
     conversion_table = list(zip(mapping_file.index.values, mapping_file['original_id'].values))
     unique_froms = set([e[0] for e in conversion_table])
