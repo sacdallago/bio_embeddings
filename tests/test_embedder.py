@@ -14,9 +14,16 @@ from bio_embeddings.embed import (
     BertEmbedder,
     XLNetEmbedder,
     EmbedderInterface,
+    UniRepEmbedder,
 )
 
-all_embedders = [SeqVecEmbedder, AlbertEmbedder, BertEmbedder, XLNetEmbedder]
+all_embedders = [
+    SeqVecEmbedder,
+    AlbertEmbedder,
+    BertEmbedder,
+    XLNetEmbedder,
+    UniRepEmbedder,
+]
 
 
 def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):

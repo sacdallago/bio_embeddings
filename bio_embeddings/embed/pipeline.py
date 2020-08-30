@@ -14,6 +14,7 @@ from bio_embeddings.embed import (
     EmbedderInterface,
     SeqVecEmbedder,
     XLNetEmbedder,
+    UniRepEmbedder,
 )
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -157,7 +158,7 @@ def embed_and_write_batched(
         file_manager, result_kwargs
     ) as reduced_embeddings_file:
         embedding_generator = embedder.embed_many(
-            sequences, result_kwargs["max_amino_acids"]
+            sequences, result_kwargs.get("max_amino_acids")
         )
         for sequence_id, embedding in zip(
             mapping_file.index, tqdm(embedding_generator, total=len(mapping_file))
@@ -238,12 +239,24 @@ def xlnet(**kwargs):
     return transformer(XLNetEmbedder, "xlnet", 4000, **kwargs)
 
 
+def unirep(**kwargs) -> Dict[str, Any]:
+    if kwargs.get("use_cpu") is not None:
+        raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+    embedder = UniRepEmbedder(**result_kwargs)
+    # We don't actually batch with UniRep, but embed_and_write_batched
+    # works anyway since UniRepEmbedder still implements `embed_many`
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+
+
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
     "albert": albert,
     "bert": bert,
     "xlnet": xlnet,
+    "unirep": unirep,
 }
 
 
