@@ -99,7 +99,7 @@ After having installed the package, you can:
   - [ ] Fastext
   - [ ] Glove
   - [ ] Word2Vec
-  - [ ] UniRep (https://www.nature.com/articles/s41592-019-0598-1?sfns=mo)
+  - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
 - project:
   - [x] t-SNE
   - [x] UMAP
@@ -125,7 +125,7 @@ After having installed the package, you can:
 - [x] Fastext
 - [x] Glove
 - [x] Word2Vec
-- [ ] UniRep
+- [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
 - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
@@ -133,7 +133,7 @@ After having installed the package, you can:
 
 ## Building a Distribution
 Building the packages best happens using invoke.
-If you manganage your dependecies with poetry this should be already installed.
+If you manage your dependencies with poetry this should be already installed.
 Simply use `poetry run invoke clean build` to update your requirements according to your current status
 and to generate the dist files
 

@@ -49,11 +49,13 @@ lock = "^2018.3.25"
 # Help the version resolver with allennlp
 boto3 = "1.14.18"
 botocore = "1.17.18"
+jax-unirep = { version = "^1.0.1", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp"]
 transformers = ["transformers"]
-all = ["allennlp", "transformers"]
+unirep = ["jax-unirep"]
+all = ["allennlp", "transformers", "jax-unirep"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"

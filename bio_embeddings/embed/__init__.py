@@ -35,6 +35,14 @@ if not name_to_embedder:
         "Please run `pip install bio-embeddings[all]`!"
     )
 
+# Unirep
+try:
+    from bio_embeddings.embed.unirep_embedder import UniRepEmbedder
+
+    name_to_embedder["unirep"] = UniRepEmbedder
+except ImportError:
+    logger.debug("unirep extra not installed and will not be available")
+
 from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
 from bio_embeddings.embed.glove_embedder import GloveEmbedder
 from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder

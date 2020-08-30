@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, albert, bert, xlnet
+  # Options: seqvec, albert, bert, xlnet, unirep
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -55,12 +55,8 @@ stage_1:
 
   ### Optional for protocol: seqvec, albert, bert, xlnet
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
-  # use_cpu: [True, *False]
-
-  #### Optional parameters for the execution of the protocol
-
-  ### Optional for protocol: seqvec, albert, bert, xlnet
-  ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
+  ## unirep will use the cpu by default; Follow https://github.com/google/jax#pip-installation
+  ## to run it on the gpu
   # use_cpu: [True, *False]
 
 stage_2:
