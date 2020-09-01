@@ -78,7 +78,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
 
     # Save a copy of the annotation file with only necessary cols cols
-    input_reference_annotations_file_path = file_manager.create_file(kwargs.get('prefix'),
+    input_reference_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                      result_kwargs.get('stage_name'),
                                                                      'input_reference_annotations_file',
                                                                      extension='.csv')
@@ -93,7 +93,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     reference_embeddings = list()
 
     # Save a copy of the reference embeddings file with only necessary embeddings
-    input_reference_embeddings_file_path = file_manager.create_file(kwargs.get('prefix'),
+    input_reference_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                     result_kwargs.get('stage_name'),
                                                                     'input_reference_embeddings_file',
                                                                     extension='.h5')
@@ -154,7 +154,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     pairwise_distances = pairwise_distances.numpy()
 
-    pairwise_distances_matrix_file_path = file_manager.create_file(kwargs.get('prefix'),
+    pairwise_distances_matrix_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                    result_kwargs.get('stage_name'),
                                                                    'pairwise_distances_matrix_file',
                                                                    extension='.csv')
