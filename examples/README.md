@@ -11,6 +11,13 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
 
   You have a set of proteins (in FASTA format) and want to create amino acid-level embeddings, as well as protein-level embeddings.
   Additionally, you have an annotation file with some property for some of the proteins in your dataset. For these, you want to produce a t-sne plot.
+  
+  Noteworthy files produced:
+    - The `embed` stage produces an `embeddings_file` and a `reduced_embeddings_file`.
+    The former contains embeddings for each AA in each sequence, while the latter contains (fixed sized) embeddings for each sequence in your set.
+    You can use the notebooks to check out how to open these. 
+    - The `project` stage produces a CSV `projected_embeddings_file`, which contains `(x,y,z)` coordinates for each sequence in your set.
+    - The `visualize` stage produces an HTML `plot_file` containing the plot of the sequences derived from the projection's coordinates.
 
 - `use_case_two`
 
@@ -33,9 +40,28 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
   *Note*: While it is possible to use the pipeline to produce many visualizations for many different annotations, it may be more efficient to use a Notebook for this.
   We include a notebook (`project_visualize_pipeline_embeddings`) covering the same use case as the one presented here in the `notebooks` folder at the root of this project.
 
-- `use_case_four`
+- `supervised_annotation_extraction`
 
   You have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec and Bert (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
+  
+  Noteworthy files produced:
+    - The `extract` stages produce
+       - `DSSP3_predictions_file`, `DSSP8_predictions_file`, and `disorder_predictions_file`, which are FASTA files containing the respective, per-AA annotations;
+       - additionally a CSV `per_sequence_predictions_file` contains per-sequence annotations, aka: localization and if a sequence is predicted to be membrane-bound or not.
+    
+
+- `unsupervised_annotation_extraction`
+
+  Unsupervised annotation extraction (also annotation transfer) happens through k-nearest-neighbour search of the closest embeddings in a reference, annotated dataset.
+  Distances between input sequences and reference dataset are calculated via pairwise Euclidean distance between target (your input sequences) and reference embeddings (e.g. SwissProt).
+  The pipeline's implementation is derived from [goPredSim](https://github.com/Rostlab/goPredSim).
+  In this example, we use the `reduced_embeddings_file` calculated in `disprot`, and annotations from the CSV file there to transfer annotations onto an unknown dataset.
+  
+   Noteworthy files produced:
+     - The `extract` stage produces:
+         - a CSV `pairwise_distances_matrix_file`, which contains all pairwise distances between input sequences/embeddings and reference embeddings;
+         - a CSV `transferred_annotations_file`, which contains a column with the transferred annotations, and k columns with the k-th closest element its distance, identifier and annotations.
+  
 
 - `cath`
 
@@ -46,10 +72,6 @@ To run the example, cd in the directory (e.g. `cd use_case_one`) and execute `bi
 
   Similar to the `cath` example, but using the DisProt (https://www.disprot.org) database instead. Annotations contain "highly disorder" for proteins with >80% disorder, and "low disorder" for proteins with <20% disordered AA content.
   Note that in this example we exclude proteins with unknown annotation (see visualize stage in config).
-  
-- `unsupervised_annotation_extraction`
-
-  This example uses the reduced_embeddings calculated in `disprot`, and annotations from the CSV file there to transfer annotations onto an unknown dataset.
 
 - `docker`
 
