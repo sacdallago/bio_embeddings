@@ -50,7 +50,7 @@ def embedder_test_impl(
     assert numpy.allclose(expected["test_case 2"], seqwence, rtol=1.0e-3, atol=1.0e-5)
 
 
-@pytest.mark.skipif(os.environ["SKIP_SLOW_TESTS"], reason="This test is very slow")
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
 @pytest.mark.skipif(
     not torch.cuda.is_available(), reason="Can't test the GPU if there isn't any"
 )
@@ -59,7 +59,7 @@ def test_embedder_gpu(embedder_class: Type[EmbedderInterface]):
     embedder_test_impl(embedder_class, "cuda")
 
 
-@pytest.mark.skipif(os.environ["SKIP_SLOW_TESTS"], reason="This test is very slow")
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
 @pytest.mark.parametrize("embedder_class", all_embedders)
 def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
     embedder_test_impl(embedder_class, "cpu")
