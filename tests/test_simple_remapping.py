@@ -1,5 +1,4 @@
 from tempfile import TemporaryDirectory
-from typing import Type
 
 import numpy
 from numpy import ndarray

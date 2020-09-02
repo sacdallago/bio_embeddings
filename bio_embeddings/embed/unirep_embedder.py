@@ -1,5 +1,6 @@
-from typing import Type, Any, Dict
+from typing import Any, Dict, Union
 
+import torch
 from jax import vmap, partial
 from jax_unirep.featurize import apply_fun
 from jax_unirep.utils import get_embeddings, load_params_1900
@@ -24,10 +25,10 @@ class UniRepEmbedder(EmbedderInterface):
 
     params: Dict[str, Any]
 
-    def __init__(self, use_cpu: bool = False, **kwargs):
-        if use_cpu:
+    def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
+        if device:
             raise NotImplementedError("UniRep does not allow configuring the device")
-        super().__init__(use_cpu, **kwargs)
+        super().__init__(device, **kwargs)
 
         self.params = load_params_1900()
 

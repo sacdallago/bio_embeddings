@@ -1,6 +1,7 @@
 import os
 from json import JSONDecodeError
 from pathlib import Path
+from typing import Optional
 from typing import Type
 from unittest import mock
 
@@ -20,13 +21,15 @@ from bio_embeddings.embed import (
 all_embedders = [
     SeqVecEmbedder,
     AlbertEmbedder,
-    # Workaround spurious ci failure because the skip with the env var doesn't work
-    # BertEmbedder,
+    BertEmbedder,
     XLNetEmbedder,
+    UniRepEmbedder,
 ]
 
 
-def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
+def embedder_test_impl(
+    embedder_class: Type[EmbedderInterface], device: Optional[str] = None
+):
     """ Compute embeddings and check them against a stored reference file """
     expected_file = Path("test-data/reference-embeddings").joinpath(
         embedder_class.name + ".npz"
@@ -37,37 +40,29 @@ def embedder_test_impl(embedder_class: Type[EmbedderInterface], use_cpu: bool):
         model_directory = Path(os.environ["MODEL_DIRECTORY"]).joinpath(
             embedder_class.name
         )
-        embedder = embedder_class(model_directory=model_directory, use_cpu=use_cpu)
+        embedder = embedder_class(model_directory=model_directory, device=device)
     else:
-        embedder = embedder_class(use_cpu=use_cpu)
+
+        embedder = embedder_class(device=device)
     [protein, seqwence] = embedder.embed_many(["PROTEIN", "SEQWENCE"], 100)
     expected = numpy.load(str(expected_file))
     assert numpy.allclose(expected["test_case 1"], protein, rtol=1.0e-3, atol=1.0e-5)
     assert numpy.allclose(expected["test_case 2"], seqwence, rtol=1.0e-3, atol=1.0e-5)
 
 
+@pytest.mark.skipif(os.environ["SKIP_SLOW_TESTS"], reason="This test is very slow")
 @pytest.mark.skipif(
     not torch.cuda.is_available(), reason="Can't test the GPU if there isn't any"
 )
 @pytest.mark.parametrize("embedder_class", all_embedders)
 def test_embedder_gpu(embedder_class: Type[EmbedderInterface]):
-    embedder_test_impl(embedder_class, False)
+    embedder_test_impl(embedder_class, "cuda")
 
 
+@pytest.mark.skipif(os.environ["SKIP_SLOW_TESTS"], reason="This test is very slow")
 @pytest.mark.parametrize("embedder_class", all_embedders)
 def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
-    if embedder_class == UniRepEmbedder:
-        # UniRepEmbedder does not allow configuring the device
-        use_cpu = False
-    else:
-        use_cpu = True
-    embedder_test_impl(embedder_class, use_cpu)
-
-
-@pytest.mark.parametrize("embedder_class", [UniRepEmbedder])
-def test_embedder_any(embedder_class: Type[EmbedderInterface]):
-    # This will change to None later on
-    embedder_test_impl(embedder_class, False)
+    embedder_test_impl(embedder_class, "cpu")
 
 
 @pytest.mark.parametrize(
