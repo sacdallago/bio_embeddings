@@ -8,6 +8,7 @@ from copy import deepcopy
 from typing import Dict, Any, List
 from Bio.Seq import Seq
 from pandas import read_csv, DataFrame
+from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
@@ -136,21 +137,15 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         for identifier in target_identifiers:
             target_embeddings.append(np.array(reduced_embeddings_file[identifier]))
 
-    # TODO: !!!! IMPORTANT !!!!
-    #       KS: for consistency, please make the same changes here, as you are doing on
-    #       https://gitlab.lrz.de/sacdallago/bio_embeddings/-/merge_requests/39
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    result_kwargs['n_jobs'] = result_kwargs.get('n_jobs', -1)
+    result_kwargs['metric'] = result_kwargs.get('metric', 'euclidean')
 
-    # Calculate the pairwise distances and store them as matrix (in CSV format)
-    reference_embeddings = torch.tensor(reference_embeddings, device=device).squeeze()
-    target_embeddings = torch.tensor(target_embeddings, device=device).squeeze()
-
-    result_kwargs['pairwise_distance_norm'] = result_kwargs.get('pairwise_distance_norm', 2.0)
-
-    pairwise_distances = _pairwise_distance_matrix(
+    pairwise_distances = _pairwise_distances(
         target_embeddings,
         reference_embeddings,
-        norm=result_kwargs['pairwise_distance_norm'])
+        metric=result_kwargs['metric'],
+        n_jobs=result_kwargs['n_jobs']
+    )
 
     pairwise_distances = pairwise_distances.numpy()
 
