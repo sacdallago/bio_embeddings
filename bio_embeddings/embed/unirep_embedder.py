@@ -1,9 +1,6 @@
 from typing import Any, Dict, Union
 
 import torch
-from jax import vmap, partial
-from jax_unirep.featurize import apply_fun
-from jax_unirep.utils import get_embeddings, load_params_1900
 from numpy import ndarray
 
 from bio_embeddings.embed import EmbedderInterface
@@ -26,6 +23,8 @@ class UniRepEmbedder(EmbedderInterface):
     params: Dict[str, Any]
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
+        from jax_unirep.utils import load_params_1900
+
         if device:
             raise NotImplementedError("UniRep does not allow configuring the device")
         super().__init__(device, **kwargs)
@@ -33,6 +32,10 @@ class UniRepEmbedder(EmbedderInterface):
         self.params = load_params_1900()
 
     def embed(self, sequence: str) -> ndarray:
+        from jax import vmap, partial
+        from jax_unirep.featurize import apply_fun
+        from jax_unirep.utils import get_embeddings
+
         # Unirep only allows batching with sequences of the same length, so we don't do batching at all
         embedded_seqs = get_embeddings([sequence])
         # h and c refer to hidden and cell state
