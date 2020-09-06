@@ -1,28 +1,173 @@
 import logging
 import h5py
 import numpy as np
-from copy import deepcopy
 
+from copy import deepcopy
+from typing import Dict, Any, List
 from Bio.Seq import Seq
-from pandas import read_csv
-from typing import Dict, Any
+from pandas import read_csv, DataFrame
+from sklearn.metrics import pairwise_distances as _pairwise_distances
+
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
     write_fasta_file
-from bio_embeddings.utilities.exceptions import InvalidParameterError
+from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError
 
 logger = logging.getLogger(__name__)
 
 
-def unsupervised(**kwargs) -> Dict[str, Any]:
-    raise NotImplementedError()
+def _flatten_2d_list(l: List[List[str]]) -> List[str]:
+    return [item for sublist in l for item in sublist]
 
-    # TODO: pick up from here
-    check_required(kwargs, ['reference_embeddings', 'reference_annotations'])
+
+def unsupervised(**kwargs) -> Dict[str, Any]:
+    check_required(kwargs, ['reference_embeddings_file', 'reference_annotations_file', 'reduced_embeddings_file'])
 
     result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Try to create final files (if this fails, now is better than later
+    transferred_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                 result_kwargs.get('stage_name'),
+                                                                 'transferred_annotations_file',
+                                                                 extension='.csv')
+
+    # Read the reference annotations and reference embeddings
+
+    # The reference annotations file must be CSV containing two columns & headers like:
+    # identifier,label
+    # ** identifier doesn't need to be unique **
+    reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
+
+    # Save a copy of the annotation file with only necessary cols cols
+    input_reference_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                     result_kwargs.get('stage_name'),
+                                                                     'input_reference_annotations_file',
+                                                                     extension='.csv')
+
+    reference_annotations_file.to_csv(input_reference_annotations_file_path, index=False)
+
+    result_kwargs['input_reference_annotations_file'] = input_reference_annotations_file_path
+
+    # Starting from here order is super important!
+    reference_identifiers = reference_annotations_file['identifier'].unique()
+    reference_identifiers.sort()
+    reference_embeddings = list()
+
+    # Save a copy of the reference embeddings file with only necessary embeddings
+    input_reference_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                    result_kwargs.get('stage_name'),
+                                                                    'input_reference_embeddings_file',
+                                                                    extension='.h5')
+
+    result_kwargs['input_reference_embeddings_file'] = input_reference_embeddings_file_path
+
+    # Only read in embeddings for annotated sequences! This will save RAM/GPU_RAM.
+    with h5py.File(result_kwargs['reference_embeddings_file'], 'r') as reference_embeddings_file:
+        # Sanity check: check that all identifiers in reference_annotation_file are present as embeddings
+
+        unembedded_identifiers = set(reference_identifiers) - set(reference_embeddings_file.keys())
+
+        if len(unembedded_identifiers) > 0:
+            raise UnrecognizedEmbeddingError("Your reference_annotations_file includes identifiers for which "
+                                             "no embedding can be found in your reference_embeddings_file.\n"
+                                             "We require the set of identifiers in the reference_annotations_file "
+                                             "to be a equal or a subset of the embeddings present in the "
+                                             "reference_embeddings_file.\n"
+                                             "To fix this issue, you can use the "
+                                             "bio_embeddings.utilities.remove_identifiers_from_annotations_file "
+                                             "function (see notebooks). "
+                                             "The faulty identifiers are:\n['" +
+                                             "','".join(unembedded_identifiers) + "']")
+
+        with h5py.File(result_kwargs['input_reference_embeddings_file'], 'w') as input_reference_embeddings_file:
+            for identifier in reference_identifiers:
+                current_embedding = np.array(reference_embeddings_file[identifier])
+                reference_embeddings.append(current_embedding)
+                input_reference_embeddings_file.create_dataset(identifier, data=current_embedding)
+
+    # mapping file will be needed to transfer annotations
+    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+
+    # Important to have consistent ordering!
+    target_identifiers = mapping_file.index.map(str).values
+    target_identifiers.sort()
+    target_embeddings = list()
+
+    with h5py.File(result_kwargs['reduced_embeddings_file'], 'r') as reduced_embeddings_file:
+        for identifier in target_identifiers:
+            target_embeddings.append(np.array(reduced_embeddings_file[identifier]))
+
+    result_kwargs['n_jobs'] = result_kwargs.get('n_jobs', -1)
+    result_kwargs['metric'] = result_kwargs.get('metric', 'euclidean')
+
+    pairwise_distances = _pairwise_distances(
+        target_embeddings,
+        reference_embeddings,
+        metric=result_kwargs['metric'],
+        n_jobs=result_kwargs['n_jobs']
+    )
+
+    pairwise_distances_matrix_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'pairwise_distances_matrix_file',
+                                                                   extension='.csv')
+    pairwise_distances_matrix_file = DataFrame(pairwise_distances,
+                                               index=target_identifiers,
+                                               columns=reference_identifiers)
+    pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
+    result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
+
+    # transfer & store annotations
+    result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
+
+    transferred_annotations = list()
+
+    for index in range(len(target_identifiers)):
+        current_annotation = {
+            'identifier': target_identifiers[index]
+        }
+
+        target_to_reference_distances = pairwise_distances[index, :]
+        nearest_neighbour_indices = np.argpartition(
+            target_to_reference_distances,
+            result_kwargs['k_nearest_neighbours'])[:result_kwargs['k_nearest_neighbours']]
+
+        nearest_neighbour_identifiers = list()
+        nearest_neighbour_distances = list()
+        nearest_neighbour_annotations = list()
+
+        for i in nearest_neighbour_indices:
+            nearest_neighbour_identifiers.append(reference_identifiers[i])
+            nearest_neighbour_distances.append(target_to_reference_distances[i])
+            reference_annotations_rows = reference_annotations_file[
+                reference_annotations_file['identifier'] == reference_identifiers[i]
+                ]
+            nearest_neighbour_annotations.append(reference_annotations_rows['label'].values)
+
+        current_annotation['transferred_annotations'] = ";".join(list(set(_flatten_2d_list(nearest_neighbour_annotations))))
+
+        for i, (distance, identifier, annotations) in enumerate(
+                sorted(
+                    list(
+                        zip(nearest_neighbour_distances, nearest_neighbour_identifiers, nearest_neighbour_annotations)
+                    ),
+                    key=lambda x: x[0]
+                )):
+            current_annotation[f'k_nn_{i+1}_identifier'] = identifier
+            current_annotation[f'k_nn_{i+1}_distance'] = distance
+            current_annotation[f'k_nn_{i+1}_annotations'] = ";".join(annotations)
+
+        transferred_annotations.append(current_annotation)
+
+    transferred_annotations_dataframe = DataFrame(transferred_annotations)
+    transferred_annotations_dataframe = transferred_annotations_dataframe.set_index('identifier')
+    transferred_annotations_dataframe = mapping_file.join(transferred_annotations_dataframe)
+    transferred_annotations_dataframe.to_csv(transferred_annotations_file_path, index=True)
+
+    result_kwargs['transferred_annotations_file'] = transferred_annotations_file_path
 
     return result_kwargs
 

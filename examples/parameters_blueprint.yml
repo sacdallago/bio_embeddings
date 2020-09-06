@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, albert, bert, xlnet
+  # Options: seqvec, albert, bert, xlnet, unirep
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -55,12 +55,8 @@ stage_1:
 
   ### Optional for protocol: seqvec, albert, bert, xlnet
   ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
-  # use_cpu: [True, *False]
-
-  #### Optional parameters for the execution of the protocol
-
-  ### Optional for protocol: seqvec, albert, bert, xlnet
-  ## Set the following parameter to True to use CPU instead of GPU to calculate embeddings
+  ## unirep will use the cpu by default; Follow https://github.com/google/jax#pip-installation
+  ## to run it on the gpu
   # use_cpu: [True, *False]
 
 stage_2:
@@ -117,21 +113,35 @@ stage_3:
 
 stage_4:
   type: extract
-  # Required: which method to use.
-  # Current options:
-  #   - seqvec_from_publication (Uses models evaluated in https://doi.org/10.1186/s12859-019-3220-8 )
-  #   - bert_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )
-  #   - unsupervised
+  ## Required: which method to use.
+  ## Current options:
+  ##   - seqvec_from_publication (Uses models evaluated in https://doi.org/10.1186/s12859-019-3220-8 )
+  ##   - bert_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )
+  ##   - unsupervised (Uses concepts presented in https://github.com/Rostlab/goPredSim )
   protocol: seqvec_from_publication
 
-  # Either depend on an embed stage, or supply reduced or raw embeddings
+  ## Either depend on an embed stage, or supply:
+  ## Unsupervised:
+  # reduced_embeddings_file:
+  ## bert_from_publication and seqvec_from_publication
+  # embeddings_file:
   depends_on: stage_2
 
-  # Optional for protocol: seqvec_from_publication, bert_from_publication
-  # will be downloaded if not supplied
+  ## Optional for protocol: seqvec_from_publication, bert_from_publication
+  ## will be downloaded if not supplied
   # secondary_structure_checkpoint_file: path/to/checkpoint.pt
   # subcellular_location_checkpoint_file: path/to/checkpoint.pt
 
-  # Required for protocol: unsupervised
-  # reference_embeddings: path/to/embeddings.hd5
-  # reference_annotations: path/to/annotation_file.csv
+  ## Required for protocol: unsupervised
+  # reference_embeddings_file: path/to/embeddings.hd5
+  # reference_annotations_file: path/to/annotation_file.csv
+
+  ## Optional for protocol: unsupervised
+  ## The following two options refer to the pairwise_distance function of scikit-learn 0.23.2
+  ## https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise_distances.html#sklearn.metrics.pairwise_distances
+  # n_jobs: [-1*]
+  # metric: [euclidean*]
+  ## The following will define how many neighbours to consider to transfer annotations.
+  ## k = 1 means transfer the annotations from the nearest neighbor
+  ## k > 1 will result in merging the annotations of all k > 1 neighbors onto the target embedding
+  # k_nearest_neighbours: [1*]

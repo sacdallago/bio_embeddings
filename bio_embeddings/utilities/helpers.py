@@ -136,3 +136,17 @@ def reindex_h5_file(h5_file_path: str, mapping_file_path: str):
 
             for (from_index, to_index) in filter(lambda item: item[0] in keys_set, conversion_table):
                 h5_file.move(from_index, to_index)
+
+
+def remove_identifiers_from_annotations_file(faulty_identifiers: list, annotation_file_path: str) -> DataFrame:
+    """
+    Removes id
+    :param faulty_identifiers: a list of identifiers
+    :param annotation_file_path: a str detailing the path
+    :return: a new DataFrame with the annotations removed
+    """
+
+    annotation_file = read_csv(annotation_file_path)
+    return annotation_file[annotation_file['identifier'].isin(
+        set(annotation_file['identifier'].values) - set(faulty_identifiers)
+    )]

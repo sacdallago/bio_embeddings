@@ -11,6 +11,8 @@ def main():
     Pipeline commandline entry point
     """
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    # Jax likes to print warnings
+    logging.captureWarnings(True)
 
     parser = argparse.ArgumentParser(description='Embeds protein sequences.')
     parser.add_argument('-o', '--overwrite', dest='overwrite', required=False, action='store_true',

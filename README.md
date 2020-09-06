@@ -23,11 +23,11 @@ While we are working on a proper publication, if you are already using this tool
 
 ## Install guides
 
-You cam install bio_embeddings with pip or use it through docker
+You can install `bio_embeddings` via pip or use it via docker
 
 ## Pip
 
-You can install the pipeline via pip like so:
+Install the pipeline like so:
 
 ```bash
 pip install bio-embeddings[all]
@@ -41,7 +41,7 @@ pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embe
 
 ### Docker
 
-We will provide a docker image at `rostlab/bio_embeddings`. Simple usage example:
+We provide a docker image at `rostlab/bio_embeddings`. Simple usage example:
 
 ```shell_script
 docker run --rm --gpus all \
@@ -50,7 +50,7 @@ docker run --rm --gpus all \
     rostlab/bio_embeddings /mnt/config.yml
 ```
 
-See the docker example in the examples folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
+See the `docker` example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
 
 ## What model is right for you?
 
@@ -58,9 +58,9 @@ Each models has its strengths and weaknesses (speed, specificity, memory footpri
 
 The models `albert`, `bert`, `seqvec` and `xlnet` were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be `bert`, followed by `seqvec`, which has been established for longer and uses a different principle (LSTM vs Transformer).
 
-## Examples
+## Usage and examples
 
-We highly recommend you to check out the `examples` folder for pipeline examples, and the `notebooks` folder for post-processing pipeline runs and general purpose use of the embedders.
+We highly recommend you to check out the [`examples`](examples) folder for pipeline examples, and the [`notebooks`](notebooks) folder for post-processing pipeline runs and general purpose use of the embedders.
 
 After having installed the package, you can:
 
@@ -70,7 +70,7 @@ After having installed the package, you can:
     bio_embeddings config.yml
     ```
 
-    A blueprint of the configuration file, and an example setup can be found in the `examples` directory of this repository.
+    [A blueprint of the configuration file](examples/parameters_blueprint.yml), and an example setup can be found in the [`examples`](examples) directory of this repository.
 
 1. Use the general purpose embedder objects via python, e.g.:
 
@@ -82,7 +82,7 @@ After having installed the package, you can:
     embedding = embedder.embed("SEQVENCE")
     ```
 
-    More examples can be found in the `notebooks` folder of this repository.
+    More examples can be found in the [`notebooks`](notebooks) folder of this repository.
 
 ## Development status
 
@@ -99,7 +99,7 @@ After having installed the package, you can:
   - [ ] Fastext
   - [ ] Glove
   - [ ] Word2Vec
-  - [ ] UniRep (https://www.nature.com/articles/s41592-019-0598-1?sfns=mo)
+  - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
 - project:
   - [x] t-SNE
   - [x] UMAP
@@ -107,14 +107,20 @@ After having installed the package, you can:
   - supervised:
     - [x] SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8
     - [x] Bert: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://doi.org/10.1101/2020.07.12.199554
+  - unsupervised:
+    - [x] via sequence-level (reduced_embeddings), pairwise distance (euclidean like [goPredSim](https://github.com/Rostlab/goPredSim), more options available, e.g. cosine)
 </details>
 
 <details>
 <summary>Web server (unpublished)</summary>
 <br>
 
-- [x] SeqVec
-- [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
+- [x] SeqVec supervised predictions
+- [x] Bert supervised predictions
+- [ ] SeqVec unsupervised predictions for GO: CC, BP,..
+- [ ] Bert unsupervised predictions for GO: CC, BP,..
+- [ ] SeqVec unsupervised predictions for SwissProt (just a link to the 1st-k-nn)
+- [ ] Bert unsupervised predictions for SwissProt (just a link to the 1st-k-nn)
 </details>
 
 <details>
@@ -125,7 +131,7 @@ After having installed the package, you can:
 - [x] Fastext
 - [x] Glove
 - [x] Word2Vec
-- [ ] UniRep
+- [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
 - [x] Albert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] Bert (https://doi.org/10.1101/2020.07.12.199554)
 - [x] XLNet (https://doi.org/10.1101/2020.07.12.199554)
@@ -133,7 +139,7 @@ After having installed the package, you can:
 
 ## Building a Distribution
 Building the packages best happens using invoke.
-If you manganage your dependecies with poetry this should be already installed.
+If you manage your dependencies with poetry this should be already installed.
 Simply use `poetry run invoke clean build` to update your requirements according to your current status
 and to generate the dist files
 
