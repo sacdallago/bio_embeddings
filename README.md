@@ -108,7 +108,7 @@ After having installed the package, you can:
     - [x] SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8
     - [x] Bert: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://doi.org/10.1101/2020.07.12.199554
   - unsupervised:
-    - [x] via sequence-level, pairwise Euclidean distance, like [goPredSim](https://github.com/Rostlab/goPredSim)
+    - [x] via sequence-level (reduced_embeddings), pairwise distance (euclidean like [goPredSim](https://github.com/Rostlab/goPredSim), more options available, e.g. cosine)
 </details>
 
 <details>

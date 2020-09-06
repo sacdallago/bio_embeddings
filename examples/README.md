@@ -56,13 +56,13 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 
   Use case: you have a set of proteins with known properties (we call this "`reference`"), and you have a set of proteins for which you would like to infer these properties.
   Unsupervised annotation extraction (also annotation transfer) happens through k-nearest-neighbour search of the closest embeddings in a reference, annotated dataset.
-  Distances between input sequences and reference dataset are calculated via pairwise Euclidean distance between target (your input sequences) and reference embeddings (e.g. SwissProt).
-  The pipeline's implementation is derived from [goPredSim](https://github.com/Rostlab/goPredSim).
+  Distances between input sequences and reference dataset are calculated via pairwise distances between target (your input sequences) and reference embeddings (e.g. SwissProt).
+  The pipeline's implementation is inspired by [goPredSim](https://github.com/Rostlab/goPredSim) and offers standard distance metrics, e.g. euclidean, manhattan, and also pseudo distances e.g. cosine
   In this example, we use the `reduced_embeddings_file` calculated in `disprot`, and annotations from the CSV file there to transfer annotations onto an unknown dataset.
   
    Noteworthy files produced:
-     - The `extract` stage produces:
-         - a CSV `pairwise_distances_matrix_file`, which contains all pairwise distances between input sequences/embeddings and reference embeddings;
+     - The `extract` stages produces:
+         - a CSV `pairwise_distances_matrix_file`, which contains all pairwise distances (euclidean and cosine in this example) between input sequences/embeddings and reference embeddings;
          - a CSV `transferred_annotations_file`, which contains a column with the transferred annotations, and k columns with the k-th closest element its distance, identifier and annotations.
   
 
