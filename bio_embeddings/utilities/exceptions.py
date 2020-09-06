@@ -28,8 +28,6 @@ class SequenceTooLongException(Exception):
     """
 
 
-
-
 class MD5ClashException(Exception):
     """
     When remapping sequences from a fasta file, if there is an MD5 clash, this will stop the execution
@@ -39,4 +37,10 @@ class MD5ClashException(Exception):
 class TooFewComponentsException(InvalidParameterError):
     """
     Thrown when n_components is nonsensical (e.g. < 2)
+    """
+
+
+class UnrecognizedEmbeddingError(Exception):
+    """
+    Thrown when trying to access embeddings for sequences which have no embedding.
     """
