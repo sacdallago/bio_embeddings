@@ -18,7 +18,6 @@ class BertEmbedder(BertBaseEmbedder):
         Initialize Bert embedder.
 
         :param model_directory:
-        :param use_cpu: overwrite autodiscovery and force CPU use
         """
         super().__init__(**kwargs)
 

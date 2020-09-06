@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Generator
 
-import torch
 from allennlp.commands.elmo import ElmoEmbedder
 from numpy import ndarray
 
@@ -30,7 +29,6 @@ class SeqVecEmbedder(EmbedderWithFallback):
         :param weights_file: path of weights file
         :param options_file: path of options file
         :param model_directory: Alternative of weights_file/options_file
-        :param use_cpu: overwrite autodiscovery and force CPU use
         :param max_amino_acids: max # of amino acids to include in embed_many batches. Default: 15k AA
         """
         super().__init__(**kwargs)
@@ -47,11 +45,9 @@ class SeqVecEmbedder(EmbedderWithFallback):
             self._weights_file = self._options["weights_file"]
             self._options_file = self._options["options_file"]
 
-        # TODO: Only SeqVec is checking for cuda availability, this should be done by all or none instead
-        # Additionally, this should use self.device.index
-        if torch.cuda.is_available() and not self._use_cpu:
+        if self._device.type == "cuda":
             logger.info("CUDA available, using the GPU")
-            cuda_device = 0
+            cuda_device = self._device.index
         else:
             logger.info("CUDA NOT available, using the CPU. This is slow")
             cuda_device = -1
