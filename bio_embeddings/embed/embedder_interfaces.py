@@ -8,12 +8,16 @@ Authors:
 import abc
 import logging
 import tempfile
-from typing import List, Generator, Optional, Iterable, ClassVar, Any, Dict
+from typing import List, Generator, Optional, Iterable, ClassVar, Any, Dict, Union
 
 import torch
 from numpy import ndarray
 
-from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
+from bio_embeddings.utilities import (
+    get_model_file,
+    get_model_directories_from_zip,
+    get_device,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,20 +34,15 @@ class EmbedderInterface(abc.ABC):
     # When downloading model files, we store them in temporary files and directories
     # which can and must be cleared after the instance using was deallocated
     _keep_tempfiles_alive = []
-
-    _use_cpu: bool
     _device: torch.device
     _options: Dict[str, Any]
 
-    def __init__(self, use_cpu: bool = False, **kwargs):
+    def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initializer accepts location of a pre-trained model and options
         """
         self._options = kwargs
-        self._use_cpu = use_cpu
-        self._device = torch.device(
-            "cuda:0" if torch.cuda.is_available() and not self._use_cpu else "cpu"
-        )
+        self._device = get_device(device)
 
         # Special case because SeqVec can currently be used with either a model directory or two files
         if self.__class__.__name__ == "SeqVecEmbedder":
@@ -93,10 +92,10 @@ class EmbedderInterface(abc.ABC):
         raise NotImplementedError
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
-        """ Computes the embeddings from all sequences in the batch
+        """Computes the embeddings from all sequences in the batch
 
         The provided implementation is dummy implementation that should be
-        overwritten with the appropriate batching method for the model. """
+        overwritten with the appropriate batching method for the model."""
         for sequence in batch:
             yield self.embed(sequence)
 
@@ -163,7 +162,7 @@ class EmbedderWithFallback(EmbedderInterface, abc.ABC):
         ...
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
-        """ Tries to get the embeddings in this order:
+        """Tries to get the embeddings in this order:
           * Full batch GPU
           * Single Sequence GPU
           * Single Sequence CPU
@@ -176,7 +175,7 @@ class EmbedderWithFallback(EmbedderInterface, abc.ABC):
         Returns unprocessed embeddings
         """
         # No point in having a fallback model when the normal model is CPU already
-        if self._use_cpu:
+        if self._device.type == "cpu":
             yield from self._embed_batch_impl(batch, self._model)
             return
 

@@ -1,12 +1,26 @@
 from enum import Enum
 from hashlib import md5
-from typing import List
+from typing import List, Union
 
+import torch
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from pandas import DataFrame, read_csv
 
 from bio_embeddings.utilities.exceptions import MissingParameterError
+
+
+def get_device(device: Union[None, str, torch.device] = None) -> torch.device:
+    """Returns what the user specified, or defaults to the GPU,
+    with a fallback to CPU if no GPU is available."""
+    if isinstance(device, torch.device):
+        return device
+    elif device:
+        return torch.device(device)
+    elif torch.cuda.is_available():
+        return torch.device("cuda")
+    else:
+        return torch.device("cpu")
 
 
 def check_required(params: dict, keys: List[str]):
@@ -47,10 +61,12 @@ def read_fasta(path: str) -> List[SeqRecord]:
     :param path: path to a valid FASTA file
     :return: a list of SeqRecord objects.
     """
-    return list(SeqIO.parse(path, 'fasta'))
+    return list(SeqIO.parse(path, "fasta"))
 
 
-def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRecord, DataFrame):
+def reindex_sequences(
+    sequence_records: List[SeqRecord], simple=False
+) -> (SeqRecord, DataFrame):
     """
     Function will sort and re-index the sequence_records IN PLACE! (change the original list!).
     Returns a DataFrame with the mapping.
@@ -71,15 +87,17 @@ def reindex_sequences(sequence_records: List[SeqRecord], simple=False) -> (SeqRe
         sequence_records[:] = map(_assign_hash, sequence_records)
         new_ids = [s.id for s in sequence_records]
 
-    df = DataFrame(zip(original_ids, [len(seq) for seq in sequence_records]),
-                   columns=['original_id', 'sequence_length'],
-                   index=new_ids)
+    df = DataFrame(
+        zip(original_ids, [len(seq) for seq in sequence_records]),
+        columns=["original_id", "sequence_length"],
+        index=new_ids,
+    )
 
     return df
 
 
 def write_fasta_file(sequence_records: List[SeqRecord], file_path: str) -> None:
-    SeqIO.write(sequence_records, file_path, 'fasta')
+    SeqIO.write(sequence_records, file_path, "fasta")
 
 
 def convert_list_of_enum_to_string(list_of_enums: List[Enum]) -> str:
