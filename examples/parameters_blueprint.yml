@@ -124,7 +124,11 @@ stage_4:
   ##   - unsupervised (Uses concepts presented in https://github.com/Rostlab/goPredSim )
   protocol: seqvec_from_publication
 
-  ## Either depend on an embed stage, or supply reduced or raw embeddings
+  ## Either depend on an embed stage, or supply:
+  ## Unsupervised:
+  # reduced_embeddings_file:
+  ## bert_from_publication and seqvec_from_publication
+  # embeddings_file:
   depends_on: stage_2
 
   ## Optional for protocol: seqvec_from_publication, bert_from_publication
