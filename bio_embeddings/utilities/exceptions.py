@@ -39,6 +39,10 @@ class TooFewComponentsException(InvalidParameterError):
     Thrown when n_components is nonsensical (e.g. < 2)
     """
 
+class ConversionUniqueMismatch(Exception):
+    """
+    Thrown when trying to remap using a mapping file which doesn't have as many uniuqye original_ids as md5 hashes
+    """
 
 class UnrecognizedEmbeddingError(Exception):
     """
