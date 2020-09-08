@@ -110,15 +110,18 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         n_jobs=result_kwargs['n_jobs']
     )
 
-    pairwise_distances_matrix_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                   result_kwargs.get('stage_name'),
-                                                                   'pairwise_distances_matrix_file',
-                                                                   extension='.csv')
-    pairwise_distances_matrix_file = DataFrame(pairwise_distances,
-                                               index=target_identifiers,
-                                               columns=reference_identifiers)
-    pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
-    result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
+    result_kwargs['keep_pairwise_distances_matrix_file'] = result_kwargs.get('keep_pairwise_distances_matrix_file', False)
+
+    if result_kwargs['keep_pairwise_distances_matrix_file']:
+        pairwise_distances_matrix_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                       result_kwargs.get('stage_name'),
+                                                                       'pairwise_distances_matrix_file',
+                                                                       extension='.csv')
+        pairwise_distances_matrix_file = DataFrame(pairwise_distances,
+                                                   index=target_identifiers,
+                                                   columns=reference_identifiers)
+        pairwise_distances_matrix_file.to_csv(pairwise_distances_matrix_file_path, index=True)
+        result_kwargs['pairwise_distances_matrix_file'] = pairwise_distances_matrix_file_path
 
     # transfer & store annotations
     result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
