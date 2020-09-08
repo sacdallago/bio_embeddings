@@ -5,10 +5,11 @@ import numpy as np
 from copy import deepcopy
 from typing import Dict, Any, List
 from Bio.Seq import Seq
-from pandas import read_csv, DataFrame
+from pandas import read_csv, DataFrame, concat as concatenate_dataframe
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
+from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
@@ -126,47 +127,30 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # transfer & store annotations
     result_kwargs['k_nearest_neighbours'] = result_kwargs.get('k_nearest_neighbours', 1)
 
-    transferred_annotations = list()
+    k_nn_indices, k_nn_distances = get_k_nearest_neighbours(pairwise_distances, result_kwargs['k_nearest_neighbours'])
 
-    for index in range(len(target_identifiers)):
-        current_annotation = {
-            'identifier': target_identifiers[index]
-        }
+    k_nn_identifiers = list(map(reference_identifiers.__getitem__, k_nn_indices))
+    k_nn_annotations = list()
 
-        target_to_reference_distances = pairwise_distances[index, :]
-        nearest_neighbour_indices = np.argpartition(
-            target_to_reference_distances,
-            result_kwargs['k_nearest_neighbours'])[:result_kwargs['k_nearest_neighbours']]
+    for row in k_nn_identifiers:
+        k_nn_annotations.append([";".join(
+                reference_annotations_file[reference_annotations_file['identifier'] == identifier]['label'].values
+            ) for identifier in row])
 
-        nearest_neighbour_identifiers = list()
-        nearest_neighbour_distances = list()
-        nearest_neighbour_annotations = list()
+    # At this stage I have: nxk list of identifiers (strings), nxk indices (ints), nxk distances (floats),
+    # nxk annotations
+    # Now I need to expand the lists into a table and store the table into a CSV
 
-        for i in nearest_neighbour_indices:
-            nearest_neighbour_identifiers.append(reference_identifiers[i])
-            nearest_neighbour_distances.append(target_to_reference_distances[i])
-            reference_annotations_rows = reference_annotations_file[
-                reference_annotations_file['identifier'] == reference_identifiers[i]
-                ]
-            nearest_neighbour_annotations.append(reference_annotations_rows['label'].values)
+    k_nn_identifiers_df = DataFrame(k_nn_identifiers, columns=[f"k_nn_{i+1}_identifier" for i in range(len(k_nn_identifiers[0]))])
+    k_nn_distances_df = DataFrame(k_nn_distances, columns=[f"k_nn_{i+1}_distance" for i in range(len(k_nn_distances[0]))])
+    k_nn_annotations_df = DataFrame(k_nn_annotations, columns=[f"k_nn_{i+1}_annotations" for i in range(len(k_nn_annotations[0]))])
 
-        current_annotation['transferred_annotations'] = ";".join(list(set(_flatten_2d_list(nearest_neighbour_annotations))))
+    transferred_annotations_dataframe = concatenate_dataframe([k_nn_identifiers_df, k_nn_distances_df, k_nn_annotations_df], axis=1)
+    transferred_annotations_dataframe.index = target_identifiers
 
-        for i, (distance, identifier, annotations) in enumerate(
-                sorted(
-                    list(
-                        zip(nearest_neighbour_distances, nearest_neighbour_identifiers, nearest_neighbour_annotations)
-                    ),
-                    key=lambda x: x[0]
-                )):
-            current_annotation[f'k_nn_{i+1}_identifier'] = identifier
-            current_annotation[f'k_nn_{i+1}_distance'] = distance
-            current_annotation[f'k_nn_{i+1}_annotations'] = ";".join(annotations)
+    transferred_annotations_dataframe['transferred_annotations'] = [";".join(set(";".join(k_nn_row).split(";"))) for k_nn_row in k_nn_annotations]
 
-        transferred_annotations.append(current_annotation)
-
-    transferred_annotations_dataframe = DataFrame(transferred_annotations)
-    transferred_annotations_dataframe = transferred_annotations_dataframe.set_index('identifier')
+    # Merge with mapping file! Get also original ids!
     transferred_annotations_dataframe = mapping_file.join(transferred_annotations_dataframe)
     transferred_annotations_dataframe.to_csv(transferred_annotations_file_path, index=True)
 
@@ -259,7 +243,7 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
 
             # Per-sequence annotations, e.g. subcell loc & membrane boundness
             mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
-            mapping_file.at[protein_sequence.id, 'membrane_or_soluble']  = annotations.membrane.value
+            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
 
     # Write files
     mapping_file.to_csv(per_sequence_predictions_file_path)
