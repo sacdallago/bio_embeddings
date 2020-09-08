@@ -91,9 +91,10 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     # mapping file will be needed to transfer annotations
     mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+    mapping_file.index = mapping_file.index.map(str)
 
     # Important to have consistent ordering!
-    target_identifiers = mapping_file.index.map(str).values
+    target_identifiers = mapping_file.index.values
     target_identifiers.sort()
     target_embeddings = list()
 
