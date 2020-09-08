@@ -100,7 +100,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         for identifier in target_identifiers:
             target_embeddings.append(np.array(reduced_embeddings_file[identifier]))
 
-    result_kwargs['n_jobs'] = result_kwargs.get('n_jobs', -1)
+    result_kwargs['n_jobs'] = result_kwargs.get('n_jobs', 1)
     result_kwargs['metric'] = result_kwargs.get('metric', 'euclidean')
 
     pairwise_distances = _pairwise_distances(
