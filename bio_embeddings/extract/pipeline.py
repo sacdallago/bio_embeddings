@@ -14,7 +14,8 @@ from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
     write_fasta_file
-from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError
+from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
+    InvalidAnnotationFileError
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,13 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # identifier,label
     # ** identifier doesn't need to be unique **
     reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
+
+    # If reference annotations contain nans (either in label or identifier) throw an error!
+    # https://github.com/sacdallago/bio_embeddings/issues/58
+    # https://datatofish.com/check-nan-pandas-dataframe/
+    if reference_annotations_file[['identifier', 'label']].isnull().values.any():
+        raise InvalidAnnotationFileError("Your annotation file contains NaN values in either identifier or label columns.\n"
+                                         "Please remove these and run the pipeline again.")
 
     # Save a copy of the annotation file with only necessary cols cols
     input_reference_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
