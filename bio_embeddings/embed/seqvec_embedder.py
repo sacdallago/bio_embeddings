@@ -47,7 +47,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
 
         if self._device.type == "cuda":
             logger.info("CUDA available, using the GPU")
-            cuda_device = self._device.index
+            cuda_device = self._device.index or 0
         else:
             logger.info("CUDA NOT available, using the CPU. This is slow")
             cuda_device = -1
