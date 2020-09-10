@@ -157,6 +157,14 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     transferred_annotations_dataframe = concatenate_dataframe([k_nn_identifiers_df, k_nn_distances_df, k_nn_annotations_df], axis=1)
     transferred_annotations_dataframe.index = target_identifiers
 
+    # At this stage we would like to aggregate all k_nn_XX_annotations into one column
+    # -  A row in the k_nn_annotations matrix is string with X annotations (e.g. ["A;B", "A;C", "D"])
+    # -  Each annotation in the string is separated by a ";"
+    # Thus:
+    # 1. Join all strings in a row separating them with ";" (aka ["A;B", "C"] --> "A;B;A;C;D")
+    # 2. Split joined string into separate annotations using split(";") (aka "A;B;A;C;D" --> ["A","B","A","C","D"])
+    # 3. Take a unique set of annotations by using set(*) (aka ["A","B","A","C","D"] --> set{"A","B","C","D"})
+    # 4. Join the new unique set of annotations using ";" (aka set{"A","B","C","D"}) --> "A;B;C;D")
     transferred_annotations_dataframe['transferred_annotations'] = [";".join(set(";".join(k_nn_row).split(";"))) for k_nn_row in k_nn_annotations]
 
     # Merge with mapping file! Get also original ids!
