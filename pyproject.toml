@@ -29,7 +29,7 @@ homepage = "https://visualize.protein.properties"
 repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
-python = "~ 3.6.6 || ^3.7 || 3.8"
+python = "~ 3.6.6 || ^3.7 || ^3.8"
 allennlp = { version = "^0.9.0", optional = true }
 numpy = "^1.18.3"
 gensim = "^3.8.2"
@@ -37,7 +37,7 @@ biopython = "^1.76"
 "ruamel.yaml" = "^0.16.10"
 pandas = "^1.0.3"
 h5py = "^2.10.0"
-transformers = { version = "^2.8.0", optional = true }
+transformers = { version = "^3.1.0", optional = true }
 plotly = "^4.6.0"
 umap-learn = "^0.4.2"
 matplotlib = "^3.2.1"
@@ -46,10 +46,10 @@ scipy = "^1.4.1"
 torch = "~1.5.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
+jax-unirep = { version = "^1.0.1", optional = true }
 # Help the version resolver with allennlp
 boto3 = { version = "1.14.18", optional = true }
 botocore = { version = "1.17.18", optional = true }
-jax-unirep = { version = "^1.0.1", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
