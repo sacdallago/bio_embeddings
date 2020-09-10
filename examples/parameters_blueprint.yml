@@ -143,9 +143,14 @@ stage_4:
   ## Optional for protocol: unsupervised
   ## The following two options refer to the pairwise_distance function of scikit-learn 0.23.2
   ## https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise_distances.html#sklearn.metrics.pairwise_distances
-  # n_jobs: [-1*]
+  # n_jobs: [1*]
   # metric: [euclidean*]
   ## The following will define how many neighbours to consider to transfer annotations.
   ## k = 1 means transfer the annotations from the nearest neighbor
   ## k > 1 will result in merging the annotations of all k > 1 neighbors onto the target embedding
   # k_nearest_neighbours: [1*]
+  ## The following informs the pipeline whether you want to keep the pairwise distance matrix file.
+  ## This is a CSV containing pairwise distances between query and reference embeddings using your metric.
+  ## The file can become quite big (e.g. UniProt Human (query) vs. SwissProt (reference) results in 45GB)
+  ## By default, this file will be discarded, but you can decide to keep it to perform other calculations.
+  # keep_pairwise_distances_matrix_file: [*False]

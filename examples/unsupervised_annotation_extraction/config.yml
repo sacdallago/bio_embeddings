@@ -12,7 +12,7 @@ transferred_annotations_euclidean:
   depends_on: seqvec_embeddings
   reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.h5
   reference_annotations_file: disprot_2019_09_labelled_0.2_0.8_filtered.csv
-  k_nearest_neighbours: 3
+  k_nearest_neighbours: 15
 transferred_annotations_cosine:
   type: extract
   protocol: unsupervised
@@ -20,4 +20,5 @@ transferred_annotations_cosine:
   reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.h5
   reference_annotations_file: disprot_2019_09_labelled_0.2_0.8_filtered.csv
   k_nearest_neighbours: 3
+  keep_pairwise_distances_matrix_file: True
   metric: cosine
