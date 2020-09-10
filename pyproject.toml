@@ -70,7 +70,7 @@ black = "^20.8b1"
 [tool.pytest.ini_options]
 addopts = "--tb=short"
 filterwarnings = [
-    "ignore:::Bio.Alphabet:27",
+    "ignore:::Bio.Alphabet",
     "ignore:::thinc.check:4",
     "ignore:::thinc.neural.train:7",
     "ignore:::plac_ext:6",
