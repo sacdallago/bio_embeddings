@@ -30,6 +30,8 @@ stage_1:
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
+  # Note that you can always compute the reduced embeddings from the full embeddings
+  # but some further stages (e.g. unsupervised extract) need this option
   reduce: True
 
   # Optional: discard per amino acid embeddings.
@@ -124,10 +126,13 @@ stage_4:
   ##   - unsupervised (Uses concepts presented in https://github.com/Rostlab/goPredSim )
   protocol: seqvec_from_publication
 
-  ## Either depend on an embed stage, or supply:
-  ## Unsupervised:
+  ## The supervised extract (bert_from_publication and seqvec_from_publication) needs
+  ## the full embeddings, i.e. `discard_per_amino_acid_embeddings` must be false in the
+  ## embed stage, which is the default. For the unsupervised extract, you need the
+  ## reduced embeddings, i.e. set `reduce: True`.
+  ## Instead of an embed stage, you can also provide a file manually, either supply for unsupervised:
   # reduced_embeddings_file:
-  ## bert_from_publication and seqvec_from_publication
+  ## or for bert_from_publication and seqvec_from_publication
   # embeddings_file:
   depends_on: stage_2
 
