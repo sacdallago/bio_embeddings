@@ -63,6 +63,9 @@ def get_k_nearest_neighbours(pairwise_matrix: np.array, k: int = 1) -> (List[int
         nearest_neighbour_indices = np.argpartition(neighbour_distances, k)[:k]
         nearest_neighbour_distances = np.array(list(map(neighbour_distances.__getitem__, nearest_neighbour_indices)))
 
+        # nearest_neighbours will appear in an arbitrary order.
+        # We want to ensure that the distances and indices are sorted by ascending distance
+        # The following code shuffles both lists around to make sure that indices and distances are sorted equally
         nearest_neighbour_distances, nearest_neighbour_indices = (list(t) for t in zip(
             *sorted(
                 zip(nearest_neighbour_distances, nearest_neighbour_indices)
