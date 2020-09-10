@@ -31,9 +31,6 @@ class EmbedderInterface(abc.ABC):
     # The files or directories with weights and config
     _necessary_files: ClassVar[List[str]] = []
     _necessary_directories: ClassVar[List[str]] = []
-    # When downloading model files, we store them in temporary files and directories
-    # which can and must be cleared after the instance using was deallocated
-    _keep_tempfiles_alive = []
     _device: torch.device
     _options: Dict[str, Any]
 
@@ -53,24 +50,15 @@ class EmbedderInterface(abc.ABC):
         files_loaded = 0
         for file in self._necessary_files:
             if not self._options.get(file):
-                f = tempfile.NamedTemporaryFile()
-                self._keep_tempfiles_alive.append(f)
-
-                get_model_file(path=f.name, model=self.name, file=file)
-
-                self._options[file] = f.name
+                self._options[file] = get_model_file(model=self.name, file=file)
                 files_loaded += 1
 
         for directory in self._necessary_directories:
             if not self._options.get(directory):
-                f = tempfile.mkdtemp()
-                self._keep_tempfiles_alive.append(f)
-
-                get_model_directories_from_zip(
-                    path=f, model=self.name, directory=directory
+                self._options[directory] = get_model_directories_from_zip(
+                    model=self.name, directory=directory
                 )
 
-                self._options[directory] = f
                 files_loaded += 1
 
         total_necessary = len(self._necessary_files) + len(self._necessary_directories)

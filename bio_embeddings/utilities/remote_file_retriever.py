@@ -7,13 +7,13 @@ from pathlib import Path
 from typing import Dict, Optional
 from urllib import request
 
+from appdirs import user_cache_dir
 from tqdm import tqdm
 
 from bio_embeddings.utilities.config import read_config_file
-from bio_embeddings.utilities.exceptions import CannotFindDefaultFile
 
 _module_dir: Path = Path(os.path.dirname(os.path.abspath(__file__)))
-_defaults: Dict[str, Dict[str, str]] = read_config_file(_module_dir / 'defaults.yml')
+_defaults: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "defaults.yml")
 
 logger = logging.getLogger(__name__)
 
@@ -35,49 +35,74 @@ class TqdmUpTo(tqdm):
         self.update(b * bsize - self.n)  # will also set self.n = b * bsize
 
 
-def get_model_directories_from_zip(path, model=None, directory=None) -> None:
+def get_model_directories_from_zip(
+    model: Optional[str] = None,
+    directory: Optional[str] = None,
+    overwrite_cache: bool = False,
+) -> str:
+    cache_path = (
+        Path(user_cache_dir("bio_embeddings")).joinpath(model).joinpath(directory)
+    )
+    if not overwrite_cache and cache_path.is_dir():
+        logger.info(f"Loading {directory} for {model} from cache at '{cache_path}'")
+        return str(cache_path)
+
+    cache_path.mkdir(parents=True, exist_ok=True)
     url = _defaults.get(model, {}).get(directory)
 
-    if not url:
-        raise CannotFindDefaultFile(
-            "Trying to get file '{}' for model '{}', but it doesn't exist.".format("model_folder_zip", path))
-
-    os.makedirs(path, exist_ok=True)
+    # Since the directory are not user provided, this must never happen
+    assert url, f"Directory {directory} for {model} doesn't exist."
 
     with tempfile.NamedTemporaryFile() as f:
         file_name = f.name
 
-        logger.info("Downloading '{}' for model '{}' and storing in '{}'.".format("model_folder_zip", model, file_name))
+        logger.info(
+            "Downloading {} for {} and storing in '{}'.".format(
+                "model_folder_zip", model, file_name
+            )
+        )
 
-        with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
+        with TqdmUpTo(
+            unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+        ) as t:
             request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
 
-        logger.info("Unzipping '{}' for model '{}' and storing in '{}'.".format(file_name, model, path))
+        logger.info(
+            "Unzipping {} for {} and storing in '{}'.".format(
+                file_name, model, cache_path
+            )
+        )
 
-        with zipfile.ZipFile(file_name, 'r') as zip_ref:
-            zip_ref.extractall(path)
+        with zipfile.ZipFile(file_name, "r") as zip_ref:
+            zip_ref.extractall(cache_path)
 
-        logger.info("Moving the weights into the right tree structure.")
-
-        source = str(Path(path) / model)
-        files = os.listdir(source)
-
-        for model_file_name in files:
-            shutil.move(str(Path(source) / model_file_name), path)
-
-        shutil.rmtree(source)
+        # We unpacked a folder from the zip, but we only want the files
+        for model_file_name in cache_path.joinpath(model).iterdir():
+            shutil.move(
+                model_file_name, Path(cache_path).joinpath(model_file_name.name)
+            )
+    return str(cache_path)
 
 
-def get_model_file(path: str, model: Optional[str] = None, file: Optional[str] = None) -> None:
+def get_model_file(
+    model: Optional[str] = None,
+    file: Optional[str] = None,
+    overwrite_cache: bool = False,
+) -> str:
+    cache_path = Path(user_cache_dir("bio_embeddings")).joinpath(model).joinpath(file)
+    if not overwrite_cache and cache_path.is_file():
+        logger.info(f"Loading {file} for {model} from cache at '{cache_path}'")
+        return str(cache_path)
+
+    cache_path.parent.mkdir(exist_ok=True, parents=True)
     url = _defaults.get(model, {}).get(file)
 
-    if not url:
-        raise CannotFindDefaultFile("Trying to get file '{}' for model '{}', but it doesn't exist.".format(file, path))
+    # Since the files are not user provided, this must never happen
+    assert url, f"File {file} for {model} doesn't exist."
 
-    if not os.path.isfile(path):
-        raise FileNotFoundError("Trying to open file '{}', but it doesn't exist.".format(path))
+    logger.info(f"Downloading {file} for {model} and storing it in '{cache_path}'")
 
-    logger.info("Downloading '{}' for model '{}' and storing in '{}'.".format(file, model, path))
+    with TqdmUpTo(unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]) as t:
+        request.urlretrieve(url, filename=cache_path, reporthook=t.update_to)
 
-    with TqdmUpTo(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
-        request.urlretrieve(url, filename=path, reporthook=t.update_to)
+    return str(cache_path)

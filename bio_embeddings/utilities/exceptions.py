@@ -16,12 +16,6 @@ class InvalidParameterError(Exception):
     """
 
 
-class CannotFindDefaultFile(Exception):
-    """
-    Exception for invalid file download request
-    """
-
-
 class SequenceTooLongException(Exception):
     """
     Exception when trying to embed sequences longer then the limit

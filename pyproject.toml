@@ -47,6 +47,7 @@ torch = "~1.5.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
 jax-unirep = { version = "^1.0.1", optional = true }
+appdirs = "^1.4.4"
 # Help the version resolver with allennlp
 boto3 = { version = "1.14.18", optional = true }
 botocore = { version = "1.17.18", optional = true }

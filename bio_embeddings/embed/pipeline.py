@@ -184,17 +184,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
     # Download necessary files if needed
     for file in necessary_files:
         if not result_kwargs.get(file):
-            file_path = file_manager.create_file(
-                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), file
-            )
-
-            get_model_file(
-                path=file_path,
-                model="seqvec",
-                file=file,
-            )
-
-            result_kwargs[file] = file_path
+            result_kwargs[file] = get_model_file(model="seqvec", file=file)
 
     embedder = SeqVecEmbedder(**result_kwargs)
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
@@ -213,15 +203,9 @@ def transformer(
     necessary_directories = ["model_directory"]
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
-            directory_path = file_manager.create_directory(
-                result_kwargs.get("prefix"), result_kwargs.get("stage_name"), directory
+            result_kwargs[directory] = get_model_directories_from_zip(
+                model=model, directory=directory
             )
-
-            get_model_directories_from_zip(
-                path=directory_path, model=model, directory=directory
-            )
-
-            result_kwargs[directory] = directory_path
 
     embedder = embedder_class(**result_kwargs)
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
