@@ -78,7 +78,7 @@ def reindex_sequences(
     Returns a DataFrame with the mapping.
 
     :param sequence_records: List of sequence records
-    :param simple: Bolean; if set to true use numerical index (1,2,3,4) instead of md5 hash
+    :param simple: Boolean; if set to true use numerical index (1,2,3,4) instead of md5 hash
     :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id, and the sequence length.
     """
     sequence_records[:] = sorted(sequence_records, key=lambda seq: -len(seq))
