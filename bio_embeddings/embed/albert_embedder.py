@@ -19,7 +19,7 @@ class AlbertEmbedder(BertBaseEmbedder):
         super().__init__(**kwargs)
 
         # Get file locations from kwargs
-        self._model_directory = self._options.get("model_directory")
+        self._model_directory = self._options["model_directory"]
 
         # make model
         self._model = AlbertModel.from_pretrained(self._model_directory)

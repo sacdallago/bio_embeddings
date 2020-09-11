@@ -29,7 +29,7 @@ class XLNetEmbedder(EmbedderInterface):
         super().__init__(**kwargs)
 
         # Get file locations from kwargs
-        self.model_directory = self._options.get("model_directory")
+        self.model_directory = self._options["model_directory"]
 
         self._model = (
             XLNetModel.from_pretrained(self.model_directory).to(self._device).eval()

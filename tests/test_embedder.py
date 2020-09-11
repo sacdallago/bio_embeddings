@@ -75,7 +75,8 @@ def test_model_download(embedder_class):
     model_name = f"{module_name}.{base_name}Model"
     tokenizer_name = f"{module_name}.{base_name}Tokenizer"
     with mock.patch(
-        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip"
+        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip",
+        return_value="/dev/null",
     ) as get_model_mock, mock.patch(model_name, mock.MagicMock()), mock.patch(
         tokenizer_name, mock.MagicMock()
     ):
