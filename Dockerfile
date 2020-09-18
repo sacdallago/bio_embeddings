@@ -11,9 +11,12 @@ COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
 WORKDIR /app
 
-# Install a recent version of pip, otherwise the installation of manylinux2010 packages will fail
 RUN python3 -m venv .venv && \
+    # Install a recent version of pip, otherwise the installation of manylinux2010 packages will fail
     .venv/bin/pip install -U pip && \
+    # Make sure poetry install the metadata for bio_embeddings
+    mkdir bio_embeddings && \
+    touch bio_embeddings/__init__.py && \
     python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
     python3 $HOME/.poetry/bin/poetry install --no-dev -E all
 
