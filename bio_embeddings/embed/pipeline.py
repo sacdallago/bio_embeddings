@@ -211,16 +211,16 @@ def transformer(
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
-def albert(**kwargs):
-    return transformer(AlbertEmbedder, "albert", 3035, **kwargs)
+def prottrans_albert(**kwargs):
+    return transformer(AlbertEmbedder, "prottrans_albert", 3035, **kwargs)
 
 
-def bert(**kwargs):
-    return transformer(BertEmbedder, "bert", 6024, **kwargs)
+def prottrans_bert(**kwargs):
+    return transformer(BertEmbedder, "prottrans_bert", 6024, **kwargs)
 
 
-def xlnet(**kwargs):
-    return transformer(XLNetEmbedder, "xlnet", 4000, **kwargs)
+def prottrans_xlnet(**kwargs):
+    return transformer(XLNetEmbedder, "prottrans_xlnet", 4000, **kwargs)
 
 
 def unirep(**kwargs) -> Dict[str, Any]:
@@ -237,9 +237,9 @@ def unirep(**kwargs) -> Dict[str, Any]:
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
-    "albert": albert,
-    "bert": bert,
-    "xlnet": xlnet,
+    "prottrans_albert": prottrans_albert,
+    "prottrans_bert": prottrans_bert,
+    "prottrans_xlnet": prottrans_xlnet,
     "unirep": unirep,
 }
 

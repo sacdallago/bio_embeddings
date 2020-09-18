@@ -6,7 +6,7 @@ from bio_embeddings.embed.bert_base_embedder import BertBaseEmbedder
 
 
 class AlbertEmbedder(BertBaseEmbedder):
-    name = "albert"
+    name = "prottrans_albert"
     embedding_dimension = 4096
     number_of_layers = 1
 

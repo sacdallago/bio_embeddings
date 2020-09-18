@@ -12,7 +12,7 @@ annotations_from_seqvec:
   depends_on: seqvec_embeddings
 bert_embeddings:
   type: embed
-  protocol: bert
+  protocol: prottrans_bert
   model_directory: /mnt/nfs/models/bert
 annotations_from_bert:
   type: extract

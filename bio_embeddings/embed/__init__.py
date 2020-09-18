@@ -13,9 +13,9 @@ try:
     from bio_embeddings.embed.bert_embedder import BertEmbedder
     from bio_embeddings.embed.xlnet_embedder import XLNetEmbedder
 
-    name_to_embedder["albert"] = AlbertEmbedder
-    name_to_embedder["bert"] = BertEmbedder
-    name_to_embedder["xlnet"] = XLNetEmbedder
+    name_to_embedder["prottrans_albert"] = AlbertEmbedder
+    name_to_embedder["prottrans_bert"] = BertEmbedder
+    name_to_embedder["prottrans_xlnet"] = XLNetEmbedder
 except ImportError:
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"

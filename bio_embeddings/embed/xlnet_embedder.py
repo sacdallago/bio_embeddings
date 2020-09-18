@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class XLNetEmbedder(EmbedderInterface):
-    name = "xlnet"
+    name = "prottrans_xlnet"
     embedding_dimension = 1024
     number_of_layers = 1
     _model: XLNetModel
