@@ -202,9 +202,7 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
     # Download necessary files if needed
     for file in necessary_files:
         if not result_kwargs.get(file):
-            file_path = file_manager.create_file(result_kwargs.get('prefix'), result_kwargs.get('stage_name'), file)
-            get_model_file(path=file_path, model=f'{model}_annotations_extractors', file=file)
-            result_kwargs[file] = file_path
+            result_kwargs[file] = get_model_file(model=f'{model}_annotations_extractors', file=file)
 
     annotation_extractor = BasicAnnotationExtractor(model, **result_kwargs)
 

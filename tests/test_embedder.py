@@ -75,7 +75,8 @@ def test_model_download(embedder_class):
     model_name = f"{module_name}.{base_name}Model"
     tokenizer_name = f"{module_name}.{base_name}Tokenizer"
     with mock.patch(
-        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip"
+        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip",
+        return_value="/dev/null",
     ) as get_model_mock, mock.patch(model_name, mock.MagicMock()), mock.patch(
         tokenizer_name, mock.MagicMock()
     ):
@@ -89,7 +90,8 @@ def test_model_download(embedder_class):
 def test_model_no_download(embedder_class):
     """ We want to check that models aren't downloaded if the model_directory is given """
     with mock.patch(
-        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip"
+        "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip",
+        return_value="/dev/null",
     ) as get_model_mock:
         with pytest.raises(OSError):
             embedder_class(model_directory="/none/existent/path")
@@ -98,7 +100,8 @@ def test_model_no_download(embedder_class):
 
 def test_model_parameters_seqvec(caplog):
     with mock.patch(
-        "bio_embeddings.embed.embedder_interfaces.get_model_file"
+        "bio_embeddings.embed.embedder_interfaces.get_model_file",
+        return_value="/dev/null",
     ) as get_model_mock:
         # Since we're not actually downloading, the json options file is empty
         with pytest.raises(JSONDecodeError):
