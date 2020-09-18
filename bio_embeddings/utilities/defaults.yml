@@ -15,15 +15,15 @@ word2vec:
 glove:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
 
-bert:
+prottrans_bert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/bert/bert.zip"
 
 bert_from_publication_annotations_extractors:
   secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/secstruct_checkpoint.pt"
   subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/subcell_checkpoint.pt"
 
-xlnet:
+prottrans_xlnet:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/xlnet.zip"
 
-albert:
+prottrans_albert:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
