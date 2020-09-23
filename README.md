@@ -21,9 +21,11 @@ While we are working on a proper publication, if you are already using this tool
 
 > Dallago C, Schütze K, Heinzinger M et al. bio_embeddings: python pipeline for fast visualization of protein features extracted by language models [version 1; not peer reviewed]. F1000Research 2020, 9(ISCB Comm J):876 (poster) (doi: [10.7490/f1000research.1118163.1](https://doi.org/10.7490/f1000research.1118163.1))
 
-## Install guides
+## Installation
 
-You can install `bio_embeddings` via pip or use it via docker
+bio_embeddings requires linux, a GPU and [CUDA](https://developer.nvidia.com/cuda-zone). For windows users, we recommend the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), even though [installing pytorch on windows](https://pytorch.org/get-started/locally/) is also possible.
+
+You can install `bio_embeddings` via pip or use it via docker.
 
 ## Pip
 
@@ -50,7 +52,7 @@ docker run --rm --gpus all \
     rostlab/bio_embeddings /mnt/config.yml
 ```
 
-See the `docker` example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
+See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
 
 ## What model is right for you?
 
