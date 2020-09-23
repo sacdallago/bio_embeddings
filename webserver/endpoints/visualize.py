@@ -9,8 +9,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import plotly.graph_objs as go
 from tempfile import NamedTemporaryFile
-from dash.dependencies import Input, Output, State
-from bio_embeddings.project import tsne_reduce
+from dash.dependencies import Input, Output
 
 from webserver.database import get_file
 
@@ -233,6 +232,8 @@ def create_dash_app(app):
     @dash_app.callback(dash.dependencies.Output('plot-div', 'children'),
                        [dash.dependencies.Input('url', 'pathname')])
     def display_page(pathname):
+        from bio_embeddings.project import tsne_reduce
+
         if pathname:
             job_id = pathname.split('/')[-1]
             file = get_file(job_id, 'reduced_embeddings_file')

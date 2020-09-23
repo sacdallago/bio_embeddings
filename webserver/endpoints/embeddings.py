@@ -1,5 +1,5 @@
 import uuid
-from flask import request, jsonify, send_file, abort
+from flask import request, send_file, abort
 from flask_restx import Resource
 from webserver.database import get_file
 from webserver.endpoints import api
@@ -17,11 +17,11 @@ class Embeddings(Resource):
     @api.response(400, "Invalid input. Most likely the sequence is too long, or contains invalid characters.")
     @api.response(505, "Server error")
     def post(self):
-        file_validation = validate_FASTA_submission(request)
+        statistics, sequences = validate_FASTA_submission(request)
         job_id = uuid.uuid4().hex
         pipeline_type = request.form.get('pipeline_type', 'annotations_from_bert')
 
-        async_call = get_embeddings.apply_async(args=(job_id, file_validation['sequences'], pipeline_type),
+        async_call = get_embeddings.apply_async(args=(job_id, sequences, pipeline_type),
                                                 task_id=job_id)
 
         return {'request_id': async_call.id, 'job_id': job_id}

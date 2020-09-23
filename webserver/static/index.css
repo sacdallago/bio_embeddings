@@ -22,3 +22,7 @@ pre {
 #job-id-download-options.show{
     display: inherit;
 }
+
+.job.submission.messages {
+    color: red;
+}

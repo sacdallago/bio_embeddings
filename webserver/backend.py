@@ -1,5 +1,3 @@
-import os
-from pathlib import Path
 from flask import Flask, Blueprint, render_template
 from flask_cors import CORS
 from webserver.endpoints import api

@@ -1,16 +1,19 @@
 from os import path
 from pathlib import Path
-from typing import Dict
 from tempfile import TemporaryDirectory
+from typing import Dict, Any
 
-from bio_embeddings.utilities import write_fasta_file
-from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
-from bio_embeddings.utilities.config import read_config_file
-
+from ruamel import yaml
 
 from webserver.database import write_file
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
+
+
+def read_config_file(config_path: Path) -> Dict[str, Any]:
+    with config_path.open("r") as fp:
+        return yaml.load(fp, Loader=yaml.RoundTripLoader)
+
 
 _module_dir: Path = Path(path.dirname(path.abspath(__file__)))
 
@@ -53,7 +56,9 @@ _FILES_TO_STORE = [
 
 
 @task_keeper.task()
-def get_embeddings(job_identifier, sequences, pipeline_type):
+def get_embeddings(job_identifier: str, sequences: Dict[str, str], pipeline_type: str):
+    from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
+
     config = _CONFIGS[pipeline_type]
 
     def _post_stage_save(stage_out_config):
@@ -62,7 +67,9 @@ def get_embeddings(job_identifier, sequences, pipeline_type):
                 write_file(job_identifier, file_name, stage_out_config[file_name])
 
     with TemporaryDirectory() as workdir:
-        write_fasta_file(sequences, Path(workdir) / "sequences.fasta")
+        with Path(workdir).joinpath("sequences.fasta").open("w") as fp:
+            for seq_id, sequence in sequences.items():
+                fp.write(f">{seq_id}\n{sequence}\n")
 
         # Add last job details
         config['global']['prefix'] = Path(workdir) / "bio_embeddings_job"

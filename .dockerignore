@@ -2,7 +2,8 @@
 .git
 .github
 .pytest_cache
-.venv
+.venv*
+.tox
 __pycache__
 examples/
 notebooks/

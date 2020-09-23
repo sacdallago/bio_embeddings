@@ -28,13 +28,13 @@ RUN apt-get update \
     && apt-get install -y python3 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=venv-build /app/.venv /app/.venv
-COPY . /app/
-
 # Workaround for when switching the docker user
 # https://github.com/numba/numba/issues/4032#issuecomment-547088606
 RUN mkdir /tmp/numba_cache && chmod 777 /tmp/numba_cache
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+
+COPY --from=venv-build /app/.venv /app/.venv
+COPY . /app/
 
 WORKDIR /app
 

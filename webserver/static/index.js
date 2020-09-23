@@ -26,6 +26,7 @@ $('#submit-form').form({
                 $('#id').val(response.job_id)
             }
         }).catch(e => {
+            errorMessage.text("There was an error processing you request: " + e);
             console.error(e)
         })
     }
