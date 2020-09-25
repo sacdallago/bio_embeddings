@@ -9,11 +9,11 @@ from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.embed import (
-    AlbertEmbedder,
-    BertEmbedder,
+    ProtTransAlbertBFDEmbedder,
+    ProtTransBertBFDEmbedder,
     EmbedderInterface,
     SeqVecEmbedder,
-    XLNetEmbedder,
+    ProtTransXLNetUniRef100Embedder,
     UniRepEmbedder,
 )
 from bio_embeddings.utilities import (
@@ -29,8 +29,9 @@ from bio_embeddings.utilities.backports import nullcontext
 logger = logging.getLogger(__name__)
 
 
-def _print_expected_file_sizes(embedder: EmbedderInterface, mapping_file: DataFrame,
-                               result_kwargs: Dict[str, Any]) -> None:
+def _print_expected_file_sizes(
+    embedder: EmbedderInterface, mapping_file: DataFrame, result_kwargs: Dict[str, Any]
+) -> None:
     """
     Logs the lower bound size of embeddings_file and reduced_embedding_file
 
@@ -191,10 +192,7 @@ def seqvec(**kwargs) -> Dict[str, Any]:
 
 
 def transformer(
-    embedder_class: Type[EmbedderInterface],
-    model: str,
-    max_amino_acids_default: int,
-    **kwargs
+    embedder_class: Type[EmbedderInterface], max_amino_acids_default: int, **kwargs
 ):
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
@@ -204,7 +202,7 @@ def transformer(
     for directory in necessary_directories:
         if not result_kwargs.get(directory):
             result_kwargs[directory] = get_model_directories_from_zip(
-                model=model, directory=directory
+                model=embedder_class.name, directory=directory
             )
 
     embedder = embedder_class(**result_kwargs)
@@ -212,15 +210,15 @@ def transformer(
 
 
 def prottrans_albert(**kwargs):
-    return transformer(AlbertEmbedder, "prottrans_albert", 3035, **kwargs)
+    return transformer(ProtTransAlbertBFDEmbedder, 3035, **kwargs)
 
 
-def prottrans_bert(**kwargs):
-    return transformer(BertEmbedder, "prottrans_bert", 6024, **kwargs)
+def prottrans_bert_bfd(**kwargs):
+    return transformer(ProtTransBertBFDEmbedder, 6024, **kwargs)
 
 
 def prottrans_xlnet(**kwargs):
-    return transformer(XLNetEmbedder, "prottrans_xlnet", 4000, **kwargs)
+    return transformer(ProtTransXLNetUniRef100Embedder, 4000, **kwargs)
 
 
 def unirep(**kwargs) -> Dict[str, Any]:
@@ -237,9 +235,9 @@ def unirep(**kwargs) -> Dict[str, Any]:
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
-    "prottrans_albert": prottrans_albert,
-    "prottrans_bert": prottrans_bert,
-    "prottrans_xlnet": prottrans_xlnet,
+    "prottrans_albert_bfd": prottrans_albert,
+    "prottrans_bert_bfd": prottrans_bert_bfd,
+    "prottrans_xlnet_uniref100": prottrans_xlnet,
     "unirep": unirep,
 }
 

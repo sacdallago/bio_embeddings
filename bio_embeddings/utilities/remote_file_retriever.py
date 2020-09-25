@@ -43,7 +43,11 @@ def get_model_directories_from_zip(
     cache_path = (
         Path(user_cache_dir("bio_embeddings")).joinpath(model).joinpath(directory)
     )
-    if not overwrite_cache and cache_path.is_dir():
+    if (
+        not overwrite_cache
+        and cache_path.is_dir()
+        and len(list(cache_path.iterdir())) > 1
+    ):
         logger.info(f"Loading {directory} for {model} from cache at '{cache_path}'")
         return str(cache_path)
 
@@ -76,11 +80,6 @@ def get_model_directories_from_zip(
         with zipfile.ZipFile(file_name, "r") as zip_ref:
             zip_ref.extractall(cache_path)
 
-        # We unpacked a folder from the zip, but we only want the files
-        for model_file_name in cache_path.joinpath(model).iterdir():
-            shutil.move(
-                model_file_name, Path(cache_path).joinpath(model_file_name.name)
-            )
     return str(cache_path)
 
 

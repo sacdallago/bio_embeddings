@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, prottrans_albert, prottrans_bert, protrans_xlnet, unirep
+  # Options: seqvec, prottrans_albert, prottrans_bert_bfd, protrans_xlnet, unirep
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -55,7 +55,7 @@ stage_1:
   ### Optional for protocol: albert, bert, xlnet
   # model_directory: @/path/to/directory
 
-  ### Optional for protocol: seqvec, albert, bert, xlnet
+  ### Optional for protocol: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_xlnet_uniref100
   ## Set the following parameter to calculate embeddings on a specific device or a specific GPU on multi-GPU hosts.
   ## The default, "cuda", runs on the default GPU. You can switch to CPU with "cpu" or select a GPU on
   ## multi-GPU systems with "cuda:0" or "cuda:1" etc.
