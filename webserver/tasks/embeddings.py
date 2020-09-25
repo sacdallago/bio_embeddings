@@ -72,7 +72,7 @@ def get_embeddings(job_identifier: str, sequences: Dict[str, str], pipeline_type
                 fp.write(f">{seq_id}\n{sequence}\n")
 
         # Add last job details
-        config['global']['prefix'] = Path(workdir) / "bio_embeddings_job"
-        config['global']['sequences_file'] = Path(workdir) / "sequences.fasta"
+        config['global']['prefix'] = str(Path(workdir) / "bio_embeddings_job")
+        config['global']['sequences_file'] = str(Path(workdir) / "sequences.fasta")
 
         execute_pipeline_from_config(config, post_stage=_post_stage_save)
