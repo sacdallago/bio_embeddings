@@ -10,3 +10,22 @@ The webserver provides an easy-to-use web interface to a part of the functionali
   
 The worker should run on a host with a GPU.
 
+You need to configure `CELERY_BROKER_URL`, `MONGO_URL` and `MODEL_DIRECTORY`. The `MODEL_DIRECTORY` has the following structure and content:
+
+```
+├── bert
+│   └── model_directory
+│       ├── bert_vocab_model.model
+│       ├── config.json
+│       └── pytorch_model.bin
+├── bert_from_publication_annotations_extractors
+│   ├── secondary_structure_checkpoint_file
+│   └── subcellular_location_checkpoint_file
+├── seqvec
+│   ├── options_file
+│   └── weights_file
+└── secvec_from_publication_annotations_extractors
+    ├── secondary_structure_checkpoint_file
+    └── subcellular_location_checkpoint_file
+```
+
