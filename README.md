@@ -23,11 +23,9 @@ While we are working on a proper publication, if you are already using this tool
 
 ## Installation
 
-bio_embeddings requires linux, a GPU and [CUDA](https://developer.nvidia.com/cuda-zone). For windows users, we recommend the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), even though [installing pytorch on windows](https://pytorch.org/get-started/locally/) is also possible.
-
 You can install `bio_embeddings` via pip or use it via docker.
 
-## Pip
+### Pip
 
 Install the pipeline like so:
 
@@ -53,6 +51,11 @@ docker run --rm --gpus all \
 ```
 
 See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
+
+### Notes:
+
+`bio_embeddings` was developed for unix machines with GPU capabilities and [CUDA](https://developer.nvidia.com/cuda-zone) installed. If your setup diverges from this, you may encounter some inconsitencies (e.g. speed is significantly affected by the absence of a GPU and CUDA). For Windows users, we strongly recommend the use of [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+
 
 ## What model is right for you?
 
