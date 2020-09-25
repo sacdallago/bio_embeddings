@@ -21,8 +21,7 @@ from bio_embeddings.embed import (
 all_embedders = [
     SeqVecEmbedder,
     AlbertEmbedder,
-    # Commented out due to broken ci
-    # BertEmbedder,
+    BertEmbedder,
     XLNetEmbedder,
 ]
 
