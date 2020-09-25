@@ -12,5 +12,4 @@ WORKDIR /app
 
 ENV MODEL_DIRECTORY /mnt/models
 
-# TODO: 2 workers instead of one
-ENTRYPOINT ["gunicorn", "-w", "1", "-b", ":3000", "webserver.backend:app", "--capture-output", "--log-file", "-", "--access-logfile", "-"]
+ENTRYPOINT ["gunicorn", "-w", "2", "-b", ":3000", "webserver.backend:app", "--capture-output", "--log-file", "-", "--access-logfile", "-"]

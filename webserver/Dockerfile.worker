@@ -13,23 +13,20 @@ RUN apt-get update && \
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
 COPY webserver/requirements.txt /app/webserver/requirements.txt
+# Linked from pyproject.toml
+COPY README.md /app/README.md
+
 WORKDIR /app
 
-# Install a recent version of pip, otherwise the installation of manylinux2010 packages will fail
-RUN python3 -m venv .venv && \
+# Installs a recent version of pip, otherwise the installation of manylinux2010 packages will fail
+# The __init__ makes sure poetry installs the metadata for bio_embeddings
+RUN mkdir bio_embeddings && \
+    touch bio_embeddings/__init__.py && \
+    python3 -m venv .venv && \
     .venv/bin/pip install -U pip && \
     python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
     python3 $HOME/.poetry/bin/poetry install --no-dev -E all && \
     .venv/bin/pip install -r webserver/requirements.txt
-
-# TODO: Merge with above
-
-# Linked from pyproject.toml
-COPY README.md /app/README.md
-# Make sure poetry installs the metadata for bio_embeddings
-RUN mkdir bio_embeddings && \
-    touch bio_embeddings/__init__.py && \
-    python3 $HOME/.poetry/bin/poetry install --no-dev -E all
 
 FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
