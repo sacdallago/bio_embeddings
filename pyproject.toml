@@ -51,6 +51,7 @@ appdirs = "^1.4.4"
 # Help the version resolver with allennlp
 boto3 = { version = "1.14.18", optional = true }
 botocore = { version = "1.17.18", optional = true }
+importlib_metadata = "^1.7.0"
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
@@ -66,6 +67,7 @@ wheel = "^0.34.2"
 jupyter = "^1.0.0"
 tox = "^3.16.1"
 black = "^20.8b1"
+toml = "^0.10.1"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

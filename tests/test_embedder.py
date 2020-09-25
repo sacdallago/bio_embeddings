@@ -1,4 +1,5 @@
 import os
+import typing
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Optional
@@ -8,7 +9,6 @@ from unittest import mock
 import numpy
 import pytest
 import torch
-import typing
 
 from bio_embeddings.embed import (
     SeqVecEmbedder,
@@ -16,14 +16,12 @@ from bio_embeddings.embed import (
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
     EmbedderInterface,
-    UniRepEmbedder,
 )
 
 all_embedders = [
     SeqVecEmbedder,
     ProtTransAlbertBFDEmbedder,
-    # Commented out due to broken ci
-    # BertEmbedder,
+    ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
 ]
 
