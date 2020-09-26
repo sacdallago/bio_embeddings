@@ -2,11 +2,12 @@ from pathlib import Path
 
 from transformers import AlbertModel, AlbertTokenizer
 
-from bio_embeddings.embed.bert_base_embedder import BertBaseEmbedder
+from bio_embeddings.embed.prottrans_bert_base_embedder import BertBaseEmbedder
 
 
-class AlbertEmbedder(BertBaseEmbedder):
-    name = "albert"
+class ProtTransAlbertBFDEmbedder(BertBaseEmbedder):
+    _model: AlbertModel
+    name = "prottrans_albert_bfd"
     embedding_dimension = 4096
     number_of_layers = 1
 

@@ -12,8 +12,8 @@ from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
 logger = logging.getLogger(__name__)
 
 
-class XLNetEmbedder(EmbedderInterface):
-    name = "xlnet"
+class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
+    name = "prottrans_xlnet_uniref100"
     embedding_dimension = 1024
     number_of_layers = 1
     _model: XLNetModel

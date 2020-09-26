@@ -3,13 +3,14 @@ from pathlib import Path
 
 from transformers import BertModel, BertTokenizer
 
-from bio_embeddings.embed.bert_base_embedder import BertBaseEmbedder
+from bio_embeddings.embed.prottrans_bert_base_embedder import BertBaseEmbedder
 
 logger = logging.getLogger(__name__)
 
 
-class BertEmbedder(BertBaseEmbedder):
-    name = "bert"
+class ProtTransBertBFDEmbedder(BertBaseEmbedder):
+    _model: BertModel
+    name = "prottrans_bert_bfd"
     embedding_dimension = 1024
     number_of_layers = 1
 

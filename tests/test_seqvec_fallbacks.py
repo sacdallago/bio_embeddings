@@ -35,7 +35,7 @@ class MockElmoMemory:
 
 
 def test_fallbacks(caplog):
-    """ Check that the fallbacks to single sequence processing and/or the CPU are working.
+    """Check that the fallbacks to single sequence processing and/or the CPU are working.
 
     batch_size is 18, actual GPU limit 15, so that we get a case where a too
     big batch has to be handled
@@ -53,7 +53,8 @@ def test_fallbacks(caplog):
             cuda_device, elmo_log
         ),
     ), mock.patch(
-        "bio_embeddings.utilities.helpers.torch.cuda.is_available", lambda: True,
+        "bio_embeddings.utilities.helpers.torch.cuda.is_available",
+        lambda: True,
     ):
         sequences = [
             "M" * 20,

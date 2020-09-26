@@ -1,4 +1,5 @@
 import os
+import typing
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Optional
@@ -11,18 +12,17 @@ import torch
 
 from bio_embeddings.embed import (
     SeqVecEmbedder,
-    AlbertEmbedder,
-    BertEmbedder,
-    XLNetEmbedder,
+    ProtTransAlbertBFDEmbedder,
+    ProtTransBertBFDEmbedder,
+    ProtTransXLNetUniRef100Embedder,
     EmbedderInterface,
-    UniRepEmbedder,
 )
 
 all_embedders = [
     SeqVecEmbedder,
-    AlbertEmbedder,
-    BertEmbedder,
-    XLNetEmbedder,
+    ProtTransAlbertBFDEmbedder,
+    ProtTransBertBFDEmbedder,
+    ProtTransXLNetUniRef100Embedder,
 ]
 
 
@@ -65,14 +65,19 @@ def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
 
 
 @pytest.mark.parametrize(
-    "embedder_class", [AlbertEmbedder, BertEmbedder, XLNetEmbedder]
+    "embedder_class",
+    [
+        ProtTransAlbertBFDEmbedder,
+        ProtTransBertBFDEmbedder,
+        ProtTransXLNetUniRef100Embedder,
+    ],
 )
 def test_model_download(embedder_class):
     """ We want to check that models are downloaded if the model_directory isn't given """
     module_name = embedder_class.__module__
-    base_name = embedder_class.__name__.replace("Embedder", "")
-    model_name = f"{module_name}.{base_name}Model"
-    tokenizer_name = f"{module_name}.{base_name}Tokenizer"
+    model_class = typing.get_type_hints(embedder_class)["_model"].__name__
+    model_name = f"{module_name}.{model_class}"
+    tokenizer_name = model_name.replace("Model", "Tokenizer")
     with mock.patch(
         "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip",
         return_value="/dev/null",
@@ -84,7 +89,12 @@ def test_model_download(embedder_class):
 
 
 @pytest.mark.parametrize(
-    "embedder_class", [AlbertEmbedder, BertEmbedder, XLNetEmbedder]
+    "embedder_class",
+    [
+        ProtTransAlbertBFDEmbedder,
+        ProtTransBertBFDEmbedder,
+        ProtTransXLNetUniRef100Embedder,
+    ],
 )
 def test_model_no_download(embedder_class):
     """ We want to check that models aren't downloaded if the model_directory is given """

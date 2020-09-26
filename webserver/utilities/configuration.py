@@ -12,7 +12,7 @@ configuration = {
     },
 
     # Bert stuff
-    "bert": {
+    "prottrans_bert_bfd": {
         "model_directory": environ['BERT_MODEL_DIRECTORY'],
         "max_amino_acids": int(environ.get('BERT_MAX_AMINO_ACIDS', 8000)),
         "secondary_structure_checkpoint_file": environ['BERT_SECONDARY_STRUCTURE_CHECKPOINT_FILE'],

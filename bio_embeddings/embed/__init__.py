@@ -9,23 +9,29 @@ name_to_embedder: Dict[str, Type[EmbedderInterface]] = {}
 
 # Transformers
 try:
-    from bio_embeddings.embed.albert_embedder import AlbertEmbedder
-    from bio_embeddings.embed.bert_embedder import BertEmbedder
-    from bio_embeddings.embed.xlnet_embedder import XLNetEmbedder
+    from bio_embeddings.embed.protrans_albert_bfd_embedder import (
+        ProtTransAlbertBFDEmbedder,
+    )
+    from bio_embeddings.embed.prottrans_bert_bfd_embedder import (
+        ProtTransBertBFDEmbedder,
+    )
+    from bio_embeddings.embed.xlnet_embedder import ProtTransXLNetUniRef100Embedder
 
-    name_to_embedder["albert"] = AlbertEmbedder
-    name_to_embedder["bert"] = BertEmbedder
-    name_to_embedder["xlnet"] = XLNetEmbedder
+    name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
+    name_to_embedder[ProtTransBertBFDEmbedder.name] = ProtTransBertBFDEmbedder
+    name_to_embedder[
+        ProtTransXLNetUniRef100Embedder.name
+    ] = ProtTransXLNetUniRef100Embedder
 except ImportError:
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"
     )
 
-# Elmo
+# Elmo / SeqVec
 try:
     from bio_embeddings.embed.seqvec_embedder import SeqVecEmbedder
 
-    name_to_embedder["seqvec"] = SeqVecEmbedder
+    name_to_embedder[SeqVecEmbedder.name] = SeqVecEmbedder
 except ImportError:
     logger.debug("allennlp extra not installed, SeqVec will not be available")
 
@@ -35,11 +41,11 @@ if not name_to_embedder:
         "Please run `pip install bio-embeddings[all]`!"
     )
 
-# Unirep
+# UniRep
 try:
     from bio_embeddings.embed.unirep_embedder import UniRepEmbedder
 
-    name_to_embedder["unirep"] = UniRepEmbedder
+    name_to_embedder[UniRepEmbedder.name] = UniRepEmbedder
 except ImportError:
     logger.debug("unirep extra not installed and will not be available")
 

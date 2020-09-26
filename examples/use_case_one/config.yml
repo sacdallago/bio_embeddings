@@ -3,7 +3,7 @@ global:
   prefix: simple
 bert_embeddings:
   type: embed
-  protocol: bert
+  protocol: prottrans_bert_bfd
   reduce: True
 tsne_projections:
   type: project
