@@ -13,7 +13,7 @@ The worker should run on a host with a GPU.
 You need to configure `CELERY_BROKER_URL`, `MONGO_URL` and `MODEL_DIRECTORY`. The `MODEL_DIRECTORY` has the following structure and content:
 
 ```
-├── bert
+├── prottrans_bert_bfd
 │   └── model_directory
 │       ├── bert_vocab_model.model
 │       ├── config.json

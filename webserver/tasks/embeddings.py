@@ -1,3 +1,4 @@
+from copy import deepcopy
 from os import path
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -59,7 +60,7 @@ _FILES_TO_STORE = [
 def get_embeddings(job_identifier: str, sequences: Dict[str, str], pipeline_type: str):
     from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 
-    config = _CONFIGS[pipeline_type]
+    config = deepcopy(_CONFIGS[pipeline_type])
 
     def _post_stage_save(stage_out_config):
         for file_name in _FILES_TO_STORE:
