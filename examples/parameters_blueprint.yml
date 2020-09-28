@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, prottrans_albert, prottrans_bert_bfd, protrans_xlnet, unirep
+  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, unirep
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
