@@ -17,14 +17,6 @@ The project includes:
 
 We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
 
-## News (current development cycle)
-
-- Develop now includes new models from [ProtTrans](https://doi.org/10.1101/2020.07.12.199554). The models are `albert`, `bert` and `xlnet`. They will officially be included in release `0.1.4`, but can be installed by installing the pipeline from GitHub (see _Install Guides_)
-- Release `0.1.4` will be installable on Google Colab (thanks to Prof. Georgina Stegmayer for helpful input). In the meantime:
-    - [Check out this Google Colab](https://colab.research.google.com/drive/1msZVwcCT2b768HnbRK3SrnmRqtVjvsgg?usp=sharing) allows you to extract features (secondary structure and protein localization) from a FASTA formatted sequence file (directly on Google hardware; **FAST** even if you don't have a GPU on your computer!!).
-  - [Check out this other Google Colab](https://colab.research.google.com/drive/1h5izTF07GjHMkekmGNUj32Sbb1gccJxd?usp=sharing) to get embeddings for sequences in a FASTA file (you can then download them and use them as input features for prediction models).
-- Release `0.1.4` will include embedding similarity transfer and supervised annotation extraction via a new stage called `extract`.
-
 ## Installation
 
 You can install `bio_embeddings` via pip or use it via docker.
