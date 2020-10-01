@@ -84,5 +84,5 @@ target-version = ['py36']
 include = '/(bio_embeddings|tests)/'
 
 [build-system]
-requires = ["poetry~=1.0.0"]
+requires = ["poetry~=1.1.0"]
 build-backend = "poetry.masonry.api"
