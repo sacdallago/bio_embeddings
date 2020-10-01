@@ -1,11 +1,17 @@
 import uuid
+
 from flask import request, send_file, abort
 from flask_restx import Resource
+
 from webserver.database import get_file
 from webserver.endpoints import api
+from webserver.endpoints.request_models import (
+    file_post_parser,
+    request_status_parser,
+    request_results_parser,
+)
 from webserver.endpoints.utils import validate_FASTA_submission
 from webserver.tasks.embeddings import get_embeddings
-from webserver.endpoints.request_models import file_post_parser, request_status_parser, request_results_parser
 
 ns = api.namespace("embeddings", description="Get embeddings")
 
@@ -40,9 +46,12 @@ class Embeddings(Resource):
             if file:
                 return send_file(file, attachment_filename="reduced_embeddings_file.h5", as_attachment=True)
             else:
-                return abort(404, f"File {file_request} not found."
-                                  f"Either requesting invalid file or job not finished yet."
-                                  f"Job status {job_status}.")
+                return abort(
+                    404,
+                    f"File {file_request} not found. "
+                    f"Either requesting invalid file or job not finished yet. "
+                    f"Job status {job_status}.",
+                )
         else:
             abort(404, "Job not found or not completed.")
 

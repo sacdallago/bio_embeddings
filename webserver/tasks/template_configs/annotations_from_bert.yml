@@ -3,7 +3,7 @@ global:
   prefix:
 bert_embeddings:
   type: embed
-  protocol: bert
+  protocol: prottrans_bert_bfd
   reduce: True
   model_directory:
   max_amino_acids:

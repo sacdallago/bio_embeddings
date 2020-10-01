@@ -16,13 +16,13 @@ configuration = {
     },
     # Bert stuff
     "prottrans_bert_bfd": {
-        "model_directory": os.path.join(model_directory, "bert", "model_directory"),
+        "model_directory": os.path.join(model_directory, "prottrans_bert_bfd", "model_directory"),
         "max_amino_acids": int(environ.get("BERT_MAX_AMINO_ACIDS", 8000)),
         "secondary_structure_checkpoint_file": os.path.join(
             model_directory, "bert_from_publication_annotations_extractors/secondary_structure_checkpoint_file"
         ),
         "subcellular_location_checkpoint_file": os.path.join(
-            model_directory, "bert/subcellular_location_checkpoint_file"
+            model_directory, "bert_from_publication_annotations_extractors/subcellular_location_checkpoint_file"
         ),
     },
     # SeqVec stuff

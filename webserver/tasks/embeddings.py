@@ -25,10 +25,10 @@ _annotations_from_seqvec: Dict[str, Dict[str, str]] = read_config_file(_module_d
 # Enrich templates with execution specific parameters: location of weights & optionable max_aa
 
 # BERT
-_annotations_from_bert['bert_embeddings']['model_directory'] = configuration['bert']['model_directory']
-_annotations_from_bert['bert_embeddings']['max_amino_acids'] = configuration['bert']['max_amino_acids']
-_annotations_from_bert['annotations_from_bert']['secondary_structure_checkpoint_file'] = configuration['bert']['secondary_structure_checkpoint_file']
-_annotations_from_bert['annotations_from_bert']['subcellular_location_checkpoint_file'] = configuration['bert']['subcellular_location_checkpoint_file']
+_annotations_from_bert['bert_embeddings']['model_directory'] = configuration['prottrans_bert_bfd']['model_directory']
+_annotations_from_bert['bert_embeddings']['max_amino_acids'] = configuration['prottrans_bert_bfd']['max_amino_acids']
+_annotations_from_bert['annotations_from_bert']['secondary_structure_checkpoint_file'] = configuration['prottrans_bert_bfd']['secondary_structure_checkpoint_file']
+_annotations_from_bert['annotations_from_bert']['subcellular_location_checkpoint_file'] = configuration['prottrans_bert_bfd']['subcellular_location_checkpoint_file']
 
 
 # SEQVEC

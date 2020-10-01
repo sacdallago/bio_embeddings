@@ -1,17 +1,33 @@
 # Adapted from https://github.com/Libardo1/dash-tsne
 
-import h5py
-import io
-import dash
 import base64
-import pandas as pd
-import dash_html_components as html
-import dash_core_components as dcc
-import plotly.graph_objs as go
+import io
 from tempfile import NamedTemporaryFile
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import h5py
+import pandas as pd
+import plotly.graph_objs as go
 from dash.dependencies import Input, Output
+from sklearn.manifold import TSNE
 
 from webserver.database import get_file
+
+
+def tsne_reduce(embeddings, **kwargs):
+    tsne_params = {
+        "n_components": kwargs.get("n_components", 3),
+        "perplexity": kwargs.get("perplexity", 6),
+        "random_state": kwargs.get("random_state", 420),
+        "n_iter": kwargs.get("n_iter", 15000),
+        "verbose": kwargs.get("verbose", 1),
+        "n_jobs": kwargs.get("n_jobs", -1),
+        "metric": kwargs.get("metric", "cosine"),
+    }
+
+    return TSNE(**tsne_params).fit_transform(embeddings)
 
 
 def input_field(title, state_id, state_value, state_max, state_min):
@@ -60,8 +76,6 @@ def _create_layout():
         ],
             className="row"
         ),
-
-
 
         html.Div([
             html.Div(
@@ -232,8 +246,6 @@ def create_dash_app(app):
     @dash_app.callback(dash.dependencies.Output('plot-div', 'children'),
                        [dash.dependencies.Input('url', 'pathname')])
     def display_page(pathname):
-        from bio_embeddings.project import tsne_reduce
-
         if pathname:
             job_id = pathname.split('/')[-1]
             file = get_file(job_id, 'reduced_embeddings_file')
@@ -305,5 +317,3 @@ def create_dash_app(app):
         ])
 
     return dash_app
-
-
