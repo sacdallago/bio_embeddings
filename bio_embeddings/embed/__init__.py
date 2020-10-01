@@ -1,98 +1,54 @@
-import tempfile
+import logging
+from typing import Dict, Type
 
-from bio_embeddings.embed.albert import AlbertEmbedder as _AlbertEmbedder
-from bio_embeddings.embed.fasttext import FastTextEmbedder as _FastTextEmbedder
-from bio_embeddings.embed.glove import GloveEmbedder as _GloveEmbedder
-from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder as _SeqVecEmbedder
-from bio_embeddings.embed.word2vec import Word2VecEmbedder as _Word2VecEmbedder
-from bio_embeddings.utilities.remote_file_retriever import get_model_file, get_model_directories_from_zip
+from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
 
-_temporary_files = list()
+logger = logging.getLogger(__name__)
 
+name_to_embedder: Dict[str, Type[EmbedderInterface]] = {}
 
-# To make it easier for end-users of the embeddings as a package,
-# auto-download missing files!
+# Transformers
+try:
+    from bio_embeddings.embed.protrans_albert_bfd_embedder import (
+        ProtTransAlbertBFDEmbedder,
+    )
+    from bio_embeddings.embed.prottrans_bert_bfd_embedder import (
+        ProtTransBertBFDEmbedder,
+    )
+    from bio_embeddings.embed.xlnet_embedder import ProtTransXLNetUniRef100Embedder
 
+    name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
+    name_to_embedder[ProtTransBertBFDEmbedder.name] = ProtTransBertBFDEmbedder
+    name_to_embedder[
+        ProtTransXLNetUniRef100Embedder.name
+    ] = ProtTransXLNetUniRef100Embedder
+except ImportError:
+    logger.debug(
+        "transformers extra not installed, Bert, Albert and XLNet will not be available"
+    )
 
-class SeqVecEmbedder(_SeqVecEmbedder):
+# Elmo / SeqVec
+try:
+    from bio_embeddings.embed.seqvec_embedder import SeqVecEmbedder
 
-    def __init__(self, **kwargs):
-        necessary_files = ['weights_file', 'options_file']
+    name_to_embedder[SeqVecEmbedder.name] = SeqVecEmbedder
+except ImportError:
+    logger.debug("allennlp extra not installed, SeqVec will not be available")
 
-        if kwargs.get('seqvec_version') == 2 or kwargs.get('vocabulary_file'):
-            necessary_files.append('vocabulary_file')
-            kwargs['seqvec_version'] = 2
+if not name_to_embedder:
+    logger.warning(
+        "No extra is installed, so none of the context dependent embedders are available! "
+        "Please run `pip install bio-embeddings[all]`!"
+    )
 
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                _temporary_files.append(f)
+# UniRep
+try:
+    from bio_embeddings.embed.unirep_embedder import UniRepEmbedder
 
-                get_model_file(path=f.name, model='seqvecv{}'.format(str(kwargs.get('seqvec_version', 1))), file=file)
+    name_to_embedder[UniRepEmbedder.name] = UniRepEmbedder
+except ImportError:
+    logger.debug("unirep extra not installed and will not be available")
 
-                kwargs[file] = f.name
-        super().__init__(**kwargs)
-
-
-class AlbertEmbedder(_AlbertEmbedder):
-
-    def __init__(self, **kwargs):
-        necessary_directories = ['model_directory']
-
-        for directory in necessary_directories:
-            if not kwargs.get(directory):
-                f = tempfile.mkdtemp()
-                _temporary_files.append(f)
-
-                get_model_directories_from_zip(path=f, model='albert', directory=directory)
-
-                kwargs[directory] = f
-        super().__init__(**kwargs)
-
-
-class Word2VecEmbedder(_Word2VecEmbedder):
-    def __init__(self, **kwargs):
-        necessary_files = ['model_file']
-
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                _temporary_files.append(f)
-
-                get_model_file(path=f.name, model='word2vec', file=file)
-
-                kwargs[file] = f.name
-
-        super().__init__(**kwargs)
-
-
-class FastTextEmbedder(_FastTextEmbedder):
-    def __init__(self, **kwargs):
-        necessary_files = ['model_file']
-
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                _temporary_files.append(f)
-
-                get_model_file(path=f.name, model='fasttext', file=file)
-
-                kwargs[file] = f.name
-
-        super().__init__(**kwargs)
-
-
-class GloveEmbedder(_GloveEmbedder):
-    def __init__(self, **kwargs):
-        necessary_files = ['model_file']
-
-        for file in necessary_files:
-            if not kwargs.get(file):
-                f = tempfile.NamedTemporaryFile()
-                _temporary_files.append(f)
-
-                get_model_file(path=f.name, model='glove', file=file)
-
-                kwargs[file] = f.name
-
-        super().__init__(**kwargs)
+from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
+from bio_embeddings.embed.glove_embedder import GloveEmbedder
+from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder

@@ -1,0 +1,16 @@
+global:
+  sequences_file: /mnt/fasta.fa
+  prefix: /mnt/output
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True
+tsne_projections:
+  type: project
+  protocol: tsne
+  depends_on: seqvec_embeddings
+plotly_visualization:
+  type: visualize
+  protocol: plotly
+  depends_on: tsne_projections
+  annotation_file: /mnt/annotation_file.csv

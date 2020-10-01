@@ -1,6 +1,6 @@
 import pytest
 
-from bio_embeddings.utilities.pipeline import run
+from bio_embeddings.utilities.pipeline import parse_config_file_and_execute_run
 
 ANNOTATIONS = """
 identifier,label
@@ -71,4 +71,4 @@ def test_files(tmp_path):
 
 def simple_behavior_test(test_files):
     """ Run the pipeline using a simple setup once """
-    run(test_files, overwrite=True)
+    parse_config_file_and_execute_run(test_files, overwrite=True)

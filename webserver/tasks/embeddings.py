@@ -1,52 +1,71 @@
-from io import StringIO
 from os import path
 from pathlib import Path
-from tempfile import NamedTemporaryFile
-from typing import Iterable
+from typing import Dict
+from tempfile import TemporaryDirectory
 
-import h5py
-from Bio import SeqIO, SeqRecord
+from bio_embeddings.utilities import write_fasta_file
+from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
+from bio_embeddings.utilities.config import read_config_file
 
-from bio_embeddings.embed import SeqVecEmbedder, AlbertEmbedder
-from webserver.database import get_file, write_file
+
+from webserver.database import write_file
 from webserver.tasks import task_keeper
+from webserver.utilities.configuration import configuration
 
-_model_dir = path.join(Path(path.abspath(__file__)).parent.parent.parent, 'models')
+_module_dir: Path = Path(path.dirname(path.abspath(__file__)))
 
-# SeqVec
-_seqvec_weight_file = path.join(_model_dir, 'elmov1', 'weights.hdf5')
-_seqvec_options_file = path.join(_model_dir, 'elmov1', 'options.json')
+# Template configs: these will be the "job types" available
+_annotations_from_bert: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "template_configs" / 'annotations_from_bert.yml')
+_annotations_from_seqvec: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "template_configs" / 'annotations_from_seqvec.yml')
 
-# Albert
-_albert_model_dir = path.join(_model_dir, 'albert')
+# Enrich templates with execution specific parameters: location of weights & optionable max_aa
+
+# BERT
+_annotations_from_bert['bert_embeddings']['model_directory'] = configuration['bert']['model_directory']
+_annotations_from_bert['bert_embeddings']['max_amino_acids'] = configuration['bert']['max_amino_acids']
+_annotations_from_bert['annotations_from_bert']['secondary_structure_checkpoint_file'] = configuration['bert']['secondary_structure_checkpoint_file']
+_annotations_from_bert['annotations_from_bert']['subcellular_location_checkpoint_file'] = configuration['bert']['subcellular_location_checkpoint_file']
 
 
-def _get_embeddings(protein_generator: Iterable[SeqRecord], embedder, reduced_embeddings_file):
-    max_amino_acids = 15000
-    protein_data = [(entry.id, str(entry.seq)) for entry in protein_generator]
-    ids, sequences = zip(*protein_data)
+# SEQVEC
+_annotations_from_seqvec['seqvec_embeddings']['weights_file'] = configuration['seqvec']['weights_file']
+_annotations_from_seqvec['seqvec_embeddings']['options_file'] = configuration['seqvec']['options_file']
+_annotations_from_seqvec['seqvec_embeddings']['max_amino_acids'] = configuration['seqvec']['max_amino_acids']
+_annotations_from_seqvec['annotations_from_seqvec']['secondary_structure_checkpoint_file'] = configuration['seqvec']['secondary_structure_checkpoint_file']
+_annotations_from_seqvec['annotations_from_seqvec']['subcellular_location_checkpoint_file'] = configuration['seqvec']['subcellular_location_checkpoint_file']
 
-    for sequence_id, embedding in zip(ids, embedder.embed_many(sequences, max_amino_acids)):
-        reduced_embeddings_file.create_dataset(
-            sequence_id,
-            data=embedder.reduce_per_protein(embedding)
-        )
+
+_CONFIGS = {
+    'annotations_from_seqvec': _annotations_from_seqvec,
+    'annotations_from_bert': _annotations_from_bert,
+}
+
+_FILES_TO_STORE = [
+        "embeddings_file"
+        "reduced_embeddings_file",
+        "sequence_file",
+        "DSSP3_predictions_file",
+        "DSSP8_predictions_file",
+        "disorder_predictions_file",
+        "per_sequence_predictions_file",
+        "mapping_file"
+    ]
 
 
 @task_keeper.task()
-def get_embeddings(job_identifier, embedder='seqvec'):
-    if embedder == 'seqvec':
-        embedder = SeqVecEmbedder(weights_file=_seqvec_weight_file, options_file=_seqvec_options_file)
-    elif embedder == 'albert':
-        embedder = AlbertEmbedder(model_directory=_albert_model_dir)
+def get_embeddings(job_identifier, sequences, pipeline_type):
+    config = _CONFIGS[pipeline_type]
 
-    with get_file(job_identifier, "sequences_file") as db_file:
-        file_content = StringIO(db_file.read().decode("utf-8"))
-        protein_generator: Iterable[SeqRecord] = SeqIO.parse(file_content, 'fasta')
-        db_file.close()
+    def _post_stage_save(stage_out_config):
+        for file_name in _FILES_TO_STORE:
+            if stage_out_config.get(file_name):
+                write_file(job_identifier, file_name, stage_out_config[file_name])
 
-    with NamedTemporaryFile() as temp_file:
-        with h5py.File(temp_file.name, "w") as reduced_embeddings_file:
-            _get_embeddings(protein_generator, embedder, reduced_embeddings_file)
+    with TemporaryDirectory() as workdir:
+        write_fasta_file(sequences, Path(workdir) / "sequences.fasta")
 
-        write_file(job_identifier, "reduced_embeddings_file", temp_file.name)
+        # Add last job details
+        config['global']['prefix'] = Path(workdir) / "bio_embeddings_job"
+        config['global']['sequences_file'] = Path(workdir) / "sequences.fasta"
+
+        execute_pipeline_from_config(config, post_stage=_post_stage_save)
