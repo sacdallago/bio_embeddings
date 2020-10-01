@@ -1,0 +1,24 @@
+global:
+  sequences_file: fasta.fa
+  prefix: simple
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True
+  discard_per_amino_acid_embeddings: True
+transferred_annotations_euclidean:
+  type: extract
+  protocol: unsupervised
+  depends_on: seqvec_embeddings
+  reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.h5
+  reference_annotations_file: disprot_2019_09_labelled_0.2_0.8_filtered.csv
+  k_nearest_neighbours: 15
+transferred_annotations_cosine:
+  type: extract
+  protocol: unsupervised
+  depends_on: seqvec_embeddings
+  reference_embeddings_file: disprot_seqvec_reduced_embeddings_file.h5
+  reference_annotations_file: disprot_2019_09_labelled_0.2_0.8_filtered.csv
+  k_nearest_neighbours: 3
+  keep_pairwise_distances_matrix_file: True
+  metric: cosine

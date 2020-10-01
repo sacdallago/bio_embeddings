@@ -1,15 +1,10 @@
-seqvecv1:
+seqvec:
   weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
   options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
 
-seqvecv1_feature_extractors:
-  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
-  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
-
-seqvecv2:
-  weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/weights.hdf5"
-  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/options.json"
-  vocabulary_file: "ttp://maintenance.dallago.us/public/embeddings/embedding_models/seqvec_v2/vocab.txt"
+seqvec_from_publication_annotations_extractors:
+  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
 
 fasttext:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"
@@ -20,5 +15,15 @@ word2vec:
 glove:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
 
-albert:
-  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/albert.zip"
+prottrans_bert_bfd:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/bert/prottrans_bert_bfd.zip"
+
+bert_from_publication_annotations_extractors:
+  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/subcell_checkpoint.pt"
+
+prottrans_xlnet_uniref100:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/prottrans_xlnet_uniref100.zip"
+
+prottrans_albert_bfd:
+  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/prottrans_albert_bfd.zip"

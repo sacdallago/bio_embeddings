@@ -1,0 +1,15 @@
+global:
+  sequences_file:
+  prefix:
+bert_embeddings:
+  type: embed
+  protocol: bert
+  reduce: True
+  model_directory:
+  max_amino_acids:
+annotations_from_bert:
+  type: extract
+  protocol: bert_from_publication
+  depends_on: bert_embeddings
+  secondary_structure_checkpoint_file:
+  subcellular_location_checkpoint_file:

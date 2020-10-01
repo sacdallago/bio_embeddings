@@ -138,3 +138,6 @@ models/
 private/
 .idea/
 .venv
+sync.sh
+examples/docker/output
+evotuning.log

@@ -1,9 +1,7 @@
 import uuid
 from flask import request, jsonify, send_file, abort
 from flask_restx import Resource
-from tempfile import NamedTemporaryFile
-from bio_embeddings.utilities import write_fasta_file
-from webserver.database import write_file, get_file
+from webserver.database import get_file
 from webserver.endpoints import api
 from webserver.endpoints.utils import validate_FASTA_submission
 from webserver.tasks.embeddings import get_embeddings
@@ -20,14 +18,11 @@ class Embeddings(Resource):
     @api.response(505, "Server error")
     def post(self):
         file_validation = validate_FASTA_submission(request)
-
         job_id = uuid.uuid4().hex
+        pipeline_type = request.form.get('pipeline_type', 'annotations_from_bert')
 
-        temp_file = NamedTemporaryFile()
-        write_fasta_file(file_validation['sequences'], temp_file.name)
-        write_file(job_id, "sequences_file", temp_file.name)
-
-        async_call = get_embeddings.apply_async(args=(job_id, 'seqvec'), task_id=job_id)
+        async_call = get_embeddings.apply_async(args=(job_id, file_validation['sequences'], pipeline_type),
+                                                task_id=job_id)
 
         return {'request_id': async_call.id, 'job_id': job_id}
 
@@ -38,12 +33,16 @@ class Embeddings(Resource):
         job_id = request.args.get('id')
         file_request = request.args.get('file', 'reduced_embeddings_file')
 
-        if get_embeddings.AsyncResult(job_id).status == "SUCCESS":
+        job_status = get_embeddings.AsyncResult(job_id).status
+
+        if job_status == "SUCCESS" or job_status == "STARTED":
             file = get_file(job_id, file_request)
             if file:
                 return send_file(file, attachment_filename="reduced_embeddings_file.h5", as_attachment=True)
             else:
-                return abort(404, "File {} not found".format(file_request))
+                return abort(404, f"File {file_request} not found."
+                                  f"Either requesting invalid file or job not finished yet."
+                                  f"Job status {job_status}.")
         else:
             abort(404, "Job not found or not completed.")
 
@@ -56,4 +55,5 @@ class Embeddings(Resource):
     def get(self):
         job_id = request.args.get('id')
 
+        # TODO: add a list of available files for the job (aka mongo search by job id)
         return {"status": get_embeddings.AsyncResult(job_id).status}

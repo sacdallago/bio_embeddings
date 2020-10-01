@@ -1,0 +1,20 @@
+global:
+  sequences_file: fasta.fa
+  prefix: simple
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  weights_file: /mnt/nfs/models/seqvec/weights_file
+  options_file: /mnt/nfs/models/seqvec/options_file
+annotations_from_seqvec:
+  type: extract
+  protocol: seqvec_from_publication
+  depends_on: seqvec_embeddings
+bert_embeddings:
+  type: embed
+  protocol: prottrans_bert_bfd
+  model_directory: /mnt/nfs/models/bert
+annotations_from_bert:
+  type: extract
+  protocol: bert_from_publication
+  depends_on: bert_embeddings
