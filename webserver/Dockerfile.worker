@@ -1,3 +1,6 @@
+# This file is nearly equivalent to the rostlab/bio_embeddings dockerfile,
+# except that we install the webserver dependencies and launch the worker
+
 # This location of python in venv-build needs to match the location in the runtime image,
 # so we're manually installing the required python environment
 FROM ubuntu:18.04 as venv-build
@@ -9,16 +12,20 @@ RUN apt-get update && \
 
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
+COPY webserver/requirements.txt /app/webserver/requirements.txt
+
 WORKDIR /app
 
-RUN python3 -m venv .venv && \
-    # Install a recent version of pip, otherwise the installation of manylinux2010 packages will fail
-    .venv/bin/pip install -U pip && \
-    # Make sure poetry install the metadata for bio_embeddings
-    mkdir bio_embeddings && \
+# Installs a recent version of pip, otherwise the installation of manylinux2010 packages will fail
+# The __init__.py and README.md makes sure poetry installs the metadata for bio_embeddings
+RUN mkdir bio_embeddings && \
     touch bio_embeddings/__init__.py && \
+    touch README.md && \
+    python3 -m venv .venv && \
+    .venv/bin/pip install -U pip && \
     python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
-    python3 $HOME/.poetry/bin/poetry install --no-dev -E all
+    python3 $HOME/.poetry/bin/poetry install --no-dev -E all && \
+    .venv/bin/pip install -r webserver/requirements.txt
 
 FROM nvidia/cuda:10.1-runtime-ubuntu18.04
 
@@ -33,10 +40,14 @@ RUN apt-get update \
 RUN mkdir /tmp/numba_cache && chmod 777 /tmp/numba_cache
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache
 
-COPY --from=venv-build /app/.venv /app/.venv
-COPY . /app/
+USER www-data
+
+COPY --chown=www-data:www-data --from=venv-build /app/.venv /app/.venv
+COPY --chown=www-data:www-data . /app/
 
 WORKDIR /app
 
-ENTRYPOINT ["/app/.venv/bin/python", "-m", "bio_embeddings.utilities.cli"]
+ENV MODEL_DIRECTORY /mnt/models
+
+ENTRYPOINT ["/app/.venv/bin/celery", "worker", "-A", "webserver.celery_worker.task_keeper", "--loglevel=info", "--pool=solo"]
 

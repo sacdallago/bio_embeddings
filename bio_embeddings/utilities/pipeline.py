@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Dict, Callable
 
 import importlib_metadata
+from importlib_metadata import PackageNotFoundError
 
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
@@ -96,7 +97,6 @@ def _null_function(config: Dict) -> None:
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
                                  **kwargs) -> Dict:
-
     original_config = deepcopy(config)
 
     check_required(
@@ -127,7 +127,10 @@ def execute_pipeline_from_config(config: Dict,
         # create the prefix
         file_manager.create_prefix(prefix)
 
-    Path(prefix).joinpath("bio_embeddings_version.txt").write_text(importlib_metadata.version("bio_embeddings"))
+    try:
+        Path(prefix).joinpath("bio_embeddings_version.txt").write_text(importlib_metadata.version("bio_embeddings"))
+    except PackageNotFoundError:
+        pass  # :(
 
     # Copy original config to prefix
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
@@ -198,7 +201,6 @@ def execute_pipeline_from_config(config: Dict,
 
 
 def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
-
     if not _valid_file(config_file_path):
         raise Exception("No config or invalid config was passed.")
 

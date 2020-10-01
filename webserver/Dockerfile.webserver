@@ -1,0 +1,15 @@
+FROM python:3.8-slim
+
+COPY webserver/requirements.txt webserver/requirements.txt
+RUN pip install -U pip \
+    && pip install -r webserver/requirements.txt
+
+USER www-data
+
+COPY --chown=www-data:www-data webserver /app/webserver
+
+WORKDIR /app
+
+ENV MODEL_DIRECTORY /mnt/models
+
+ENTRYPOINT ["gunicorn", "-w", "2", "-b", ":3000", "webserver.backend:app", "--capture-output", "--log-file", "-", "--access-logfile", "-"]
