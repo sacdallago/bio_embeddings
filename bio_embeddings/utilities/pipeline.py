@@ -10,6 +10,8 @@ from importlib_metadata import PackageNotFoundError
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.project.pipeline import run as run_project
+from bio_embeddings.visualize.pipeline import run as run_visualize
+# from bio_embeddings.extract_features.pipeline import run as run_extract_features
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
@@ -93,6 +95,8 @@ def _process_fasta_file(**kwargs):
 def _null_function(config: Dict) -> None:
     pass
 
+    if not _valid_file(config_file_path):
+        raise Exception("No config or invalid config was passed.")
 
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,

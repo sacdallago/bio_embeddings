@@ -1,3 +1,5 @@
+import os
+import yaml
 from tempfile import NamedTemporaryFile
 from typing import Tuple, Dict
 
@@ -14,6 +16,11 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
 
     if 'sequences' not in files:
         return abort(400, "Missing files")
+
+    # Test if sequences is valid FASTA, count number of AA & get identifiers
+    AA_count = 0
+    sequences_count = 0
+    identifiers = set()
 
     try:
         file_io = files.get('sequences', {})
@@ -36,6 +43,7 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
 
         identifiers.add(seq_id)
         AA_count += len(sequence)
+        sequences_count += 1
 
         if AA_count > configuration['web']['max_amino_acids']:
             return abort(400, "Your FASTA file contains more than {}AA. The total allowed is {}AA. "
@@ -53,7 +61,12 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if statistics['numberOfSequences'] < 1:
         return abort(400, "No sequences submitted. Try another FASTA file.")
 
-    return statistics, dict(sequences)
+    result = dict(
+        sequences=sequences,
+        statistics=statistics
+    )
+
+    return result
 
 
 def validate_file_submission(request):

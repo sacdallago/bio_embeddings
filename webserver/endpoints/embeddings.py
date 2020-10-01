@@ -12,6 +12,7 @@ from webserver.endpoints.request_models import (
 )
 from webserver.endpoints.utils import validate_FASTA_submission
 from webserver.tasks.embeddings import get_embeddings
+from webserver.endpoints.request_models import file_post_parser, request_status_parser, request_results_parser
 
 ns = api.namespace("embeddings", description="Get embeddings")
 
