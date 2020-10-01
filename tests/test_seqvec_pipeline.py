@@ -22,7 +22,7 @@ class MockElmoEmbedder:
 
 def test_seqvec():
     with mock.patch(
-        "bio_embeddings.embed.seqvec.SeqVecEmbedder.ElmoEmbedder", MockElmoEmbedder
+        "bio_embeddings.embed.seqvec_embedder.ElmoEmbedder", MockElmoEmbedder
     ), TemporaryDirectory() as tmp_dir:
         out = seqvec(
             weights_file="mocked.txt",

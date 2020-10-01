@@ -1,20 +1,8 @@
-import os
-import yaml
 from tempfile import NamedTemporaryFile
-from pathlib import Path
 from pandas import read_csv
-from bio_embeddings.utilities import read_fasta
 from flask import abort
-
-# Read and load configuration file
-configuration = dict()
-module_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-
-with open(module_dir / ".." / "backend_configuration.yml", 'r') as stream:
-    try:
-        configuration = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
+from bio_embeddings.utilities import read_fasta
+from webserver.utilities.configuration import configuration
 
 
 def validate_FASTA_submission(request):
@@ -39,7 +27,7 @@ def validate_FASTA_submission(request):
 
     for sequence in sequences:
         if sequence.id in identifiers:
-            return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty idenfifier: {})".format(sequence.id))
+            return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty identifier: {})".format(sequence.id))
         if not sequence.id:
             return abort(400, "Your FASTA sequence contains a sequence with no identifier. This is not allowed.")
 
@@ -47,10 +35,10 @@ def validate_FASTA_submission(request):
         AA_count += len(sequence)
         sequences_count += 1
 
-        if AA_count > configuration['max_allowed_aa']:
+        if AA_count > configuration['web']['max_amino_acids']:
             return abort(400, "Your FASTA file contains more than {}AA. The total allowed is {}AA. "
                               "Please, exclude some sequences from your file "
-                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['max_allowed_aa']))
+                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['web']['max_amino_acids']))
 
     # Compile statistics
     statistics = dict(
@@ -99,10 +87,10 @@ def validate_file_submission(request):
         AA_count += len(sequence)
         sequences_count += 1
 
-        if AA_count > configuration['max_allowed_aa']:
+        if AA_count > configuration['web']['max_amino_acids']:
             return abort(400, "Your FASTA file contains more than {}AA. The total allowed is {}AA. "
                               "Please, exclude some sequences from your file "
-                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['max_allowed_aa']))
+                              "or consider running the bio_embeddings pipeline locally.".format(AA_count, configuration['web']['max_amino_acids']))
 
     # Test if annotations file is valid CSV and contains necessary columns
     try:

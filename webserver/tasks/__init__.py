@@ -1,5 +1,5 @@
-from os import environ
+from webserver.utilities.configuration import configuration
 from celery import Celery as _celery
 
-_broker = environ['CELERY_BROKER_URL']
-task_keeper = _celery(broker=_broker, backend=_broker)
+task_keeper = _celery(broker=configuration['web']['celery_broker_url'],
+                      backend=configuration['web']['celery_broker_url'])

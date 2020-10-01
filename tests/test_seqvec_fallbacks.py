@@ -3,7 +3,7 @@ from unittest import mock
 
 import numpy
 
-from bio_embeddings.embed.seqvec.SeqVecEmbedder import SeqVecEmbedder
+from bio_embeddings.embed.seqvec_embedder import SeqVecEmbedder
 
 # lengths, cpu, success
 LogType = List[Tuple[List[int], bool, bool]]
@@ -33,13 +33,9 @@ class MockElmoMemory:
             self.log.append((lengths, True, True))
             return [numpy.zeros((3, length, 1024)) for length in lengths]
 
-    def embed_sentence(self, sentence: List[str]) -> numpy.ndarray:
-        # That's what the original elmo does
-        return self.embed_batch([sentence])[0]
-
 
 def test_fallbacks(caplog):
-    """ Check that the fallbacks to single sequence processing and/or the CPU are working.
+    """Check that the fallbacks to single sequence processing and/or the CPU are working.
 
     batch_size is 18, actual GPU limit 15, so that we get a case where a too
     big batch has to be handled
@@ -52,10 +48,13 @@ def test_fallbacks(caplog):
 
     elmo_log: LogType = []
     with mock.patch(
-        "bio_embeddings.embed.seqvec.SeqVecEmbedder.ElmoEmbedder",
+        "bio_embeddings.embed.seqvec_embedder.ElmoEmbedder",
         lambda weight_file, options_file, cuda_device: MockElmoMemory(
             cuda_device, elmo_log
         ),
+    ), mock.patch(
+        "bio_embeddings.utilities.helpers.torch.cuda.is_available",
+        lambda: True,
     ):
         sequences = [
             "M" * 20,
@@ -66,7 +65,7 @@ def test_fallbacks(caplog):
             "M" * 7,
         ]
         embeddings_generator = SeqVecEmbedder(
-            weights_file=None, options_file=None
+            weights_file="/invalid/path", options_file="/invalid/path"
         ).embed_many(sequences, given_limit)
         list(embeddings_generator)
 
