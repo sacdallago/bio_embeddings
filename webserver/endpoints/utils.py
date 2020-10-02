@@ -1,5 +1,3 @@
-import os
-import yaml
 from tempfile import NamedTemporaryFile
 from typing import Tuple, Dict
 
@@ -17,11 +15,6 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if 'sequences' not in files:
         return abort(400, "Missing files")
 
-    # Test if sequences is valid FASTA, count number of AA & get identifiers
-    AA_count = 0
-    sequences_count = 0
-    identifiers = set()
-
     try:
         file_io = files.get('sequences', {})
         temp_file = NamedTemporaryFile()
@@ -34,6 +27,8 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     # Test if sequences is valid FASTA, count number of AA & get identifiers
     AA_count = 0
     identifiers = set()
+    sequences_count = 0
+
     for seq_id, sequence in sequences:
         if seq_id in identifiers:
             return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty identifier: {})".format(
@@ -76,9 +71,6 @@ def validate_file_submission(request):
         return abort(400, "Missing files")
 
     # Test if sequences is valid FASTA, count number of AA & get identifiers
-    AA_count = 0
-    sequences_count = 0
-    identifiers = set()
 
     try:
         file_io = files.get('sequences', {})
@@ -88,6 +80,10 @@ def validate_file_submission(request):
         sequences = list(SeqIO.parse(temp_file.name, "fasta"))
     except:
         return abort(400, "Could not read FASTA sequence")
+
+    AA_count = 0
+    sequences_count = 0
+    identifiers = set()
 
     for sequence in sequences:
         if sequence.id in identifiers:
