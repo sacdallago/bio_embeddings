@@ -18,7 +18,10 @@ services:
       - bio_embeddings
 
   bio_embeddings_worker:
-    image: bio_embeddings_worker
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    image: bio_embeddings_worker:latest
     container_name: bio_embeddings_worker
     volumes:
       - /mnt/nfs/models:/mnt/models
@@ -29,7 +32,10 @@ services:
       - bio_embeddings
 
   bio_embeddings_webserver:
-    image: bio_embeddings_webserver
+    build:
+      context: .
+      dockerfile: Dockerfile.webserver
+    image: bio_embeddings_webserver:latest
     container_name: bio_embeddings_webserver
     ports:
       - 3000:3000
