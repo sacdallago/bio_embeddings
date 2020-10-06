@@ -10,14 +10,11 @@ from webserver.database import write_file
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
 
-_model_dir = path.join(Path(path.abspath(__file__)).parent.parent.parent, 'models')
 
 def read_config_file(config_path: Path) -> Dict[str, Any]:
     with config_path.open("r") as fp:
         return yaml.load(fp, Loader=yaml.RoundTripLoader)
 
-# Albert
-_albert_model_dir = path.join(_model_dir, 'albert')
 
 _module_dir: Path = Path(path.dirname(path.abspath(__file__)))
 

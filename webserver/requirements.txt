@@ -1,6 +1,5 @@
 biopython<2.0,>=1.76
 celery~=4.4.7
-dash~=1.16.0
 flask-cors~=3.0.9
 flask_restx~=0.2.0
 flask~=1.1.2
