@@ -18,10 +18,7 @@ services:
       - bio_embeddings
 
   bio_embeddings_worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.worker
-    image: bio_embeddings_worker:latest
+    image: gitlab.lrz.de:5005/sacdallago/bio_embeddings/bio_embeddings_worker:latest
     container_name: bio_embeddings_worker
     volumes:
       - /mnt/nfs/models:/mnt/models
@@ -32,10 +29,7 @@ services:
       - bio_embeddings
 
   bio_embeddings_webserver:
-    build:
-      context: .
-      dockerfile: Dockerfile.webserver
-    image: bio_embeddings_webserver:latest
+    image: gitlab.lrz.de:5005/sacdallago/bio_embeddings/bio_embeddings_webserver:latest
     container_name: bio_embeddings_webserver
     ports:
       - 3000:3000
