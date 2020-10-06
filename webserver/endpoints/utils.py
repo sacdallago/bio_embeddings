@@ -17,11 +17,6 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if 'sequences' not in files:
         return abort(400, "Missing files")
 
-    # Test if sequences is valid FASTA, count number of AA & get identifiers
-    AA_count = 0
-    sequences_count = 0
-    identifiers = set()
-
     try:
         file_io = files.get('sequences', {})
         temp_file = NamedTemporaryFile()
@@ -34,6 +29,8 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     # Test if sequences is valid FASTA, count number of AA & get identifiers
     AA_count = 0
     identifiers = set()
+    sequences_count = 0
+
     for seq_id, sequence in sequences:
         if seq_id in identifiers:
             return abort(400, "Your FASTA sequence contains duplicate identifiers (faulty identifier: {})".format(
@@ -61,12 +58,7 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if statistics['numberOfSequences'] < 1:
         return abort(400, "No sequences submitted. Try another FASTA file.")
 
-    result = dict(
-        sequences=sequences,
-        statistics=statistics
-    )
-
-    return result
+    return statistics, dict(sequences)
 
 
 def validate_file_submission(request):

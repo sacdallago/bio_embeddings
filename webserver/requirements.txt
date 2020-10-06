@@ -1,6 +1,5 @@
 biopython<2.0,>=1.76
 celery~=4.4.7
-dash~=1.16.0
 flask-cors~=3.0.9
 flask_restx~=0.2.0
 flask~=1.1.2
@@ -9,4 +8,5 @@ h5py<3.0.0,>=2.10.0
 pandas~=1.1.2
 pymongo~=3.11.0
 ruamel.yaml<0.17.0,>=0.16.10
-scikit-learn<0.24.0,>=0.23.2
+pyyaml<6.0.0,>=5.3.1
+scikit-learn<0.23.0,>=0.22.2.post1
