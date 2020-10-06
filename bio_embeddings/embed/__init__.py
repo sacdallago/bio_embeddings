@@ -15,7 +15,9 @@ try:
     from bio_embeddings.embed.prottrans_bert_bfd_embedder import (
         ProtTransBertBFDEmbedder,
     )
-    from bio_embeddings.embed.xlnet_embedder import ProtTransXLNetUniRef100Embedder
+    from bio_embeddings.embed.prottrans_xlnet_uniref100_embedder import (
+        ProtTransXLNetUniRef100Embedder,
+    )
 
     name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
     name_to_embedder[ProtTransBertBFDEmbedder.name] = ProtTransBertBFDEmbedder
