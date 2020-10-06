@@ -1,5 +1,6 @@
 import logging
 import re
+from itertools import zip_longest
 from pathlib import Path
 from typing import Optional, Generator, List
 
@@ -31,8 +32,11 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         # Get file locations from kwargs
         self.model_directory = self._options["model_directory"]
 
+        # 512 is from https://github.com/agemagician/ProtTrans/blob/master/Embedding/PyTorch/Advanced/ProtXLNet.ipynb
         self._model = (
-            XLNetModel.from_pretrained(self.model_directory).to(self._device).eval()
+            XLNetModel.from_pretrained(self.model_directory, mem_len=512)
+            .to(self._device)
+            .eval()
         )
         self._model_fallback = None
 
@@ -43,35 +47,39 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         self._tokenizer = XLNetTokenizer.from_pretrained(spm_model, do_lower_case=False)
 
     def embed(self, sequence: str) -> ndarray:
-        sequence_length = len(sequence)
-        sequence = re.sub(r"[UZOB]", "X", sequence)
-
-        # Tokenize sequence with spaces
-        sequence = " ".join(list(sequence))
-
-        # tokenize sequence
-        tokenized_sequence = torch.tensor(
-            [self._tokenizer.encode(sequence, add_special_tokens=True)]
-        ).to(self._device)
-
-        with torch.no_grad():
-            try:
-                embedding = self._model(tokenized_sequence)
-            except RuntimeError:
-                embedding = self._get_fallback_model()(tokenized_sequence)
-
-            # drop batch dimension and remove special tokens added to end
-            embedding = embedding[0].squeeze()[:-2]
-
-        assert (
-            sequence_length == embedding.shape[0]
-        ), f"Sequence length mismatch: {sequence_length} vs {embedding.shape[0]}"
-
-        return embedding.cpu().detach().numpy().squeeze()
+        [embedding] = self.embed_batch([sequence])
+        return embedding
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
-        # TODO: Actual batching for xlnet
-        return (self.embed(sequence) for sequence in batch)
+        seq_lens = [len(seq) for seq in batch]
+        # Remove rare amino acids
+        batch = [re.sub(r"[UZOBX]", "<unk>", sequence) for sequence in batch]
+        #batch = [re.sub(r"[UZOBX]", "X", sequence) for sequence in batch]
+        # transformers needs spaces between the amino acids
+        batch = [" ".join(list(seq)) for seq in batch]
+
+        ids = self._tokenizer.batch_encode_plus(
+            batch, add_special_tokens=True, pad_to_max_length=True
+        )
+
+        tokenized_sequences = torch.tensor(ids["input_ids"]).to(self._model.device)
+        attention_mask = torch.tensor(ids["attention_mask"]).to(self._model.device)
+
+        with torch.no_grad():
+            embeddings, memory = self._model(
+                input_ids=tokenized_sequences, attention_mask=attention_mask, mems=None
+            )
+
+        embeddings = embeddings[0].cpu().numpy()
+
+        for seq_num, seq in zip_longest(range(len(embeddings)), seq_lens):
+            seq_len = (attention_mask[seq_num] == 1).sum()
+            padded_seq_len = len(attention_mask[seq_num])
+            embedding = embeddings[seq_num][padded_seq_len - seq_len:padded_seq_len - 2]
+            assert (
+                seq_len == embedding.shape[0]
+            ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
+            yield embedding
 
     @staticmethod
     def reduce_per_protein(embedding):
