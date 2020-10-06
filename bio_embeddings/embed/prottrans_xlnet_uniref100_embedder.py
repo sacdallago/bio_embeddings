@@ -35,8 +35,8 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         # 512 is from https://github.com/agemagician/ProtTrans/blob/master/Embedding/PyTorch/Advanced/ProtXLNet.ipynb
         self._model = (
             XLNetModel.from_pretrained(self.model_directory, mem_len=512)
-            .to(self._device)
-            .eval()
+                .to(self._device)
+                .eval()
         )
         self._model_fallback = None
 
@@ -52,11 +52,10 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
         seq_lens = [len(seq) for seq in batch]
-        # Remove rare amino acids
-        batch = [re.sub(r"[UZOBX]", "<unk>", sequence) for sequence in batch]
-        #batch = [re.sub(r"[UZOBX]", "X", sequence) for sequence in batch]
         # transformers needs spaces between the amino acids
         batch = [" ".join(list(seq)) for seq in batch]
+        # Remove rare amino acids
+        batch = [re.sub(r"[UZOBX]", "<unk>", sequence) for sequence in batch]
 
         ids = self._tokenizer.batch_encode_plus(
             batch, add_special_tokens=True, pad_to_max_length=True
@@ -70,14 +69,14 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
                 input_ids=tokenized_sequences, attention_mask=attention_mask, mems=None
             )
 
-        embeddings = embeddings[0].cpu().numpy()
+        embeddings = embeddings.cpu().numpy()
 
-        for seq_num, seq in zip_longest(range(len(embeddings)), seq_lens):
-            seq_len = (attention_mask[seq_num] == 1).sum()
+        for seq_num, seq_len in zip_longest(range(len(embeddings)), seq_lens):
+            attention_len = (attention_mask[seq_num] == 1).sum()
             padded_seq_len = len(attention_mask[seq_num])
-            embedding = embeddings[seq_num][padded_seq_len - seq_len:padded_seq_len - 2]
+            embedding = embeddings[seq_num][padded_seq_len - attention_len:padded_seq_len - 2]
             assert (
-                seq_len == embedding.shape[0]
+                    seq_len == embedding.shape[0]
             ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
             yield embedding
 
