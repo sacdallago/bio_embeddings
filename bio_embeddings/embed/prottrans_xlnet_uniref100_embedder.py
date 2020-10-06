@@ -44,7 +44,7 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
 
     def embed(self, sequence: str) -> ndarray:
         sequence_length = len(sequence)
-        sequence = re.sub(r"[UZOBX]", "<unk>", sequence)
+        sequence = re.sub(r"[UZOB]", "X", sequence)
 
         # Tokenize sequence with spaces
         sequence = " ".join(list(sequence))

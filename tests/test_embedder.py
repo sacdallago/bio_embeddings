@@ -43,7 +43,10 @@ def embedder_test_impl(
     else:
 
         embedder = embedder_class(device=device)
-    [protein, seqwence] = embedder.embed_many(["PROTEIN", "SEQWENCE"], 100)
+    # The XXX tests that the unknown padding works
+    # https://github.com/sacdallago/bio_embeddings/issues/63
+    [protein, seqwence, padded] = embedder.embed_many(["PROTEIN", "SEQWENCE", "VLSXXXIEP"], 100)
+    print(padded.shape)
     expected = numpy.load(str(expected_file))
     assert numpy.allclose(expected["test_case 1"], protein, rtol=1.0e-3, atol=1.0e-5)
     assert numpy.allclose(expected["test_case 2"], seqwence, rtol=1.0e-3, atol=1.0e-5)
