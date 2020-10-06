@@ -18,7 +18,7 @@ services:
       - bio_embeddings
 
   bio_embeddings_worker:
-    image: gitlab.lrz.de:5005/sacdallago/bio_embeddings/bio_embeddings_worker:latest
+    image: ghcr.io/bioembeddings/worker
     container_name: bio_embeddings_worker
     volumes:
       - /mnt/nfs/models:/mnt/models
@@ -29,7 +29,7 @@ services:
       - bio_embeddings
 
   bio_embeddings_webserver:
-    image: gitlab.lrz.de:5005/sacdallago/bio_embeddings/bio_embeddings_webserver:latest
+    image: ghcr.io/bioembeddings/webserver
     container_name: bio_embeddings_webserver
     ports:
       - 3000:3000

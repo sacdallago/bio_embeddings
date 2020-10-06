@@ -10,6 +10,7 @@ image: "python:3.7"
 
 stages:
   - tests
+  - build-docker
 
 .install-deps-template: &install-deps
   before_script:
@@ -40,3 +41,27 @@ python3.7:
 python3.8:
   <<: *test
   image: python:3.8
+
+build-webserver:
+  stage: build-docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"ghcr.io\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/webserver/Dockerfile.webserver --destination ghcr.io/bioembeddings/webserver
+
+build-worker:
+  stage: build-docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"ghcr.io\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/webserver/Dockerfile.worker --destination ghcr.io/bioembeddings/worker
