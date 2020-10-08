@@ -24,7 +24,7 @@ You need to configure `CELERY_BROKER_URL`, `MONGO_URL` and `MODEL_DIRECTORY`. Th
 ├── seqvec
 │   ├── options_file
 │   └── weights_file
-└── secvec_from_publication_annotations_extractors
+└── seqvec_from_publication_annotations_extractors
     ├── secondary_structure_checkpoint_file
     └── subcellular_location_checkpoint_file
 ```
