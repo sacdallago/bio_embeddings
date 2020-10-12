@@ -5,8 +5,8 @@ services:
     image: mongo:4
     container_name: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: REPLACE_ME
+      MONGO_INITDB_ROOT_PASSWORD: REPLACE_ME
     networks:
       - bio_embeddings
 
@@ -24,7 +24,7 @@ services:
       - /mnt/nfs/models:/mnt/models
     environment:
       CELERY_BROKER_URL: amqp://rabbitmq
-      MONGO_URL: mongodb://root:example@mongo:27017
+      MONGO_URL: mongodb://REPLACE_ME:REPLACE_ME@mongo:27017
     networks:
       - bio_embeddings
 
@@ -32,10 +32,11 @@ services:
     image: ghcr.io/bioembeddings/webserver
     container_name: bio_embeddings_webserver
     ports:
+      # Configure your reverse proxy to forward to this port
       - 3000:3000
     environment:
       CELERY_BROKER_URL: amqp://rabbitmq
-      MONGO_URL: mongodb://root:example@mongo:27017
+      MONGO_URL: mongodb://REPLACE_ME:REPLACE_ME@mongo:27017
     networks:
       - bio_embeddings
 
