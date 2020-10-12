@@ -56,12 +56,7 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if statistics['numberOfSequences'] < 1:
         return abort(400, "No sequences submitted. Try another FASTA file.")
 
-    result = dict(
-        sequences=sequences,
-        statistics=statistics
-    )
-
-    return result
+    return statistics, dict(sequences)
 
 
 def validate_file_submission(request):

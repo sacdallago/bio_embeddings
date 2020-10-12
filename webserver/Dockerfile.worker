@@ -5,10 +5,12 @@
 # so we're manually installing the required python environment
 FROM ubuntu:18.04 as venv-build
 
+ENV PYTHONIOENCODING=utf-8 PYTHONUNBUFFERED=1
+
 # build-essential is for jsonnet
 RUN apt-get update && \
     apt-get install -y curl build-essential python3 python3-distutils python3-venv python3-dev && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 - --version 1.1.1
 
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
