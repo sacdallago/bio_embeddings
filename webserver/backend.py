@@ -1,5 +1,7 @@
 from flask import Flask, Blueprint, render_template
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from webserver.endpoints import api
 from webserver.endpoints.embeddings import ns as embeddings_namespace
 from webserver.utilities.configuration import configuration
@@ -16,6 +18,9 @@ cors = CORS(blueprint, origins=['https://embed.protein.properties', 'http://loca
 api.init_app(blueprint)
 api.add_namespace(embeddings_namespace)
 app.register_blueprint(blueprint)
+
+# https://flask.palletsprojects.com/en/1.1.x/quickstart/#hooking-in-wsgi-middleware
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 @app.route("/")
