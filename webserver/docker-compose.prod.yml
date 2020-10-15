@@ -21,7 +21,7 @@ services:
     image: ghcr.io/bioembeddings/worker
     container_name: bio_embeddings_worker
     volumes:
-      - /mnt/nfs/models:/mnt/models
+      - /replace/me/with/a/path/to/the/model/directory:/mnt/models
     environment:
       CELERY_BROKER_URL: amqp://rabbitmq
       MONGO_URL: mongodb://REPLACE_ME:REPLACE_ME@mongo:27017
