@@ -6,13 +6,11 @@ seqvec_embeddings:
   type: embed
   protocol: seqvec
   reduce: True
-  weights_file: /mnt/nfs/models/seqvec/weights_file
-  options_file: /mnt/nfs/models/seqvec/options_file
-  max_amino_acids: 17000
 umap_projections:
   type: project
   protocol: umap
   depends_on: seqvec_embeddings
+  n_components: 2
 plotly_visualization:
   type: visualize
   protocol: plotly
