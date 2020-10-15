@@ -1,0 +1,420 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bio_embeddings.github.io/v0.1.4/schema.json",
+  "title": "bio_embeddings pipeline format",
+  "description": "The bio_embeddings pipeline format",
+  "type": "object",
+  "properties": {
+    "global": {
+      "description": "Specify the input fasta file and the output prefix",
+      "type": "object",
+      "properties": {
+        "sequences_file": {
+          "description": "Path to a fasta file",
+          "type": "string"
+        },
+        "prefix": {
+          "description": "String for output",
+          "type": "string"
+        },
+        "simple_remapping": {
+          "description": "remap index simple (not via md5, this is not encouraged)",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "sequences_file",
+        "prefix"
+      ]
+    }
+  },
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "description": "Type of the stage",
+        "type": "string",
+        "enum": [
+          "embed",
+          "project",
+          "visualize",
+          "extract"
+        ]
+      }
+    },
+    "oneOf": [
+      {
+        "properties": {
+          "type": {
+            "description": "Type of the stage",
+            "type": "string",
+            "const": "embed"
+          },
+          "protocol": {
+            "description": "Required: which embedder to use",
+            "type": "string",
+            "enum": [
+              "seqvec",
+              "albert",
+              "bert",
+              "xlnet",
+              "unirep",
+              "fasttext",
+              "word2vec",
+              "glove"
+            ]
+          },
+          "reduce": {
+            "type": "boolean",
+            "default": false
+          },
+          "discard_per_amino_acid_embeddings": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "const": "seqvec"
+              },
+              "weights_file": {
+                "type": "string"
+              },
+              "options_file": {
+                "type": "string"
+              },
+              "device": {
+                "type": "string",
+                "default": "cuda"
+              }
+            }
+          },
+          {
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "albert",
+                  "bert",
+                  "xlnet"
+                ]
+              },
+              "model_directory": {
+                "type": "string"
+              },
+              "device": {
+                "type": "string",
+                "default": "cuda"
+              }
+            }
+          },
+          {
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "fasttext",
+                  "word2vec",
+                  "glove"
+                ]
+              },
+              "model_file": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "project"
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "tsne",
+              "umap"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "default": "cosine"
+          },
+          "n_components": {
+            "type": "integer",
+            "default": 3
+          },
+          "random_state": {
+            "type": "integer",
+            "default": 420
+          },
+          "verbose": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
+        ],
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "depends_on": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "depends_on"
+                ]
+              },
+              {
+                "properties": {
+                  "reduced_embeddings_file": {
+                    "type": "string"
+                  },
+                  "mapping_file": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reduced_embeddings_file",
+                  "mapping_file"
+                ]
+              }
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "const": "tsne"
+                  },
+                  "n_iter": {
+                    "type": "integer",
+                    "default": 15000
+                  },
+                  "perplexity": {
+                    "type": "integer",
+                    "default": 6
+                  },
+                  "n_jobs": {
+                    "type": "integer",
+                    "default": -1
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "const": "umap"
+                  },
+                  "min_dist": {
+                    "type": "number",
+                    "default": 0.5
+                  },
+                  "n_neighbors": {
+                    "type": "integer",
+                    "default": 15
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "visualize"
+          },
+          "protocol": {
+            "type": "string",
+            "const": "plotly"
+          },
+          "annotation_file": {
+            "type": "string"
+          },
+          "display_unknown": {
+            "type": "boolean",
+            "default": true
+          },
+          "n_components": {
+            "type": "integer",
+            "enum": [
+              2,
+              3
+            ],
+            "default": 3
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "depends_on": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "depends_on"
+            ]
+          },
+          {
+            "properties": {
+              "projected_embeddings_file": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "projected_embeddings_file"
+            ]
+          }
+        ]
+      },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "extract"
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "seqvec_from_publication",
+              "bert_from_publication",
+              "unsupervised"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
+        ],
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "depends_on": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "depends_on"
+                ]
+              },
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "enum": [
+                      "seqvec_from_publication",
+                      "bert_from_publication"
+                    ]
+                  },
+                  "embeddings_file": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "embeddings_file"
+                ]
+              },
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "const": "unsupervised"
+                  },
+                  "reduced_embeddings_file": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reduced_embeddings_file"
+                ]
+              }
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "enum": [
+                      "seqvec_from_publication",
+                      "bert_from_publication"
+                    ]
+                  },
+                  "secondary_structure_checkpoint_file": {
+                    "type": "string"
+                  },
+                  "subcellular_location_checkpoint_file": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "protocol": {
+                    "type": "string",
+                    "const": "unsupervised"
+                  },
+                  "reference_embeddings_file": {
+                    "type": "string"
+                  },
+                  "reference_annotations_file": {
+                    "type": "string"
+                  },
+                  "n_jobs": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "metric": {
+                    "type": "string",
+                    "default": "euclidean"
+                  },
+                  "k_nearest_neighbours": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "keep_pairwise_distances_matrix_file": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "reference_embeddings_file",
+                  "reference_annotations_file"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "required": [
+    "global"
+  ]
+}
