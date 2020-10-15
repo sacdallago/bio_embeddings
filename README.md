@@ -116,6 +116,7 @@ While we are working on a proper publication, if you are already using this tool
   - [ ] Glove
   - [ ] Word2Vec
   - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+  - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
 - project:
   - [x] t-SNE
   - [x] UMAP
@@ -153,6 +154,7 @@ While we are working on a proper publication, if you are already using this tool
 - [x] Glove
 - [x] Word2Vec
 - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+- [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
 </details>
 
 ## Building a Distribution
