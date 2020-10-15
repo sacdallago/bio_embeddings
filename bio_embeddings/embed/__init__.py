@@ -43,6 +43,13 @@ if not name_to_embedder:
         "Please run `pip install bio-embeddings[all]`!"
     )
 
+# ESM
+try:
+    from bio_embeddings.embed.esm_embedder import ESMEmbedder
+    name_to_embedder[ESMEmbedder.name] = ESMEmbedder
+except ImportError:
+    logger.debug("esm extra is not installed, ESM will not be available")
+
 # UniRep
 try:
     from bio_embeddings.embed.unirep_embedder import UniRepEmbedder

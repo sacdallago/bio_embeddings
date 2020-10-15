@@ -15,6 +15,7 @@ from bio_embeddings.embed import (
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
+    ESMEmbedder,
     EmbedderInterface,
 )
 
@@ -23,6 +24,7 @@ all_embedders = [
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
+    ESMEmbedder,
 ]
 
 
@@ -45,7 +47,9 @@ def embedder_test_impl(
         embedder = embedder_class(device=device)
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
-    [protein, seqwence, padded] = embedder.embed_many(["PROTEIN", "SEQWENCE", "VLSXXXIEP"], 100)
+    [protein, seqwence, padded] = embedder.embed_many(
+        ["PROTEIN", "SEQWENCE", "VLSXXXIEP"], 100
+    )
     if embedder_class == SeqVecEmbedder:
         assert padded.shape[1] == 9
     else:

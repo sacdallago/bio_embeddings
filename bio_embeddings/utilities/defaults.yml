@@ -27,3 +27,7 @@ prottrans_xlnet_uniref100:
 
 prottrans_albert_bfd:
   model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/prottrans_albert_bfd.zip"
+
+esm:
+  # TODO: Move this to http://maintenance.dallago.us ?
+  model_file: "https://dl.fbaipublicfiles.com/fair-esm/models/esm1_t34_670M_UR50S.pt"

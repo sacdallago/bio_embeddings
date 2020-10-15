@@ -52,12 +52,14 @@ appdirs = "^1.4.4"
 boto3 = { version = "1.14.18", optional = true }
 botocore = { version = "1.17.18", optional = true }
 importlib_metadata = "^1.7.0"
+esm = { git = "https://github.com/facebookresearch/esm.git", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
 unirep = ["jax-unirep"]
-all = ["allennlp", "transformers", "jax-unirep"]
+esm = ["esm"]
+all = ["allennlp", "transformers", "jax-unirep", "esm"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
