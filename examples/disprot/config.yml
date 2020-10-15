@@ -5,6 +5,7 @@ seqvec_embeddings:
   type: embed
   protocol: seqvec
   reduce: True
+  discard_per_amino_acid_embeddings: True
 umap_projections:
   type: project
   protocol: umap
