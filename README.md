@@ -17,6 +17,10 @@ The project includes:
 
 We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
 
+## News (current development cycle)
+
+ * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)
+
 ## Installation
 
 You can install `bio_embeddings` via pip or use it via docker.
@@ -116,6 +120,7 @@ While we are working on a proper publication, if you are already using this tool
   - [ ] Glove
   - [ ] Word2Vec
   - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+  - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
 - project:
   - [x] t-SNE
   - [x] UMAP
@@ -153,6 +158,7 @@ While we are working on a proper publication, if you are already using this tool
 - [x] Glove
 - [x] Word2Vec
 - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+- [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
 </details>
 
 ## Building a Distribution
