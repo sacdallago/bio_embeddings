@@ -30,3 +30,6 @@ prottrans_albert_bfd:
 
 esm:
   model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
+
+cpcprot:
+  model_file: "http://hershey.csb.utoronto.ca/CPCProt/weights/CPCProt__pretrained/best.ckpt"
