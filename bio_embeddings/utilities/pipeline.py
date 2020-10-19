@@ -95,9 +95,6 @@ def _process_fasta_file(**kwargs):
 def _null_function(config: Dict) -> None:
     pass
 
-    if not _valid_file(config_file_path):
-        raise Exception("No config or invalid config was passed.")
-
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
                                  **kwargs) -> Dict:
