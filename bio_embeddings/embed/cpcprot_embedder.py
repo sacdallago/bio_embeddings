@@ -18,7 +18,7 @@ class CPCProtEmbedder(EmbedderInterface):
     """
 
     name = "cpcprot"
-    embedding_dimension = NotImplementedError
+    embedding_dimension = 512
     number_of_layers = 1
 
     _necessary_files = ["model_file"]
