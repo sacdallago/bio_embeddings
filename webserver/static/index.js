@@ -56,8 +56,15 @@ $('#check-form').form({
                 jobIdCard.addClass('show');
                 jobStatus.text(response.status);
                 if(response.status === "SUCCESS"){
-                    $("#download-embeddings").attr("href", "/api/embeddings/download?id=" + fields.id);
-                    jobDownloadOptions.addClass('show');
+                    response.files.forEach(file => {
+                        $("#download_"+file)
+                            .attr(
+                                "href",
+                                "/api/embeddings/download?id=" + fields.id + "&file=" + file
+                            )
+                            .addClass('show');
+                        jobDownloadOptions.addClass('show');
+                    })
                 }
             }
         }).catch(e => {
