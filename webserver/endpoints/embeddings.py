@@ -45,6 +45,17 @@ class Embeddings(Resource):
         }
 
 
+_extensions = {
+        "embeddings_file": ".h5",
+        "reduced_embeddings_file": ".h5",
+        "sequence_file": ".fasta",
+        "DSSP3_predictions_file": ".fasta",
+        "DSSP8_predictions_file": ".fasta",
+        "disorder_predictions_file": ".fasta",
+        "per_sequence_predictions_file": '.csv',
+        "mapping_file": ".csv"
+}
+
 @ns.route('/download')
 class EmbeddingsDownload(Resource):
     @api.expect(request_results_parser, validate=True)
@@ -59,7 +70,10 @@ class EmbeddingsDownload(Resource):
         if job_status == "SUCCESS" or job_status == "STARTED":
             file = get_file(job_id, file_request)
             if file:
-                return send_file(file, attachment_filename="reduced_embeddings_file.h5", as_attachment=True)
+                return send_file(
+                    file,
+                    attachment_filename=file_request+_extensions.get(file_request, ""),
+                    as_attachment=True)
             else:
                 return abort(
                     404,
