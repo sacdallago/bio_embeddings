@@ -30,9 +30,16 @@
                             </div>
                             <div class="field">
                                 <label>Embed via</label>
-                                <select class="ui search dropdown">
-                                    <option value="seqvec">SeqVec</option>
-                                </select>
+                                <div class="ui selection dropdown">
+                                    <input type="hidden" name="pipeline_type">
+
+                                    <div class="default text">ProtBert: embed, extract (supervised)</div>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu">
+                                        <div class="item" data-value="annotations_from_seqvec">SeqVec: embed, extract (supervised)</div>
+                                        <div class="item" data-value="annotations_from_bert">ProtBert: embed, extract (supervised)</div>
+                                    </div>
+                                </div>
                             </div>
                             <button class="ui button" type="submit">Submit</button>
                             <div class="error message"></div>
@@ -50,9 +57,9 @@
                         </form>
                         <div class="ui segment" id="job-id-status-card">
                             <div id="job-id-status-message"></div>
-                                <div class="ui one buttons" id="job-id-download-options">
-                                    <a class="ui basic button" id="download-embeddings" target="_blank">Download embeddings</a>
-                                </div>
+                            <div class="ui one buttons" id="job-id-download-options">
+                                <a class="ui basic button" id="download-embeddings" target="_blank">Download embeddings</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -62,7 +69,7 @@
             </div>
         </div>
     </div>
-<div class="ui row">
+    <div class="ui row">
         <div class="sixteen wide column">
             Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
         </div>

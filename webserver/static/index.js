@@ -2,7 +2,7 @@ let validateInput = (event) => {
     console.log(event);
 };
 
-$('select.dropdown').dropdown();
+$('div.ui.selection.dropdown').dropdown();
 
 $('#submit-form').form({
     fields: {
