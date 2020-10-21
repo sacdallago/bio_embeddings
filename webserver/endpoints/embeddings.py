@@ -32,6 +32,18 @@ class Embeddings(Resource):
 
         return {'request_id': async_call.id, 'job_id': job_id}
 
+    @api.expect(request_status_parser, validate=True)
+    @api.response(200, "Returns job status in celery queue.")
+    @api.response(505, "Server error")
+    def get(self):
+        job_id = request.args.get('id')
+
+        # TODO: add a list of available files for the job (aka mongo search by job id)
+        return {"status": get_embeddings.AsyncResult(job_id).status}
+
+
+@ns.route('/download')
+class EmbeddingsDownload(Resource):
     @api.expect(request_results_parser, validate=True)
     @api.response(200, "Found embedding file: downloading")
     @api.response(505, "Server error")
@@ -54,15 +66,3 @@ class Embeddings(Resource):
                 )
         else:
             abort(404, "Job not found or not completed.")
-
-
-@ns.route('/status')
-class Embeddings(Resource):
-    @api.expect(request_status_parser, validate=True)
-    @api.response(200, "Returns job status in celery queue.")
-    @api.response(505, "Server error")
-    def get(self):
-        job_id = request.args.get('id')
-
-        # TODO: add a list of available files for the job (aka mongo search by job id)
-        return {"status": get_embeddings.AsyncResult(job_id).status}

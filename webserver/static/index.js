@@ -46,7 +46,7 @@ $('#check-form').form({
         jobIdCard.removeClass('show');
         jobDownloadOptions.removeClass('show');
 
-        fetch("/api/embeddings/status?id=" + fields.id, {
+        fetch("/api/embeddings?id=" + fields.id, {
             method: 'get'
         }).then(response => {
             return response.json();
@@ -56,7 +56,7 @@ $('#check-form').form({
                 jobIdCard.addClass('show');
                 jobStatus.text(response.status);
                 if(response.status === "SUCCESS"){
-                    $("#download-embeddings").attr("href", "/api/embeddings?id=" + fields.id);
+                    $("#download-embeddings").attr("href", "/api/embeddings/download?id=" + fields.id);
                     jobDownloadOptions.addClass('show');
                 }
             }
