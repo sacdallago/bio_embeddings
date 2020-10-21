@@ -56,6 +56,7 @@ _extensions = {
         "mapping_file": ".csv"
 }
 
+
 @ns.route('/download')
 class EmbeddingsDownload(Resource):
     @api.expect(request_results_parser, validate=True)
