@@ -3,7 +3,7 @@ import uuid
 from flask import request, send_file, abort
 from flask_restx import Resource
 
-from webserver.database import get_file
+from webserver.database import get_file, get_list_of_files
 from webserver.endpoints import api
 from webserver.endpoints.request_models import (
     file_post_parser,
@@ -37,9 +37,12 @@ class Embeddings(Resource):
     @api.response(505, "Server error")
     def get(self):
         job_id = request.args.get('id')
+        job_status = get_embeddings.AsyncResult(job_id).status
 
-        # TODO: add a list of available files for the job (aka mongo search by job id)
-        return {"status": get_embeddings.AsyncResult(job_id).status}
+        return {
+            "status": job_status,
+            "files": get_list_of_files(job_id)
+        }
 
 
 @ns.route('/download')
@@ -49,7 +52,7 @@ class EmbeddingsDownload(Resource):
     @api.response(505, "Server error")
     def get(self):
         job_id = request.args.get('id')
-        file_request = request.args.get('file', 'reduced_embeddings_file')
+        file_request = request.args.get('file', 'embeddings_file')
 
         job_status = get_embeddings.AsyncResult(job_id).status
 
