@@ -69,7 +69,7 @@ def get_embeddings(job_identifier: str, sequences: Dict[str, str], pipeline_type
 
     with TemporaryDirectory() as workdir:
         with Path(workdir).joinpath("sequences.fasta").open("w") as fp:
-            for seq_id, sequence in sequences.items():
+            for seq_id, sequence in sequences:
                 fp.write(f">{seq_id}\n{sequence}\n")
 
         # Add last job details
