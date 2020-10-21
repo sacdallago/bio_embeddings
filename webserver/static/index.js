@@ -57,7 +57,6 @@ $('#check-form').form({
                 jobStatus.text(response.status);
                 if(response.status === "SUCCESS"){
                     $("#download-embeddings").attr("href", "/api/embeddings?id=" + fields.id);
-                    $("#visualize-embeddings").attr("href", "/visualize/" + fields.id,);
                     jobDownloadOptions.addClass('show');
                 }
             }
