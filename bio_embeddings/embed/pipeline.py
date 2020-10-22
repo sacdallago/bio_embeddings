@@ -1,7 +1,7 @@
 import logging
 import shutil
 from copy import deepcopy
-from typing import Dict, Any, Type
+from typing import Dict, Any
 
 import h5py
 from Bio import SeqIO
@@ -16,6 +16,7 @@ from bio_embeddings.embed import (
     ProtTransXLNetUniRef100Embedder,
     UniRepEmbedder,
     ESMEmbedder,
+    CPCProtEmbedder,
 )
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -179,89 +180,25 @@ def embed_and_write_batched(
     return result_kwargs
 
 
-def seqvec(**kwargs) -> Dict[str, Any]:
-    necessary_files = ["weights_file", "options_file"]
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-
-    # Initialize pipeline and model specific options:
-    result_kwargs.setdefault("max_amino_acids", 15000)
-
-    # Download necessary files if needed
-    for file in necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model="seqvec", file=file)
-
-    embedder = SeqVecEmbedder(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
-
-
-def transformer(
-    embedder_class: Type[EmbedderInterface], max_amino_acids_default: int, **kwargs
-):
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-    result_kwargs.setdefault("max_amino_acids", max_amino_acids_default)
-
-    necessary_directories = ["model_directory"]
-    for directory in necessary_directories:
-        if not result_kwargs.get(directory):
-            result_kwargs[directory] = get_model_directories_from_zip(
-                model=embedder_class.name, directory=directory
-            )
-
-    embedder = embedder_class(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
-
-
-def prottrans_albert(**kwargs):
-    return transformer(ProtTransAlbertBFDEmbedder, 3035, **kwargs)
-
-
-def prottrans_bert_bfd(**kwargs):
-    return transformer(ProtTransBertBFDEmbedder, 6024, **kwargs)
-
-
-def prottrans_xlnet(**kwargs):
-    return transformer(ProtTransXLNetUniRef100Embedder, 4000, **kwargs)
-
-
-def unirep(**kwargs) -> Dict[str, Any]:
-    if kwargs.get("use_cpu") is not None:
-        raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-    embedder = UniRepEmbedder(**result_kwargs)
-    # We don't actually batch with UniRep, but embed_and_write_batched
-    # works anyway since UniRepEmbedder still implements `embed_many`
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
-
-
-def esm(**kwargs) -> Dict[str, Any]:
-    result_kwargs = deepcopy(kwargs)
-    file_manager = get_file_manager(**kwargs)
-    embedder = ESMEmbedder(**result_kwargs)
-
-    # TODO: That value is a random guess
-    result_kwargs.setdefault("max_amino_acids", 10000)
-
-    # Download necessary files if needed
-    # noinspection PyProtectedMember
-    for file in embedder._necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=embedder.name, file=file)
-
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
-
-
-# list of available embedding protocols
 PROTOCOLS = {
-    "seqvec": seqvec,
-    "prottrans_albert_bfd": prottrans_albert,
-    "prottrans_bert_bfd": prottrans_bert_bfd,
-    "prottrans_xlnet_uniref100": prottrans_xlnet,
-    "unirep": unirep,
-    "esm": esm,
+    "seqvec": SeqVecEmbedder,
+    "prottrans_albert_bfd": ProtTransAlbertBFDEmbedder,
+    "prottrans_bert_bfd": ProtTransBertBFDEmbedder,
+    "prottrans_xlnet_uniref100": ProtTransXLNetUniRef100Embedder,
+    "unirep": UniRepEmbedder,
+    "esm": ESMEmbedder,
+    "cpcprot": CPCProtEmbedder
+}
+
+# TODO: 10000 is a random guess
+DEFAULT_MAX_AMINO_ACIDS = {
+    "seqvec": 15000,
+    "prottrans_albert_bfd": 3035,
+    "prottrans_bert_bfd": 6024,
+    "prottrans_xlnet_uniref100": 4000,
+    "unirep": 10000,
+    "esm": 10000,
+    "cpcprot": 10000,
 }
 
 
@@ -294,4 +231,28 @@ def run(**kwargs):
             )
         )
 
-    return PROTOCOLS[kwargs["protocol"]](**kwargs)
+    embedder_class = PROTOCOLS[kwargs["protocol"]]
+
+    if embedder_class == UniRepEmbedder and kwargs.get("use_cpu") is not None:
+        raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
+
+    result_kwargs = deepcopy(kwargs)
+
+    # Download necessary files if needed
+    # noinspection PyProtectedMember
+    for file in embedder_class._necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model=embedder_class.name, file=file)
+
+    # noinspection PyProtectedMember
+    for directory in embedder_class._necessary_directories:
+        if not result_kwargs.get(directory):
+            result_kwargs[directory] = get_model_directories_from_zip(
+                model=embedder_class.name, directory=directory
+            )
+
+    result_kwargs.setdefault("max_amino_acids", DEFAULT_MAX_AMINO_ACIDS[kwargs["protocol"]])
+
+    file_manager = get_file_manager(**kwargs)
+    embedder: EmbedderInterface = embedder_class(**result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
