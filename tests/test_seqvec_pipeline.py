@@ -1,3 +1,4 @@
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import List
 from unittest import mock
@@ -5,7 +6,7 @@ from unittest import mock
 import numpy
 from numpy import ndarray
 
-from bio_embeddings.embed.pipeline import seqvec
+from bio_embeddings.embed.pipeline import run
 
 
 class MockElmoEmbedder:
@@ -24,7 +25,10 @@ def test_seqvec():
     with mock.patch(
         "bio_embeddings.embed.seqvec_embedder.ElmoEmbedder", MockElmoEmbedder
     ), TemporaryDirectory() as tmp_dir:
-        out = seqvec(
+        Path(tmp_dir).joinpath("seqvec_stage").mkdir()
+        out = run(
+            protocol="seqvec",
+            stage_name="seqvec_stage",
             weights_file="mocked.txt",
             options_file="mocked.txt",
             seqvec_version=1,
