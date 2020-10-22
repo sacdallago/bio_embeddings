@@ -1,7 +1,9 @@
+from argparse import Namespace
 from typing import List, Generator, Union
 
 import esm
 import torch
+from esm.constants import proteinseq_toks
 from numpy import ndarray
 
 from bio_embeddings.embed import EmbedderInterface
@@ -25,9 +27,23 @@ class ESMEmbedder(EmbedderInterface):
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)
-        model, alphabet = esm.pretrained.load_model_and_alphabet_local(
-            self._options["model_file"]
+
+        alphabet = esm.Alphabet.from_dict(proteinseq_toks)
+        if torch.cuda.is_available():
+            model_data = torch.load(self._options["model_file"])
+        else:
+            model_data = torch.load(self._options["model_file"], map_location=torch.device('cpu'))
+
+        # upgrade state dict
+        pra = lambda s: ''.join(s.split('decoder_')[1:] if 'decoder' in s else s)
+        prs = lambda s: ''.join(s.split('decoder.')[1:] if 'decoder' in s else s)
+        model_args = {pra(arg[0]): arg[1] for arg in vars(model_data["args"]).items()}
+        model_state = {prs(arg[0]): arg[1] for arg in model_data["model"].items()}
+        model = esm.ProteinBertModel(
+            Namespace(**model_args), len(alphabet), padding_idx=alphabet.padding_idx
         )
+        model.load_state_dict(model_state)
+
         self._model = model.to(self._device)
         self._batch_converter = alphabet.get_batch_converter()
 
