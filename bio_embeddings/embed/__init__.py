@@ -15,7 +15,9 @@ try:
     from bio_embeddings.embed.prottrans_bert_bfd_embedder import (
         ProtTransBertBFDEmbedder,
     )
-    from bio_embeddings.embed.xlnet_embedder import ProtTransXLNetUniRef100Embedder
+    from bio_embeddings.embed.prottrans_xlnet_uniref100_embedder import (
+        ProtTransXLNetUniRef100Embedder,
+    )
 
     name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
     name_to_embedder[ProtTransBertBFDEmbedder.name] = ProtTransBertBFDEmbedder
@@ -40,6 +42,13 @@ if not name_to_embedder:
         "No extra is installed, so none of the context dependent embedders are available! "
         "Please run `pip install bio-embeddings[all]`!"
     )
+
+# ESM
+try:
+    from bio_embeddings.embed.esm_embedder import ESMEmbedder
+    name_to_embedder[ESMEmbedder.name] = ESMEmbedder
+except ImportError:
+    logger.debug("esm extra is not installed, ESM will not be available")
 
 # UniRep
 try:

@@ -15,6 +15,7 @@ from bio_embeddings.embed import (
     SeqVecEmbedder,
     ProtTransXLNetUniRef100Embedder,
     UniRepEmbedder,
+    ESMEmbedder,
 )
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -232,6 +233,23 @@ def unirep(**kwargs) -> Dict[str, Any]:
     return embed_and_write_batched(embedder, file_manager, result_kwargs)
 
 
+def esm(**kwargs) -> Dict[str, Any]:
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+    embedder = ESMEmbedder(**result_kwargs)
+
+    # TODO: That value is a random guess
+    result_kwargs.setdefault("max_amino_acids", 10000)
+
+    # Download necessary files if needed
+    # noinspection PyProtectedMember
+    for file in embedder._necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model=embedder.name, file=file)
+
+    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+
+
 # list of available embedding protocols
 PROTOCOLS = {
     "seqvec": seqvec,
@@ -239,6 +257,7 @@ PROTOCOLS = {
     "prottrans_bert_bfd": prottrans_bert_bfd,
     "prottrans_xlnet_uniref100": prottrans_xlnet,
     "unirep": unirep,
+    "esm": esm,
 }
 
 
