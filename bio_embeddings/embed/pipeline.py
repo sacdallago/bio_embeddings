@@ -162,16 +162,20 @@ def embed_and_write_batched(
         embedding_generator = embedder.embed_many(
             sequences, result_kwargs.get("max_amino_acids")
         )
-        for sequence_id, embedding in zip(
-            mapping_file.index, tqdm(embedding_generator, total=len(mapping_file))
+        for sequence_id, original_id, embedding in zip(
+            mapping_file.index,
+            mapping_file["original_id"],
+            tqdm(embedding_generator, total=len(mapping_file))
         ):
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
-                embeddings_file.create_dataset(sequence_id, data=embedding)
+                dataset = embeddings_file.create_dataset(sequence_id, data=embedding)
+                dataset.attrs["original_id"] = original_id
 
             if result_kwargs.get("reduce") is True:
-                reduced_embeddings_file.create_dataset(
+                dataset = reduced_embeddings_file.create_dataset(
                     sequence_id, data=embedder.reduce_per_protein(embedding)
                 )
+                dataset.attrs["original_id"] = original_id
     return result_kwargs
 
 
