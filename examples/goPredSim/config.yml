@@ -1,0 +1,23 @@
+global:
+  sequences_file: sequences.fasta
+  prefix: goa_seqvec
+
+## Get embeddings
+
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True
+  discard_per_amino_acid_embeddings: True
+
+## Transfer GOA annotations
+
+goa_transfer:
+  type: extract
+  protocol: unsupervised
+  depends_on: seqvec_embeddings
+  ## Please download this file (~1.3GB) from: http://data.bioembeddings.com/public/embeddings/reference/goa/seqvec_reference_embeddings.h5
+  reference_embeddings_file: seqvec_reference_embeddings.h5
+  ## Please download this file (~20MB) from: http://data.bioembeddings.com/public/embeddings/reference/goa/annotations.csv
+  reference_annotations_file: annotations.csv
+  k_nearest_neighbours: 3
