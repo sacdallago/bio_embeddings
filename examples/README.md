@@ -90,7 +90,7 @@ In this example, we use the `reduced_embeddings_file` calculated in `disprot`, a
 
 ### Transfer GO annotations: `goPredSim`
 
-**Use case**: You have a set of proteins for which you would like to infer GO annotations, as is done in [goPredSim](https://github.com/Rostlab/goPredSim).
+**Use case**: You have a set of proteins for which you would like to infer GO annotations for (as is done in [goPredSim](https://github.com/Rostlab/goPredSim)).
 This uses the [unsupervised_annotation_extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction) idea.
 
 **Prerequisites**: 
