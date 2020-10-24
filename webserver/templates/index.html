@@ -30,9 +30,15 @@
                             </div>
                             <div class="field">
                                 <label>Embed via</label>
-                                <select class="ui search dropdown">
-                                    <option value="seqvec">SeqVec</option>
-                                </select>
+                                <div class="ui selection dropdown">
+                                    <input type="hidden" name="pipeline_type">
+                                    <div class="default text">ProtBert: embed, extract (supervised)</div>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu">
+                                        <div class="item" data-value="annotations_from_seqvec">SeqVec: embed, extract (supervised)</div>
+                                        <div class="item" data-value="annotations_from_bert">ProtBert: embed, extract (supervised)</div>
+                                    </div>
+                                </div>
                             </div>
                             <button class="ui button" type="submit">Submit</button>
                             <div class="error message"></div>
@@ -48,33 +54,107 @@
                             <button class="ui button" type="submit">Check</button>
                             <div class="error message"></div>
                         </form>
-                        <div class="ui segment" id="job-id-status-card">
+                        <div id="job-id-status-card">
                             <div id="job-id-status-message"></div>
-                                <div class="ui two buttons" id="job-id-download-options">
-                                    <a class="ui basic button" id="download-embeddings" target="_blank">Download embeddings</a>
-                                    <a class="ui basic button" id="visualize-embeddings" target="_blank">Visualize online</a>
+                            <div class="ui celled list">
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="header">Job parameters</div>
+                                        <div class="description">Files relevant to the execution of the job.</div>
+                                        <div class="list">
+                                            <a class="item download_file" id="download_input_sequence_file">
+                                                <div class="content">
+                                                    <div class="header">input_sequence_file</div>
+                                                    <div class="description">Sequences in FASTA</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_mapping_file">
+                                                <div class="content">
+                                                    <div class="header">mapping_file</div>
+                                                    <div class="description">CSV file mapping input ids to pipeline ids</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_input_config_file">
+                                                <div class="content">
+                                                    <div class="header">input_config_file</div>
+                                                    <div class="description">The configuration file used for your job</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-
-                        </div>
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="header">embed</div>
+                                        <div class="description">Results from the embed stage</div>
+                                        <div class="list">
+                                            <a class="item download_file" id="download_embeddings_file">
+                                                <div class="content">
+                                                    <div class="header">embeddings_file</div>
+                                                    <div class="description">Per-amino-acid embeddings in hdf5</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_reduced_embeddings_file">
+                                                <div class="content">
+                                                    <div class="header">reduced_embeddings_file</div>
+                                                    <div class="description">Per-sequence embeddings in hdf5</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="header">extract</div>
+                                        <div class="description">Results from the extract stage</div>
+                                        <div class="list">
+                                            <a class="item download_file" id="download_DSSP3_predictions_file">
+                                                <div class="content">
+                                                    <div class="header">DSSP3_predictions_file</div>
+                                                    <div class="description">Secondary structure predicted in three states as FASTA file</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_DSSP8_predictions_file">
+                                                <div class="content">
+                                                    <div class="header">DSSP8_predictions_file</div>
+                                                    <div class="description">Secondary structure predicted in eight states as FASTA file</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_disorder_predictions_file">
+                                                <div class="content">
+                                                    <div class="header">disorder_predictions_file</div>
+                                                    <div class="description">Disorder predicted in two states as FASTA file</div>
+                                                </div>
+                                            </a>
+                                            <a class="item download_file" id="download_per_sequence_predictions_file">
+                                                <div class="content">
+                                                    <div class="header">per_sequence_predictions_file</div>
+                                                    <div class="description">Subcellular localization and membrane/non-membrane predictions per-sequence in CSV</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
-                <div class="ui vertical divider">
-                    Or
-                </div>
+            </div>
+            <div class="ui vertical divider">
+                Or
             </div>
         </div>
     </div>
+</div>
 <div class="ui row">
-        <div class="sixteen wide column">
-            Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
-        </div>
+    <div class="sixteen wide column">
+        Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
     </div>
-    <div class="ui row">
-        <div class="sixteen wide column">
-            Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a>.
-
-        </div>
+</div>
+<div class="ui row">
+    <div class="sixteen wide column">
+        Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a> &amp; Konstantin Schütze.
     </div>
+</div>
 </div>
 <script type="application/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='semantic.min.js') }}"></script>

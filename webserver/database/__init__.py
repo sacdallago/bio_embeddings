@@ -1,4 +1,5 @@
 import gridfs
+from typing import List
 from pymongo import MongoClient
 from webserver.utilities.configuration import configuration
 
@@ -25,3 +26,11 @@ def get_file(job_id, file_identifier):
         return _fs.get(db_file._id)
     else:
         return None
+
+
+def get_list_of_files(job_id) -> List:
+    file_list = _fs.find(filter={
+        "job": job_id
+    })
+
+    return list([file.filename for file in file_list])

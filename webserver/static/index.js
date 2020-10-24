@@ -2,7 +2,7 @@ let validateInput = (event) => {
     console.log(event);
 };
 
-$('select.dropdown').dropdown();
+$('div.ui.selection.dropdown').dropdown();
 
 $('#submit-form').form({
     fields: {
@@ -46,19 +46,24 @@ $('#check-form').form({
         jobIdCard.removeClass('show');
         jobDownloadOptions.removeClass('show');
 
-        fetch("/api/embeddings/status?id=" + fields.id, {
+        fetch("/api/embeddings?id=" + fields.id, {
             method: 'get'
         }).then(response => {
             return response.json();
         }).then(response => {
-            if(response.message){
-            } else {
+            if(!response.message){
                 jobIdCard.addClass('show');
                 jobStatus.text(response.status);
                 if(response.status === "SUCCESS"){
-                    $("#download-embeddings").attr("href", "/api/embeddings?id=" + fields.id);
-                    $("#visualize-embeddings").attr("href", "/visualize/" + fields.id,);
-                    jobDownloadOptions.addClass('show');
+                    response.files.forEach(file => {
+                        $("#download_"+file)
+                            .attr(
+                                "href",
+                                "/api/embeddings/download?id=" + fields.id + "&file=" + file
+                            )
+                            .addClass('show');
+                        jobDownloadOptions.addClass('show');
+                    })
                 }
             }
         }).catch(e => {

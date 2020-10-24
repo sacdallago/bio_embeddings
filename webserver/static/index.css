@@ -15,12 +15,12 @@ pre {
     display: inherit;
 }
 
-#job-id-download-options{
-    display: none;
+.download_file {
+    display: none !important;
 }
 
-#job-id-download-options.show{
-    display: inherit;
+.download_file.show{
+    display: inherit !important;
 }
 
 .job.submission.messages {
