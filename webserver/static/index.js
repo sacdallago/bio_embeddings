@@ -51,8 +51,7 @@ $('#check-form').form({
         }).then(response => {
             return response.json();
         }).then(response => {
-            if(response.message){
-            } else {
+            if(!response.message){
                 jobIdCard.addClass('show');
                 jobStatus.text(response.status);
                 if(response.status === "SUCCESS"){
