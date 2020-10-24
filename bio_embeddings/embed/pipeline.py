@@ -191,6 +191,7 @@ PROTOCOLS = {
 }
 
 # TODO: 10000 is a random guess
+# There remainder was measured for a GTX 1080 with 8GB memory
 DEFAULT_MAX_AMINO_ACIDS = {
     "seqvec": 15000,
     "prottrans_albert_bfd": 3035,
