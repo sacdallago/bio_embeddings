@@ -14,8 +14,10 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[use_case_one](#a-simple-way-to-visualize-embeddings-use_case_one)|Embedding generation & visualization|
 |[use_case_two](#same-as-before-but-using-cached-weights-which-is-faster-use_case_two)|Embedding generation & visualization|
 |[use_case_three](#how-can-i-display-3d-sequence-spaces-from-embeddings-use_case_three)|Embedding visualization|
-|[supervised_annotation_extraction](#trained-supervised-models-get-protein-structure-and-function-annotations-supervised_annotation_extraction)|Prediction of localization and secondary structure|
-|[unsupervised_annotation_extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction)|Transfer of annotations|
+|[Supervised annotation extraction](#trained-supervised-models-get-protein-structure-and-function-annotations-supervised_annotation_extraction)|Prediction of localization and secondary structure|
+|[Unsupervised annotation extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction)|Transfer of annotations|
+|[goPredSim](#transfer-go-annotations-gopredsim)|Transfer of annotations|
+|[goPredSim using ProtTrans BERT BFD](#transfer-go-annotations-gopredsim_protbert)|Transfer of annotations|
 |[cath](#cath-used-for-our-manuscript)|Embedding generation & visualization|
 |[disprot](#disprot-used-for-our-manuscript)|Embedding generation & visualization|
 |[docker](#docker)|Pipeline use through Docker|
@@ -83,6 +85,29 @@ In this example, we use the `reduced_embeddings_file` calculated in `disprot`, a
   - The `extract` stages produces:
     - a CSV `pairwise_distances_matrix_file`, which contains all pairwise distances (euclidean and cosine in this example) between input sequences/embeddings and reference embeddings;
     - a CSV `transferred_annotations_file`, which contains a column with the transferred annotations, and k columns with the k-th closest element its distance, identifier and annotations.
+   
+   
+---
+
+### Transfer GO annotations: `goPredSim`
+
+**Use case**: You have a set of proteins for which you would like to infer GO annotations for (as is done in [goPredSim](https://github.com/Rostlab/goPredSim)).
+This uses the [unsupervised_annotation_extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction) idea.
+
+**Prerequisites**: 
+
+ - for this example, you have to download the `seqvec_reference_embeddings.h5` and `annotations.csv` files from http://data.bioembeddings.com/public/embeddings/reference/goa/ , and store them in the same folder as the `config.yml`.
+ - Our tests show that this experiment consumed 16.3GB of system RAM at peak computation (average: 2.5GB). The RAM requirements will increase with the number of sequences in your set.
+  
+**Noteworthy files produced**:
+  - The `extract` stages produces:
+    - a CSV `transferred_annotations_file`, which contains a column with the transferred GO terms.
+    
+---
+
+### Transfer GO annotations: `goPredSim_protbert`
+
+The same as [goPredSim](#transfer-go-annotations-gopredsim), but using `prottrans-bert-bfd` instead. You can find the reference protbert embeddings at: http://data.bioembeddings.com/public/embeddings/reference/goa/
 
 ---
 
