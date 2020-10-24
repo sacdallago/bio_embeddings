@@ -14,9 +14,10 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[use_case_one](#a-simple-way-to-visualize-embeddings-use_case_one)|Embedding generation & visualization|
 |[use_case_two](#same-as-before-but-using-cached-weights-which-is-faster-use_case_two)|Embedding generation & visualization|
 |[use_case_three](#how-can-i-display-3d-sequence-spaces-from-embeddings-use_case_three)|Embedding visualization|
-|[supervised_annotation_extraction](#trained-supervised-models-get-protein-structure-and-function-annotations-supervised_annotation_extraction)|Prediction of localization and secondary structure|
-|[unsupervised_annotation_extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction)|Transfer of annotations|
+|[Supervised annotation extraction](#trained-supervised-models-get-protein-structure-and-function-annotations-supervised_annotation_extraction)|Prediction of localization and secondary structure|
+|[Unsupervised annotation extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction)|Transfer of annotations|
 |[goPredSim](#transfer-go-annotations-gopredsim)|Transfer of annotations|
+|[goPredSim using ProtTrans BERT BFD](#transfer-go-annotations-gopredsim_protbert)|Transfer of annotations|
 |[cath](#cath-used-for-our-manuscript)|Embedding generation & visualization|
 |[disprot](#disprot-used-for-our-manuscript)|Embedding generation & visualization|
 |[docker](#docker)|Pipeline use through Docker|
@@ -101,6 +102,12 @@ This uses the [unsupervised_annotation_extraction](#transfer-annotations-from-la
 **Noteworthy files produced**:
   - The `extract` stages produces:
     - a CSV `transferred_annotations_file`, which contains a column with the transferred GO terms.
+    
+---
+
+### Transfer GO annotations: `goPredSim_protbert`
+
+The same as [goPredSim](#transfer-go-annotations-gopredsim), but using `prottrans-bert-bfd` instead. You can find the reference protbert embeddings at: http://data.bioembeddings.com/public/embeddings/reference/goa/
 
 ---
 
