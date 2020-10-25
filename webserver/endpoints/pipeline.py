@@ -11,9 +11,9 @@ from webserver.endpoints.request_models import (
     request_results_parser,
 )
 from webserver.endpoints.utils import validate_FASTA_submission
-from webserver.tasks.embeddings import get_embeddings
+from webserver.tasks.embeddings import run_pipeline
 
-ns = api.namespace("embeddings", description="Get embeddings")
+ns = api.namespace("pipeline", description="Run pipeline jobs")
 
 
 @ns.route('')
@@ -27,8 +27,8 @@ class Embeddings(Resource):
         job_id = uuid.uuid4().hex
         pipeline_type = request.form.get('pipeline_type', 'annotations_from_bert')
 
-        async_call = get_embeddings.apply_async(args=(job_id, validated_request.sequences, pipeline_type),
-                                                task_id=job_id)
+        async_call = run_pipeline.apply_async(args=(job_id, validated_request.sequences, pipeline_type),
+                                              task_id=job_id)
 
         return {'request_id': async_call.id, 'job_id': job_id}
 
@@ -37,7 +37,7 @@ class Embeddings(Resource):
     @api.response(505, "Server error")
     def get(self):
         job_id = request.args.get('id')
-        job_status = get_embeddings.AsyncResult(job_id).status
+        job_status = run_pipeline.AsyncResult(job_id).status
 
         return {
             "status": job_status,
@@ -66,7 +66,7 @@ class EmbeddingsDownload(Resource):
         job_id = request.args.get('id')
         file_request = request.args.get('file', 'embeddings_file')
 
-        job_status = get_embeddings.AsyncResult(job_id).status
+        job_status = run_pipeline.AsyncResult(job_id).status
 
         if job_status == "SUCCESS" or job_status == "STARTED":
             file = get_file(job_id, file_request)

@@ -13,7 +13,7 @@ $('#submit-form').form({
         let errorMessage = $('.job.submission.messages');
         errorMessage.text("");
 
-        fetch("/api/embeddings", {
+        fetch("/api/pipeline", {
             method: 'post',
             body: new FormData(event.target),
         }).then(response => {
@@ -46,7 +46,7 @@ $('#check-form').form({
         jobIdCard.removeClass('show');
         jobDownloadOptions.removeClass('show');
 
-        fetch("/api/embeddings?id=" + fields.id, {
+        fetch("/api/pipeline?id=" + fields.id, {
             method: 'get'
         }).then(response => {
             return response.json();
@@ -59,7 +59,7 @@ $('#check-form').form({
                         $("#download_"+file)
                             .attr(
                                 "href",
-                                "/api/embeddings/download?id=" + fields.id + "&file=" + file
+                                "/api/pipeline/download?id=" + fields.id + "&file=" + file
                             )
                             .addClass('show');
                         jobDownloadOptions.addClass('show');

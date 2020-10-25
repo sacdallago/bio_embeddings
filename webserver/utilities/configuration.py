@@ -37,4 +37,14 @@ configuration = {
             model_directory, "seqvec_from_publication_annotations_extractors/subcellular_location_checkpoint_file"
         ),
     },
+    # Celery worker type
+    "celery": {
+        # Type can be:
+        #  - nothing ==> pipeline  async worker
+        #  - pipeline ==> pipeline async worker
+        #  - seqvec ==> seqvec sync worker
+        #  - protbert ==> protbert sync worker
+
+        "celery_worker_type": int(environ.get("CELERY_WORKER_TYPE", None)),
+    }
 }
