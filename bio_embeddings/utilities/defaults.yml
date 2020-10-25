@@ -1,35 +1,35 @@
 seqvec:
-  weights_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/weights.hdf5"
-  options_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/seqvec/options.json"
+  weights_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/seqvec/weights.hdf5"
+  options_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/seqvec/options.json"
 
 seqvec_from_publication_annotations_extractors:
-  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
-  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
+  secondary_structure_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/seqvec/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/seqvec/subcell_checkpoint.pt"
 
 fasttext:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/fasttext/fasttext.model"
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/fasttext/fasttext.model"
 
 word2vec:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/word2vec/word2vec.model"
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/word2vec/word2vec.model"
 
 glove:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/glove/glove.model"
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/glove/glove.model"
 
 prottrans_bert_bfd:
-  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/bert/prottrans_bert_bfd.zip"
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/bert/prottrans_bert_bfd.zip"
 
 bert_from_publication_annotations_extractors:
-  secondary_structure_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/secstruct_checkpoint.pt"
-  subcellular_location_checkpoint_file: "http://maintenance.dallago.us/public/embeddings/feature_models/bert/subcell_checkpoint.pt"
+  secondary_structure_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bert/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bert/subcell_checkpoint.pt"
 
 prottrans_xlnet_uniref100:
-  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/xlnet/prottrans_xlnet_uniref100.zip"
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/xlnet/prottrans_xlnet_uniref100.zip"
 
 prottrans_albert_bfd:
-  model_directory: "http://maintenance.dallago.us/public/embeddings/embedding_models/albert/prottrans_albert_bfd.zip"
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/albert/prottrans_albert_bfd.zip"
 
 esm:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
 
 cpcprot:
-  model_file: "http://maintenance.dallago.us/public/embeddings/embedding_models/cpcprot/best.ckpt"
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/cpcprot/best.ckpt"

@@ -98,6 +98,7 @@ def test_model_download(embedder_class):
     get_model_mock.assert_called_once()
 
 
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
 @pytest.mark.parametrize(
     "embedder_class",
     [

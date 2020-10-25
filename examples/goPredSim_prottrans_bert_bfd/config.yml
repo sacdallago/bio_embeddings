@@ -1,0 +1,23 @@
+global:
+  sequences_file: sequences.fasta
+  prefix: goa_prottrans_bert_bfd
+
+## Get embeddings
+
+prottrans_bert_embeddings:
+  type: embed
+  protocol: prottrans_bert_bfd
+  reduce: True
+  discard_per_amino_acid_embeddings: True
+
+## Transfer GOA annotations
+
+goa_transfer:
+  type: extract
+  protocol: unsupervised
+  depends_on: prottrans_bert_embeddings
+  ## Please download this file (~1.3GB) from: http://data.bioembeddings.com/public/embeddings/reference/goa/protbert_reference_embeddings.h5
+  reference_embeddings_file: protbert_reference_embeddings.h5
+  ## Please download this file (~20MB) from: http://data.bioembeddings.com/public/embeddings/reference/goa/annotations.csv
+  reference_annotations_file: annotations.csv
+  k_nearest_neighbours: 3

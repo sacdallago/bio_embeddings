@@ -1,15 +1,17 @@
-from tempfile import NamedTemporaryFile
-from typing import Tuple, Dict
-
 import flask
+import collections
+
+from tempfile import NamedTemporaryFile
 from Bio import SeqIO
 from flask import abort
 from pandas import read_csv
 
 from webserver.utilities.configuration import configuration
 
+ValidationResult = collections.namedtuple('ValidationResult', 'sequences statistics')
 
-def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], Dict[str, str]]:
+
+def validate_FASTA_submission(request: flask.Request) -> ValidationResult:
     files = request.files
 
     if 'sequences' not in files:
@@ -56,7 +58,7 @@ def validate_FASTA_submission(request: flask.Request) -> Tuple[Dict[str, int], D
     if statistics['numberOfSequences'] < 1:
         return abort(400, "No sequences submitted. Try another FASTA file.")
 
-    return statistics, dict(sequences)
+    return ValidationResult(sequences=sequences, statistics=statistics)
 
 
 def validate_file_submission(request):
