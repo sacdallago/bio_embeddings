@@ -2,7 +2,7 @@ import collections
 import h5py
 import numpy as np
 
-from typing import List, Tuple
+from typing import List
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 
