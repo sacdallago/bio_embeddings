@@ -11,16 +11,16 @@ from webserver.endpoints.request_models import (
     request_results_parser,
 )
 from webserver.endpoints.utils import validate_FASTA_submission
-from webserver.tasks.embeddings import run_pipeline
+from webserver.tasks.pipeline import run_pipeline
 
 ns = api.namespace("pipeline", description="Run pipeline jobs")
 
 
 @ns.route('')
-class Embeddings(Resource):
+class Pipeline(Resource):
     @api.expect(file_post_parser, validate=True)
     @api.response(200, "Calculated embeddings")
-    @api.response(400, "Invalid input. Most likely the sequence is too long, or contains invalid characters.")
+    @api.response(400, "Invalid input. See message for details")
     @api.response(505, "Server error")
     def post(self):
         validated_request = validate_FASTA_submission(request)
@@ -58,7 +58,7 @@ _extensions = {
 
 
 @ns.route('/download')
-class EmbeddingsDownload(Resource):
+class PipelineDownload(Resource):
     @api.expect(request_results_parser, validate=True)
     @api.response(200, "Found embedding file: downloading")
     @api.response(505, "Server error")

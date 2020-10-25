@@ -4,6 +4,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from webserver.endpoints import api
 from webserver.endpoints.pipeline import ns as pipeline_namespace
+from webserver.endpoints.embeddings import ns as embeddings_namespace
+from webserver.endpoints.annotations import ns as annotations_namespace
 from webserver.utilities.configuration import configuration
 
 # Initialize API
@@ -17,6 +19,9 @@ cors = CORS(blueprint, origins=['https://embed.protein.properties', 'http://loca
 
 api.init_app(blueprint)
 api.add_namespace(pipeline_namespace)
+api.add_namespace(embeddings_namespace)
+api.add_namespace(annotations_namespace)
+
 app.register_blueprint(blueprint)
 
 # https://flask.palletsprojects.com/en/1.1.x/quickstart/#hooking-in-wsgi-middleware
