@@ -20,6 +20,7 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find t
 ## News (current development cycle)
 
  * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)
+ * Included [example](examples/goPredSim) to transfer GO annotations (a-la [goPredSim](https://github.com/Rostlab/goPredSim)). We also make the reference annotations and embeddings available!
 
 ## Installation
 

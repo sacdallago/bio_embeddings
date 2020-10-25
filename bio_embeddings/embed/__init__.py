@@ -56,7 +56,15 @@ try:
 
     name_to_embedder[UniRepEmbedder.name] = UniRepEmbedder
 except ImportError:
-    logger.debug("unirep extra not installed and will not be available")
+    logger.debug("unirep extra not installedm UniRep will not be available")
+
+# CPCProt
+
+try:
+    from bio_embeddings.embed.cpcprot_embedder import CPCProtEmbedder
+    name_to_embedder[CPCProtEmbedder.name] = CPCProtEmbedder
+except ImportError:
+    logger.debug("cpcprot extra not installed, CPCProt will not be available")
 
 from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
 from bio_embeddings.embed.glove_embedder import GloveEmbedder
