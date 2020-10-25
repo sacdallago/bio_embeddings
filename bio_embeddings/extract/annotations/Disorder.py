@@ -6,6 +6,13 @@ class Disorder(Enum):
     ORDER = '-'
     UNKNOWN = '?'
 
+    def __str__(self):
+        return {
+            self.DISORDER: "Disorder",
+            self.ORDER: "Order",
+            self.UNKNOWN: "Unknown"
+        }.get(self)
+
     @staticmethod
     def isAAFeature():
         return True

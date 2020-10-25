@@ -14,6 +14,19 @@ class SecondaryStructure(Enum):
     IRREGULAR = "C"
     UNKNOWN = "?"
 
+    def __str__(self):
+        return {
+            self.ALPHA_HELIX: "α-helix",
+            self.ISOLATED_BETA_BRIDGE: "Residue in isolated β-bridge",
+            self.EXTENDED_STRAND: "Extended strand, participates in β ladder",
+            self.THREE_HELIX: "3-helix",
+            self.FIVE_HELIX: "5 helix",
+            self.TURN: "Hydrogen bonded turn",
+            self.BEND: "Bend",
+            self.IRREGULAR: "Loop/Irregular",
+            self.UNKNOWN: "Unknown"
+        }.get(self)
+
     @staticmethod
     def isAAFeature():
         return True
