@@ -36,4 +36,6 @@ class Annotations(Resource):
         job = model.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
         annotations = job.get()
 
+        annotations['sequence'] = sequence
+
         return annotations
