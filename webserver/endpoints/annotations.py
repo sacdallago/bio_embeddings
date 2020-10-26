@@ -27,13 +27,15 @@ class Annotations(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400, "Sequence is too long or contains invalid characters.")
 
+        model_name = params.get('model', 'seqvec')
+
         model = {
             'seqvec': get_seqvec_annotations_sync,
             'prottrans_bert_bfd': get_protbert_annotations_sync
-        }.get(params.get('model', 'seqvec'))
+        }.get(model_name)
 
         if not model:
-            return abort(400, f"Model '{params.get('model')}' isn't available.")
+            return abort(400, f"Model '{model_name}' isn't available.")
 
         # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
         job = model.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
@@ -46,8 +48,8 @@ class Annotations(Resource):
         if format == "protvista-predictprotein":
             source = Source(
                 url=request.url,
-                id=sequence,
-                name="bio_embeddings"
+                id="sync",
+                name=f"bio_embeddings using {model_name}"
             )
 
             evidence = Evidence(
@@ -62,7 +64,7 @@ class Annotations(Resource):
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDSSP8'],
                     evidences=[evidence],
-                    type="SECONDARY_STRUCTURE_8_STATES_(SEQVEC)",
+                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})",
                     feature_enum=SecondaryStructure
                 )
             )
@@ -70,7 +72,7 @@ class Annotations(Resource):
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDSSP3'],
                     evidences=[evidence],
-                    type="SECONDARY_STRUCTURE_3_STATES_(SEQVEC)",
+                    type=f"SECONDARY_STRUCTURE_3_STATES_({model_name})",
                     feature_enum=SecondaryStructure
                 )
             )
@@ -78,8 +80,8 @@ class Annotations(Resource):
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDisorder'],
                     evidences=[evidence],
-                    type="DISORDER_(SEQVEC)",
-                    feature_enum=SecondaryStructure
+                    type=f"DISORDER_({model_name})",
+                    feature_enum=Disorder
                 )
             )
 
