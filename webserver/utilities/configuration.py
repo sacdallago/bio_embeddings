@@ -45,6 +45,6 @@ configuration = {
         #  - seqvec ==> seqvec sync worker
         #  - protbert ==> protbert sync worker
 
-        "celery_worker_type": int(environ.get("CELERY_WORKER_TYPE", None)),
+        "celery_worker_type": environ.get("CELERY_WORKER_TYPE", None),
     }
 }
