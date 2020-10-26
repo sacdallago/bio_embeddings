@@ -1,8 +1,11 @@
 from flask import request, abort
 from flask_restx import Resource
 
+from webserver.utilities.parsers import (
+    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder
+)
 from webserver.endpoints import api
-from webserver.endpoints.request_models import sequence_post_parameters
+from webserver.endpoints.request_models import sequence_post_parameters_annotations
 from webserver.endpoints.utils import check_valid_sequence
 from webserver.tasks.seqvec_embeddings import get_seqvec_annotations_sync
 from webserver.tasks.protbert_embeddings import get_protbert_annotations_sync
@@ -12,7 +15,7 @@ ns = api.namespace("annotations", description="Get annotations on the fly.")
 
 @ns.route('')
 class Annotations(Resource):
-    @api.expect(sequence_post_parameters, validate=True)
+    @api.expect(sequence_post_parameters_annotations, validate=True)
     @api.response(200, "Embedding in npy format")
     @api.response(400, "Invalid input. See return message for details.")
     @api.response(505, "Server error")
@@ -38,4 +41,48 @@ class Annotations(Resource):
 
         annotations['sequence'] = sequence
 
-        return annotations
+        format = params.get('format', 'legacy')
+
+        if format == "protvista-predictprotein":
+            source = Source(
+                url=request.url,
+                id=sequence,
+                name="bio_embeddings"
+            )
+
+            evidence = Evidence(
+                source=source,
+            )
+
+            protvista_features = dict()
+            protvista_features['sequence'] = sequence
+
+            protvista_features['features'] = list()
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDSSP8'],
+                    evidences=[evidence],
+                    type="SECONDARY_STRUCTURE_8_STATES_(SEQVEC)",
+                    feature_enum=SecondaryStructure
+                )
+            )
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDSSP3'],
+                    evidences=[evidence],
+                    type="SECONDARY_STRUCTURE_3_STATES_(SEQVEC)",
+                    feature_enum=SecondaryStructure
+                )
+            )
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDisorder'],
+                    evidences=[evidence],
+                    type="DISORDER_(SEQVEC)",
+                    feature_enum=SecondaryStructure
+                )
+            )
+
+            return protvista_features
+        else:
+            return annotations

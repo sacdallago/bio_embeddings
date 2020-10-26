@@ -1,6 +1,5 @@
 import json
 
-from Bio import SeqRecord
 from typing import NamedTuple, List, Union
 
 from bio_embeddings.extract.annotations import SecondaryStructure, Disorder
@@ -57,9 +56,12 @@ _HEX_COLORS = {
 _FEATURE_COLORS = {
     Disorder.DISORDER: _HEX_COLORS['HEX_COL3'],
     Disorder.ORDER: _HEX_COLORS['HEX_COL1'],
+
     SecondaryStructure.ALPHA_HELIX: _HEX_COLORS['HEX_COL1'],
     SecondaryStructure.EXTENDED_STRAND: _HEX_COLORS['HEX_COL3'],
     SecondaryStructure.IRREGULAR: _HEX_COLORS['HEX_COL5'],
+
+
 }
 
 
@@ -96,12 +98,12 @@ class ProtVistaFeature(NamedTuple):
 
 
 # Note: this function is O(n), with n = length of the SeqRecord
-def seqrecord_to_features(FASTA: SeqRecord, evidences: List[Evidence], type: str, feature_enum) -> List[ProtVistaFeature]:
+def annotations_to_protvista_converter(features_string: str, evidences: List[Evidence], type: str, feature_enum) -> List[ProtVistaFeature]:
     features = list()
 
     current = None
 
-    for i, AA_feature in enumerate(list(FASTA.seq)):
+    for i, AA_feature in enumerate(list(features_string)):
         AA_annotation = feature_enum(AA_feature)
 
         if not current:
@@ -113,7 +115,7 @@ def seqrecord_to_features(FASTA: SeqRecord, evidences: List[Evidence], type: str
                 type=type
             )
         elif current.description != AA_annotation:
-            features.append(current)
+            features.append(current.toDict())
             current = ProtVistaFeature(
                 description=AA_annotation,
                 begin=i+1,
@@ -122,8 +124,8 @@ def seqrecord_to_features(FASTA: SeqRecord, evidences: List[Evidence], type: str
                 type=type
             )
         else:
-            current.end = i+1
+            current = current._replace(end=i+1)
 
-    features.append(current)
+    features.append(current.toDict())
 
     return features
