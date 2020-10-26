@@ -50,6 +50,11 @@ _HEX_COLORS = {
     "HEX_COL3": '#DC267F',
     "HEX_COL4": '#FE6100',
     "HEX_COL5": '#FFB000',
+
+    # These colors shouldn't be used unless absolutely necessary!
+    "HEX_COL6": '#FFF000',
+    "HEX_COL7": '#FF3000',
+    "HEX_COL8": '#FEA100',
 }
 
 
@@ -61,7 +66,12 @@ _FEATURE_COLORS = {
     SecondaryStructure.EXTENDED_STRAND: _HEX_COLORS['HEX_COL3'],
     SecondaryStructure.IRREGULAR: _HEX_COLORS['HEX_COL5'],
 
+    SecondaryStructure.ISOLATED_BETA_BRIDGE: _HEX_COLORS['HEX_COL2'],
+    SecondaryStructure.TURN: _HEX_COLORS['HEX_COL4'],
+    SecondaryStructure.BEND: _HEX_COLORS['HEX_COL8'],
 
+    SecondaryStructure.THREE_HELIX: _HEX_COLORS['HEX_COL6'],
+    SecondaryStructure.FIVE_HELIX: _HEX_COLORS['HEX_COL7'],
 }
 
 
