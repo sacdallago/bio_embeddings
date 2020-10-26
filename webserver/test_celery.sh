@@ -12,6 +12,9 @@ export MONGO_URL="mongodb://root:example@localhost:27017"
 
 # The following needed for the celery workers!
 export MODEL_DIRECTORY="/mnt/nfs/models"
+# Optional, if you want to create a "sync" worker
+# Values can be: seqvec, protbert or (default) pipeline
+# export CELERY_WORKER_TYPE="seqvec"
 
 celery worker -A celery_worker.task_keeper --loglevel=info --pool=solo
 
