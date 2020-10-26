@@ -1,5 +1,6 @@
 from webserver.endpoints import api
 from werkzeug.datastructures import FileStorage
+from flask_restx import fields
 
 file_post_parser = api.parser()
 file_post_parser.add_argument(
@@ -50,10 +51,19 @@ sequence_post_parameters.add_argument(
     required=True,
     help='Protein sequence in AA format.'
 )
-sequence_post_parameters.add_argument(
-    'model',
-    location='json',
-    type=str,
-    required=False,
-    help='Which LM to use; options: seqvec, prottrans_bert_bfd'
-)
+
+sequence_post_parameters = api.model('sequence_post', {
+    'model': fields.String(
+        location='json',
+        description='Which LM to use; options: seqvec, prottrans_bert_bfd.',
+        required=False,
+        default='seqvec',
+        example='seqvec'
+    ),
+    'sequence': fields.String(
+            location='json',
+            description='Protein sequence in AA format.',
+            required=True,
+            example='MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK'
+        ),
+})
