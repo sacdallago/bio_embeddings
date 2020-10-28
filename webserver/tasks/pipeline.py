@@ -1,3 +1,5 @@
+import logging
+
 from copy import deepcopy
 from os import path
 from pathlib import Path
@@ -9,6 +11,8 @@ from ruamel import yaml
 from webserver.database import write_file
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
+
+logger = logging.getLogger(__name__)
 
 
 def read_config_file(config_path: Path) -> Dict[str, Any]:
@@ -57,7 +61,7 @@ _FILES_TO_STORE = [
 
 
 @task_keeper.task()
-def get_embeddings(job_identifier: str, sequences: List[Tuple[str, str]], pipeline_type: str):
+def run_pipeline(job_identifier: str, sequences: List[Tuple[str, str]], pipeline_type: str):
     from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 
     config = deepcopy(_CONFIGS[pipeline_type])
@@ -65,6 +69,7 @@ def get_embeddings(job_identifier: str, sequences: List[Tuple[str, str]], pipeli
     def _post_stage_save(stage_out_config):
         for file_name in _FILES_TO_STORE:
             if stage_out_config.get(file_name):
+                logger.info(f"Copying {file_name} to database.")
                 write_file(job_identifier, file_name, stage_out_config[file_name])
 
     with TemporaryDirectory() as workdir:
@@ -76,4 +81,6 @@ def get_embeddings(job_identifier: str, sequences: List[Tuple[str, str]], pipeli
         config['global']['prefix'] = str(Path(workdir) / "bio_embeddings_job")
         config['global']['sequences_file'] = str(Path(workdir) / "sequences.fasta")
 
+        logger.info("------ Starting pipeline execution...")
         execute_pipeline_from_config(config, post_stage=_post_stage_save)
+        logger.info("------ Finished pipeline execution.")

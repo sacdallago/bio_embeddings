@@ -7,6 +7,13 @@ class Membrane(Enum):
     SOLUBLE = 'Soluble'
     UNKONWN = "?"
 
+    def __str__(self):
+        return {
+            self.MEMBRANE: "Membrane bound",
+            self.SOLUBLE: "Soluble",
+            self.UNKNOWN: "Unknown"
+        }.get(self)
+
     @staticmethod
     def isAAFeature():
         return False

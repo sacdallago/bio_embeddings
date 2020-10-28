@@ -1,3 +1,4 @@
+import re
 import flask
 import collections
 
@@ -136,3 +137,16 @@ def validate_file_submission(request):
     )
 
     return result
+
+
+_ACCEPTABLE_CHAR_TARGET_REGEX = "[^ACDEFGHIKLMNPQRSTVWY]"
+
+
+def check_valid_sequence(sequence: str) -> bool:
+    m = re.search(
+        _ACCEPTABLE_CHAR_TARGET_REGEX, sequence, re.IGNORECASE
+    )
+    if m:
+        return False
+
+    return True
