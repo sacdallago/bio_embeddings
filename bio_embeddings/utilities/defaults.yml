@@ -33,3 +33,6 @@ esm:
 
 cpcprot:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/cpcprot/best.ckpt"
+
+plus_rnn:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/plus/PLUS-RNN_BASE.pt"
