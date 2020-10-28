@@ -17,6 +17,7 @@ from bio_embeddings.embed import (
     ProtTransXLNetUniRef100Embedder,
     ESMEmbedder,
     EmbedderInterface,
+    CPCProtEmbedder,
 )
 
 all_embedders = [
@@ -25,6 +26,7 @@ all_embedders = [
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
     ESMEmbedder,
+    CPCProtEmbedder,
 ]
 
 
@@ -52,6 +54,9 @@ def embedder_test_impl(
     )
     if embedder_class == SeqVecEmbedder:
         assert padded.shape[1] == 9
+    elif embedder_class == CPCProtEmbedder:
+        # There is only a per-protein embedding for CPCProt
+        assert padded.shape == (512,)
     else:
         assert padded.shape[0] == 9
     expected = numpy.load(str(expected_file))

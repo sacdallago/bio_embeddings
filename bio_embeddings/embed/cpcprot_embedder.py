@@ -3,7 +3,6 @@ from typing import List, Generator, Union
 import numpy
 import torch
 from CPCProt import CPCProtModel, CPCProtEmbedding
-from CPCProt.collate_fn import pad_sequences
 from CPCProt.tokenizer import Tokenizer
 from numpy import ndarray
 
@@ -44,7 +43,10 @@ class CPCProtEmbedder(EmbedderInterface):
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
         """See https://github.com/amyxlu/CPCProt/blob/df1ad1118544ed349b5e711207660a7c205b3128/embed_fasta.py"""
         encoded = [numpy.array(self.tokenizer.encode(sequence)) for sequence in batch]
-        torch_inputs = torch.from_numpy(pad_sequences(encoded, 0))
+        # 11 is the minimum patch size, so we need to zero-pad shorter sequences
+        pad_length = max(max([i.shape[0] for i in encoded]), 11)
+        padded = [numpy.pad(i, (0, pad_length - i.shape[0])) for i in encoded]
+        torch_inputs = torch.from_numpy(numpy.array(padded))
         yield from self._model.get_z_mean(torch_inputs).detach().cpu().numpy()
 
     @staticmethod

@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://chat.bioembeddings.com/">
+    <img src="https://chat.bioembeddings.com/api/v1/shield.svg?type=online&name=chat&icon=false" />
+  </a>
+</p>
+
 # Bio Embeddings
 Project aims:
   - Facilitate the use of DeepLearning based biological sequence representations for transfer-learning by providing a single, consistent interface and close-to-zero-friction
