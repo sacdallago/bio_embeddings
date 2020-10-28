@@ -68,7 +68,7 @@ sequence_post_parameters = api.model('sequence_post', {
     ),
 })
 
-sequence_post_parameters_annotations = api.model('sequence_post', {
+sequence_post_parameters_annotations = api.model('sequence_post_annotations', {
     'model': fields.String(
         location='json',
         description='Which LM to use; options: seqvec, prottrans_bert_bfd.',

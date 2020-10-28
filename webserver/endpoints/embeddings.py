@@ -1,4 +1,5 @@
 import io
+import h5py
 import numpy as np
 
 from flask import request, send_file, abort
@@ -16,7 +17,8 @@ ns = api.namespace("embeddings", description="Calculate embeddings on the fly.")
 @ns.route('')
 class Embeddings(Resource):
     @api.expect(sequence_post_parameters, validate=True)
-    @api.response(200, "Embedding in npy format")
+    @api.response(200, "Returns an hdf5 file with one dataset called `sequence` "
+                       "containing the embedding of the supplied sequence.")
     @api.response(400, "Invalid input. See return message for details.")
     @api.response(505, "Server error")
     def post(self):
@@ -37,10 +39,11 @@ class Embeddings(Resource):
 
         # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
         job = model.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-        embeddings = job.get()
+        embedding = np.array(job.get())
 
         buffer = io.BytesIO()
-        np.savez_compressed(buffer, embeddings)
+        with h5py.File(buffer, "w") as embeddings_file:
+            embeddings_file.create_dataset("sequence", data=embedding)
 
         # This simulates closing the file and re-opening it.
         # Otherwise the cursor will already be at the end of the
@@ -48,4 +51,4 @@ class Embeddings(Resource):
         # think the file is empty.
         buffer.seek(0)
 
-        return send_file(buffer, attachment_filename="embedding.npy")
+        return send_file(buffer, attachment_filename="embeddings_file.h5", as_attachment=True)

@@ -33,7 +33,7 @@ if configuration['celery']['celery_worker_type'] == "seqvec":
 
 @task_keeper.task()
 def get_seqvec_embeddings_sync(sequence: str):
-    return model.embed(sequence)
+    return model.embed(sequence).tolist()
 
 
 @task_keeper.task()

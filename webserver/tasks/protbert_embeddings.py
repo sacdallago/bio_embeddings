@@ -32,7 +32,7 @@ if configuration['celery']['celery_worker_type'] == "protbert":
 
 @task_keeper.task()
 def get_protbert_embeddings_sync(sequence: str):
-    return model.embed(sequence)
+    return model.embed(sequence).tolist()
 
 
 @task_keeper.task()
