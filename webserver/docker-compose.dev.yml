@@ -2,12 +2,12 @@ version: '3.2'
 
 services:
   bio_embeddings_worker:
-    image: docker.pkg.github.com/sacdallago/bio_embeddings/bio_embeddings_worker:latest
+    image: ghcr.io/bio_embeddings/worker
     build:
       context: ..
       dockerfile: webserver/Dockerfile.worker
       cache_from:
-        - docker.pkg.github.com/sacdallago/bio_embeddings/bio_embeddings_worker:latest
+        - ghcr.io/bio_embeddings/worker
     container_name: bio_embeddings_worker
     volumes:
       - ${HOME}/.cache/bio_embeddings:/mnt/models
@@ -20,12 +20,12 @@ services:
       - bio_embeddings
 
   bio_embeddings_webserver:
-    image: docker.pkg.github.com/sacdallago/bio_embeddings/bio_embeddings_webserver:latest
+    image: ghcr.io/bio_embeddings/webserver
     build:
       context: ..
       dockerfile: webserver/Dockerfile.webserver
       cache_from:
-        - docker.pkg.github.com/sacdallago/bio_embeddings/bio_embeddings_webserver:latest
+        - ghcr.io/bio_embeddings/webserver
     container_name: bio_embeddings_webserver
     ports:
       - 3000:3000
