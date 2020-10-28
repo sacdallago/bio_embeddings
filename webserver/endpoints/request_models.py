@@ -52,36 +52,29 @@ sequence_post_parameters.add_argument(
     help='Protein sequence in AA format.'
 )
 
+lm_field = fields.String(
+    location='json',
+    description='Which LM to use; options: seqvec, prottrans_bert_bfd.',
+    required=False,
+    default='seqvec',
+    example='seqvec'
+)
+
+sequence_field = fields.String(
+    location='json',
+    description='Protein sequence in AA format.',
+    required=True,
+    example='MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK'
+)
+
 sequence_post_parameters = api.model('sequence_post', {
-    'model': fields.String(
-        location='json',
-        description='Which LM to use; options: seqvec, prottrans_bert_bfd.',
-        required=False,
-        default='seqvec',
-        example='seqvec'
-    ),
-    'sequence': fields.String(
-        location='json',
-        description='Protein sequence in AA format.',
-        required=True,
-        example='MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK'
-    ),
+    'model': lm_field,
+    'sequence': sequence_field
 })
 
 sequence_post_parameters_annotations = api.model('sequence_post_annotations', {
-    'model': fields.String(
-        location='json',
-        description='Which LM to use; options: seqvec, prottrans_bert_bfd.',
-        required=False,
-        default='seqvec',
-        example='seqvec'
-    ),
-    'sequence': fields.String(
-        location='json',
-        description='Protein sequence in AA format.',
-        required=True,
-        example='MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK'
-    ),
+    'model': lm_field,
+    'sequence': sequence_field
     'format': fields.String(
         location='json',
         description='Output format. Options: legacy (default), protvista-predictprotein',
