@@ -18,6 +18,7 @@ from bio_embeddings.embed import (
     ESMEmbedder,
     EmbedderInterface,
     CPCProtEmbedder,
+    PLUSRNNEmbedder,
 )
 
 all_embedders = [
@@ -27,6 +28,7 @@ all_embedders = [
     ProtTransXLNetUniRef100Embedder,
     ESMEmbedder,
     CPCProtEmbedder,
+    PLUSRNNEmbedder,
 ]
 
 
@@ -38,15 +40,7 @@ def embedder_test_impl(
         embedder_class.name + ".npz"
     )
 
-    # TODO: Change this once GH-20 is solved
-    if os.environ.get("MODEL_DIRECTORY"):
-        model_directory = Path(os.environ["MODEL_DIRECTORY"]).joinpath(
-            embedder_class.name
-        )
-        embedder = embedder_class(model_directory=model_directory, device=device)
-    else:
-
-        embedder = embedder_class(device=device)
+    embedder = embedder_class(device=device)
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
     [protein, seqwence, padded] = embedder.embed_many(
@@ -101,6 +95,7 @@ def test_model_download(embedder_class):
     ):
         embedder_class()
     get_model_mock.assert_called_once()
+    CPCProtEmbedder,
 
 
 @pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
