@@ -27,6 +27,7 @@ We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find t
 
  * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)
  * Included [example](examples/goPredSim) to transfer GO annotations (a-la [goPredSim](https://github.com/Rostlab/goPredSim)). We also make the reference annotations and embeddings available!
+ * We've added the language models [ESM](https://github.com/facebookresearch/esm), [PLUS](https://github.com/mswzeus/PLUS/) and [CPCProt](https://github.com/amyxlu/CPCProt)
 
 ## Installation
 
@@ -128,6 +129,8 @@ While we are working on a proper publication, if you are already using this tool
   - [ ] Word2Vec
   - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
   - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+  - [x] PLUS (https://github.com/mswzeus/PLUS/)
+  - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 - project:
   - [x] t-SNE
   - [x] UMAP
@@ -166,6 +169,8 @@ While we are working on a proper publication, if you are already using this tool
 - [x] Word2Vec
 - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
 - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+- [x] PLUS (https://github.com/mswzeus/PLUS/)
+- [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>
 
 ## Building a Distribution
