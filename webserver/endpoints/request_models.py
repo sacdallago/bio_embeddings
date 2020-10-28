@@ -74,7 +74,7 @@ sequence_post_parameters = api.model('sequence_post', {
 
 sequence_post_parameters_annotations = api.model('sequence_post_annotations', {
     'model': lm_field,
-    'sequence': sequence_field
+    'sequence': sequence_field,
     'format': fields.String(
         location='json',
         description='Output format. Options: legacy (default), protvista-predictprotein',
