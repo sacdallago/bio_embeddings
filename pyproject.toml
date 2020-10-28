@@ -77,6 +77,9 @@ jupyter = "^1.0.0"
 tox = "^3.16.1"
 black = "^20.8b1"
 toml = "^0.10.1"
+furo = "^2020.10.15-beta.13"
+Sphinx = "^3.2.1"
+myst-parser = "^0.12.10"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

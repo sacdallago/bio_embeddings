@@ -39,6 +39,9 @@ def get_model_directories_from_zip(
     directory: Optional[str] = None,
     overwrite_cache: bool = False,
 ) -> str:
+    """If the specified asset directory for the model is in the user cache, returns the
+    directory path, otherwise downloads the zipped directory, unpacks in the cache and
+    returns the location"""
     cache_path = (
         Path(user_cache_dir("bio_embeddings")).joinpath(model).joinpath(directory)
     )
@@ -87,6 +90,8 @@ def get_model_file(
     file: Optional[str] = None,
     overwrite_cache: bool = False,
 ) -> str:
+    """If the specified asset for the model is in the user cache, returns the
+    location, otherwise downloads the file to cache and returns the location"""
     cache_path = Path(user_cache_dir("bio_embeddings")).joinpath(model).joinpath(file)
     if not overwrite_cache and cache_path.is_file():
         logger.info(f"Loading {file} for {model} from cache at '{cache_path}'")

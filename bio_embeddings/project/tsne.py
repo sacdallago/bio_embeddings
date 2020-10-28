@@ -2,6 +2,7 @@ from sklearn.manifold import TSNE
 
 
 def tsne_reduce(embeddings, **kwargs):
+    """Wrapper around :meth:`sklearn.manifold.TSNE` with defaults for bio_embeddings"""
     tsne_params = dict()
 
     tsne_params['n_components'] = kwargs.get('n_components', 3)
