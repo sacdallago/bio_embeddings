@@ -18,6 +18,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[Unsupervised annotation extraction](#transfer-annotations-from-labeled-sequences-to-unlabeled-sequences-unsupervised_annotation_extraction)|Transfer of annotations|
 |[goPredSim](#transfer-go-annotations-gopredsim)|Transfer of annotations|
 |[goPredSim using ProtTrans BERT BFD](#transfer-go-annotations-gopredsim_protbert)|Transfer of annotations|
+|[deeploc](#deeploc-used-for-our-manuscript)|Embedding generation & visualization|
 |[cath](#cath-used-for-our-manuscript)|Embedding generation & visualization|
 |[disprot](#disprot-used-for-our-manuscript)|Embedding generation & visualization|
 |[docker](#docker)|Pipeline use through Docker|
@@ -108,6 +109,15 @@ This uses the [unsupervised_annotation_extraction](#transfer-annotations-from-la
 ### Transfer GO annotations: `goPredSim_protbert`
 
 The same as [goPredSim](#transfer-go-annotations-gopredsim), but using `prottrans-bert-bfd` instead. You can find the reference protbert embeddings at: http://data.bioembeddings.com/public/embeddings/reference/goa/
+
+---
+
+### `deeploc`, used for our manuscript
+
+This example includes sequences pulled directly from DeepLoc 1.0 (http://www.cbs.dtu.dk/services/DeepLoc/data.php). Annotations (`deeploc_annotations.csv`) were extracted from the FASTA headers.
+
+**Note**: since the FASTA file pulled from DeepLoc contains duplicate sequences, the remapping has been set to "simple". This is generally *discouraged*, but for the sake of simplicity of this example has been kept "as-is".
+
 
 ---
 
