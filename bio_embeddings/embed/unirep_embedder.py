@@ -47,4 +47,4 @@ class UniRepEmbedder(EmbedderInterface):
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
         # This is `h_avg` in jax-unirep terminology
-        return embedding.mean(axis=1)
+        return embedding.mean(axis=0)
