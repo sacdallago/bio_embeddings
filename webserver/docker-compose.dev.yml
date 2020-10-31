@@ -1,0 +1,68 @@
+version: '3.2'
+
+services:
+  bio_embeddings_worker:
+    image: ghcr.io/bio_embeddings/worker
+    build:
+      context: ..
+      dockerfile: webserver/Dockerfile.worker
+      cache_from:
+        - ghcr.io/bio_embeddings/worker
+    container_name: bio_embeddings_worker
+    volumes:
+      - ${HOME}/.cache/bio_embeddings:/mnt/models
+      - ../bio_embeddings:/app/bio_embeddings
+      - ../webserver:/app/webserver
+    environment:
+      CELERY_BROKER_URL: amqp://rabbitmq
+      MONGO_URL: mongodb://root:example@mongo:27017
+    networks:
+      - bio_embeddings
+
+  bio_embeddings_webserver:
+    image: ghcr.io/bio_embeddings/webserver
+    build:
+      context: ..
+      dockerfile: webserver/Dockerfile.webserver
+      cache_from:
+        - ghcr.io/bio_embeddings/webserver
+    container_name: bio_embeddings_webserver
+    ports:
+      - 3000:3000
+    volumes:
+      - ../webserver:/app/webserver
+    environment:
+      CELERY_BROKER_URL: amqp://rabbitmq
+      MONGO_URL: mongodb://root:example@mongo:27017
+    networks:
+      - bio_embeddings
+
+  nginx:
+    image: nginx:1-alpine
+    container_name: nginx
+    ports:
+      - 443:443
+    volumes:
+      - .:/mnt
+      - ./dev/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    networks:
+      - bio_embeddings
+
+  mongo:
+    image: mongo:4
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - bio_embeddings
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    hostname: bio_embeddings_host
+    container_name: rabbitmq
+    networks:
+      - bio_embeddings
+
+networks:
+  bio_embeddings:
