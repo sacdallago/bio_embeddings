@@ -85,4 +85,4 @@ class PLUSRNNEmbedder(EmbedderInterface):
 
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
-        return embedding
+        return embedding.mean(axis=0)
