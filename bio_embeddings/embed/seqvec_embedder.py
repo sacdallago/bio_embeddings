@@ -10,7 +10,7 @@ from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 logger = logging.getLogger(__name__)
 
 # A random short sequence (T0922 from CASP2)
-warmup_seq = "MGSSHHHHHHSSGLVPRGSHMASVQKFPGDANCDGIVDISDAVLIMQTMANPSKYQMTDKGRINADVTGNSDGVTVLDAQFIQSYCLGLVELPPVE"
+_warmup_seq = "MGSSHHHHHHSSGLVPRGSHMASVQKFPGDANCDGIVDISDAVLIMQTMANPSKYQMTDKGRINADVTGNSDGVTVLDAQFIQSYCLGLVELPPVE"
 
 
 class SeqVecEmbedder(EmbedderWithFallback):
@@ -63,10 +63,11 @@ class SeqVecEmbedder(EmbedderWithFallback):
             cuda_device=cuda_device,
         )
 
-        if warmup_rounds > 0:
+        self.warmup_rounds = warmup_rounds
+        if self.warmup_rounds > 0:
             logger.info("Running ELMo warmup")
-            for _ in range(warmup_rounds):
-                self.embed(warmup_seq)
+            for _ in range(self.warmup_rounds):
+                self.embed(_warmup_seq)
 
     def embed(self, sequence: str) -> ndarray:
         return self._model.embed_sentence(list(sequence))
@@ -81,6 +82,10 @@ class SeqVecEmbedder(EmbedderWithFallback):
                 options_file=self._options_file,
                 cuda_device=-1,
             )
+            if self.warmup_rounds > 0:
+                logger.info("Running CPU ELMo warmup")
+                for _ in range(self.warmup_rounds):
+                    self._model_fallback.embed_sentence(list(_warmup_seq))
         return self._model_fallback
 
     def _embed_batch_impl(
