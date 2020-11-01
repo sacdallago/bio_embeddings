@@ -2,6 +2,7 @@ from umap import UMAP
 
 
 def umap_reduce(embeddings, **kwargs):
+    """Wrapper around :meth:`umap.UMAP` with defaults for bio_embeddings"""
     umap_params = dict()
 
     umap_params['n_components'] = kwargs.get('n_components', 3)
