@@ -140,4 +140,6 @@ private/
 .venv
 sync.sh
 examples/docker/output
+notebooks/*.h5
+notebooks/*.csv
 evotuning.log
