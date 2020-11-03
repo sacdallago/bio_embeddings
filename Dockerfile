@@ -4,7 +4,7 @@ FROM ubuntu:20.04 as venv-build
 
 # build-essential is for jsonnet
 RUN apt-get update && \
-    apt-get install -y curl build-essential python3 python3-distutils python3-venv python3-dev && \
+    apt-get install -y curl build-essential python3 python3-distutils python3-venv python3-dev git && \
     curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - --version 1.1.3
 
 COPY pyproject.toml /app/pyproject.toml

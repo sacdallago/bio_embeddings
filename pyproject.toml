@@ -51,6 +51,8 @@ appdirs = "^1.4.4"
 # Help the version resolver with allennlp
 boto3 = { version = "1.14.18", optional = true }
 botocore = { version = "1.17.18", optional = true }
+# https://github.com/boto/botocore/issues/2187#issuecomment-712819351
+urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
 esm = { git = "https://github.com/facebookresearch/esm.git", tag = "v0.1.0", optional = true }
 cpcprot = { git = "https://github.com/amyxlu/CPCProt.git", rev = "df1ad1118544ed349b5e711207660a7c205b3128", optional = true }
@@ -75,6 +77,9 @@ jupyter = "^1.0.0"
 tox = "^3.16.1"
 black = "^20.8b1"
 toml = "^0.10.1"
+furo = "^2020.10.15-beta.13"
+Sphinx = "^3.2.1"
+myst-parser = "^0.12.10"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

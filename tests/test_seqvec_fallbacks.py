@@ -65,7 +65,7 @@ def test_fallbacks(caplog):
             "M" * 7,
         ]
         embeddings_generator = SeqVecEmbedder(
-            weights_file="/invalid/path", options_file="/invalid/path"
+            weights_file="/invalid/path", options_file="/invalid/path", warmup_rounds=0
         ).embed_many(sequences, given_limit)
         list(embeddings_generator)
 

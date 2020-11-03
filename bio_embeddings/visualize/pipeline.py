@@ -3,7 +3,7 @@ import logging
 from copy import deepcopy
 from pandas import read_csv
 from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, TooFewComponentsException
-from bio_embeddings.visualize.plotly_plots import render_3D_scatter_plotly, render_scatter_plotly,\
+from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly,\
     save_plotly_figure_to_html
 
 logger = logging.getLogger(__name__)
