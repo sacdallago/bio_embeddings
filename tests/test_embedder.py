@@ -41,7 +41,10 @@ def embedder_test_impl(
         embedder_class.name + ".npz"
     )
 
-    embedder = embedder_class(device=device)
+    if embedder_class == SeqVecEmbedder:
+        embedder = embedder_class(warmup_rounds=0, device=device)
+    else:
+        embedder = embedder_class(device=device)
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
     padded_sequence = "VLSXXXIEP"

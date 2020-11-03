@@ -9,6 +9,9 @@ from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 
 logger = logging.getLogger(__name__)
 
+# A random short sequence (T0922 from CASP2)
+_warmup_seq = "MGSSHHHHHHSSGLVPRGSHMASVQKFPGDANCDGIVDISDAVLIMQTMANPSKYQMTDKGRINADVTGNSDGVTVLDAQFIQSYCLGLVELPPVE"
+
 
 class SeqVecEmbedder(EmbedderWithFallback):
     name = "seqvec"
@@ -22,10 +25,12 @@ class SeqVecEmbedder(EmbedderWithFallback):
     _model_fallback: Optional[ElmoEmbedder] = None
     _necessary_files = ["weights_file", "options_file"]
 
-    def __init__(self, **kwargs):
+    def __init__(self, warmup_rounds: int = 4, **kwargs):
         """
         Initialize Elmo embedder. Can define non-positional arguments for paths of files and other settings.
 
+        :param warmup_rounds: A sample sequence will be embedded this often to
+            work around elmo's non-determinism (https://github.com/allenai/allennlp/blob/v0.9.0/tutorials/how_to/elmo.md#notes-on-statefulness-and-non-determinism)
         :param weights_file: path of weights file
         :param options_file: path of options file
         :param model_directory: Alternative of weights_file/options_file
@@ -58,6 +63,12 @@ class SeqVecEmbedder(EmbedderWithFallback):
             cuda_device=cuda_device,
         )
 
+        self.warmup_rounds = warmup_rounds
+        if self.warmup_rounds > 0:
+            logger.info("Running ELMo warmup")
+            for _ in range(self.warmup_rounds):
+                self.embed(_warmup_seq)
+
     def embed(self, sequence: str) -> ndarray:
         return self._model.embed_sentence(list(sequence))
 
@@ -71,6 +82,10 @@ class SeqVecEmbedder(EmbedderWithFallback):
                 options_file=self._options_file,
                 cuda_device=-1,
             )
+            if self.warmup_rounds > 0:
+                logger.info("Running CPU ELMo warmup")
+                for _ in range(self.warmup_rounds):
+                    self._model_fallback.embed_sentence(list(_warmup_seq))
         return self._model_fallback
 
     def _embed_batch_impl(
