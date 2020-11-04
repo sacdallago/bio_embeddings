@@ -58,14 +58,14 @@ docs:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
     - git config --global user.name "bio_embeddings"
-    - git config --global user.email "support@bio_embeddings.com"
+    - git config --global user.email "support@bioembeddings.com"
     - git init
     - git add .
     - git commit -m 'Upload docs'
     # https://stackoverflow.com/a/29380765/3549270
     - mkdir ~/.ssh
     - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-    - git remote add origin git@github.com:konstin/bio_embeddings.git
+    - git remote add origin git@github.com:sacdallago/bio_embeddings.git
     - git push -f origin master:gh-pages
 
 build-webserver:
