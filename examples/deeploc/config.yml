@@ -1,0 +1,33 @@
+global:
+  sequences_file: deeploc_data.fasta
+  prefix: deeploc
+  simple_remapping: True
+
+# Protocol 1
+# Get the embeddings from the ProtTrans BERT model trained on BFD.
+
+prottrans_bert_embeddings:
+  type: embed
+  protocol: prottrans_bert_bfd
+
+  # This will generate per-sequence embeddings (reduced_embeddings.h5)
+  reduce: True
+
+  # This will discard per-amino-acid embeddings as they are not needed for the remainder of the example
+  # the reason we explicitly discard them is to save storage on our computers.
+  discard_per_amino_acid_embeddings: True
+
+# Protocol 2
+# Apply dimensionality reduction techniques and visualize embedding spaces
+
+umap_projections:
+  type: project
+  protocol: umap
+  depends_on: prottrans_bert_embeddings
+  n_components: 2
+plotly_visualization:
+  type: visualize
+  protocol: plotly
+  annotation_file: deeploc_annotations.csv
+  depends_on: umap_projections
+  display_unknown: False

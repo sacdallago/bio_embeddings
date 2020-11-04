@@ -6,7 +6,6 @@ from pandas import DataFrame
 def render_3D_scatter_plotly(embeddings_dataframe: DataFrame):
     if 'label' in embeddings_dataframe.columns:
         fig = px.scatter_3d(embeddings_dataframe,
-                            template='ggplot2',
                             x='component_0',
                             y='component_1',
                             z='component_2',
@@ -17,7 +16,6 @@ def render_3D_scatter_plotly(embeddings_dataframe: DataFrame):
                             )
     else:
         fig = px.scatter_3d(embeddings_dataframe,
-                            template='ggplot2',
                             x='component_0',
                             y='component_1',
                             z='component_2',
@@ -51,7 +49,6 @@ def render_3D_scatter_plotly(embeddings_dataframe: DataFrame):
 def render_scatter_plotly(embeddings_dataframe: DataFrame):
     if 'label' in embeddings_dataframe.columns:
         fig = px.scatter(embeddings_dataframe,
-                         template='ggplot2',
                          x='component_0',
                          y='component_1',
                          color='label',
@@ -61,7 +58,6 @@ def render_scatter_plotly(embeddings_dataframe: DataFrame):
                          )
     else:
         fig = px.scatter(embeddings_dataframe,
-                         template='ggplot2',
                          x='component_0',
                          y='component_1',
                          hover_name=embeddings_dataframe.index,
