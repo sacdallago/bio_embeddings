@@ -89,6 +89,7 @@ except ImportError:
 try:
     from bio_embeddings.embed.plus_rnn_embedder import PLUSRNNEmbedder
     name_to_embedder[PLUSRNNEmbedder.name] = PLUSRNNEmbedder
+    __all__.append("PLUSRNNEmbedder")
 except ImportError:
     logger.debug("plus extra not installed, PLUSRNNEmbedder will not be available")
 
