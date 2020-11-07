@@ -2,7 +2,7 @@ import os
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Callable
+from typing import Dict, Callable, Final, Set
 
 import importlib_metadata
 from importlib_metadata import PackageNotFoundError
@@ -15,6 +15,10 @@ from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_seque
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 _STAGES = {
     "embed": run_embed,
     "project": run_project,
@@ -24,6 +28,8 @@ _STAGES = {
 
 _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
+
+LEGAL_AMINO_ACIDS: Final[Set[str]] = set("MRHKDESTNQCUGPAVIFYWLOXZB")
 
 
 def _valid_file(file_path):
@@ -54,6 +60,24 @@ def _process_fasta_file(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta(kwargs['sequences_file'])
+    for entry in sequences:
+        # TODO: What about lowercase vs uppercase? Do all methods handle that properly?
+        # Currently the only datapoint is that PLUSRNNEmbedder calls upper() explicitly
+        illegal = sorted(set(entry.seq.upper()) - LEGAL_AMINO_ACIDS)
+        # It would be ideal if we could peak into the
+        if "J" in illegal:
+            logger.warning(
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the ambiguous amino acid 'J' "
+                f"which is only supported by UniRep"
+            )
+            illegal.remove("J")
+        if illegal:
+            formatted = "'" + "', '".join(illegal) + "'"
+            logger.error(
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the characters {formatted}, "
+                f"which are not supported by the embedders"
+            )
+
     sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',
                                                    extension='.fasta')
     write_fasta_file(sequences, sequences_file_path)
