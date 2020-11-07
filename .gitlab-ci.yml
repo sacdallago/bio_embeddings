@@ -10,6 +10,7 @@ image: "python:3.7"
 
 stages:
   - tests
+  - docs
   - build-docker
 
 .install-deps-template: &install-deps
@@ -41,6 +42,31 @@ python3.7:
 python3.8:
   <<: *test
   image: python:3.8
+
+docs:
+  <<: *install-deps
+  stage: docs
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  script:
+    - . .venv/bin/activate
+    - cd docs
+    - make html
+    - cd _build/html
+    # https://about.gitlab.com/blog/2017/11/02/automating-boring-git-operations-gitlab-ci/
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
+    - git config --global user.name "bio_embeddings"
+    - git config --global user.email "support@bioembeddings.com"
+    - git init
+    - git add .
+    - git commit -m 'Upload docs'
+    # https://stackoverflow.com/a/29380765/3549270
+    - mkdir ~/.ssh
+    - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    - git remote add origin git@github.com:sacdallago/bio_embeddings.git
+    - git push -f origin master:gh-pages
 
 build-webserver:
   stage: build-docker
