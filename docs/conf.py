@@ -12,6 +12,9 @@
 #
 import os
 import sys
+from pathlib import Path
+
+import toml
 
 sys.path.insert(0, os.path.abspath("../bio_embeddings"))
 
@@ -23,8 +26,12 @@ copyright = (
 )
 author = "Christian Dallago <christian.dallago@tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>, Konstantin Schuetze <schuetze@in.tum.de>"
 
+html_baseurl = "https://docs.bioembeddings.org"
+
 # The full version, including alpha/beta/rc tags
-release = "0.1.4"
+release = toml.loads(
+    Path(__file__).parent.parent.joinpath("pyproject.toml").read_text()
+)["tool"]["poetry"]["version"]
 
 # -- General configuration ---------------------------------------------------
 
