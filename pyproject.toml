@@ -58,6 +58,8 @@ esm = { git = "https://github.com/facebookresearch/esm.git", tag = "v0.1.0", opt
 cpcprot = { git = "https://github.com/amyxlu/CPCProt.git", rev = "df1ad1118544ed349b5e711207660a7c205b3128", optional = true }
 tape-proteins = { git = "https://github.com/konstin/tape.git", branch = "patch-1", optional = true }
 plus = { git = "https://github.com/konstin/PLUS", optional = true }
+# Doesn't use any exotic dependencies, so if we have a wheel we don't even need an extra
+bepler = { git = "https://github.com/konstin/protein-sequence-embedding-iclr2019" , optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
@@ -66,7 +68,8 @@ unirep = ["jax-unirep"]
 esm = ["esm"]
 cpcprot = ["cpcprot", "tape-proteins"]
 plus = ["plus"]
-all = ["allennlp", "transformers", "jax-unirep", "esm", "cpcprot", "tape-proteins", "plus"]
+bepler = ["bepler"]
+all = ["allennlp", "transformers", "jax-unirep", "esm", "cpcprot", "tape-proteins", "plus", "bepler"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
