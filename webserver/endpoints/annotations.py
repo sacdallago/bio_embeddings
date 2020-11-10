@@ -1,3 +1,6 @@
+from typing import Dict
+from functools import lru_cache
+
 from flask import request, abort
 from flask_restx import Resource
 
@@ -11,6 +14,21 @@ from webserver.tasks.seqvec_embeddings import get_seqvec_annotations_sync
 from webserver.tasks.protbert_embeddings import get_protbert_annotations_sync
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
+
+
+@lru_cache()
+def _get_feaures(model_name: str, sequence: str) -> Dict[str, str]:
+    model = {
+        'seqvec': get_seqvec_annotations_sync,
+        'prottrans_bert_bfd': get_protbert_annotations_sync
+    }.get(model_name)
+
+    if not model:
+        return abort(400, f"Model '{model_name}' isn't available.")
+
+    # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
+    job = model.apply_async(args=[sequence], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60)
+    return job.get()
 
 
 @ns.route('')
@@ -29,17 +47,7 @@ class Annotations(Resource):
 
         model_name = params.get('model', 'seqvec')
 
-        model = {
-            'seqvec': get_seqvec_annotations_sync,
-            'prottrans_bert_bfd': get_protbert_annotations_sync
-        }.get(model_name)
-
-        if not model:
-            return abort(400, f"Model '{model_name}' isn't available.")
-
-        # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
-        job = model.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-        annotations = job.get()
+        annotations = _get_feaures(model_name, sequence)
 
         annotations['sequence'] = sequence
 
