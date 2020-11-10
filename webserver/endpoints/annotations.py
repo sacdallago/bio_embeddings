@@ -1,7 +1,7 @@
 from flask import request, abort
 from flask_restx import Resource
 
-from webserver.endpoints.task_interface import _get_feaures
+from webserver.endpoints.task_interface import get_feaures
 from webserver.utilities.parsers import (
     Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder
 )
@@ -28,7 +28,7 @@ class Annotations(Resource):
 
         model_name = params.get('model', 'seqvec')
 
-        annotations = _get_feaures(model_name, sequence)
+        annotations = get_feaures(model_name, sequence)
 
         annotations['sequence'] = sequence
 

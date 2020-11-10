@@ -26,7 +26,7 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
 
 
 @lru_cache()
-def _get_feaures(model_name: str, sequence: str) -> Dict[str, str]:
+def get_feaures(model_name: str, sequence: str) -> Dict[str, str]:
     """
     Calls two jobs:
     - First job gets the emebddings (can be run on GPU machine with little system RAM)
