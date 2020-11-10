@@ -16,6 +16,6 @@ export MODEL_DIRECTORY="/mnt/nfs/models"
 # Values can be: seqvec, protbert or (default) pipeline
 # export CELERY_WORKER_TYPE="seqvec"
 
-celery worker -A celery_worker.task_keeper --loglevel=info --pool=solo
+celery worker -A celery_worker.task_keeper --loglevel=info --pool=solo -n pipeline_worker
 
 exit 0

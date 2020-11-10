@@ -24,6 +24,7 @@ configuration = {
         "subcellular_location_checkpoint_file": os.path.join(
             model_directory, "bert_from_publication_annotations_extractors/subcellular_location_checkpoint_file"
         ),
+        # TODO: add goPredSim stuff
     },
     # SeqVec stuff
     "seqvec": {
@@ -36,15 +37,18 @@ configuration = {
         "subcellular_location_checkpoint_file": os.path.join(
             model_directory, "seqvec_from_publication_annotations_extractors/subcellular_location_checkpoint_file"
         ),
+        # TODO: add goPredSim stuff
     },
     # Celery worker type
     "celery": {
         # Type can be:
         #  - nothing ==> pipeline  async worker
         #  - pipeline ==> pipeline async worker
-        #  - seqvec ==> seqvec sync worker
-        #  - protbert ==> protbert sync worker
+        #  - seqvec ==> takes sequences and returns embeddings (sync)
+        #  - seqvec_annotations ==> takes embeddings and returns annotations (sync)
+        #  - protbert ==> takes sequences and returns embeddings (sync)
+        #  - protbert_annotations ==> takes embeddings and returns annotations (sync)
 
-        "celery_worker_type": environ.get("CELERY_WORKER_TYPE", None),
+        "celery_worker_type": environ.get("CELERY_WORKER_TYPE", None)
     }
 }
