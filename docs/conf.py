@@ -26,7 +26,7 @@ copyright = (
 )
 author = "Christian Dallago <christian.dallago@tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>, Konstantin Schuetze <schuetze@in.tum.de>"
 
-html_baseurl = "https://docs.bioembeddings.org"
+html_baseurl = "https://docs.bioembeddings.com"
 
 # The full version, including alpha/beta/rc tags
 release = toml.loads(
