@@ -1,6 +1,6 @@
 """
 Most of this implementation is taken from
-https://github.com/tbepler/protein-sequence-embedding-iclr2019/blob/3bb338bd70e2b7b97c733304d50cfcac9c35cb27/embed_sequences.py#L15
+https://github.com/tbepler/protein-sequence-embedding-iclr2019/blob/3bb338bd70e2b7b97c733304d50cfcac9c35cb27/embed_sequences.py
 
 ---
 

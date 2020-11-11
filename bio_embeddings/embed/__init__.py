@@ -95,10 +95,13 @@ except ImportError:
     logger.debug("plus extra not installed, PLUSRNNEmbedder will not be available")
 
 # Bepler - should always work
-from bio_embeddings.embed.bepler_embedder import BeplerEmbedder
+try:
+    from bio_embeddings.embed.bepler_embedder import BeplerEmbedder
 
-name_to_embedder[BeplerEmbedder.name] = BeplerEmbedder
-__all__.append(BeplerEmbedder.__name__)
+    name_to_embedder[BeplerEmbedder.name] = BeplerEmbedder
+    __all__.append(BeplerEmbedder.__name__)
+except ImportError:
+    logger.debug("bepler extra not installed, PLUSRNNEmbedder will not be available")
 
 # Unmaintained embedders
 from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
