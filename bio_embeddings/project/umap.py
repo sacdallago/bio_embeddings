@@ -7,6 +7,7 @@ def umap_reduce(embeddings, **kwargs):
 
     umap_params['n_components'] = kwargs.get('n_components', 3)
     umap_params['min_dist'] = kwargs.get('min_dist', .6)
+    umap_params['spread'] = kwargs.get('spread', 1)
     umap_params['random_state'] = kwargs.get('random_state', 420)
     umap_params['n_neighbors'] = kwargs.get('n_neighbors', 15)
     umap_params['verbose'] = kwargs.get('verbose', 1)
