@@ -65,6 +65,9 @@ stage_1:
   ## to run it on the gpu
   # device: cuda
 
+  ## Convert the float32 embeddings to float16. Halves storage space
+  # fp: [true, *false]
+
 stage_2:
   type: project
   # Required: which projection algorithm to use
