@@ -12,9 +12,9 @@ from bio_embeddings.embed import EmbedderInterface
 class CPCProtEmbedder(EmbedderInterface):
     """CPCProt Embedder
 
-    Self-Supervised Contrastive Learning of Protein Representations By Mutual Information Maximization
-    Amy X. Lu, Haoran Zhang, Marzyeh Ghassemi, Alan Moses
-    bioRxiv 2020.09.04.283929; doi: https://doi.org/10.1101/2020.09.04.283929
+    Lu, Amy X., et al. "Self-supervised contrastive learning of protein
+    representations by mutual information maximization." bioRxiv (2020).
+    https://doi.org/10.1101/2020.09.04.283929
     """
 
     name = "cpcprot"

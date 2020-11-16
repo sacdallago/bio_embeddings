@@ -9,6 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 class ProtTransBertBFDEmbedder(BertBaseEmbedder):
+    """ProtTrans-Bert-BFD Embedder (ProtBert-BFD)
+
+    Elnaggar, Ahmed, et al. "ProtTrans: Towards Cracking the Language of Life's
+    Code Through Self-Supervised Deep Learning and High Performance Computing."
+    arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225
+    """
     _model: BertModel
     name = "prottrans_bert_bfd"
     embedding_dimension = 1024

@@ -14,6 +14,12 @@ _warmup_seq = "MGSSHHHHHHSSGLVPRGSHMASVQKFPGDANCDGIVDISDAVLIMQTMANPSKYQMTDKGRINA
 
 
 class SeqVecEmbedder(EmbedderWithFallback):
+    """SeqVec Embedder
+
+    Heinzinger, Michael, et al. "Modeling aspects of the language of life
+    through transfer-learning protein sequences." BMC bioinformatics 20.1 (2019): 723.
+    https://doi.org/10.1186/s12859-019-3220-8
+    """
     name = "seqvec"
     embedding_dimension = 1024
     number_of_layers = 3
