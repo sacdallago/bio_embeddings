@@ -12,3 +12,7 @@
 .. automodule:: bio_embeddings
    :members:
 ```
+
+```{eval-rst}
+.. mdinclude:: ../README.md
+```
