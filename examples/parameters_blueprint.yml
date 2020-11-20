@@ -66,7 +66,7 @@ stage_1:
   # device: cuda
 
   ## Convert the float32 embeddings to float16. Halves storage space
-  # fp: [true, *false]
+  # fp16: [true, *false]
 
 stage_2:
   type: project
