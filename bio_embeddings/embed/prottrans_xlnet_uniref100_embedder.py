@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
+    """ProtTrans-XLNet-UniRef100 Embedder (ProtXLNet)
+
+    Elnaggar, Ahmed, et al. "ProtTrans: Towards Cracking the Language of Life's
+    Code Through Self-Supervised Deep Learning and High Performance Computing."
+    arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225
+    """
     name = "prottrans_xlnet_uniref100"
     embedding_dimension = 1024
     number_of_layers = 1

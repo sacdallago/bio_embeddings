@@ -17,6 +17,7 @@ from bio_embeddings.embed import (
     UniRepEmbedder,
     ESMEmbedder,
     CPCProtEmbedder,
+    PLUSRNNEmbedder,
 )
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -187,7 +188,8 @@ PROTOCOLS = {
     "prottrans_xlnet_uniref100": ProtTransXLNetUniRef100Embedder,
     "unirep": UniRepEmbedder,
     "esm": ESMEmbedder,
-    "cpcprot": CPCProtEmbedder
+    "cpcprot": CPCProtEmbedder,
+    "plusrnn": PLUSRNNEmbedder,
 }
 
 # TODO: 10000 is a random guess
@@ -200,6 +202,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "unirep": 10000,
     "esm": 10000,
     "cpcprot": 10000,
+    "plusrnn": 10000,
 }
 
 

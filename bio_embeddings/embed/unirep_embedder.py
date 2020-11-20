@@ -12,6 +12,11 @@ class UniRepEmbedder(EmbedderInterface):
     Alley, E.C., Khimulya, G., Biswas, S. et al. Unified rational protein
     engineering with sequence-based deep representation learning. Nat Methods
     16, 1315–1322 (2019). https://doi.org/10.1038/s41592-019-0598-1
+
+    We use a reimplementation of unirep:
+
+    Ma, Eric, and Arkadij Kummer. "Reimplementing Unirep in JAX." bioRxiv (2020).
+    https://doi.org/10.1101/2020.05.11.088344
     """
 
     name = "unirep"

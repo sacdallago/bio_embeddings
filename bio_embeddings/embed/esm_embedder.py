@@ -11,12 +11,12 @@ from bio_embeddings.embed import EmbedderInterface
 
 class ESMEmbedder(EmbedderInterface):
     """ESM Embedder
+
     Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences
 
-    Alexander Rives, Joshua Meier, Tom Sercu, Siddharth Goyal, Zeming Lin, Demi Guo, Myle Ott, C. Lawrence Zitnick, Jerry Ma, Rob Fergus
-    bioRxiv 622803; doi: https://doi.org/10.1101/622803
-
-    Idle GPU usage: 4134MiB
+    Rives, Alexander, et al. "Biological structure and function emerge from
+    scaling unsupervised learning to 250 million protein sequences."
+    bioRxiv (2019): 622803. https://doi.org/10.1101/622803
     """
 
     name = "esm"

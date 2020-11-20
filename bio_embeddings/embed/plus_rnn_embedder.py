@@ -71,9 +71,7 @@ class PLUSRNNEmbedder(EmbedderInterface):
             trainer.embed(batch, {"data_parallel": False})
 
         embeddings = trainer.tasks_dict["results_eval"][0]["embeddings"]
-        # TODO: Should this be `embeddings[0]` or `embeddings[1]`?
-        # 0 is projection dimension d_z (100)
-        # 1 is d_h (1024)
+        # 1 is d_h with 1024 dimensions
         for i in range(len(embeddings[0])):
             yield embeddings[1][i].numpy()
 

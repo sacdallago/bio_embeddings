@@ -2,9 +2,22 @@
 
 All language models implement the :class:`EmbedderInterface`. You can embed a single
 sequences with :meth:`EmbedderInterface.embed` or a list of
-sequences with the :meth:`EmbedderInterface.embed_many` function. All except for CPCProt generate
-per-residue embeddings, which you can summarize into a fixed size per-protein
-embedding by calling :meth:`EmbedderInterface.reduce_per_protein`.
+sequences with the :meth:`EmbedderInterface.embed_many` function. All except
+CPCProt and UniRep generate per-residue embeddings, which you can summarize
+into a fixed size per-protein embedding by calling
+:meth:`EmbedderInterface.reduce_per_protein`. CPCProt only generates a
+per-protein embedding (``reduce_per_protein`` does nothing), while UniRep
+includes a start token, so the embedding is one longer than the protein.
+
+Instead of using ``bio_embeddings[all]``, it's possible to only install
+some embedders by selecting specific extras:
+
+* ``allennlp``: seqvec
+* ``transformers``: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100
+* ``jax``-unirep: unirep
+* ``esm``: esm
+* ``cpcprot``: cpcprot
+* ``plus``: plusrnn
 """
 
 import logging
