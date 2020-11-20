@@ -1,7 +1,7 @@
 import logging
-import numpy as np
-
 from typing import Dict
+
+from numpy import ndarray
 
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
@@ -26,7 +26,7 @@ if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
 
 
 @task_keeper.task()
-def get_seqvec_annotations_sync(embedding: np.array) -> Dict[str, str]:
+def get_seqvec_annotations_sync(embedding: ndarray) -> Dict[str, str]:
     annotations = featureExtractor.get_annotations(embedding)
 
     return {

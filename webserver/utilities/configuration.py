@@ -41,14 +41,14 @@ configuration = {
     },
     # Celery worker type
     "celery": {
-        # Type can be:
-        #  - nothing ==> pipeline  async worker
+        # Types can be, separated by comma:
+        #  - nothing ==> pipeline async worker
         #  - pipeline ==> pipeline async worker
         #  - seqvec ==> takes sequences and returns embeddings (sync)
         #  - seqvec_annotations ==> takes embeddings and returns annotations (sync)
         #  - protbert ==> takes sequences and returns embeddings (sync)
         #  - protbert_annotations ==> takes embeddings and returns annotations (sync)
 
-        "celery_worker_type": environ.get("CELERY_WORKER_TYPE", None)
+        "celery_worker_type": environ["CELERY_WORKER_TYPE"].split(",") if "CELERY_WORKER_TYPE" in environ else [],
     }
 }

@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 model = None
 
-if configuration['celery']['celery_worker_type'] == "seqvec":
+if "seqvec" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.embed import SeqVecEmbedder
 
     logger.info("Loading the language model...")

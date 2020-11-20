@@ -1,20 +1,20 @@
-from webserver.utilities.configuration import configuration
 from webserver.tasks import task_keeper
+from webserver.utilities.configuration import configuration
 
 # Make celery find the task dependent on the worker type
-if configuration['celery']['celery_worker_type'] == "seqvec":
+if "seqvec" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.seqvec_embeddings import get_seqvec_embeddings_sync
-elif configuration['celery']['celery_worker_type'] == "seqvec_annotations":
+if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.seqvec_annotations import get_seqvec_annotations_sync
-elif configuration['celery']['celery_worker_type'] == "protbert":
+if "protbert" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.protbert_embeddings import get_protbert_embeddings_sync
-elif configuration['celery']['celery_worker_type'] == "protbert_annotations":
+if "protbert_annotations" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.protbert_annotations import get_protbert_annotations_sync
-else:
+if "pipeline" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.pipeline import run_pipeline
 

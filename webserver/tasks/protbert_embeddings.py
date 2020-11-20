@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 model = None
 
-if configuration['celery']['celery_worker_type'] == "protbert":
+if "protbert" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.embed import ProtTransBertBFDEmbedder
 
     logger.info("Loading the language model...")
