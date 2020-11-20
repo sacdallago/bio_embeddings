@@ -1,8 +1,54 @@
 import json
-
+from enum import Enum
 from typing import NamedTuple, List, Union
 
-from bio_embeddings.extract.annotations import SecondaryStructure, Disorder
+
+class SecondaryStructure(Enum):
+    # From https://swift.cmbi.umcn.nl/gv/dssp/
+
+    ALPHA_HELIX = "H"
+    ISOLATED_BETA_BRIDGE = "B"
+    EXTENDED_STRAND = "E"
+    THREE_HELIX = "G"
+    FIVE_HELIX = "I"
+    TURN = "T"
+    BEND = "S"
+    IRREGULAR = "C"
+    UNKNOWN = "?"
+
+    def __str__(self):
+        return {
+            self.ALPHA_HELIX: "α-helix",
+            self.ISOLATED_BETA_BRIDGE: "Residue in isolated β-bridge",
+            self.EXTENDED_STRAND: "Extended strand, participates in β ladder",
+            self.THREE_HELIX: "3-helix",
+            self.FIVE_HELIX: "5 helix",
+            self.TURN: "Hydrogen bonded turn",
+            self.BEND: "Bend",
+            self.IRREGULAR: "Loop/Irregular",
+            self.UNKNOWN: "Unknown"
+        }.get(self)
+
+    @staticmethod
+    def isAAFeature():
+        return True
+
+
+class Disorder(Enum):
+    DISORDER = 'X'
+    ORDER = '-'
+    UNKNOWN = '?'
+
+    def __str__(self):
+        return {
+            self.DISORDER: "Disorder",
+            self.ORDER: "Order",
+            self.UNKNOWN: "Unknown"
+        }.get(self)
+
+    @staticmethod
+    def isAAFeature():
+        return True
 
 
 class Source(NamedTuple):
@@ -12,7 +58,7 @@ class Source(NamedTuple):
 
     def toDict(self):
         """
-        url: the URL of where the prediction can be retreived
+        url: the URL of where the prediction can be retrieved
         id: the ID of the job
         name: name of the source
         """
@@ -56,7 +102,6 @@ _HEX_COLORS = {
     "HEX_COL7": '#FF3000',
     "HEX_COL8": '#FEA100',
 }
-
 
 _FEATURE_COLORS = {
     Disorder.DISORDER: _HEX_COLORS['HEX_COL3'],
@@ -108,7 +153,8 @@ class ProtVistaFeature(NamedTuple):
 
 
 # Note: this function is O(n), with n = length of the SeqRecord
-def annotations_to_protvista_converter(features_string: str, evidences: List[Evidence], type: str, feature_enum) -> List[ProtVistaFeature]:
+def annotations_to_protvista_converter(features_string: str, evidences: List[Evidence], type: str, feature_enum) -> \
+List[ProtVistaFeature]:
     features = list()
 
     current = None
@@ -119,8 +165,8 @@ def annotations_to_protvista_converter(features_string: str, evidences: List[Evi
         if not current:
             current = ProtVistaFeature(
                 description=AA_annotation,
-                begin=i+1,
-                end=i+1,
+                begin=i + 1,
+                end=i + 1,
                 evidences=evidences,
                 type=type
             )
@@ -128,13 +174,13 @@ def annotations_to_protvista_converter(features_string: str, evidences: List[Evi
             features.append(current.toDict())
             current = ProtVistaFeature(
                 description=AA_annotation,
-                begin=i+1,
-                end=i+1,
+                begin=i + 1,
+                end=i + 1,
                 evidences=evidences,
                 type=type
             )
         else:
-            current = current._replace(end=i+1)
+            current = current._replace(end=i + 1)
 
     features.append(current.toDict())
 

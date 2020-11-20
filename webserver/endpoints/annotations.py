@@ -1,13 +1,13 @@
 from flask import request, abort
 from flask_restx import Resource
 
-from webserver.endpoints.task_interface import get_feaures
+from webserver.endpoints import api
+from webserver.endpoints.request_models import sequence_post_parameters_annotations
+from webserver.endpoints.task_interface import get_features
+from webserver.endpoints.utils import check_valid_sequence
 from webserver.utilities.parsers import (
     Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder
 )
-from webserver.endpoints import api
-from webserver.endpoints.request_models import sequence_post_parameters_annotations
-from webserver.endpoints.utils import check_valid_sequence
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
 
@@ -28,7 +28,7 @@ class Annotations(Resource):
 
         model_name = params.get('model', 'seqvec')
 
-        annotations = get_feaures(model_name, sequence)
+        annotations = get_features(model_name, sequence)
 
         annotations['sequence'] = sequence
 

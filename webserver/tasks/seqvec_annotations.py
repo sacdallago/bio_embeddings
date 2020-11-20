@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 featureExtractor = None
 
-if configuration['celery']['celery_worker_type'] == "seqvec_annotations":
+if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicAnnotationExtractor
     from bio_embeddings.utilities import convert_list_of_enum_to_string
 
