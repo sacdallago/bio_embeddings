@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import Dict, Any
 
 import h5py
+import numpy
 from Bio import SeqIO
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
@@ -140,6 +141,7 @@ def embed_and_write_batched(
     embedder: EmbedderInterface,
     file_manager: FileManagerInterface,
     result_kwargs: Dict[str, Any],
+    half_precision: bool = False
 ) -> Dict[str, Any]:
     """ The shared code between the SeqVec, Albert, Bert and XLNet pipelines """
     # Lazy fasta file reader. The mapping file contains the corresponding ids in the same order
@@ -169,6 +171,9 @@ def embed_and_write_batched(
             mapping_file["original_id"],
             tqdm(embedding_generator, total=len(mapping_file))
         ):
+            # embedding: numpy.ndarray
+            if half_precision:
+                embedding = embedding.astype(numpy.float16)
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
                 dataset = embeddings_file.create_dataset(sequence_id, data=embedding)
                 dataset.attrs["original_id"] = original_id
@@ -259,4 +264,4 @@ def run(**kwargs):
 
     file_manager = get_file_manager(**kwargs)
     embedder: EmbedderInterface = embedder_class(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs, kwargs.get("half_precision", False))

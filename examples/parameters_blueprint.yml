@@ -65,6 +65,11 @@ stage_1:
   ## to run it on the gpu
   # device: cuda
 
+  ## Save numbers with lower precision, so that they take only about half the
+  ## storage space (replace float32 with float16).
+  ## This makes predictions based on the embeddings less exact.
+  # half_precision: [true, *false]
+
 stage_2:
   type: project
   # Required: which projection algorithm to use
