@@ -1,9 +1,10 @@
 import plotly
 import plotly.express as px
+from plotly.graph_objects import Figure as _Figure
 from pandas import DataFrame
 
 
-def render_3D_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
+def render_3D_scatter_plotly(embeddings_dataframe: DataFrame) -> _Figure:
     """
     Return a Plotly Figure (3D scatter plot) based on a DataFrame containing three components.
 
@@ -56,7 +57,7 @@ def render_3D_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
     return fig
 
 
-def render_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
+def render_scatter_plotly(embeddings_dataframe: DataFrame) -> _Figure:
     """
     Return a Plotly Figure (2D scatter plot) based on a DataFrame containing three components.
 
@@ -102,7 +103,7 @@ def render_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
     return fig
 
 
-def save_plotly_figure_to_html(figure: plotly.Figure, path: str) -> None:
+def save_plotly_figure_to_html(figure: _Figure, path: str) -> None:
     """
     Store plotly figure as interactive HTML file
 
