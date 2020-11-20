@@ -11,25 +11,27 @@ import pytest
 import torch
 
 from bio_embeddings.embed import (
-    SeqVecEmbedder,
+    BeplerEmbedder,
+    CPCProtEmbedder,
+    ESMEmbedder,
+    EmbedderInterface,
+    PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
-    ESMEmbedder,
-    EmbedderInterface,
-    CPCProtEmbedder,
-    PLUSRNNEmbedder,
+    SeqVecEmbedder,
     UniRepEmbedder,
 )
 
 all_embedders = [
-    SeqVecEmbedder,
+    BeplerEmbedder,
+    CPCProtEmbedder,
+    ESMEmbedder,
+    PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
-    ESMEmbedder,
-    CPCProtEmbedder,
-    PLUSRNNEmbedder,
+    SeqVecEmbedder,
 ]
 
 
