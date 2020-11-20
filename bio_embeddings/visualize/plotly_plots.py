@@ -3,7 +3,17 @@ import plotly.express as px
 from pandas import DataFrame
 
 
-def render_3D_scatter_plotly(embeddings_dataframe: DataFrame):
+def render_3D_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
+    """
+    Return a Plotly Figure (3D scatter plot) based on a DataFrame containing three components.
+
+    :param embeddings_dataframe: the DataFrame *must* contain three numerical columns called `component_0`,
+            `component_1` and `component_2`. The DataFrame index will be used to identify the points in the
+            scatter plot. Optionally, the DataFrame may contain a column called `label` which will be used
+            to color the points in the scatter plot.
+    :return: A 3D scatter plot
+    """
+
     if 'label' in embeddings_dataframe.columns:
         fig = px.scatter_3d(embeddings_dataframe,
                             x='component_0',
@@ -46,7 +56,17 @@ def render_3D_scatter_plotly(embeddings_dataframe: DataFrame):
     return fig
 
 
-def render_scatter_plotly(embeddings_dataframe: DataFrame):
+def render_scatter_plotly(embeddings_dataframe: DataFrame) -> plotly.Figure:
+    """
+    Return a Plotly Figure (2D scatter plot) based on a DataFrame containing three components.
+
+    :param embeddings_dataframe: the DataFrame *must* contain two numerical columns called `component_0`
+            and `component_1`. The DataFrame index will be used to identify the points in the
+            scatter plot. Optionally, the DataFrame may contain a column called `label` which will be used
+            to color the points in the scatter plot.
+    :return: A 2D scatter plot
+    """
+
     if 'label' in embeddings_dataframe.columns:
         fig = px.scatter(embeddings_dataframe,
                          x='component_0',
@@ -82,5 +102,12 @@ def render_scatter_plotly(embeddings_dataframe: DataFrame):
     return fig
 
 
-def save_plotly_figure_to_html(figure, path):
+def save_plotly_figure_to_html(figure: plotly.Figure, path: str) -> None:
+    """
+    Store plotly figure as interactive HTML file
+
+    :param figure: A Plotly Figure
+    :param path: A string representing the path and/or filename where the HTML figure should be stored
+         (e.g.: /path/to/figure.html).
+    """
     plotly.offline.plot(figure, filename=path)

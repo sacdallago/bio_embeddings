@@ -3,6 +3,7 @@ Abstract interface for Embedder.
 
 Authors:
   Christian Dallago
+  Konstantin Schuetze
 """
 
 import abc

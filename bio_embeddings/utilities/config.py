@@ -1,11 +1,6 @@
 """
 Configuration handling
 
-.. todo::
-
-    switch ruamel.yaml to round trip loading
-    to preserver order and comments?
-
 Authors:
   Thomas A. Hopf
 """
