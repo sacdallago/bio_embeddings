@@ -3,12 +3,12 @@ from pathlib import Path
 
 from transformers import BertModel, BertTokenizer
 
-from bio_embeddings.embed.prottrans_bert_base_embedder import BertBaseEmbedder
+from bio_embeddings.embed.prottrans_base_embedder import ProtTransBertBaseEmbedder
 
 logger = logging.getLogger(__name__)
 
 
-class ProtTransBertBFDEmbedder(BertBaseEmbedder):
+class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
     """ProtTrans-Bert-BFD Embedder (ProtBert-BFD)
 
     Elnaggar, Ahmed, et al. "ProtTrans: Towards Cracking the Language of Life's
@@ -28,7 +28,6 @@ class ProtTransBertBFDEmbedder(BertBaseEmbedder):
         """
         super().__init__(**kwargs)
 
-        # Get file locations from kwargs
         self._model_directory = self._options["model_directory"]
 
         # make model
