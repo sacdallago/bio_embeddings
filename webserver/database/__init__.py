@@ -1,12 +1,39 @@
-import gridfs
+import logging
 from typing import List
+
+import gridfs
 from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.database import Database
+
 from webserver.utilities.configuration import configuration
 
+logger = logging.getLogger(__name__)
+
+ten_days = 10 * 24 * 60 * 60
+
 _client = MongoClient(configuration['web']['mongo_url'])
-_collection = _client.file_storage
+_response_cache_db: Database = _client.response_cache
+_collection: Database = _client.file_storage
 _fs = gridfs.GridFS(_collection)
-_collection.fs.files.create_index('uploadDate', expireAfterSeconds=10*24*60*60)
+_collection.fs.files.create_index("uploadDate", expireAfterSeconds=ten_days)
+
+
+def get_or_create_cache(name: str) -> Collection:
+    # Cap the collections at 10GB (which should never be reached anyway)
+    if name not in _response_cache_db.list_collection_names():
+        logger.info("Creating mongodb response_cache collection")
+        cache_collection = _response_cache_db.create_collection(name, size=10 * 1024 * 1024 * 1024, capped=True)
+    else:
+        cache_collection = _response_cache_db[name]
+    # We use `uploadDate` for consistency with gridFS
+    cache_collection.create_index("uploadDate", expireAfterSeconds=ten_days)
+    return cache_collection
+
+
+# Caches for the direct feature extractors
+get_embedding_cache = get_or_create_cache("get_embedding_cache")
+get_features_cache = get_or_create_cache("get_features_cache")
 
 
 def write_file(job_id, file_identifier, file_path):
