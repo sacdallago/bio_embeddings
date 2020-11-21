@@ -1,12 +1,13 @@
+import numpy as np
 import h5py
 import logging
+import torch
 
 from enum import Enum
 from hashlib import md5
 from typing import List, Union
 from pandas import DataFrame, read_csv
 
-import torch
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 
@@ -71,7 +72,7 @@ def read_fasta(path: str) -> List[SeqRecord]:
 
 
 def reindex_sequences(
-    sequence_records: List[SeqRecord], simple=False
+        sequence_records: List[SeqRecord], simple=False
 ) -> (SeqRecord, DataFrame):
     """
     Function will sort and re-index the sequence_records IN PLACE! (change the original list!).
@@ -168,3 +169,41 @@ def remove_identifiers_from_annotations_file(faulty_identifiers: list, annotatio
     return annotation_file[annotation_file['identifier'].isin(
         set(annotation_file['identifier'].values) - set(faulty_identifiers)
     )]
+
+
+class QueryEmbeddingsFile:
+    """
+    A helper class that allows you to retrieve embeddings from an embeddings file based on either the `original_id`
+    (extracted from the FASTA header during the embed stage), or via the `new_id` (assigned during the embed stage,
+    either an MD5 hash of the input sequence, or an integer (if `remapping_simple: True`).
+
+    Available for embeddings created with the pipeline starting with v0.1.5
+    """
+
+    def __init__(self, embeddings_file: h5py.File):
+        """
+        :param embeddings_file: an h5py File, aka `h5py.File("/path/to/file.h5")`.
+        """
+        self._lookup_table = dict(
+            (embeddings_file[new_id].attrs["original_id"], new_id) for new_id in embeddings_file.keys()
+        )
+
+        self._embeddings_file = embeddings_file
+
+    def query_original_id(self, original_id: str) -> np.array:
+        """
+        Query embeddings file using the original id, aka. the string extracted from the FASTA header of the sequence.
+
+        :param original_id: a string representing the id extracted from the FASTA header
+        :return: the embedding as a numpy array
+        """
+        return np.array(self._embeddings_file[self._lookup_table[original_id]])
+
+    def query_new_id(self, new_id: str) -> np.array:
+        """
+        Query embeddings file using the new id, aka. either the MD5 hash of the sequence or a number.
+
+        :param new_id: a string representing the new id.
+        :return: the embedding as a numpy array
+        """
+        return np.array(self._embeddings_file[new_id])
