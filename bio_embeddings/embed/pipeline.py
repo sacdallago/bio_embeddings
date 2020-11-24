@@ -229,13 +229,13 @@ def embed_and_write_batched(
         transform_function = eval(transform_function, {}, {"np": numpy})
 
     # Open embedding files or null contexts and iteratively save embeddings to file
-    with _get_transformed_embeddings_file_context(
+    with _get_embeddings_file_context(
         file_manager, result_kwargs
-    ) as transformed_embeddings_file, _get_reduced_embeddings_file_context(
+    ) as embeddings_file, _get_reduced_embeddings_file_context(
         file_manager, result_kwargs
-    ) as reduced_embeddings_file, _get_embeddings_file_context(
+    ) as reduced_embeddings_file, _get_transformed_embeddings_file_context(
         file_manager, result_kwargs
-    ) as embeddings_file:
+    ) as transformed_embeddings_file:
         embedding_generator = embedder.embed_many(
             sequences, result_kwargs.get("max_amino_acids")
         )
