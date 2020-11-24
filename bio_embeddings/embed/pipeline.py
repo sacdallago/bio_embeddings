@@ -201,7 +201,6 @@ def _check_transform_embeddings_function(embedder: EmbedderInterface, result_kwa
                                         f"This function excepts when processing an embedding.")
 
 
-
 def embed_and_write_batched(
     embedder: EmbedderInterface,
     file_manager: FileManagerInterface,
@@ -221,6 +220,11 @@ def embed_and_write_batched(
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
+
+    # Get transformer function, if available
+    transform_function = result_kwargs["embeddings_transformer_function"]
+    if transform_function:
+        transform_function = eval(transform_function, {}, {"np": numpy})
 
     # Open embedding files or null contexts and iteratively save embeddings to file
     with _get_transformed_embeddings_file_context(
@@ -244,12 +248,17 @@ def embed_and_write_batched(
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
                 dataset = embeddings_file.create_dataset(sequence_id, data=embedding)
                 dataset.attrs["original_id"] = original_id
-
             if result_kwargs.get("reduce") is True:
                 dataset = reduced_embeddings_file.create_dataset(
                     sequence_id, data=embedder.reduce_per_protein(embedding)
                 )
                 dataset.attrs["original_id"] = original_id
+            if transform_function:
+                dataset = transformed_embeddings_file.create_dataset(
+                    sequence_id, data=numpy.array(transform_function(embedding))
+                )
+                dataset.attrs["original_id"] = original_id
+
     return result_kwargs
 
 
