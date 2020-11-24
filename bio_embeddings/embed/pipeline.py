@@ -1,10 +1,11 @@
 import logging
 import shutil
+import h5py
+import numpy
+
 from copy import deepcopy
 from typing import Dict, Any
 
-import h5py
-import numpy
 from Bio import SeqIO
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
@@ -121,9 +122,10 @@ def _get_embeddings_file_context(
     result_kwargs.setdefault("discard_per_amino_acid_embeddings", False)
 
     if result_kwargs["discard_per_amino_acid_embeddings"] is True:
-        if result_kwargs["reduce"] is False:
+        if result_kwargs["reduce"] is False and result_kwargs["embeddings_transformer_function"] is None:
             raise InvalidParameterError(
-                "Cannot have discard_per_amino_acid_embeddings=True and reduce=False. Both must be True."
+                "Cannot only have discard_per_amino_acid_embeddings=True. "
+                "Either also set `reduce: False` or define an `embeddings_transformer_function`."
             )
         return nullcontext()
     else:
@@ -135,6 +137,69 @@ def _get_embeddings_file_context(
         )
         result_kwargs["embeddings_file"] = embeddings_file_path
         return h5py.File(embeddings_file_path, "w")
+
+
+def _get_transformed_embeddings_file_context(
+    file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]
+):
+    """
+    :param file_manager: The FileManager derived class which will be used to create the file
+    :param result_kwargs: A dictionary which will be updated in-place to include the path to the newly created file
+
+    :return: a file context
+    """
+
+    result_kwargs.setdefault("embeddings_transformer_function", None)
+
+    if result_kwargs["embeddings_transformer_function"] is not None:
+        transformed_embeddings_file_path = file_manager.create_file(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "transformed_embeddings_file",
+            extension=".h5",
+        )
+        result_kwargs["transformed_embeddings_file"] = transformed_embeddings_file_path
+        return h5py.File(transformed_embeddings_file_path, "w")
+
+    return nullcontext()
+
+
+def _check_transform_embeddings_function(embedder: EmbedderInterface, result_kwargs: Dict[str, Any]):
+
+    result_kwargs.setdefault("embeddings_transformer_function", None)
+
+    if result_kwargs["embeddings_transformer_function"] is not None:
+        try:
+            transform_function = eval(result_kwargs["embeddings_transformer_function"], {}, {"np": numpy})
+        except TypeError:
+            raise InvalidParameterError(f"`embeddings_transformer_function` must be callable! \n"
+                                        f"Instead is {result_kwargs['embeddings_transformer_function']}\n"
+                                        f"Most likely you want a lambda function.")
+
+        if not callable(transform_function):
+            raise InvalidParameterError(f"`embeddings_transformer_function` must be callable! \n"
+                                        f"Instead is {result_kwargs['embeddings_transformer_function']}\n"
+                                        f"Most likely you want a lambda function.")
+
+        template_embedding = embedder.embed("SEQVENCE")
+
+        # Check that it works in principle
+        try:
+            transformed_template_embedding = transform_function(template_embedding)
+        except:
+            raise InvalidParameterError(f"`embeddings_transformer_function` must be valid callable! \n"
+                                        f"Instead is {result_kwargs['embeddings_transformer_function']}\n"
+                                        f"This function excepts when processing an embedding.")
+
+        # Check that return can be cast to np.array
+        try:
+            numpy.array(transformed_template_embedding)
+        except:
+            raise InvalidParameterError(f"`embeddings_transformer_function` must be valid callable "
+                                        f"returning numpy array compatible object! \n"
+                                        f"Instead is {result_kwargs['embeddings_transformer_function']}\n"
+                                        f"This function excepts when processing an embedding.")
+
 
 
 def embed_and_write_batched(
@@ -158,11 +223,13 @@ def embed_and_write_batched(
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
 
     # Open embedding files or null contexts and iteratively save embeddings to file
-    with _get_embeddings_file_context(
+    with _get_transformed_embeddings_file_context(
         file_manager, result_kwargs
-    ) as embeddings_file, _get_reduced_embeddings_file_context(
+    ) as transformed_embeddings_file, _get_reduced_embeddings_file_context(
         file_manager, result_kwargs
-    ) as reduced_embeddings_file:
+    ) as reduced_embeddings_file, _get_embeddings_file_context(
+        file_manager, result_kwargs
+    ) as embeddings_file:
         embedding_generator = embedder.embed_many(
             sequences, result_kwargs.get("max_amino_acids")
         )
@@ -264,4 +331,6 @@ def run(**kwargs):
 
     file_manager = get_file_manager(**kwargs)
     embedder: EmbedderInterface = embedder_class(**result_kwargs)
+    _check_transform_embeddings_function(embedder, result_kwargs)
+
     return embed_and_write_batched(embedder, file_manager, result_kwargs, kwargs.get("half_precision", False))
