@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import Dict, Any
 
 import h5py
+import numpy
 from Bio import SeqIO
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
@@ -17,6 +18,7 @@ from bio_embeddings.embed import (
     UniRepEmbedder,
     ESMEmbedder,
     CPCProtEmbedder,
+    PLUSRNNEmbedder,
 )
 from bio_embeddings.utilities import (
     InvalidParameterError,
@@ -139,6 +141,7 @@ def embed_and_write_batched(
     embedder: EmbedderInterface,
     file_manager: FileManagerInterface,
     result_kwargs: Dict[str, Any],
+    half_precision: bool = False
 ) -> Dict[str, Any]:
     """ The shared code between the SeqVec, Albert, Bert and XLNet pipelines """
     # Lazy fasta file reader. The mapping file contains the corresponding ids in the same order
@@ -168,6 +171,9 @@ def embed_and_write_batched(
             mapping_file["original_id"],
             tqdm(embedding_generator, total=len(mapping_file))
         ):
+            # embedding: numpy.ndarray
+            if half_precision:
+                embedding = embedding.astype(numpy.float16)
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
                 dataset = embeddings_file.create_dataset(sequence_id, data=embedding)
                 dataset.attrs["original_id"] = original_id
@@ -187,7 +193,8 @@ PROTOCOLS = {
     "prottrans_xlnet_uniref100": ProtTransXLNetUniRef100Embedder,
     "unirep": UniRepEmbedder,
     "esm": ESMEmbedder,
-    "cpcprot": CPCProtEmbedder
+    "cpcprot": CPCProtEmbedder,
+    "plusrnn": PLUSRNNEmbedder,
 }
 
 # TODO: 10000 is a random guess
@@ -200,6 +207,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "unirep": 10000,
     "esm": 10000,
     "cpcprot": 10000,
+    "plusrnn": 10000,
 }
 
 
@@ -256,4 +264,4 @@ def run(**kwargs):
 
     file_manager = get_file_manager(**kwargs)
     embedder: EmbedderInterface = embedder_class(**result_kwargs)
-    return embed_and_write_batched(embedder, file_manager, result_kwargs)
+    return embed_and_write_batched(embedder, file_manager, result_kwargs, kwargs.get("half_precision", False))

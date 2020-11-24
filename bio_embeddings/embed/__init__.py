@@ -2,9 +2,22 @@
 
 All language models implement the :class:`EmbedderInterface`. You can embed a single
 sequences with :meth:`EmbedderInterface.embed` or a list of
-sequences with the :meth:`EmbedderInterface.embed_many` function. All except for CPCProt generate
-per-residue embeddings, which you can summarize into a fixed size per-protein
-embedding by calling :meth:`EmbedderInterface.reduce_per_protein`.
+sequences with the :meth:`EmbedderInterface.embed_many` function. All except
+CPCProt and UniRep generate per-residue embeddings, which you can summarize
+into a fixed size per-protein embedding by calling
+:meth:`EmbedderInterface.reduce_per_protein`. CPCProt only generates a
+per-protein embedding (``reduce_per_protein`` does nothing), while UniRep
+includes a start token, so the embedding is one longer than the protein.
+
+Instead of using ``bio_embeddings[all]``, it's possible to only install
+some embedders by selecting specific extras:
+
+* ``allennlp``: seqvec
+* ``transformers``: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100
+* ``jax``-unirep: unirep
+* ``esm``: esm
+* ``cpcprot``: cpcprot
+* ``plus``: plusrnn
 """
 
 import logging
@@ -35,9 +48,9 @@ try:
         ProtTransXLNetUniRef100Embedder.name
     ] = ProtTransXLNetUniRef100Embedder
 
-    __all__.append("ProtTransAlbertBFDEmbedder")
-    __all__.append("ProtTransBertBFDEmbedder")
-    __all__.append("ProtTransXLNetUniRef100Embedder")
+    __all__.append(ProtTransAlbertBFDEmbedder.__name__)
+    __all__.append(ProtTransBertBFDEmbedder.__name__)
+    __all__.append(ProtTransXLNetUniRef100Embedder.__name__)
 except ImportError:
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"
@@ -48,7 +61,7 @@ try:
     from bio_embeddings.embed.seqvec_embedder import SeqVecEmbedder
 
     name_to_embedder[SeqVecEmbedder.name] = SeqVecEmbedder
-    __all__.append("SeqVecEmbedder")
+    __all__.append(SeqVecEmbedder.__name__)
 except ImportError:
     logger.debug("allennlp extra not installed, SeqVec will not be available")
 
@@ -63,7 +76,7 @@ try:
     from bio_embeddings.embed.esm_embedder import ESMEmbedder
 
     name_to_embedder[ESMEmbedder.name] = ESMEmbedder
-    __all__.append("ESMEmbedder")
+    __all__.append(ESMEmbedder.__name__)
 except ImportError:
     logger.debug("esm extra is not installed, ESM will not be available")
 
@@ -72,7 +85,7 @@ try:
     from bio_embeddings.embed.unirep_embedder import UniRepEmbedder
 
     name_to_embedder[UniRepEmbedder.name] = UniRepEmbedder
-    __all__.append("UniRepEmbedder")
+    __all__.append(UniRepEmbedder.__name__)
 except ImportError:
     logger.debug("unirep extra not installedm UniRep will not be available")
 
@@ -81,18 +94,29 @@ try:
     from bio_embeddings.embed.cpcprot_embedder import CPCProtEmbedder
 
     name_to_embedder[CPCProtEmbedder.name] = CPCProtEmbedder
-    __all__.append("CPCProtEmbedder")
+    __all__.append(CPCProtEmbedder.__name__)
 except ImportError:
     logger.debug("cpcprot extra not installed, CPCProt will not be available")
 
 # PLUS
 try:
     from bio_embeddings.embed.plus_rnn_embedder import PLUSRNNEmbedder
+
     name_to_embedder[PLUSRNNEmbedder.name] = PLUSRNNEmbedder
-    __all__.append("PLUSRNNEmbedder")
+    __all__.append(PLUSRNNEmbedder.__name__)
 except ImportError:
     logger.debug("plus extra not installed, PLUSRNNEmbedder will not be available")
 
+# Bepler - should always work
+try:
+    from bio_embeddings.embed.bepler_embedder import BeplerEmbedder
+
+    name_to_embedder[BeplerEmbedder.name] = BeplerEmbedder
+    __all__.append(BeplerEmbedder.__name__)
+except ImportError:
+    logger.debug("bepler extra not installed, PLUSRNNEmbedder will not be available")
+
+# Unmaintained embedders
 from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
 from bio_embeddings.embed.glove_embedder import GloveEmbedder
 from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder

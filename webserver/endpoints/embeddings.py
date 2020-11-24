@@ -1,15 +1,13 @@
 import io
 import h5py
-import numpy as np
 
 from flask import request, send_file, abort
 from flask_restx import Resource
 
 from webserver.endpoints import api
 from webserver.endpoints.request_models import sequence_post_parameters
+from webserver.endpoints.task_interface import get_embedding
 from webserver.endpoints.utils import check_valid_sequence
-from webserver.tasks.seqvec_embeddings import get_seqvec_embeddings_sync
-from webserver.tasks.protbert_embeddings import get_protbert_embeddings_sync
 
 ns = api.namespace("embeddings", description="Calculate embeddings on the fly.")
 
@@ -29,17 +27,9 @@ class Embeddings(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400, "Sequence is too long or contains invalid characters.")
 
-        model = {
-            'seqvec': get_seqvec_embeddings_sync,
-            'prottrans_bert_bfd': get_protbert_embeddings_sync
-        }.get(params.get('model', 'seqvec'))
+        model_name = params.get('model', 'seqvec')
 
-        if not model:
-            return abort(400, f"Model '{params.get('model')}' isn't available.")
-
-        # time_limit && soft_time_limit limit the execution time. Expires limits the queuing time.
-        job = model.apply_async(args=[sequence], time_limit=60*5, soft_time_limit=60*5, expires=60*60)
-        embedding = np.array(job.get())
+        embedding = get_embedding(model_name, sequence)
 
         buffer = io.BytesIO()
         with h5py.File(buffer, "w") as embeddings_file:

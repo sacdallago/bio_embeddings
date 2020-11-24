@@ -36,3 +36,6 @@ cpcprot:
 
 plus_rnn:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/plus/PLUS-RNN_BASE.pt"
+
+bepler:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/bepler/ssa_L1_100d_lstm3x512_lm_i512_mb64_tau0.5_lambda0.1_p0.05_epoch100_updated.state_dict"

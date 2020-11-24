@@ -16,7 +16,7 @@ from pathlib import Path
 
 import toml
 
-sys.path.insert(0, os.path.abspath("../bio_embeddings"))
+sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 

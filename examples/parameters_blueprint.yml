@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, unirep, esm
+  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, unirep, esm, cpcprot, plusrnn
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -64,6 +64,11 @@ stage_1:
   ## unirep will use the cpu by default; Follow https://github.com/google/jax#pip-installation
   ## to run it on the gpu
   # device: cuda
+
+  ## Save numbers with lower precision, so that they take only about half the
+  ## storage space (replace float32 with float16).
+  ## This makes predictions based on the embeddings less exact.
+  # half_precision: [true, *false]
 
 stage_2:
   type: project
