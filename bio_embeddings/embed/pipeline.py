@@ -223,7 +223,8 @@ def embed_and_write_batched(
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
 
     # Get transformer function, if available
-    transform_function = result_kwargs["embeddings_transformer_function"]
+    transform_function = result_kwargs.get("embeddings_transformer_function", None)
+
     if transform_function:
         transform_function = eval(transform_function, {}, {"np": numpy})
 
