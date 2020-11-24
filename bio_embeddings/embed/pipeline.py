@@ -123,7 +123,7 @@ def _get_embeddings_file_context(
     result_kwargs.setdefault("discard_per_amino_acid_embeddings", False)
 
     if result_kwargs["discard_per_amino_acid_embeddings"] is True:
-        if result_kwargs["reduce"] is False and result_kwargs["embeddings_transformer_function"] is None:
+        if result_kwargs.get("reduce", False) is False and result_kwargs.get("embeddings_transformer_function") is None:
             raise InvalidParameterError(
                 "Cannot only have discard_per_amino_acid_embeddings=True. "
                 "Either also set `reduce: False` or define an `embeddings_transformer_function`."
