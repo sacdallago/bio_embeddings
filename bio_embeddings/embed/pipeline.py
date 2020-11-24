@@ -63,6 +63,7 @@ def _print_expected_file_sizes(
 
         required_space_in_MB += reduced_embeddings_file_size_in_MB
 
+    # TODO: calculate size of transformed embeddings?
     if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
         logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
 
