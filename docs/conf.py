@@ -22,9 +22,9 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = "bio_embeddings"
 copyright = (
-    "2020, Christian Dallago, Michael Heinzinger, Tobias Olenyi, Konstantin Schuetze"
+    "2020, Christian Dallago, Konstantin Schuetze, Michael Heinzinger, Tobias Olenyi"
 )
-author = "Christian Dallago <christian.dallago@tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>, Konstantin Schuetze <schuetze@in.tum.de>"
+author = "Christian Dallago <christian.dallago@tum.de>, Konstantin Schuetze <schuetze@in.tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>"
 
 html_baseurl = "https://docs.bioembeddings.com"
 
