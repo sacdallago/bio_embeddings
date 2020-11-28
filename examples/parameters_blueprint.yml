@@ -36,8 +36,21 @@ stage_1:
 
   # Optional: discard per amino acid embeddings.
   # Setting this parameter to True will disable storing full size embeddings (per amino acid).
-  # This parameter only works in combination with "reduce: True"
+  # This parameter only works in combination with `reduce: True` or `embeddings_transformer_function`.
   # discard_per_amino_acid_embeddings: [True, *False]
+
+  # Optional/Advanced: apply a transformation on the per-amino-acid embeddings
+  # === This is an advanced parameter ===
+  # This parameter will be "eval"-uated. It must be a callable. Most likely, you'll want to define lambda functions.
+  # The input of the function is a per-amino-acid embedding (aka. an np array of shape n_layers*embedding_dimension*sequence_length).
+  # You can use numpy functions via "np".
+  # The result of the transformation will be stored in the transformed_embeddings_file.
+  # The pipeline *WILL NOT* check file size of the prospective transformed_embeddings_file.
+  # This parameter can be used in conjunction with `discard_per_amino_acid_embeddings`.
+  # Two examples:
+  #   - "lambda x: x[0].mean(0)" --> for SeqVec, this will return the mean pooled embedding of the first layer
+  #   - "lambda x: x.max(0)" --> for ProtTrans-BERT-BFD, this will return the max pooled embedding, instead of mean pooled
+  # embeddings_transformer_function:
 
   #### Optional parameters to instantiate classes
 

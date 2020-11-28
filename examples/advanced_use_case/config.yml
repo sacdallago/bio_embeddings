@@ -1,0 +1,13 @@
+global:
+  sequences_file: fasta.fa
+  prefix: advanced
+bert_embeddings:
+  type: embed
+  protocol: prottrans_bert_bfd
+  discard_per_amino_acid_embeddings: True
+  embeddings_transformer_function: "lambda x: x.max(0)"
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  discard_per_amino_acid_embeddings: True
+  embeddings_transformer_function: "lambda x: x[1].mean(0)"
