@@ -74,7 +74,7 @@ class Annotations(Resource):
             )
 
             return protvista_features
-        if format == "legacy":
+        elif format == "legacy":
             predictedCCO = {}
             predictedBPO = {}
             predictedMFO = {}
@@ -93,5 +93,28 @@ class Annotations(Resource):
             annotations['predictedMFO'] = predictedMFO
 
             return annotations
+
+        elif format == "go-predictprotein":
+            mapping_function = lambda x: {
+                "gotermid": x['GO_Name'],
+                "gotermname": x['GO_Term'],
+                "gotermscore": int(x['RI']*100)
+            }
+
+            predictedCCO = {
+                "ontology": "Cellular Component Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedCCO']))
+            }
+            predictedBPO = {
+                "ontology": "Biological Process Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedBPO']))
+            }
+            predictedMFO = {
+                "ontology": "Molecular Function Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedMFO']))
+            }
+
+            return [predictedBPO, predictedCCO, predictedMFO]
+
         else:
             abort(400, f"Wrong format passed: {format}")
