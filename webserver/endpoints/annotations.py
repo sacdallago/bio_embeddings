@@ -29,7 +29,6 @@ class Annotations(Resource):
         model_name = params.get('model', 'seqvec')
 
         annotations = get_features(model_name, sequence)
-
         annotations['sequence'] = sequence
 
         format = params.get('format', 'legacy')
@@ -75,5 +74,47 @@ class Annotations(Resource):
             )
 
             return protvista_features
-        else:
+        elif format == "legacy":
+            predictedCCO = {}
+            predictedBPO = {}
+            predictedMFO = {}
+
+            for prediction in annotations['predictedCCO']:
+                predictedCCO[prediction['GO_Term']] = max(predictedCCO.get(prediction['GO_Term'], -1), prediction['RI'])
+
+            for prediction in annotations['predictedBPO']:
+                predictedBPO[prediction['GO_Term']] = max(predictedBPO.get(prediction['GO_Term'], -1), prediction['RI'])
+
+            for prediction in annotations['predictedMFO']:
+                predictedMFO[prediction['GO_Term']] = max(predictedMFO.get(prediction['GO_Term'], -1), prediction['RI'])
+
+            annotations['predictedCCO'] = predictedCCO
+            annotations['predictedBPO'] = predictedBPO
+            annotations['predictedMFO'] = predictedMFO
+
             return annotations
+
+        elif format == "go-predictprotein":
+            mapping_function = lambda x: {
+                "gotermid": x['GO_Name'],
+                "gotermname": x['GO_Term'],
+                "gotermscore": int(x['RI']*100)
+            }
+
+            predictedCCO = {
+                "ontology": "Cellular Component Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedCCO']))
+            }
+            predictedBPO = {
+                "ontology": "Biological Process Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedBPO']))
+            }
+            predictedMFO = {
+                "ontology": "Molecular Function Ontology",
+                "goTermWithScore": list(map(mapping_function, annotations['predictedMFO']))
+            }
+
+            return [predictedBPO, predictedCCO, predictedMFO]
+
+        else:
+            abort(400, f"Wrong format passed: {format}")

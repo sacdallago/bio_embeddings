@@ -35,4 +35,7 @@ def get_protbert_annotations_sync(embedding: np.array) -> Dict[str, str]:
         "predictedDisorder": convert_list_of_enum_to_string(annotations.disorder),
         "predictedMembrane": annotations.membrane.value,
         "predictedSubcellularLocalizations": annotations.localization.value,
+        "predictedCCO": [],
+        "predictedBPO": [],
+        "predictedMFO": []
     }
