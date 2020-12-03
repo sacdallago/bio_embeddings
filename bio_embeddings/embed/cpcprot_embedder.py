@@ -2,7 +2,8 @@ from typing import List, Generator, Union
 
 import numpy
 import torch
-from CPCProt import CPCProtModel, CPCProtEmbedding
+from CPCProt import CPCProtModel, CPCProtEmbedding, CPCProtConfig
+from CPCProt.model.cpcprot import DEFAULT_CONFIG
 from CPCProt.tokenizer import Tokenizer
 from numpy import ndarray
 
@@ -26,7 +27,12 @@ class CPCProtEmbedder(EmbedderInterface):
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)
         self.tokenizer = Tokenizer(vocab="iupac")
-        raw_model = CPCProtModel().to(self._device)
+        # If we don't do this here, CPCProtModel will end up on the gpu if one is
+        # available, even if we passed the cpu as device.
+        # Afaik this is the best way to derive from DEFAULT_CONFIG
+        dict_cfg = DEFAULT_CONFIG.to_dict()
+        dict_cfg["use_cuda"] = self._device.type == "cuda"
+        raw_model = CPCProtModel(cfg=CPCProtConfig.from_dict(dict_cfg)).to(self._device)
         state_dict = dict(
             torch.load(self._options["model_file"], map_location=self._device)
         )
