@@ -1,4 +1,5 @@
 import os
+import string
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -29,7 +30,6 @@ _STAGES = {
 _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
 
-LEGAL_AMINO_ACIDS: Final[Set[str]] = set("MRHKDESTNQCUGPAVIFYWLOXZB")
 
 
 def _valid_file(file_path):
@@ -60,22 +60,22 @@ def _process_fasta_file(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta(kwargs['sequences_file'])
+
+    # Sanity check the fasta file to avoid nonsense and/or crashes by the embedders
+    letters = set(string.ascii_letters)
     for entry in sequences:
-        # TODO: What about lowercase vs uppercase? Do all methods handle that properly?
-        # Currently the only datapoint is that PLUSRNNEmbedder calls upper() explicitly
-        illegal = sorted(set(entry.seq.upper()) - LEGAL_AMINO_ACIDS)
-        # It would be ideal if we could peak into the
-        if "J" in illegal:
-            logger.warning(
-                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the ambiguous amino acid 'J' "
-                f"which is only supported by UniRep"
-            )
-            illegal.remove("J")
+        illegal = sorted(set(entry.seq) - letters)
         if illegal:
             formatted = "'" + "', '".join(illegal) + "'"
-            logger.error(
+            raise ValueError(
                 f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the characters {formatted}, "
-                f"which are not supported by the embedders"
+                f"while only one hot encoded amino acids are allowed"
+            )
+        # This is a warning due to the inconsistent handling between different embedders
+        if not str(entry.seq).isupper():
+            logger.warning(
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains lower case amino acids, "
+                f"even if all letters should be upper case."
             )
 
     sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',

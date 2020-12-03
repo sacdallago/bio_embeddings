@@ -42,13 +42,18 @@ def test_simple_remapping(tmp_path: Path):
 def test_illegal_amino_acids(caplog, tmp_path: Path):
     """ https://github.com/sacdallago/bio_embeddings/issues/54 """
     input_file = "test-data/illegal_amino_acids.fasta"
-    _process_fasta_file(
-        sequences_file=input_file,
-        prefix=str(tmp_path),
-    )
+    with pytest.raises(
+        ValueError,
+        match=f"The entry 'illegal' in {input_file} contains the characters 'ä', 'ö', "
+        "while only one hot encoded amino acids are allowed",
+    ):
+        _process_fasta_file(
+            sequences_file=input_file,
+            prefix=str(tmp_path),
+        )
     assert caplog.messages == [
-        f"The entry 'only_unirep' in {input_file} contains the ambiguous amino acid 'J' which is only supported by UniRep",
-        f"The entry 'illegal' in {input_file} contains the characters 'Ä', 'Ö', which are not supported by the embedders",
+        f"The entry 'lowercase' in {input_file} contains lower "
+        "case amino acids, even if all letters should be upper case.",
     ]
 
 
