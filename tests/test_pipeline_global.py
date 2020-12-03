@@ -8,7 +8,7 @@ from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 
 def test_pipeline_global(tmp_path):
     prefix = Path(tmp_path).joinpath("prefix")
-    execute_pipeline_from_config(
+    out_config = execute_pipeline_from_config(
         {
             "global": {
                 "prefix": str(prefix),
@@ -17,6 +17,18 @@ def test_pipeline_global(tmp_path):
         }
     )
 
+    try:
+        installed_version = importlib_metadata.version("bio_embeddings")
+        expected = toml.loads(Path("pyproject.toml").read_text())["tool"]["poetry"][
+            "version"
+        ]
+        # That can actually happen
+        assert expected == installed_version, "Please run `poetry install`"
+        print(out_config["global"])
+        assert out_config["global"]["version"] == expected
+    except importlib_metadata.PackageNotFoundError:
+        pass  # No dev install
+
     expected_files = [
         "input_parameters_file.yml",
         "mapping_file.csv",
@@ -24,16 +36,5 @@ def test_pipeline_global(tmp_path):
         "remapped_sequences_file.fasta",
         "sequences_file.fasta",
     ]
-
-    try:
-        importlib_metadata.version("bio_embeddings")
-        actual = prefix.joinpath("bio_embeddings_version.txt").read_text()
-        expected = toml.loads(Path("pyproject.toml").read_text())["tool"]["poetry"][
-            "version"
-        ]
-        assert actual == expected
-        expected_files.append("bio_embeddings_version.txt")
-    except importlib_metadata.PackageNotFoundError:
-        pass  # No dev install
 
     assert sorted(expected_files) == sorted(path.name for path in prefix.iterdir())
