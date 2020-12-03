@@ -116,7 +116,7 @@ class BeplerEmbedder(EmbedderInterface):
 
         self.model = SCOPCM(embedding)
         self.model.load_state_dict(torch.load(self._options["model_file"]))
-        self.model = self.model.eval()
+        self.model = self.model.eval().to(self._device)
 
         self.lstm_stack = _unstack_lstm(self.model.embedding.rnn, self._device)
 

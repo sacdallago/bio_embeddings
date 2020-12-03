@@ -60,14 +60,17 @@ class PLUSRNNEmbedder(EmbedderInterface):
         )
 
         iterator_test = DataLoader(
-            test_dataset, self._run_cfg.batch_size_eval, collate_fn=collate_sequences_for_embedding
+            test_dataset,
+            self._run_cfg.batch_size_eval,
+            collate_fn=collate_sequences_for_embedding,
         )
 
         model_list = [self._model, "", True, False, False]
         tasks_list = [["", [], []]]  # list of lists [idx, metrics_train, metrics_eval]
         trainer = Trainer([model_list], get_embedding, self._run_cfg, tasks_list)
-        for batch in iterator_test:
-            batch = [t.to(self._device) for t in batch]
+        for tokens, lengths in iterator_test:
+            # https://github.com/pytorch/pytorch/issues/43227
+            batch = (tokens.to(self._device), lengths)
             trainer.embed(batch, {"data_parallel": False})
 
         embeddings = trainer.tasks_dict["results_eval"][0]["embeddings"]
