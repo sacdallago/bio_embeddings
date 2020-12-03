@@ -1,9 +1,10 @@
+import logging
 import os
 import string
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Callable, Final, Set
+from typing import Dict, Callable
 
 import importlib_metadata
 from importlib_metadata import PackageNotFoundError
@@ -11,12 +12,10 @@ from importlib_metadata import PackageNotFoundError
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.project.pipeline import run as run_project
-from bio_embeddings.visualize.pipeline import run as run_visualize
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
-
-import logging
+from bio_embeddings.visualize.pipeline import run as run_visualize
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +28,6 @@ _STAGES = {
 
 _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
-
 
 
 def _valid_file(file_path):
@@ -116,6 +114,7 @@ def _process_fasta_file(**kwargs):
 
 def _null_function(config: Dict) -> None:
     pass
+
 
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
