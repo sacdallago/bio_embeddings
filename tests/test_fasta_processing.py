@@ -45,7 +45,7 @@ def test_illegal_amino_acids(caplog, tmp_path: Path):
     with pytest.raises(
         ValueError,
         match=f"The entry 'illegal' in {input_file} contains the characters 'ä', 'ö', "
-        "while only one hot encoded amino acids are allowed",
+        "while only single letter code is allowed",
     ):
         _process_fasta_file(
             sequences_file=input_file,
@@ -53,7 +53,11 @@ def test_illegal_amino_acids(caplog, tmp_path: Path):
         )
     assert caplog.messages == [
         f"The entry 'lowercase' in {input_file} contains lower "
-        "case amino acids, even if all letters should be upper case.",
+        "case amino acids. Lower case letters are uninterpretable by most language "
+        "models, and their embedding will be nonesensical. Protein LMs available "
+        "through bio_embeddings have been trained on upper case, single letter code "
+        "sequence representations only "
+        "(https://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_properties)."
     ]
 
 

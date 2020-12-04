@@ -67,13 +67,18 @@ def _process_fasta_file(**kwargs):
             formatted = "'" + "', '".join(illegal) + "'"
             raise ValueError(
                 f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the characters {formatted}, "
-                f"while only one hot encoded amino acids are allowed"
+                f"while only single letter code is allowed "
+                f"(https://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_properties)."
             )
         # This is a warning due to the inconsistent handling between different embedders
         if not str(entry.seq).isupper():
             logger.warning(
-                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains lower case amino acids, "
-                f"even if all letters should be upper case."
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains lower case amino acids. "
+                f"Lower case letters are uninterpretable by most language models, "
+                f"and their embedding will be nonesensical. "
+                f"Protein LMs available through bio_embeddings have been trained on upper case, "
+                f"single letter code sequence representations only "
+                f"(https://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_properties)."
             )
 
     sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',
