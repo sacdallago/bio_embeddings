@@ -71,9 +71,21 @@ def get_seqvec_annotations_sync(embedding: np.ndarray) -> Dict[str, str]:
     k_nn_RI = [0.5 / (0.5 + dist) for dist in k_nn_distances[0]]
 
     k_nns = DataFrame({metric: k_nn_distances[0], "RI": k_nn_RI}, index=k_nn_identifiers)
-    k_nn_BPO = BPO_annotations.join(k_nns, on="identifier").dropna()
-    k_nn_CCO = CCO_annotations.join(k_nns, on="identifier").dropna()
-    k_nn_MFO = MFO_annotations.join(k_nns, on="identifier").dropna()
+    k_nn_BPO = BPO_annotations\
+        .join(k_nns, on="identifier")\
+        .dropna()\
+        .sort_values("RI", ascending=False)\
+        .drop_duplicates(subset=["GO_Term"], keep="first")
+    k_nn_CCO = CCO_annotations\
+        .join(k_nns, on="identifier")\
+        .dropna()\
+        .sort_values("RI", ascending=False)\
+        .drop_duplicates(subset=["GO_Term"], keep="first")
+    k_nn_MFO = MFO_annotations\
+        .join(k_nns, on="identifier")\
+        .dropna()\
+        .sort_values("RI", ascending=False)\
+        .drop_duplicates(subset=["GO_Term"], keep="first")
 
     return {
         "predictedDSSP3": convert_list_of_enum_to_string(annotations.DSSP3),
