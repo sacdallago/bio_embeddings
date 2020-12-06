@@ -16,7 +16,7 @@ app.config['MAX_CONTENT_LENGTH'] = configuration['web']['max_content_length']
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 cors = CORS(blueprint, origins=['https://embed.protein.properties', 'http://localhost:3000',
-                                "https://predictprotein.org"])
+                                'https://predictprotein.org', 'https://predictprotein.test'])
 
 api.init_app(blueprint)
 api.add_namespace(pipeline_namespace)
