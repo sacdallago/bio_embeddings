@@ -96,8 +96,8 @@ class Annotations(Resource):
 
         elif format == "go-predictprotein":
             mapping_function = lambda x: {
-                "gotermid": x['GO_Name'],
-                "gotermname": x['GO_Term'],
+                "gotermid": x['GO_Term'],
+                "gotermname": x['GO_Name'],
                 "gotermscore": int(x['RI']*100)
             }
 
