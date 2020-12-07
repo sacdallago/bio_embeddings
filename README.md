@@ -5,8 +5,17 @@
 </p>
 
 # Bio Embeddings
+Resources to learn about bio_embeddings:
+
+- Quickly predict protein structure and function from sequence via embeddings: [embed.protein.properties](https://embed.protein.properties).
+- Read the current documentation: [docs.bioembeddings.com](https://docs.bioembeddings.com).
+- Chat with us: [chat.bioembeddings.com](https://chat.bioembeddings.com).
+- We presented the bio_embeddings pipeline as a talk at ISMB 2020 & LMRL 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
+- Check out the [`examples`](examples) of pipeline configurations a and [`notebooks`](notebooks).
+
 Project aims:
-  - Facilitate the use of DeepLearning based biological sequence representations for transfer-learning by providing a single, consistent interface and close-to-zero-friction
+
+  - Facilitate the use of language model based biological sequence representations for transfer-learning by providing a single, consistent interface and close-to-zero-friction
   - Reproducible workflows
   - Depth of representation (different models from different labs trained on different dataset for different purposes)
   - Extensive examples, handle complexity for users (e.g. CUDA OOM abstraction) and well documented warnings and error messages.
@@ -20,8 +29,6 @@ The project includes:
   - visualizes low dimensional sets of per-sequence embeddings onto 2D and 3D interactive plots (with and without annotations)
   - extracts annotations from per-sequence and per-amino-acid embeddings using supervised (when available) and unsupervised approaches (e.g. by network analysis)
 - A webserver that wraps the pipeline into a distributed API for scalable and consistent workfolws
-
-We presented the bio_embeddings pipeline as a talk at ISMB 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
 
 ## News (current development cycle)
 
