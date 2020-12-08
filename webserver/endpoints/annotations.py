@@ -12,9 +12,11 @@ from webserver.utilities.parsers import (
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
 
+
 def _filter_ontology(annotations, ontology):
-    first_k = next(goannotations for identifier, goannotations in groupby(annotations[ontology], lambda x: x["identifier"]))
-    annotations[ontology] = list(first_k)
+    if annotations.get(ontology):
+        first_k = next(goannotations for identifier, goannotations in groupby(annotations[ontology], lambda x: x["identifier"]))
+        annotations[ontology] = list(first_k)
 
 
 @ns.route('')
