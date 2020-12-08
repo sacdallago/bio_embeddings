@@ -77,9 +77,17 @@ sequence_post_parameters_annotations = api.model('sequence_post_annotations', {
     'sequence': sequence_field,
     'format': fields.String(
         location='json',
-        description='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein',
+        description='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full',
         required=False,
         default='legacy',
         example='protvista-predictprotein'
     ),
+    'only_closest_k': fields.Boolean(
+        location='json',
+        description='Boolean to filter GoPredSim for closest hit only. '
+                    'Default set to True, if False, considers up to 3 nearest-neighbours.',
+        required=False,
+        default=True
+    ),
+
 })
