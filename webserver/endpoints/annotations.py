@@ -1,3 +1,4 @@
+from itertools import groupby
 from flask import request, abort
 from flask_restx import Resource
 
@@ -10,6 +11,10 @@ from webserver.utilities.parsers import (
 )
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
+
+def _filter_ontology(annotations, ontology):
+    first_k = next(goannotations for identifier, goannotations in groupby(annotations[ontology], lambda x: x["identifier"]))
+    annotations[ontology] = list(first_k)
 
 
 @ns.route('')
@@ -32,6 +37,13 @@ class Annotations(Resource):
         annotations['sequence'] = sequence
 
         format = params.get('format', 'legacy')
+        only_closest_k = params.get('only_closest_k', True)
+
+        if only_closest_k == True:
+            _filter_ontology(annotations, "predictedBPO")
+            _filter_ontology(annotations, "predictedCCO")
+            _filter_ontology(annotations, "predictedMFO")
+
 
         if format == "protvista-predictprotein":
             source = Source(
@@ -98,7 +110,7 @@ class Annotations(Resource):
             mapping_function = lambda x: {
                 "gotermid": x['GO_Term'],
                 "gotermname": x['GO_Name'],
-                "gotermscore": int(x['RI']*100)
+                "gotermscore": round(x['RI']*100)
             }
 
             predictedCCO = {
@@ -115,6 +127,7 @@ class Annotations(Resource):
             }
 
             return [predictedBPO, predictedCCO, predictedMFO]
-
+        elif format == "full":
+            return annotations
         else:
             abort(400, f"Wrong format passed: {format}")
