@@ -72,22 +72,48 @@ sequence_post_parameters = api.model('sequence_post', {
     'sequence': sequence_field
 })
 
+fromat_field = fields.String(
+    location='json',
+    description='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full',
+    required=False,
+    default='legacy',
+    example='protvista-predictprotein'
+)
+
+k_neighbours_field = fields.Boolean(
+    location='json',
+    description='Boolean to filter GoPredSim for closest hit only. '
+                'Default set to True, if False, considers up to 3 nearest-neighbours.',
+    required=False,
+    default=True
+)
+
 sequence_post_parameters_annotations = api.model('sequence_post_annotations', {
     'model': lm_field,
     'sequence': sequence_field,
-    'format': fields.String(
-        location='json',
-        description='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full',
-        required=False,
-        default='legacy',
-        example='protvista-predictprotein'
-    ),
-    'only_closest_k': fields.Boolean(
-        location='json',
-        description='Boolean to filter GoPredSim for closest hit only. '
-                    'Default set to True, if False, considers up to 3 nearest-neighbours.',
-        required=False,
-        default=True
-    ),
-
+    'format': fromat_field,
+    'only_closest_k': k_neighbours_field
 })
+
+sequence_get_parameters_annotations = api.parser()
+sequence_get_parameters_annotations.add_argument(
+    'sequence',
+    location='args',
+    type=str,
+    required=True,
+    help='Protein sequence in AA format.'
+)
+sequence_get_parameters_annotations.add_argument(
+    'model',
+    location='args',
+    type=str,
+    required=False,
+    help='Which LM to use; options: seqvec, prottrans_bert_bfd.'
+)
+sequence_get_parameters_annotations.add_argument(
+    'format',
+    location='args',
+    type=str,
+    required=False,
+    help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
+)
