@@ -46,7 +46,7 @@ all_embedders = [
     ProtTransBertBFDEmbedder,
     ProtTransT5BFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
-    UniRepEmbedder,
+    SeqVecEmbedder,
 ]
 
 
