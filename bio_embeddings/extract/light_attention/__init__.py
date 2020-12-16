@@ -1,0 +1,2 @@
+from bio_embeddings.extract.light_attention.LightAttention import LightAttentionAnnotationExtractor
+from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicSubcellularLocalizationResult
