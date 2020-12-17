@@ -3,6 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 
+notebooks/README
 api/index
 ```
 

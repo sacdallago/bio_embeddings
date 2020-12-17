@@ -1,8 +1,10 @@
+# Notebooks
+
 The notebooks in this folder can be executed locally on your machine or on Google Colab (a tool that allows you to run code online). If you run the Notebooks on your own machine, you might ignore the "Colab Initialization" code, but you will have to download the files required by the notebook. If you do run the Notebooks on Colab, you have to execute commands to install the pipeline and download neccessary files, which are the blocks of code followin the "Colab Initialization" header.
 
 
 
-#  Preface
+##  Preface
 
 From experience within our lab and with collaborators we have created a set of Notebooks that try to address different aspects of what is generally needed. The Notebooks presented here are to be viewed as "building blocks" for your exploratory projects! We've tried to keep the notebooks short and to the point. Often, you will need to grab a thing from here and a thing from there.
 
