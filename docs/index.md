@@ -3,6 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 
+pipeline
 notebooks/README
 api/index
 ```
