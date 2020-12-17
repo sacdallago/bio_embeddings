@@ -1,4 +1,6 @@
+import logging
 import os
+import string
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -10,10 +12,12 @@ from importlib_metadata import PackageNotFoundError
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.project.pipeline import run as run_project
-from bio_embeddings.visualize.pipeline import run as run_visualize
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
+from bio_embeddings.visualize.pipeline import run as run_visualize
+
+logger = logging.getLogger(__name__)
 
 _STAGES = {
     "embed": run_embed,
@@ -54,6 +58,29 @@ def _process_fasta_file(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     sequences = read_fasta(kwargs['sequences_file'])
+
+    # Sanity check the fasta file to avoid nonsense and/or crashes by the embedders
+    letters = set(string.ascii_letters)
+    for entry in sequences:
+        illegal = sorted(set(entry.seq) - letters)
+        if illegal:
+            formatted = "'" + "', '".join(illegal) + "'"
+            raise ValueError(
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains the characters {formatted}, "
+                f"while only single letter code is allowed "
+                f"(https://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_properties)."
+            )
+        # This is a warning due to the inconsistent handling between different embedders
+        if not str(entry.seq).isupper():
+            logger.warning(
+                f"The entry '{entry.name}' in {kwargs['sequences_file']} contains lower case amino acids. "
+                f"Lower case letters are uninterpretable by most language models, "
+                f"and their embedding will be nonesensical. "
+                f"Protein LMs available through bio_embeddings have been trained on upper case, "
+                f"single letter code sequence representations only "
+                f"(https://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_properties)."
+            )
+
     sequences_file_path = file_manager.create_file(kwargs.get('prefix'), None, 'sequences_file',
                                                    extension='.fasta')
     write_fasta_file(sequences, sequences_file_path)
@@ -92,6 +119,7 @@ def _process_fasta_file(**kwargs):
 
 def _null_function(config: Dict) -> None:
     pass
+
 
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
