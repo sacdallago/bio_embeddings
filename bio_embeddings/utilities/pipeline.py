@@ -126,11 +126,6 @@ def execute_pipeline_from_config(config: Dict,
         # create the prefix
         file_manager.create_prefix(prefix)
 
-    try:
-        Path(prefix).joinpath("bio_embeddings_version.txt").write_text(importlib_metadata.version("bio_embeddings"))
-    except PackageNotFoundError:
-        pass  # :(
-
     # Copy original config to prefix
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
     write_config_file(global_in, original_config)
@@ -193,6 +188,12 @@ def execute_pipeline_from_config(config: Dict,
         post_stage(stage_output_parameters)
 
     config['global'] = global_parameters
+
+    try:
+        config['global']['version'] = importlib_metadata.version("bio_embeddings")
+    except PackageNotFoundError:
+        pass  # :(
+
     global_out = file_manager.create_file(prefix, None, _OUT_CONFIG_NAME, extension='.yml')
     write_config_file(global_out, config)
 
