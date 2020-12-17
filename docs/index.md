@@ -3,7 +3,7 @@
 ```{toctree}
 :maxdepth: 1
 
-pipeline
+Pipeline Examples <https://github.com/sacdallago/bio_embeddings/tree/develop/examples>
 notebooks/README
 api/index
 ```

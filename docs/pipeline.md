@@ -1,2 +1,0 @@
-```{include} ../examples/README.md
-```
