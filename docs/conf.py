@@ -49,6 +49,7 @@ extensions = [
     # "If you are using MyST-NB in your documentation, do not activate myst-parser.
     # It will be automatically activated by myst-nb."
     "myst_nb",
+    "sphinx_copybutton",
 ]
 
 jupyter_execute_notebooks = "off"
