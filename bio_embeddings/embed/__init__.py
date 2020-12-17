@@ -13,7 +13,7 @@ Instead of using ``bio_embeddings[all]``, it's possible to only install
 some embedders by selecting specific extras:
 
 * ``allennlp``: seqvec
-* ``transformers``: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100
+* ``transformers``: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, prottrans_t5_bfd
 * ``jax``-unirep: unirep
 * ``esm``: esm
 * ``cpcprot``: cpcprot
@@ -32,7 +32,7 @@ __all__ = ["EmbedderInterface"]
 
 # Transformers
 try:
-    from bio_embeddings.embed.protrans_albert_bfd_embedder import (
+    from bio_embeddings.embed.prottrans_albert_bfd_embedder import (
         ProtTransAlbertBFDEmbedder,
     )
     from bio_embeddings.embed.prottrans_bert_bfd_embedder import (
@@ -41,16 +41,19 @@ try:
     from bio_embeddings.embed.prottrans_xlnet_uniref100_embedder import (
         ProtTransXLNetUniRef100Embedder,
     )
+    from bio_embeddings.embed.prottrans_t5_bfd_embedder import ProtTransT5BFDEmbedder
 
     name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
     name_to_embedder[ProtTransBertBFDEmbedder.name] = ProtTransBertBFDEmbedder
     name_to_embedder[
         ProtTransXLNetUniRef100Embedder.name
     ] = ProtTransXLNetUniRef100Embedder
+    name_to_embedder[ProtTransT5BFDEmbedder.name] = ProtTransT5BFDEmbedder
 
     __all__.append(ProtTransAlbertBFDEmbedder.__name__)
     __all__.append(ProtTransBertBFDEmbedder.__name__)
     __all__.append(ProtTransXLNetUniRef100Embedder.__name__)
+    __all__.append(ProtTransT5BFDEmbedder.__name__)
 except ImportError:
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"

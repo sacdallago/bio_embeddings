@@ -1,3 +1,16 @@
+"""
+How to add a new embedder:
+
+```
+from bio_embeddings.embed import MyLanguageModel
+import numpy
+embedder = MyLanguageModel()
+[protein, seqwence, padded] = embedder.embed_many(["PROTEIN", "SEQWENCE", "VLSXXXIEP"])
+numpy.savez(f"test-data/reference-embeddings/{embedder.name}.npz", **{"test_case 1": protein, "test_case 2": seqwence})
+```
+
+"""
+
 import os
 import typing
 from json import JSONDecodeError
@@ -18,6 +31,7 @@ from bio_embeddings.embed import (
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
+    ProtTransT5BFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
@@ -30,6 +44,7 @@ all_embedders = [
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
+    ProtTransT5BFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
 ]

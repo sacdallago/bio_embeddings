@@ -10,13 +10,15 @@ from transformers import BertTokenizer, AlbertTokenizer, BertModel, AlbertModel
 from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 
 # https://stackoverflow.com/a/39205612/3549270
-RealBertEmbedder = TypeVar("RealBertEmbedder", bound="BertBaseEmbedder")
+RealProtTransBertEmbedder = TypeVar(
+    "RealProtTransEmbedder", bound="RealProtTransEmbedder"
+)
 
 logger = logging.getLogger(__name__)
 
 
-class BertBaseEmbedder(EmbedderWithFallback):
-    """ Shared code between Bert and Albert """
+class ProtTransBertBaseEmbedder(EmbedderWithFallback):
+    """ Shared code between the ProtTrans models Bert and Albert """
 
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
     _model: Union[AlbertModel, BertModel]
