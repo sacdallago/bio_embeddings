@@ -2,8 +2,6 @@
 The functionality of bio_embeddings is split into 5 different modules
 
 .. autosummary::
-   :toctree: modules
-
    bio_embeddings.embed
    bio_embeddings.extract
    bio_embeddings.project

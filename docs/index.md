@@ -1,18 +1,19 @@
-# Welcome to bio_embeddings's documentation!
+# Bio Embeddings
 
-```{eval-rst}
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+```{toctree}
+:maxdepth: 1
+
+api/index
 ```
 
-# Modules
+# Python API
 
 ```{eval-rst}
 .. automodule:: bio_embeddings
+   :noindex:
    :members:
 ```
 
-```{eval-rst}
-.. mdinclude:: ../README.md
+```{include} ../README.md
+:start-after: "# Bio Embeddings"
 ```

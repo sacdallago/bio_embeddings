@@ -21,10 +21,11 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "bio_embeddings"
+html_title = "bio_embeddings"
 copyright = (
-    "2020, Christian Dallago, Konstantin Schuetze, Michael Heinzinger, Tobias Olenyi"
+    "2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi"
 )
-author = "Christian Dallago <christian.dallago@tum.de>, Konstantin Schuetze <schuetze@in.tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>"
+author = "Christian Dallago <christian.dallago@tum.de>, Konstantin Schütze <schuetze@in.tum.de>, Michael Heinzinger <mheinzinger@rostlab.org>, Tobias Olenyi <olenyi@rostlab.org>"
 
 html_baseurl = "https://docs.bioembeddings.com"
 
@@ -45,8 +46,12 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
-    "myst_parser",
+    # "If you are using MyST-NB in your documentation, do not activate myst-parser.
+    # It will be automatically activated by myst-nb."
+    "myst_nb",
 ]
+
+jupyter_execute_notebooks = "off"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

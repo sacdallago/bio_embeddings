@@ -60,6 +60,7 @@ tape-proteins = { git = "https://github.com/konstin/tape.git", branch = "patch-1
 plus = { git = "https://github.com/konstin/PLUS", rev = "762a7b8141c7a19c86741e5d874de803b5792f14", optional = true }
 # Doesn't use any exotic dependencies, so if we have a wheel we don't even need an extra
 bepler = { git = "https://github.com/konstin/protein-sequence-embedding-iclr2019", rev = "32942331f68e76584f1f6a35001a4d440fcee1c7", optional = true }
+myst-nb = "^0.10.1"
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
