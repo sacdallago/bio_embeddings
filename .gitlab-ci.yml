@@ -46,6 +46,7 @@ python3.8:
 docs:
   <<: *install-deps
   stage: docs
+  needs: ['python3.8']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
@@ -70,6 +71,7 @@ docs:
 
 build-webserver:
   stage: build-docker
+  needs: ['python3.8']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   image:
@@ -82,6 +84,7 @@ build-webserver:
 
 build-worker:
   stage: build-docker
+  needs: ['python3.8']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   image:
