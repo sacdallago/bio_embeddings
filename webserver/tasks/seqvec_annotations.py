@@ -15,7 +15,7 @@ BPO_annotations = None
 CCO_annotations = None
 MFO_annotations = None
 metric = "euclidean"
-k = 7
+k = 25
 
 if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicAnnotationExtractor
