@@ -54,17 +54,15 @@ $('#check-form').form({
             if(!response.message){
                 jobIdCard.addClass('show');
                 jobStatus.text(response.status);
-                if(response.status === "SUCCESS"){
-                    response.files.forEach(file => {
-                        $("#download_"+file)
-                            .attr(
-                                "href",
-                                "/api/pipeline/download?id=" + fields.id + "&file=" + file
-                            )
-                            .addClass('show');
-                        jobDownloadOptions.addClass('show');
-                    })
-                }
+                response.files.forEach(file => {
+                    $("#download_"+file)
+                        .attr(
+                            "href",
+                            "/api/pipeline/download?id=" + fields.id + "&file=" + file
+                        )
+                        .addClass('show');
+                    jobDownloadOptions.addClass('show');
+                })
             }
         }).catch(e => {
             console.error(e)

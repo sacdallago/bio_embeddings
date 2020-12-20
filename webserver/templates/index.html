@@ -31,7 +31,7 @@
                             <div class="field">
                                 <label>Embed via</label>
                                 <div class="ui selection dropdown">
-                                    <input type="hidden" name="pipeline_type">
+                                    <input value="annotations_from_bert" type="hidden" name="pipeline_type">
                                     <div class="default text">ProtBert: embed, extract (supervised)</div>
                                     <i class="dropdown icon"></i>
                                     <div class="menu">
@@ -130,6 +130,20 @@
                                                 <div class="content">
                                                     <div class="header">per_sequence_predictions_file</div>
                                                     <div class="description">Subcellular localization and membrane/non-membrane predictions per-sequence in CSV</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="header">visualize</div>
+                                        <div class="description">Results from the visualize stage</div>
+                                        <div class="list">
+                                            <a class="item download_file" id="download_plot_file">
+                                                <div class="content">
+                                                    <div class="header">plot_file</div>
+                                                    <div class="description">2D UMAP projection of sequences</div>
                                                 </div>
                                             </a>
                                         </div>
