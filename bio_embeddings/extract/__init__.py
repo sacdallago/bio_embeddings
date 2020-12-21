@@ -7,8 +7,10 @@ from bio_embeddings.extract.unsupervised_utilities import (
     pairwise_distance_matrix_from_embeddings_and_annotations,
     get_k_nearest_neighbours,
 )
+from bio_embeddings.extract.basic import BasicAnnotationExtractor
 
 __all__ = [
-    "pairwise_distance_matrix_from_embeddings_and_annotations",
+    "BasicAnnotationExtractor",
     "get_k_nearest_neighbours",
+    "pairwise_distance_matrix_from_embeddings_and_annotations",
 ]

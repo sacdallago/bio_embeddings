@@ -24,4 +24,5 @@ __all__ = [
     "reindex_h5_file",
     "reindex_sequences",
     "write_fasta_file",
+    "get_device"
 ]
