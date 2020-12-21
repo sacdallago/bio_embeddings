@@ -83,6 +83,8 @@ toml = "^0.10.1"
 furo = "^2020.10.15-beta.13"
 Sphinx = "^3.2.1"
 myst-parser = "^0.12.10"
+sphinx-copybutton = "^0.3.1"
+myst-nb = "^0.10.1"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

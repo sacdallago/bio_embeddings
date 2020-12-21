@@ -49,7 +49,7 @@ _CONFIGS = {
 }
 
 _FILES_TO_STORE = [
-        "embeddings_file"
+        "embeddings_file",
         "reduced_embeddings_file",
         "sequence_file",
         "DSSP3_predictions_file",
