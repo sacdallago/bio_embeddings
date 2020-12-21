@@ -18,6 +18,7 @@ blueprint = Blueprint('api', __name__, url_prefix='/api')
 cors = CORS(blueprint, origins=['https://embed.protein.properties', 'http://localhost:3000',
                                 'https://predictprotein.org', 'https://predictprotein.test',
                                 'https://bioembeddings.com', 'https://seqvec.bioembeddings.com',
+                                'https://login.predictprotein.org'
                                 ])
 
 api.init_app(blueprint)
