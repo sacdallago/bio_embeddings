@@ -29,10 +29,7 @@ class ESMEmbedder(EmbedderInterface):
         super().__init__(device, **kwargs)
 
         alphabet = esm.Alphabet.from_dict(proteinseq_toks)
-        if torch.cuda.is_available():
-            model_data = torch.load(self._options["model_file"])
-        else:
-            model_data = torch.load(self._options["model_file"], map_location=torch.device('cpu'))
+        model_data = torch.load(self._options["model_file"], map_location=self._device)
 
         # upgrade state dict
         pra = lambda s: ''.join(s.split('decoder_')[1:] if 'decoder' in s else s)
