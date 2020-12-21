@@ -1,3 +1,5 @@
+# Pipeline Examples
+
 In this folder you will find a couple examples of how to use the pipeline or its outputs.
 
 You can refer to the [`parameters_blueprint.yml`](parameters_blueprint.yml) file for all pipeline parameters, including details about their functionality.
