@@ -35,18 +35,14 @@ python3.6:
   <<: *test
   image: python:3.6
 
-python3.7:
+python3.9:
   <<: *test
-  image: python:3.7
-
-python3.8:
-  <<: *test
-  image: python:3.8
+  image: python:3.9
 
 docs:
   <<: *install-deps
   stage: docs
-  needs: ['python3.8']
+  needs: ['python3.9']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
@@ -71,7 +67,7 @@ docs:
 
 build-webserver:
   stage: build-docker
-  needs: ['python3.8']
+  needs: ['python3.9']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   image:
@@ -84,7 +80,7 @@ build-webserver:
 
 build-worker:
   stage: build-docker
-  needs: ['python3.8']
+  needs: ['python3.9']
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   image:
