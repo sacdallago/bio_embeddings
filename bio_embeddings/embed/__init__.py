@@ -17,7 +17,7 @@ some embedders by selecting specific extras:
 * ``jax``-unirep: unirep
 * ``esm``: esm
 * ``cpcprot``: cpcprot
-* ``plus``: plusrnn
+* ``plus``: plus_rnn
 """
 
 import logging

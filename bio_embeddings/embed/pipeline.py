@@ -10,24 +10,14 @@ from Bio import SeqIO
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
-from bio_embeddings.embed import (
-    ProtTransAlbertBFDEmbedder,
-    ProtTransBertBFDEmbedder,
-    EmbedderInterface,
-    SeqVecEmbedder,
-    ProtTransXLNetUniRef100Embedder,
-    UniRepEmbedder,
-    ESMEmbedder,
-    CPCProtEmbedder,
-    PLUSRNNEmbedder,
-)
+from bio_embeddings.embed import name_to_embedder, EmbedderInterface
 from bio_embeddings.utilities import (
+    FileManagerInterface,
     InvalidParameterError,
-    get_model_file,
     check_required,
     get_file_manager,
     get_model_directories_from_zip,
-    FileManagerInterface,
+    get_model_file,
 )
 from bio_embeddings.utilities.backports import nullcontext
 
@@ -264,28 +254,33 @@ def embed_and_write_batched(
     return result_kwargs
 
 
-PROTOCOLS = {
-    "seqvec": SeqVecEmbedder,
-    "prottrans_albert_bfd": ProtTransAlbertBFDEmbedder,
-    "prottrans_bert_bfd": ProtTransBertBFDEmbedder,
-    "prottrans_xlnet_uniref100": ProtTransXLNetUniRef100Embedder,
-    "unirep": UniRepEmbedder,
-    "esm": ESMEmbedder,
-    "cpcprot": CPCProtEmbedder,
-    "plusrnn": PLUSRNNEmbedder,
-}
+# Some of this might not be available when installed without the `all` extra
+ALL_PROTOCOLS = [
+    "bepler",
+    "cpcprot",
+    "esm",
+    "plus_rnn",
+    "prottrans_albert_bfd",
+    "prottrans_bert_bfd",
+    "prottrans_t5_bfd",
+    "prottrans_xlnet_uniref100",
+    "seqvec",
+    "unirep",
+]
 
 # TODO: 10000 is a random guess
 # There remainder was measured for a GTX 1080 with 8GB memory
 DEFAULT_MAX_AMINO_ACIDS = {
-    "seqvec": 15000,
+    "bepler": 10000,
+    "cpcprot": 10000,
+    "esm": 10000,
+    "plus_rnn": 10000,
     "prottrans_albert_bfd": 3035,
     "prottrans_bert_bfd": 6024,
+    "prottrans_t5_bfd": 1000,
     "prottrans_xlnet_uniref100": 4000,
+    "seqvec": 15000,
     "unirep": 10000,
-    "esm": 10000,
-    "cpcprot": 10000,
-    "plusrnn": 10000,
 }
 
 
@@ -311,16 +306,21 @@ def run(**kwargs):
         ["protocol", "prefix", "stage_name", "remapped_sequences_file", "mapping_file"],
     )
 
-    if kwargs["protocol"] not in PROTOCOLS:
+    if kwargs["protocol"] not in name_to_embedder:
+        if kwargs["protocol"] in ALL_PROTOCOLS:
+            raise InvalidParameterError(
+                f"The extra for the protocol {kwargs['protocol']} is missing. "
+                "See https://docs.bioembeddings.com/#installation on how to install all extras"
+            )
         raise InvalidParameterError(
             "Invalid protocol selection: {}. Valid protocols are: {}".format(
-                kwargs["protocol"], ", ".join(PROTOCOLS.keys())
+                kwargs["protocol"], ", ".join(name_to_embedder.keys())
             )
         )
 
-    embedder_class = PROTOCOLS[kwargs["protocol"]]
+    embedder_class = name_to_embedder[kwargs["protocol"]]
 
-    if embedder_class == UniRepEmbedder and kwargs.get("use_cpu") is not None:
+    if kwargs["protocol"] == "unirep" and kwargs.get("use_cpu") is not None:
         raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
 
     result_kwargs = deepcopy(kwargs)

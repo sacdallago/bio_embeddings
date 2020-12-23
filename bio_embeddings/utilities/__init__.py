@@ -17,12 +17,14 @@ from bio_embeddings.utilities.remote_file_retriever import (
 __all__ = [
     "FileManagerInterface",
     "FileSystemFileManager",
-    "get_model_file",
+    "InvalidParameterError",
     "check_required",
+    "get_device",
     "get_file_manager",
+    "get_model_directories_from_zip",
+    "get_model_file",
     "read_fasta",
     "reindex_h5_file",
     "reindex_sequences",
     "write_fasta_file",
-    "get_device"
 ]

@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, unirep, esm, cpcprot, plusrnn
+  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_xlnet_uniref100, cpcprot, esm, plus_rnn, unirep, bepler
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
