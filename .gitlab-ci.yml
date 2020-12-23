@@ -38,9 +38,9 @@ python3.6:
   <<: *test
   image: python:3.6
 
-python3.9:
+python3.8:
   <<: *test
-  image: python:3.9
+  image: python:3.8
 
 docs:
   <<: *install-deps
@@ -98,7 +98,7 @@ release-to-pypi:
   stage: release
   rules:
     - if: '$CI_COMMIT_TAG'
-  image: python:3.9
+  image: python:3.8
   script:
     - pip install --upgrade pip virtualenv
     - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
