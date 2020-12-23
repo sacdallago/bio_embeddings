@@ -144,3 +144,5 @@ notebooks/*.h5
 notebooks/*.csv
 evotuning.log
 examples/*/simple
+docs/_build
+docs/docs-branch
