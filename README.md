@@ -179,9 +179,3 @@ While we are working on a proper publication, if you are already using this tool
 - [x] PLUS (https://github.com/mswzeus/PLUS/)
 - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>
-
-## Building a Distribution
-Building the packages best happens using invoke.
-If you manage your dependencies with poetry this should be already installed.
-Simply use `poetry run invoke clean build` to update your requirements according to your current status
-and to generate the dist files

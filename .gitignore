@@ -143,3 +143,5 @@ examples/docker/output
 notebooks/*.h5
 notebooks/*.csv
 evotuning.log
+docs/_build
+docs/docs-branch
