@@ -10,9 +10,7 @@ image: "python:3.7"
 
 stages:
   - tests
-  - docs
-  - docker
-  - release
+  - deploy
 
 .install-deps-template: &install-deps
   variables:
@@ -45,7 +43,7 @@ python3.8:
 
 docs:
   <<: *install-deps
-  stage: docs
+  stage: deploy
   rules:
     - if: '$CI_COMMIT_BRANCH == "ci-refactor"' # TODO: CHANGE ME BACK
       when: always
@@ -89,18 +87,18 @@ docs:
 
 docker-webserver-develop:
   <<: *setup-kaniko
-  stage: docker
+  stage: deploy
   script:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/webserver/Dockerfile.webserver --destination ghcr.io/bioembeddings/webserver:${CI_COMMIT_TAG:-latest}
 
 docker-worker-develop:
   <<: *setup-kaniko
-  stage: docker
+  stage: deploy
   script:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/webserver/Dockerfile.worker --destination ghcr.io/bioembeddings/worker:${CI_COMMIT_TAG:-latest}
 
 release-to-pypi:
-  stage: release
+  stage: deploy
   rules:
     - if: '$CI_COMMIT_TAG'
       when: always
