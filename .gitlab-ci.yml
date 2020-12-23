@@ -34,9 +34,10 @@ stages:
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
   script: echo true # poetry run pytest -v # TODO: CHANGE BACK
 
-python3.6:
-  <<: *test
-  image: python:3.6
+# TODO: CHANGE BACK
+#python3.6:
+#  <<: *test
+#  image: python:3.6
 
 python3.8:
   <<: *test
@@ -47,7 +48,9 @@ docs:
   stage: docs
   rules:
     - if: '$CI_COMMIT_BRANCH == "ci-refactor"' # TODO: CHANGE ME BACK
+      when: always
     - if: '$CI_COMMIT_TAG'
+      when: always
   script:
     - . .venv/bin/activate
     - cd docs
@@ -74,7 +77,9 @@ docs:
 .setup-kaniko-template: &setup-kaniko
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: always
     - if: '$CI_COMMIT_TAG'
+      when: always
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -98,6 +103,7 @@ release-to-pypi:
   stage: release
   rules:
     - if: '$CI_COMMIT_TAG'
+      when: always
   image: python:3.8
   script:
     - pip install --upgrade pip virtualenv
