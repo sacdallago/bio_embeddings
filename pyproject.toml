@@ -54,22 +54,21 @@ botocore = { version = "1.17.18", optional = true }
 # https://github.com/boto/botocore/issues/2187#issuecomment-712819351
 urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
-esm = { git = "https://github.com/facebookresearch/esm.git", tag = "v0.1.0", optional = true }
-cpcprot = { git = "https://github.com/amyxlu/CPCProt.git", rev = "df1ad1118544ed349b5e711207660a7c205b3128", optional = true }
-tape-proteins = { git = "https://github.com/konstin/tape.git", branch = "patch-1", optional = true }
-plus = { git = "https://github.com/konstin/PLUS", rev = "762a7b8141c7a19c86741e5d874de803b5792f14", optional = true }
-# Doesn't use any exotic dependencies, so if we have a wheel we don't even need an extra
-bepler = { git = "https://github.com/konstin/protein-sequence-embedding-iclr2019", rev = "32942331f68e76584f1f6a35001a4d440fcee1c7", optional = true }
+bio-embeddings-esm = { version = "0.2.0", optional = true }
+bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
+bio-embeddings-tape-proteins = { version = "0.4", optional = true }
+bio-embeddings-plus = { version = "0.1.0 ", optional = true }
+bio-embeddings-bepler = { version = "0.0.0", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
 unirep = ["jax-unirep"]
-esm = ["esm"]
-cpcprot = ["cpcprot", "tape-proteins"]
-plus = ["plus"]
-bepler = ["bepler"]
-all = ["allennlp", "transformers", "jax-unirep", "esm", "cpcprot", "tape-proteins", "plus", "bepler"]
+esm = ["bio-embeddings-esm"]
+cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
+plus = ["bio-embeddings-plus"]
+bepler = ["bio-embeddings-bepler"]
+all = ["allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
