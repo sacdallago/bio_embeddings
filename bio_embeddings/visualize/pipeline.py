@@ -3,7 +3,7 @@ import logging
 from copy import deepcopy
 from pandas import read_csv
 from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, TooFewComponentsException
-from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly,\
+from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly, \
     save_plotly_figure_to_html
 
 logger = logging.getLogger(__name__)
@@ -61,11 +61,13 @@ def plotly(**kwargs):
 
         merged_annotation_file.to_csv(merged_annotation_file_path)
         result_kwargs['merged_annotation_file'] = merged_annotation_file_path
-
-    if result_kwargs['n_components'] == 2:
-        figure = render_scatter_plotly(merged_annotation_file)
     else:
-        figure = render_3D_scatter_plotly(merged_annotation_file)
+        projected_embeddings_file['label'] = 'UNKNOWN'
+
+        if result_kwargs['n_components'] == 2:
+            figure = render_scatter_plotly(projected_embeddings_file)
+        else:
+            figure = render_3D_scatter_plotly(projected_embeddings_file)
 
     plot_file_path = file_manager.create_file(kwargs.get('prefix'),
                                               result_kwargs.get('stage_name'),

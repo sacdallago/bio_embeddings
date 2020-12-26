@@ -49,15 +49,16 @@ _CONFIGS = {
 }
 
 _FILES_TO_STORE = [
-        "embeddings_file",
-        "reduced_embeddings_file",
-        "sequence_file",
-        "DSSP3_predictions_file",
-        "DSSP8_predictions_file",
-        "disorder_predictions_file",
-        "per_sequence_predictions_file",
-        "mapping_file"
-    ]
+    "embeddings_file",
+    "reduced_embeddings_file",
+    "sequence_file",
+    "DSSP3_predictions_file",
+    "DSSP8_predictions_file",
+    "disorder_predictions_file",
+    "per_sequence_predictions_file",
+    "mapping_file",
+    "plot_file"
+]
 
 
 @task_keeper.task()
