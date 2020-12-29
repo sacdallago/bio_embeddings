@@ -6,7 +6,10 @@ from webserver.endpoints import api
 from webserver.endpoints.pipeline import ns as pipeline_namespace
 from webserver.endpoints.embeddings import ns as embeddings_namespace
 from webserver.endpoints.annotations import ns as annotations_namespace
+
 from webserver.utilities.configuration import configuration
+
+from webserver.tasks import task_keeper
 
 # Initialize API
 app = Flask(__name__)
@@ -33,7 +36,12 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    i = task_keeper.control.inspect()
+    queues = set()
+    active_queues = i.active_queues()
+    for queue in active_queues:
+        queues.add(active_queues[queue][0]['name'])
+    return render_template("index.html", workers=queues)
 
 
 if __name__ == '__main__':

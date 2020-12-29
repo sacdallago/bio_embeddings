@@ -20,6 +20,8 @@
     </div>
     <div class="ui row">
         <div class="ui sixteen wide column">
+            <h2>Submit a pipeline job</h2>
+            <label class="ui circular orange {{ "blue" if "pipeline" in workers }} label"></label> Pipeline jobs are currently {{ "in" if "pipeline" not in workers }}active.
             <div class="ui segment">
                 <div class="ui two column very relaxed grid">
                     <div class="column">
@@ -150,25 +152,38 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="ui vertical divider">
-                Or
+                <div class="ui vertical divider">
+                    Or
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="ui row">
-    <div class="sixteen wide column">
-        Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
+    <div class="ui row">
+        <div class="sixteen wide column">
+            <h2>Direct jobs</h2>
+            <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
+            <label class="ui circular orange {{ "blue" if "protbert" in workers }} label"></label> ProtBert
+            <br />
+            <label class="ui circular orange {{ "blue" if "protbert_annotations" in workers }} label"></label> ProtBert Annotations
+            <br />
+            <label class="ui circular orange {{ "blue" if "seqvec" in workers }} label"></label> SeqVec
+            <br />
+            <label class="ui circular orange {{ "blue" if "seqvec_annotations" in workers }} label"></label> SeqVec Annotations
+        </div>
     </div>
-</div>
-<div class="ui row">
-    <div class="sixteen wide column">
-        Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a> &amp; Konstantin Schütze.
+    <div class="ui row">
+        <div class="sixteen wide column">
+            Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
+        </div>
     </div>
-</div>
+    <div class="ui row">
+        <div class="sixteen wide column">
+            Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a> &amp; Konstantin Schütze.
+        </div>
+    </div>
 </div>
 <script type="application/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='semantic.min.js') }}"></script>
