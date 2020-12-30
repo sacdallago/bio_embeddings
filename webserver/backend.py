@@ -39,7 +39,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 def index():
     i = task_keeper.control.inspect()
     queues = set()
-    active_queues = i.active_queues()
+    active_queues = i.active_queues() or dict()
     for queue in active_queues:
         queues.add(active_queues[queue][0]['name'])
     return render_template("index.html", workers=queues)
