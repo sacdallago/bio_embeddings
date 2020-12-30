@@ -58,7 +58,7 @@ bio-embeddings-esm = { version = "0.2.0", optional = true }
 bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
 bio-embeddings-tape-proteins = { version = "0.4", optional = true }
 bio-embeddings-plus = { version = "0.1.0 ", optional = true }
-bio-embeddings-bepler = { version = "0.0.0", optional = true }
+bio-embeddings-bepler = { version = "0.0.1", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
