@@ -10,17 +10,21 @@
 <div class="ui grid container">
     <div class="ui row">
         <div class="sixteen wide column">
-            <h2>Welcome to the <strong><pre>bio_embeddings</pre></strong> webserver</h2>
+            <h1>Welcome to <strong><pre>bio_embeddings</pre></strong></h1>
         </div>
     </div>
     <div class="ui row">
         <div class="sixteen wide column">
+            <p>Please note that this is a very basic server.</p>
+            <p>If you have questions, <a target="_blank" href="https://chat.bioembeddings.com">chat with us</a>.</p>
             You can find out more about <pre>bio_embeddings</pre> by visiting our <a target="_blank" rel="help" href="https://github.com/sacdallago/bio_embeddings">GitHub page</a>.
         </div>
     </div>
     <div class="ui row">
         <div class="ui sixteen wide column">
-            <div class="ui segment">
+            <h2>Submit a pipeline job</h2>
+            <label class="ui circular orange {{ "blue" if "pipeline" in workers }} label"></label> Pipeline jobs are currently {{ "in" if "pipeline" not in workers }}active.
+            <div class="ui segment {{ "disabled" if "pipeline" not in workers }}">
                 <div class="ui two column very relaxed grid">
                     <div class="column">
                         <form class="ui form" id="submit-form">
@@ -150,25 +154,39 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="ui vertical divider">
-                Or
+                <div class="ui vertical divider">
+                    Or
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="ui row">
-    <div class="sixteen wide column">
-        Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
+    <div class="ui row">
+        <div class="sixteen wide column">
+            <h2>Direct jobs</h2>
+            <p>Direct jobs (e.g., getting secondary structure prediction from ProtBert on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
+            <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
+            <label class="ui circular orange {{ "blue" if "protbert" in workers }} label"></label> ProtBert
+            <br />
+            <label class="ui circular orange {{ "blue" if "protbert_annotations" in workers }} label"></label> ProtBert Annotations
+            <br />
+            <label class="ui circular orange {{ "blue" if "seqvec" in workers }} label"></label> SeqVec
+            <br />
+            <label class="ui circular orange {{ "blue" if "seqvec_annotations" in workers }} label"></label> SeqVec Annotations
+        </div>
     </div>
-</div>
-<div class="ui row">
-    <div class="sixteen wide column">
-        Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a> &amp; Konstantin Schütze.
+    <div class="ui row">
+        <div class="sixteen wide column">
+            Programmatic access is available through the <a target="_blank" rel="help" href="/api">API</a>.
+        </div>
     </div>
-</div>
+    <div class="ui row">
+        <div class="sixteen wide column">
+            Made by &nbsp; <a rel="author" target="_blank" href="https://christian.dallago.us">Christian Dallago</a> &amp; Konstantin Schütze.
+        </div>
+    </div>
 </div>
 <script type="application/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='semantic.min.js') }}"></script>
