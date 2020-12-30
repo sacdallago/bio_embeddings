@@ -44,7 +44,12 @@ all_embedders = [
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
-    ProtTransT5BFDEmbedder,
+    pytest.param(
+        ProtTransT5BFDEmbedder,
+        marks=pytest.mark.skipif(
+            os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
+        ),
+    ),
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
 ]
