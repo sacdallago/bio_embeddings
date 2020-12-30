@@ -195,11 +195,14 @@ torch = ">=1.0,<2.0"
 
 [[package]]
 name = "bio-embeddings-esm"
-version = "0.2.0"
+version = "0.2.1"
 description = "Pre-trained evolutionary scale models for proteins, from Facebook AI Research."
 category = "main"
 optional = true
 python-versions = "*"
+
+[package.dependencies]
+torchvision = "*"
 
 [[package]]
 name = "bio-embeddings-plus"
@@ -603,7 +606,7 @@ wcwidth = "*"
 
 [[package]]
 name = "furo"
-version = "2020.12.28b23"
+version = "2020.12.30b24"
 description = "A clean customisable Sphinx documentation theme."
 category = "dev"
 optional = false
@@ -2413,6 +2416,22 @@ future = "*"
 numpy = "*"
 
 [[package]]
+name = "torchvision"
+version = "0.6.1"
+description = "image and video datasets and models for torch deep learning"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+numpy = "*"
+pillow = ">=4.1.1"
+torch = "1.5.1"
+
+[package.extras]
+scipy = ["scipy"]
+
+[[package]]
 name = "tornado"
 version = "6.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -2690,7 +2709,7 @@ unirep = ["jax-unirep"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~ 3.6.6 || ^3.7 || ^3.8"
-content-hash = "36f20f2cce200c0a9de4d398350db9ff98bde4d5a76cd03c5afa436f48b24680"
+content-hash = "135682c10b21f77387d73edbff09fb509b11897b125334c6bd85f7a6bf6d5f01"
 
 [metadata.files]
 absl-py = [
@@ -2769,8 +2788,8 @@ bio-embeddings-cpcprot = [
     {file = "bio_embeddings_CPCProt-0.0.1.tar.gz", hash = "sha256:046a8699ef771738c482a04459c2b99f59b22e71378d1ebb5e1a083952a5d4b3"},
 ]
 bio-embeddings-esm = [
-    {file = "bio_embeddings-esm-0.2.0.tar.gz", hash = "sha256:b8ac5923a2f3ba03de9e6729c765d748d287cbc862904303e33a992b6bd9cc05"},
-    {file = "bio_embeddings_esm-0.2.0-py3-none-any.whl", hash = "sha256:0b30739e988ba37f5774a9539560b2651fbd99d526ddd8afcc30a0769921dc86"},
+    {file = "bio_embeddings-esm-0.2.1.tar.gz", hash = "sha256:6cf7e402ded610a207c47cef40f599c55f07f79377c5458e74c1052bae8335d6"},
+    {file = "bio_embeddings_esm-0.2.1-py3-none-any.whl", hash = "sha256:92f24880bc2507d3c861b7687ced9e0d52e9e48af8522fa3307d5a60db440b15"},
 ]
 bio-embeddings-plus = [
     {file = "bio_embeddings_PLUS-0.1.0-py3-none-any.whl", hash = "sha256:01fa96bbcc141317890977ed6d2ef0f2f0e06860b04b7924f46c295b8a6109fe"},
@@ -3038,8 +3057,8 @@ ftfy = [
     {file = "ftfy-5.8.tar.gz", hash = "sha256:51c7767f8c4b47d291fcef30b9625fb5341c06a31e6a3b627039c706c42f3720"},
 ]
 furo = [
-    {file = "furo-2020.12.28b23-py3-none-any.whl", hash = "sha256:3c48f254ff504b344c3090e13ed35abb40e7b0011a53c850fd6ac32e1a89e1ff"},
-    {file = "furo-2020.12.28b23.tar.gz", hash = "sha256:3e7b6c6471ef38f17cf208a2ca0cbd6d7cfa3516e733e7d0abfac214361bebfc"},
+    {file = "furo-2020.12.30b24-py3-none-any.whl", hash = "sha256:251dadee4dee96dddf2dc9b5243b88212e16923f53397bf12bc98574918bda41"},
+    {file = "furo-2020.12.30b24.tar.gz", hash = "sha256:30171899c9c06d692a778e6daf6cb2e5cbb05efc6006e1692e5e776007dc8a8c"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
@@ -4212,6 +4231,16 @@ torch = [
     {file = "torch-1.5.1-cp37-none-macosx_10_9_x86_64.whl", hash = "sha256:bb2a3e6c9c9dbfda856bd1b1a55d88789a9488b569ffba9cd6d9aa536ef866ba"},
     {file = "torch-1.5.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:c42658f2982591dc4d0459645c9ab26e0ce18aa7ab0993c27c8bcb1c98931d11"},
     {file = "torch-1.5.1-cp38-none-macosx_10_9_x86_64.whl", hash = "sha256:ff1dbeaa017bae66036e8e7a698a5475ac5a0d7b0a690f0a04ac3b1133b1feb3"},
+]
+torchvision = [
+    {file = "torchvision-0.6.1-cp35-cp35m-macosx_10_6_x86_64.whl", hash = "sha256:eb6d7ef73ab8ed756d18c1c11ead3ba1be7b3e2fe5bf475e16a4426d7f3d6eec"},
+    {file = "torchvision-0.6.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:c122386a4604a6b611626d817981777bb06e747161a4954e4037c2e297fe1d86"},
+    {file = "torchvision-0.6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:9a544f241e1df7485c1fda64f06af4962ad4af1da6caeda352757ea800dd794d"},
+    {file = "torchvision-0.6.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:c44819c3c903f2d6d269713a9aa81a9dcb0ab7716b4fc4dbdccf596e6fe894c9"},
+    {file = "torchvision-0.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:b07e7c5a7274082a8bbe88975c817da10bffaf4020017347d185b5d4eacb891d"},
+    {file = "torchvision-0.6.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:52be3710bf495fee9eb8f1cb4d310edd2da94b127b2ca0aa77075c1001bcbb91"},
+    {file = "torchvision-0.6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:80a8beaa3416035c9640d153b1f0a7c9b09aac8037a032bbc33fd4bc8657b091"},
+    {file = "torchvision-0.6.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:3af59c61d20bb0bb63dbd50f324fcd975fc5b89fb78e6b5714ae613cd7b734cc"},
 ]
 tornado = [
     {file = "tornado-6.1-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:d371e811d6b156d82aa5f9a4e08b58debf97c302a35714f6f45e35139c332e32"},
