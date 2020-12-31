@@ -64,10 +64,10 @@ def plotly(**kwargs):
     else:
         projected_embeddings_file['label'] = 'UNKNOWN'
 
-        if result_kwargs['n_components'] == 2:
-            figure = render_scatter_plotly(projected_embeddings_file)
-        else:
-            figure = render_3D_scatter_plotly(projected_embeddings_file)
+    if result_kwargs['n_components'] == 2:
+        figure = render_scatter_plotly(projected_embeddings_file)
+    else:
+        figure = render_3D_scatter_plotly(projected_embeddings_file)
 
     plot_file_path = file_manager.create_file(kwargs.get('prefix'),
                                               result_kwargs.get('stage_name'),
