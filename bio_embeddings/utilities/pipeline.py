@@ -3,8 +3,8 @@ import os
 import string
 from copy import deepcopy
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional, Any
+from urllib import request
 
 import importlib_metadata
 from importlib_metadata import PackageNotFoundError
@@ -15,6 +15,8 @@ from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException
 from bio_embeddings.utilities.config import read_config_file, write_config_file
+from bio_embeddings.utilities.filemanagers import FileManagerInterface
+from bio_embeddings.utilities.remote_file_retriever import TqdmUpTo
 from bio_embeddings.visualize.pipeline import run as run_visualize
 
 logger = logging.getLogger(__name__)
@@ -121,6 +123,34 @@ def _null_function(config: Dict) -> None:
     pass
 
 
+def download_files_for_stage(
+    stage_parameters: Dict[str, Any],
+    file_manager: FileManagerInterface,
+    prefix: str,
+    stage_name: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Download files given as url
+
+    We don't actually check whether a given option actually takes a path as
+    don't have that information queryable, but this should lead to much
+    confusion since in the worst case we replace one string with another.
+    """
+    for key in stage_parameters:
+        if isinstance(stage_parameters[key], str) and (
+            stage_parameters[key].startswith("http://")
+            or stage_parameters[key].startswith("https://")
+        ):
+            filename = file_manager.create_file(prefix, stage_name, key)
+            logger.info(f"Downloading {stage_parameters[key]} to {filename}")
+            desc = stage_parameters[key].split("/")[-1]
+            with TqdmUpTo(unit="B", unit_scale=True, miniters=1, desc=desc) as tqdm:
+                request.urlretrieve(
+                    stage_parameters[key], filename=filename, reporthook=tqdm.update_to
+                )
+            stage_parameters[key] = filename
+    return stage_parameters
+
+
 def execute_pipeline_from_config(config: Dict,
                                  post_stage: Callable[[Dict], None] = _null_function,
                                  **kwargs) -> Dict:
@@ -158,6 +188,9 @@ def execute_pipeline_from_config(config: Dict,
     global_in = file_manager.create_file(prefix, None, _IN_CONFIG_NAME, extension='.yml')
     write_config_file(global_in, original_config)
 
+    # This downloads sequences_file if required
+    download_files_for_stage(global_parameters, file_manager, prefix)
+
     global_parameters = _process_fasta_file(**global_parameters)
 
     for stage_name in config:
@@ -177,6 +210,8 @@ def execute_pipeline_from_config(config: Dict,
         # Prepare to run stage
         stage_parameters['stage_name'] = stage_name
         file_manager.create_stage(prefix, stage_name)
+
+        stage_parameters = download_files_for_stage(stage_parameters, file_manager, prefix, stage_name)
 
         stage_dependency = stage_parameters.get('depends_on')
 
