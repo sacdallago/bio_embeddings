@@ -131,9 +131,10 @@ def download_files_for_stage(
 ) -> Dict[str, Any]:
     """Download files given as url
 
-    We don't actually check whether a given option actually takes a path as
-    don't have that information queryable, but this should lead to much
-    confusion since in the worst case we replace one string with another.
+    We don't actually check whether a given option actually takes a path, e.g.
+    one could specify `simple_remapping: https://google.com` and we'd download
+    google.com. It will however still be evident for the user that the error
+    lies in `simple_remapping` even though we replaced the value
     """
     for key in stage_parameters:
         if isinstance(stage_parameters[key], str) and (
