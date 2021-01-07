@@ -140,6 +140,7 @@ def download_files_for_stage(
         if isinstance(stage_parameters[key], str) and (
             stage_parameters[key].startswith("http://")
             or stage_parameters[key].startswith("https://")
+            or stage_parameters[key].startswith("ftp://")
         ):
             filename = file_manager.create_file(prefix, stage_name, key)
             logger.info(f"Downloading {stage_parameters[key]} to {filename}")
