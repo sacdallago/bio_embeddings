@@ -1,16 +1,14 @@
-from argparse import Namespace
 from typing import List, Generator, Union
 
-import esm
 import torch
-from esm.constants import proteinseq_toks
+from esm.pretrained import load_model_and_alphabet_local
 from numpy import ndarray
 
 from bio_embeddings.embed import EmbedderInterface
 
 
 class ESMEmbedder(EmbedderInterface):
-    """ESM Embedder
+    """ESM-1 Embedder (Note: This is not ESM-1b)
 
     Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences
 
@@ -28,18 +26,7 @@ class ESMEmbedder(EmbedderInterface):
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)
 
-        alphabet = esm.Alphabet.from_dict(proteinseq_toks)
-        model_data = torch.load(self._options["model_file"], map_location=self._device)
-
-        # upgrade state dict
-        pra = lambda s: ''.join(s.split('decoder_')[1:] if 'decoder' in s else s)
-        prs = lambda s: ''.join(s.split('decoder.')[1:] if 'decoder' in s else s)
-        model_args = {pra(arg[0]): arg[1] for arg in vars(model_data["args"]).items()}
-        model_state = {prs(arg[0]): arg[1] for arg in model_data["model"].items()}
-        model = esm.ProteinBertModel(
-            Namespace(**model_args), len(alphabet), padding_idx=alphabet.padding_idx
-        )
-        model.load_state_dict(model_state)
+        model, alphabet = load_model_and_alphabet_local(self._options["model_file"])
 
         self._model = model.to(self._device)
         self._batch_converter = alphabet.get_batch_converter()
@@ -60,7 +47,7 @@ class ESMEmbedder(EmbedderInterface):
         # Generate per-sequence embeddings via averaging
         # NOTE: token 0 is always a beginning-of-sequence token, so the first residue is token 1.
         for i, (_, seq) in enumerate(data):
-            yield token_embeddings[i, 1: len(seq) + 1].cpu().numpy()
+            yield token_embeddings[i, 1 : len(seq) + 1].cpu().numpy()
 
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
