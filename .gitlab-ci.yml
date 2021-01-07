@@ -14,6 +14,8 @@ stages:
   - build-docker
 
 .install-deps-template: &install-deps
+  variables:
+    SKIP_T5: 1
   before_script:
     - pip install --upgrade pip virtualenv
     - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
