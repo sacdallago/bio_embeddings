@@ -68,7 +68,7 @@ docs:
     # TODO: Index file with redirect
     - cp -r ../_build/html ${CI_COMMIT_TAG:-develop}
     - git add .
-    - git commit -m 'Upload docs'
+    - git commit --allow-empty -m 'Upload docs'
     - git push
 
 .setup-kaniko-template: &setup-kaniko
