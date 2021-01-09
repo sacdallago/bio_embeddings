@@ -34,6 +34,9 @@ prottrans_t5_bfd:
 esm:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
 
+esm1b:
+  model_file: "https://dl.fbaipublicfiles.com/fair-esm/models/esm1b_t33_650M_UR50S.pt"
+
 cpcprot:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/cpcprot/best.ckpt"
 
