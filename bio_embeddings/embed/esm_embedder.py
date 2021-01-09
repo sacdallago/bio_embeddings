@@ -8,11 +8,13 @@ from bio_embeddings.embed import EmbedderInterface
 
 
 class ESMEmbedderBase(EmbedderInterface):
-    # The only thing we need to overwrite is the name
+    # The only thing we need to overwrite is the name and _picked_layer
     embedding_dimension = 1280
-    number_of_layers = 1  # Following ESM, we only consider layer 34
+    number_of_layers = 1  # Following ESM, we only consider layer 34 (ESM) or 33 (ESM1b)
 
     _necessary_files = ["model_file"]
+
+    _picked_layer: int
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)
@@ -32,8 +34,10 @@ class ESMEmbedderBase(EmbedderInterface):
         batch_labels, batch_strs, batch_tokens = self._batch_converter(data)
 
         with torch.no_grad():
-            results = self._model(batch_tokens.to(self._device), repr_layers=[34])
-        token_embeddings = results["representations"][34]
+            results = self._model(
+                batch_tokens.to(self._device), repr_layers=[self._picked_layer]
+            )
+        token_embeddings = results["representations"][self._picked_layer]
 
         # Generate per-sequence embeddings via averaging
         # NOTE: token 0 is always a beginning-of-sequence token, so the first residue is token 1.
@@ -56,10 +60,11 @@ class ESMEmbedder(ESMEmbedderBase):
     """
 
     name = "esm"
+    _picked_layer = 34
 
 
 class ESM1bEmbedder(ESMEmbedderBase):
-    """ESM-1b Embedder (Note: This is not ESM-1)
+    """ESM-1b Embedder (Note: This is not the original ESM)
 
     Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences
 
@@ -69,3 +74,4 @@ class ESM1bEmbedder(ESMEmbedderBase):
     """
 
     name = "esm1b"
+    _picked_layer = 33
