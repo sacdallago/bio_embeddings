@@ -2,6 +2,7 @@ from pathlib import Path
 
 import importlib_metadata
 import toml
+from packaging import version
 
 from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 
@@ -18,14 +19,14 @@ def test_pipeline_global(tmp_path):
     )
 
     try:
-        installed_version = importlib_metadata.version("bio_embeddings")
-        expected = toml.loads(Path("pyproject.toml").read_text())["tool"]["poetry"][
-            "version"
-        ]
+        installed_version = version.parse(importlib_metadata.version("bio_embeddings"))
+        expected = version.parse(
+            toml.loads(Path("pyproject.toml").read_text())["tool"]["poetry"]["version"]
+        )
         # That can actually happen
         assert expected == installed_version, "Please run `poetry install`"
         print(out_config["global"])
-        assert out_config["global"]["version"] == expected
+        assert version.parse(out_config["global"]["version"]) == expected
     except importlib_metadata.PackageNotFoundError:
         pass  # No dev install
 

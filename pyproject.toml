@@ -92,6 +92,7 @@ mongomock = "^3.22.0"
 pytest-flask = "^1.1.0"
 pytest-celery = "^0.0.0-alpha.1"
 flask-restx = "^0.2.0"
+packaging = "^20.8"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"
