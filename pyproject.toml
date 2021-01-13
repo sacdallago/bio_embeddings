@@ -63,6 +63,8 @@ botocore = { version = "1.17.18", optional = true }
 urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
 pymongo = "^3.11.2"
+# Another weird dependency resolution issue
+jaxlib = "0.1.57"
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
