@@ -40,7 +40,7 @@ ftfy==5.8; python_version >= "3.5" and python_full_version >= "3.6.1"
 future==0.18.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_full_version < "3.6.0" and python_version >= "3.6" or python_full_version > "3.6.0" and python_version >= "3.6"
 gensim==3.8.3
 gevent==20.12.1; python_full_version >= "3.6.1"
-greenlet==0.4.17; platform_python_implementation == "CPython" and python_full_version >= "3.6.1"
+greenlet==1.0.0; platform_python_implementation == "CPython" and python_full_version >= "3.6.1"
 h5py==2.10.0
 idna==2.10; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 imagesize==1.2.0; python_full_version >= "3.6.1" and python_version >= "3.5"
