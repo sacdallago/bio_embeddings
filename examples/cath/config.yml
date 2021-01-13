@@ -1,5 +1,6 @@
 global:
-  sequences_file: cath-domain-seqs-S35.fa
+  # If you provide a url (http, https or ftp), bio_embeddings will download the file for you
+  sequences_file: ftp://orengoftp.biochem.ucl.ac.uk/cath/releases/all-releases/v4_2_0/sequence-data/cath-domain-seqs-S35-v4_2_0.fa
   prefix: cath
   simple_remapping: True
 seqvec_embeddings:
