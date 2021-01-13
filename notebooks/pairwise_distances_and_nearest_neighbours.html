@@ -1,0 +1,928 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>Colab initialization - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="colab-initialization">
+<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>install the pipeline in the colab runtime</p></li>
+<li><p>download files neccessary for this example</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip3 install -U pip &gt; /dev/null
+<span class="o">!</span>pip3 install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span> &gt; /dev/null
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/reduced_embeddings_file.h5 --output-document reduced_embeddings_file.h5
+<span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/disprot/reduced_embeddings_file.h5 --output-document disprot_reduced_embeddings_file.h5
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pairwaise-distances-between-embeddings-and-nearest-neighbour-annotation-transfer">
+<h1>Pairwaise distances between embeddings, and nearest neighbour annotation transfer<a class="headerlink" href="#pairwaise-distances-between-embeddings-and-nearest-neighbour-annotation-transfer" title="Permalink to this headline">¶</a></h1>
+<p>In the following, we will compute pairwise distances between sets of embeddings. This borrows ideas from the extract stage using the unsupervised protocol.</p>
+<p>But, we can do more than just that!</p>
+<p>For example, we can check similarity within one dataset:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.extract</span> <span class="kn">import</span> <span class="n">pairwise_distance_matrix_from_embeddings_and_annotations</span><span class="p">,</span> <span class="n">get_k_nearest_neighbours</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">concat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instrinsic_pairwise_distances</span> <span class="o">=</span> <span class="n">pairwise_distance_matrix_from_embeddings_and_annotations</span><span class="p">(</span>
+    <span class="s1">'reduced_embeddings_file.h5'</span><span class="p">,</span>
+    <span class="s1">'reduced_embeddings_file.h5'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s transform this into a nice dataframe with columns and rows, so that we know who’s distnaces we are comparing</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distances_dataframe</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">pairwise_matrix</span><span class="p">,</span>
+                                <span class="n">index</span> <span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">queries</span><span class="p">,</span>
+                                <span class="n">columns</span><span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>IMPORTANT</strong></p>
+<p>You will see that in the following we use the <code class="docutils literal notranslate"><span class="pre">round(1)</span></code> function, which rounds floating points to one decimal. We do so becuase otherwise the distance between the same sequence (diagonal) is sometimes NOT exactly zero (due to floating point precision).</p>
+<p>If you print the dataframe without rounding, you will most likely see something like <code class="docutils literal notranslate"><span class="pre">1.032383e-07</span></code> for position (1,1) in the matrix. This, however, is very close to 0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distances_dataframe</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<td>0.0</td>
+<td>4.2</td>
+<td>3.5</td>
+<td>4.3</td>
+<td>3.6</td>
+<td>4.3</td>
+<td>3.2</td>
+</tr>
+<tr>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<td>4.2</td>
+<td>0.0</td>
+<td>3.3</td>
+<td>4.3</td>
+<td>3.3</td>
+<td>3.7</td>
+<td>3.1</td>
+</tr>
+<tr>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<td>3.5</td>
+<td>3.3</td>
+<td>0.0</td>
+<td>3.6</td>
+<td>2.4</td>
+<td>3.2</td>
+<td>2.1</td>
+</tr>
+<tr>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<td>4.3</td>
+<td>4.3</td>
+<td>3.6</td>
+<td>0.0</td>
+<td>3.6</td>
+<td>4.5</td>
+<td>3.7</td>
+</tr>
+<tr>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<td>3.6</td>
+<td>3.3</td>
+<td>2.4</td>
+<td>3.6</td>
+<td>0.0</td>
+<td>2.9</td>
+<td>2.3</td>
+</tr>
+<tr>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<td>4.3</td>
+<td>3.7</td>
+<td>3.2</td>
+<td>4.5</td>
+<td>2.9</td>
+<td>0.0</td>
+<td>3.0</td>
+</tr>
+<tr>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+<td>3.2</td>
+<td>3.1</td>
+<td>2.1</td>
+<td>3.7</td>
+<td>2.3</td>
+<td>3.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table></div>
+</div></div></div>
+</div>
+<p>Next, we want to find the k nearest neighbours.</p>
+<p>Since we are comparing sequences against themselves, the first nearest neighbour will always be the sequence itself. Therefore we pass <code class="docutils literal notranslate"><span class="pre">2</span></code> to the following function in order to get the second nearest neighbour.</p>
+<p>The following function returns two results: the indices of the nearest neighbours, as well as the distances to them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">k_nn_indices</span><span class="p">,</span> <span class="n">k_nn_distances</span> <span class="o">=</span> <span class="n">get_k_nearest_neighbours</span><span class="p">(</span><span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">pairwise_matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As before, let’s put this into a dataframe with index and column names, so we understand what’s going on:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k_nn_idices_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">k_nn_indices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"k_nn_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_index"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">k_nn_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]))])</span>
+<span class="n">k_nn_distances_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">k_nn_distances</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"k_nn_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_distance"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">k_nn_distances</span><span class="p">[</span><span class="mi">0</span><span class="p">]))])</span>
+
+<span class="n">neighbours_dataframe</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">k_nn_idices_df</span><span class="p">,</span> <span class="n">k_nn_distances_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">queries</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>k_nn_1_index</th>
+<th>k_nn_2_index</th>
+<th>k_nn_1_distance</th>
+<th>k_nn_2_distance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<td>0</td>
+<td>6</td>
+<td>0.0</td>
+<td>3.2</td>
+</tr>
+<tr>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<td>1</td>
+<td>6</td>
+<td>0.0</td>
+<td>3.1</td>
+</tr>
+<tr>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<td>2</td>
+<td>6</td>
+<td>0.0</td>
+<td>2.1</td>
+</tr>
+<tr>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<td>3</td>
+<td>4</td>
+<td>0.0</td>
+<td>3.6</td>
+</tr>
+<tr>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<td>4</td>
+<td>6</td>
+<td>0.0</td>
+<td>2.3</td>
+</tr>
+<tr>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<td>5</td>
+<td>4</td>
+<td>0.0</td>
+<td>2.9</td>
+</tr>
+<tr>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+<td>6</td>
+<td>2</td>
+<td>0.0</td>
+<td>2.1</td>
+</tr>
+</tbody>
+</table></div>
+</div></div></div>
+</div>
+<p>Since it’s also nice to see whose identifier it is at index N, we can simply map that onto our dataframe</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neighbours_dataframe</span><span class="p">[</span><span class="s1">'k_nn_1_identifier'</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">k_nn_1_index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">neighbours_dataframe</span><span class="p">[</span><span class="s1">'k_nn_2_identifier'</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">k_nn_2_index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>k_nn_1_index</th>
+<th>k_nn_2_index</th>
+<th>k_nn_1_distance</th>
+<th>k_nn_2_distance</th>
+<th>k_nn_1_identifier</th>
+<th>k_nn_2_identifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<td>0</td>
+<td>6</td>
+<td>0.0</td>
+<td>3.2</td>
+<td>4019ffc973586d62bfa9adebf209bb04</td>
+<td>d91f2da05c84147f9fcfe5121b21777f</td>
+</tr>
+<tr>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<td>1</td>
+<td>6</td>
+<td>0.0</td>
+<td>3.1</td>
+<td>437dcdf95882266f90085369b9a4258f</td>
+<td>d91f2da05c84147f9fcfe5121b21777f</td>
+</tr>
+<tr>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<td>2</td>
+<td>6</td>
+<td>0.0</td>
+<td>2.1</td>
+<td>4c4dcc8dd8b86a7e8c4efb3ece2653ac</td>
+<td>d91f2da05c84147f9fcfe5121b21777f</td>
+</tr>
+<tr>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<td>3</td>
+<td>4</td>
+<td>0.0</td>
+<td>3.6</td>
+<td>528a722b3be1f711e27efc09dca5b2d7</td>
+<td>b17640be6d2ed8dacb61f48fd40996c2</td>
+</tr>
+<tr>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<td>4</td>
+<td>6</td>
+<td>0.0</td>
+<td>2.3</td>
+<td>b17640be6d2ed8dacb61f48fd40996c2</td>
+<td>d91f2da05c84147f9fcfe5121b21777f</td>
+</tr>
+<tr>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<td>5</td>
+<td>4</td>
+<td>0.0</td>
+<td>2.9</td>
+<td>c12ad1255bc3ed843ae21de938ab5f62</td>
+<td>b17640be6d2ed8dacb61f48fd40996c2</td>
+</tr>
+<tr>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+<td>6</td>
+<td>2</td>
+<td>0.0</td>
+<td>2.1</td>
+<td>d91f2da05c84147f9fcfe5121b21777f</td>
+<td>4c4dcc8dd8b86a7e8c4efb3ece2653ac</td>
+</tr>
+</tbody>
+</table></div>
+</div></div></div>
+</div>
+<p>“Hey, Christian: this is all nice and stuff, but I wanna compare two different sets!”</p>
+<p>Alighty, just as above, but using two different embedding files. Notice that we call the first embedding file the “query” embedding file, while the second embedding file is the “reference”. Internally, we use these terms, because most of the time you are not just interested in the closest embedding, but in some property of the sequence that produced that embedding, aka the “reference” embedding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instrinsic_pairwise_distances</span> <span class="o">=</span> <span class="n">pairwise_distance_matrix_from_embeddings_and_annotations</span><span class="p">(</span>
+    <span class="s1">'reduced_embeddings_file.h5'</span><span class="p">,</span>
+    <span class="s1">'disprot_reduced_embeddings_file.h5'</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">distances_dataframe</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">pairwise_matrix</span><span class="p">,</span>
+                                <span class="n">index</span> <span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">queries</span><span class="p">,</span>
+                                <span class="n">columns</span><span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">distances_dataframe</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">k_nn_indices</span><span class="p">,</span> <span class="n">k_nn_distances</span> <span class="o">=</span> <span class="n">get_k_nearest_neighbours</span><span class="p">(</span><span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">pairwise_matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">k_nn_idices_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">k_nn_indices</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"k_nn_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_index"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">k_nn_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]))])</span>
+<span class="n">k_nn_distances_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">k_nn_distances</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"k_nn_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">_distance"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">k_nn_distances</span><span class="p">[</span><span class="mi">0</span><span class="p">]))])</span>
+
+<span class="n">neighbours_dataframe</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">k_nn_idices_df</span><span class="p">,</span> <span class="n">k_nn_distances_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">queries</span>
+
+<span class="n">neighbours_dataframe</span><span class="p">[</span><span class="s1">'k_nn_1_identifier'</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">k_nn_1_index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">neighbours_dataframe</span><span class="p">[</span><span class="s1">'k_nn_2_identifier'</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">k_nn_2_index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">instrinsic_pairwise_distances</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">neighbours_dataframe</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>0011ab0c11c7fea51fefcd039b1b69f5</th>
+<th>003b243d0117cbaf2b7434184c409b06</th>
+<th>004cef7b0dae937e6d722817c17ed889</th>
+<th>0115b4447d6911651804d1303bf5f272</th>
+<th>0140b3ec6cba5734a909c1d734e48ea0</th>
+<th>01de4461209b76f57819919dc38faa99</th>
+<th>025559e7b85ed1448d34e61221a54788</th>
+<th>0297e58178e3f37ecaa080f23a5efc20</th>
+<th>02bfb6e7933ff7691596243b73dbe6c9</th>
+<th>02c8fa126578dbabb41f3ac9dc9a5048</th>
+<th>...</th>
+<th>fe15f12a73627e411d081ac2c75a08d2</th>
+<th>fe275ea1d14453f6855577d120934fe1</th>
+<th>fe3e07d970ca830a34d91a3fa7e4f9e2</th>
+<th>fe3fce3b83de1afdf00394a4e639dd5e</th>
+<th>fe462c3364a5d79fdfbef7b4befc69a5</th>
+<th>fe6c516055388ef0d8d7ab8b7dd60c45</th>
+<th>fe736d03c479e9681251e5d1e155ed85</th>
+<th>fe81b26a3d8796c10404d6d10915c3f5</th>
+<th>fec303c471974bdfa29b7b32697b39ef</th>
+<th>feeb0ed7e8d9d82d58e3578c1ae7fcee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<td>3.6</td>
+<td>4.1</td>
+<td>3.9</td>
+<td>4.6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>4.1</td>
+<td>8.3</td>
+<td>4.0</td>
+<td>3.9</td>
+<td>...</td>
+<td>3.8</td>
+<td>4.6</td>
+<td>3.8</td>
+<td>7.1</td>
+<td>4.6</td>
+<td>5.2</td>
+<td>8.3</td>
+<td>4.0</td>
+<td>4.5</td>
+<td>5.1</td>
+</tr>
+<tr>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<td>3.1</td>
+<td>3.7</td>
+<td>3.1</td>
+<td>4.2</td>
+<td>4.0</td>
+<td>3.3</td>
+<td>3.4</td>
+<td>7.8</td>
+<td>3.4</td>
+<td>3.3</td>
+<td>...</td>
+<td>3.3</td>
+<td>3.6</td>
+<td>3.4</td>
+<td>6.6</td>
+<td>3.8</td>
+<td>4.1</td>
+<td>8.0</td>
+<td>3.0</td>
+<td>3.7</td>
+<td>4.3</td>
+</tr>
+<tr>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<td>2.1</td>
+<td>3.2</td>
+<td>2.7</td>
+<td>3.8</td>
+<td>3.4</td>
+<td>2.1</td>
+<td>3.2</td>
+<td>7.9</td>
+<td>2.5</td>
+<td>2.1</td>
+<td>...</td>
+<td>2.5</td>
+<td>3.9</td>
+<td>2.9</td>
+<td>6.5</td>
+<td>3.9</td>
+<td>4.2</td>
+<td>8.0</td>
+<td>2.7</td>
+<td>3.4</td>
+<td>4.3</td>
+</tr>
+<tr>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<td>3.8</td>
+<td>4.7</td>
+<td>4.0</td>
+<td>4.9</td>
+<td>4.8</td>
+<td>3.9</td>
+<td>4.4</td>
+<td>8.3</td>
+<td>4.3</td>
+<td>3.7</td>
+<td>...</td>
+<td>4.3</td>
+<td>4.7</td>
+<td>4.2</td>
+<td>7.4</td>
+<td>4.7</td>
+<td>5.4</td>
+<td>8.7</td>
+<td>4.2</td>
+<td>4.7</td>
+<td>5.0</td>
+</tr>
+<tr>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<td>2.1</td>
+<td>3.6</td>
+<td>2.1</td>
+<td>3.9</td>
+<td>3.8</td>
+<td>2.5</td>
+<td>3.2</td>
+<td>8.1</td>
+<td>2.8</td>
+<td>2.7</td>
+<td>...</td>
+<td>2.8</td>
+<td>3.6</td>
+<td>2.9</td>
+<td>6.4</td>
+<td>3.2</td>
+<td>4.2</td>
+<td>7.9</td>
+<td>2.6</td>
+<td>3.7</td>
+<td>4.2</td>
+</tr>
+<tr>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<td>2.9</td>
+<td>3.9</td>
+<td>3.2</td>
+<td>4.2</td>
+<td>3.9</td>
+<td>3.2</td>
+<td>3.4</td>
+<td>8.1</td>
+<td>3.3</td>
+<td>3.4</td>
+<td>...</td>
+<td>3.3</td>
+<td>3.6</td>
+<td>3.4</td>
+<td>6.6</td>
+<td>3.6</td>
+<td>4.5</td>
+<td>8.0</td>
+<td>3.1</td>
+<td>3.9</td>
+<td>4.7</td>
+</tr>
+<tr>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+<td>2.0</td>
+<td>3.2</td>
+<td>2.5</td>
+<td>3.3</td>
+<td>3.1</td>
+<td>1.9</td>
+<td>2.8</td>
+<td>7.7</td>
+<td>2.3</td>
+<td>2.5</td>
+<td>...</td>
+<td>2.2</td>
+<td>3.5</td>
+<td>2.7</td>
+<td>6.3</td>
+<td>3.3</td>
+<td>4.2</td>
+<td>7.9</td>
+<td>2.5</td>
+<td>2.9</td>
+<td>4.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>7 rows × 1162 columns</p>
+</div></div><div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>k_nn_1_index</th>
+<th>k_nn_2_index</th>
+<th>k_nn_1_distance</th>
+<th>k_nn_2_distance</th>
+<th>k_nn_1_identifier</th>
+<th>k_nn_2_identifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>4019ffc973586d62bfa9adebf209bb04</th>
+<td>859</td>
+<td>1005</td>
+<td>3.201</td>
+<td>3.231</td>
+<td>bc78ea9e725fe8b819c32f1438aa0be9</td>
+<td>de3105e4d61489ce082a5e6ca9b802e7</td>
+</tr>
+<tr>
+<th>437dcdf95882266f90085369b9a4258f</th>
+<td>435</td>
+<td>763</td>
+<td>2.872</td>
+<td>2.947</td>
+<td>5d733f6264797054e7f2daa324e78e95</td>
+<td>a7bedcc53366bb2f2e4cf968188d5886</td>
+</tr>
+<tr>
+<th>4c4dcc8dd8b86a7e8c4efb3ece2653ac</th>
+<td>880</td>
+<td>190</td>
+<td>1.765</td>
+<td>1.872</td>
+<td>c13503898cf51733b81cdf19e5d521e8</td>
+<td>29bd1227262429b3c72b158d448c3ccc</td>
+</tr>
+<tr>
+<th>528a722b3be1f711e27efc09dca5b2d7</th>
+<td>356</td>
+<td>343</td>
+<td>3.238</td>
+<td>3.436</td>
+<td>4bd8fd185ad7e5d852f510a0dc1b94b2</td>
+<td>49350ec6dd02aabc8eb8cabc10476a4f</td>
+</tr>
+<tr>
+<th>b17640be6d2ed8dacb61f48fd40996c2</th>
+<td>902</td>
+<td>953</td>
+<td>1.830</td>
+<td>1.883</td>
+<td>c67f43b4c271800bf1b86b75fd06aaf7</td>
+<td>d20782131bcd520f911265e8bd79ee94</td>
+</tr>
+<tr>
+<th>c12ad1255bc3ed843ae21de938ab5f62</th>
+<td>793</td>
+<td>832</td>
+<td>2.725</td>
+<td>2.750</td>
+<td>af2a36ab30bc54843acdb759ea61df71</td>
+<td>b78f477508a2fb1765530101e9e9e861</td>
+</tr>
+<tr>
+<th>d91f2da05c84147f9fcfe5121b21777f</th>
+<td>148</td>
+<td>5</td>
+<td>1.833</td>
+<td>1.945</td>
+<td>231a587783f7bca8795a23abc3269646</td>
+<td>01de4461209b76f57819919dc38faa99</td>
+</tr>
+</tbody>
+</table></div>
+</div></div></div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/notebooks/pairwise_distances_and_nearest_neighbours.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Colab initialization</a></li>
+<li><a class="reference internal" href="#pairwaise-distances-between-embeddings-and-nearest-neighbour-annotation-transfer">Pairwaise distances between embeddings, and nearest neighbour annotation transfer</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

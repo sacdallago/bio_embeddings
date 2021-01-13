@@ -1,0 +1,351 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.visualize" href="bio_embeddings.visualize.html" /><link rel="prev" title="bio_embeddings.project" href="bio_embeddings.project.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>bio_embeddings.utilities - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="module-bio_embeddings.utilities">
+<span id="bio-embeddings-utilities"></span><h1>bio_embeddings.utilities<a class="headerlink" href="#module-bio_embeddings.utilities" title="Permalink to this headline">¶</a></h1>
+<p>Various helpers</p>
+<dl class="py class">
+<dt id="bio_embeddings.utilities.FileManagerInterface">
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">FileManagerInterface</code><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.create_directory">
+<em class="property">abstract </em><code class="sig-name descname">create_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">directory_name</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.create_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.create_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.create_file">
+<em class="property">abstract </em><code class="sig-name descname">create_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.create_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.create_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.create_prefix">
+<em class="property">abstract </em><code class="sig-name descname">create_prefix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.create_prefix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.create_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.create_stage">
+<em class="property">abstract </em><code class="sig-name descname">create_stage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.create_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.create_stage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.exists">
+<em class="property">abstract </em><code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileManagerInterface.get_file">
+<em class="property">abstract </em><code class="sig-name descname">get_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileManagerInterface.html#FileManagerInterface.get_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileManagerInterface.get_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.utilities.FileSystemFileManager">
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">FileSystemFileManager</code><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.create_directory">
+<code class="sig-name descname">create_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">directory_name</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.create_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.create_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.create_file">
+<code class="sig-name descname">create_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.create_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.create_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.create_prefix">
+<code class="sig-name descname">create_prefix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.create_prefix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.create_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.create_stage">
+<code class="sig-name descname">create_stage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.create_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.create_stage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.FileSystemFileManager.get_file">
+<code class="sig-name descname">get_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">stage</span></em>, <em class="sig-param"><span class="n">file_name</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers/FileSystemFileManager.html#FileSystemFileManager.get_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.FileSystemFileManager.get_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py exception">
+<dt id="bio_embeddings.utilities.InvalidParameterError">
+<em class="property">exception </em><code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">InvalidParameterError</code><a class="reference internal" href="../_modules/bio_embeddings/utilities/exceptions.html#InvalidParameterError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.InvalidParameterError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception for invalid parameter settings</p>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.check_required">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">check_required</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></span></em>, <em class="sig-param"><span class="n">keys</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#check_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.check_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify if required set of parameters is present in configuration</p>
+<dl class="simple">
+<dt>params<span class="classifier">dict</span></dt><dd><p>Dictionary with parameters</p>
+</dd>
+<dt>keys<span class="classifier">list-like</span></dt><dd><p>Set of parameters that has to be present in params</p>
+</dd>
+</dl>
+<p>MissingParameterError</p>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.get_device">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">get_device</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> → torch.device<a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#get_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.get_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns what the user specified, or defaults to the GPU,
+with a fallback to CPU if no GPU is available.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.get_file_manager">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">get_file_manager</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/filemanagers.html#get_file_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.get_file_manager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.get_model_directories_from_zip">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">get_model_directories_from_zip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite_cache</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/remote_file_retriever.html#get_model_directories_from_zip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.get_model_directories_from_zip" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the specified asset directory for the model is in the user cache, returns the
+directory path, otherwise downloads the zipped directory, unpacks in the cache and
+returns the location</p>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.get_model_file">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">get_model_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite_cache</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/remote_file_retriever.html#get_model_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.get_model_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the specified asset for the model is in the user cache, returns the
+location, otherwise downloads the file to cache and returns the location</p>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.read_fasta">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">read_fasta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> → List<span class="p">[</span>Bio.SeqRecord.SeqRecord<span class="p">]</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#read_fasta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.read_fasta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to read FASTA file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – path to a valid FASTA file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of SeqRecord objects.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.reindex_h5_file">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">reindex_h5_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h5_file_path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">mapping_file_path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#reindex_h5_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.reindex_h5_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will rename the dataset keys using the “original_id” from the mapping file.
+This operation is generally considered unsafe, as the “original_id” is unsafe
+(may contain invalid characters, duplicates, or empty strings).</p>
+<p>Some sanity checks are performed before starting the renaming process,
+but generally applying this function is discouraged unless you know what you are doing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5_file_path</strong> – path to the hd5_file to re-index</p></li>
+<li><p><strong>mapping_file_path</strong> – path to the mapping file (this must have the first column be the current keys, and a column “original_id” as the new desired id)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nothing – conversion happens in place!</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.reindex_sequences">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">reindex_sequences</code><span class="sig-paren">(</span><em class="sig-param">sequence_records: List[Bio.SeqRecord.SeqRecord], simple=False) -&gt; (&lt;class 'Bio.SeqRecord.SeqRecord'&gt;, &lt;class 'pandas.core.frame.DataFrame'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#reindex_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.reindex_sequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function will sort and re-index the sequence_records IN PLACE! (change the original list!).
+Returns a DataFrame with the mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence_records</strong> – List of sequence records</p></li>
+<li><p><strong>simple</strong> – Boolean; if set to true use numerical index (1,2,3,4) instead of md5 hash</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe with the mapping with key the new ids and a column “original_id” containing the previous id, and the sequence length.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="bio_embeddings.utilities.write_fasta_file">
+<code class="sig-prename descclassname">bio_embeddings.utilities.</code><code class="sig-name descname">write_fasta_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence_records</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Bio.SeqRecord.SeqRecord<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">file_path</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> → <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#write_fasta_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.utilities.write_fasta_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="bio_embeddings.visualize.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">bio_embeddings.visualize</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="bio_embeddings.project.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">bio_embeddings.project</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/api/bio_embeddings.utilities.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

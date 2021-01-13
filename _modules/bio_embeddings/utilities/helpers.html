@@ -1,0 +1,389 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>bio_embeddings.utilities.helpers - bio_embeddings</title>
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../../../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script defer="defer" src="../../../_static/jquery.js"></script>
+    <script defer="defer" src="../../../_static/underscore.js"></script>
+    <script defer="defer" src="../../../_static/doctools.js"></script>
+    <script defer="defer" src="../../../_static/togglebutton.js"></script>
+    <script defer="defer" src="../../../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../../../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for bio_embeddings.utilities.helpers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">read_csv</span>
+
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities.exceptions</span> <span class="kn">import</span> <span class="n">MissingParameterError</span><span class="p">,</span> <span class="n">ConversionUniqueMismatch</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_device"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.get_device">[docs]</a><span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+    <span class="sd">"""Returns what the user specified, or defaults to the GPU,</span>
+<span class="sd">    with a fallback to CPU if no GPU is available."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">device</span>
+    <span class="k">elif</span> <span class="n">device</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_required"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.check_required">[docs]</a><span class="k">def</span> <span class="nf">check_required</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Verify if required set of parameters is present in configuration</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Dictionary with parameters</span>
+<span class="sd">    keys : list-like</span>
+<span class="sd">        Set of parameters that has to be present in params</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    MissingParameterError</span>
+<span class="sd">    """</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span>
+            <span class="s2">"Missing required parameters: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">Given: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">),</span> <span class="n">params</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_assign_hash</span><span class="p">(</span><span class="n">sequence_record</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SeqRecord</span><span class="p">:</span>
+    <span class="n">sequence_record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sequence_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">sequence_record</span>
+
+
+<div class="viewcode-block" id="read_fasta"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.read_fasta">[docs]</a><span class="k">def</span> <span class="nf">read_fasta</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SeqRecord</span><span class="p">]:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Helper function to read FASTA file.</span>
+
+<span class="sd">    :param path: path to a valid FASTA file</span>
+<span class="sd">    :return: a list of SeqRecord objects.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span>  <span class="c1"># Already says "No such file or directory"</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not parse '</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">'. Are you sure this is a valid fasta file?"</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="reindex_sequences"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.reindex_sequences">[docs]</a><span class="k">def</span> <span class="nf">reindex_sequences</span><span class="p">(</span>
+        <span class="n">sequence_records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SeqRecord</span><span class="p">],</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">SeqRecord</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Function will sort and re-index the sequence_records IN PLACE! (change the original list!).</span>
+<span class="sd">    Returns a DataFrame with the mapping.</span>
+
+<span class="sd">    :param sequence_records: List of sequence records</span>
+<span class="sd">    :param simple: Boolean; if set to true use numerical index (1,2,3,4) instead of md5 hash</span>
+<span class="sd">    :return: A dataframe with the mapping with key the new ids and a column "original_id" containing the previous id, and the sequence length.</span>
+<span class="sd">    """</span>
+    <span class="n">sequence_records</span><span class="p">[:]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sequence_records</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">seq</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+    <span class="n">original_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sequence_records</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">simple</span><span class="p">:</span>
+        <span class="n">new_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">record</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequence_records</span><span class="p">):</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="n">new_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sequence_records</span><span class="p">[:]</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">_assign_hash</span><span class="p">,</span> <span class="n">sequence_records</span><span class="p">)</span>
+        <span class="n">new_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sequence_records</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+        <span class="nb">zip</span><span class="p">(</span><span class="n">original_ids</span><span class="p">,</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequence_records</span><span class="p">]),</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"original_id"</span><span class="p">,</span> <span class="s2">"sequence_length"</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">new_ids</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="write_fasta_file"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.write_fasta_file">[docs]</a><span class="k">def</span> <span class="nf">write_fasta_file</span><span class="p">(</span><span class="n">sequence_records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SeqRecord</span><span class="p">],</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sequence_records</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">convert_list_of_enum_to_string</span><span class="p">(</span><span class="n">list_of_enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Enum</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">list_of_enums</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="reindex_h5_file"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.reindex_h5_file">[docs]</a><span class="k">def</span> <span class="nf">reindex_h5_file</span><span class="p">(</span><span class="n">h5_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mapping_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Will rename the dataset keys using the "original_id" from the mapping file.</span>
+<span class="sd">    This operation is generally considered unsafe, as the "original_id" is unsafe</span>
+<span class="sd">    (may contain invalid characters, duplicates, or empty strings).</span>
+
+<span class="sd">    Some sanity checks are performed before starting the renaming process,</span>
+<span class="sd">    but generally applying this function is discouraged unless you know what you are doing.</span>
+
+<span class="sd">    :param h5_file_path: path to the hd5_file to re-index</span>
+<span class="sd">    :param mapping_file_path: path to the mapping file (this must have the first column be the current keys, and a column "original_id" as the new desired id)</span>
+<span class="sd">    :return: Nothing -- conversion happens in place!</span>
+<span class="sd">    """</span>
+
+    <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">mapping_file_path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mapping_file</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">mapping_file</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">mapping_file</span><span class="p">[</span><span class="s1">'original_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping_file</span><span class="p">[</span><span class="s1">'original_id'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">conversion_table</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">mapping_file</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mapping_file</span><span class="p">[</span><span class="s1">'original_id'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">unique_froms</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">conversion_table</span><span class="p">])</span>
+    <span class="n">unique_tos</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">conversion_table</span> <span class="k">if</span> <span class="n">e</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_froms</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_tos</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConversionUniqueMismatch</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Conversion unique count mismatch.</span><span class="se">\n</span><span class="s2">"</span>
+                                       <span class="sa">f</span><span class="s2">"Your mapping file contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_froms</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique ids, which you are truing to convert to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_tos</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique original_ids.</span><span class="se">\n</span><span class="s2">"</span>
+                                       <span class="sa">f</span><span class="s2">"These numbers *must* match. You likely have: duplicate original_id's, or empty strings in original_id."</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_file_path</span><span class="p">,</span> <span class="s2">"r+"</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
+        <span class="n">keys_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">h5_file</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">unchanged_set</span> <span class="o">=</span> <span class="n">keys_set</span> <span class="o">-</span> <span class="n">unique_froms</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unchanged_set</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"There are some keys in your h5 file which won't be re-indexed!</span><span class="se">\n</span><span class="s2">"</span>
+                           <span class="sa">f</span><span class="s2">"These are: </span><span class="si">{</span><span class="n">unchanged_set</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+
+        <span class="n">changeable_set</span> <span class="o">=</span> <span class="n">unique_froms</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">keys_set</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">changeable_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Nothing was re-indexed."</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Reindexing the following keys: </span><span class="si">{</span><span class="n">changeable_set</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="n">from_index</span><span class="p">,</span> <span class="n">to_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">keys_set</span><span class="p">,</span> <span class="n">conversion_table</span><span class="p">):</span>
+                <span class="n">h5_file</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">from_index</span><span class="p">,</span> <span class="n">to_index</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">remove_identifiers_from_annotations_file</span><span class="p">(</span><span class="n">faulty_identifiers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">annotation_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Removes id</span>
+<span class="sd">    :param faulty_identifiers: a list of identifiers</span>
+<span class="sd">    :param annotation_file_path: a str detailing the path</span>
+<span class="sd">    :return: a new DataFrame with the annotations removed</span>
+<span class="sd">    """</span>
+
+    <span class="n">annotation_file</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">annotation_file_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">annotation_file</span><span class="p">[</span><span class="n">annotation_file</span><span class="p">[</span><span class="s1">'identifier'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">[</span><span class="s1">'identifier'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">faulty_identifiers</span><span class="p">)</span>
+    <span class="p">)]</span>
+
+
+<span class="k">class</span> <span class="nc">QueryEmbeddingsFile</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    A helper class that allows you to retrieve embeddings from an embeddings file based on either the `original_id`</span>
+<span class="sd">    (extracted from the FASTA header during the embed stage), or via the `new_id` (assigned during the embed stage,</span>
+<span class="sd">    either an MD5 hash of the input sequence, or an integer (if `remapping_simple: True`).</span>
+
+<span class="sd">    Available for embeddings created with the pipeline starting with v0.1.5</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings_file</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        :param embeddings_file: an h5py File, aka `h5py.File("/path/to/file.h5")`.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lookup_table</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"original_id"</span><span class="p">],</span> <span class="n">new_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">new_id</span> <span class="ow">in</span> <span class="n">embeddings_file</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span> <span class="o">=</span> <span class="n">embeddings_file</span>
+
+    <span class="k">def</span> <span class="nf">query_original_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Query embeddings file using the original id, aka. the string extracted from the FASTA header of the sequence.</span>
+
+<span class="sd">        :param original_id: a string representing the id extracted from the FASTA header</span>
+<span class="sd">        :return: the embedding as a numpy array</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup_table</span><span class="p">[</span><span class="n">original_id</span><span class="p">]])</span>
+
+    <span class="k">def</span> <span class="nf">query_new_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Query embeddings file using the new id, aka. either the MD5 hash of the sequence or a number.</span>
+
+<span class="sd">        :param new_id: a string representing the new id.</span>
+<span class="sd">        :return: the embedding as a numpy array</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">])</span>
+</pre></div>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

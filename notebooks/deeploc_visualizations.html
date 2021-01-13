@@ -1,0 +1,408 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>Colab initialization - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="colab-initialization">
+<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>install the pipeline in the colab runtime</p></li>
+<li><p>download files neccessary for this example</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Protocol -- Step 2 — Install bio_embeddings</span>
+
+<span class="o">!</span>pip3 install -U pip &gt; /dev/null
+<span class="o">!</span>pip3 install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span> &gt; /dev/null
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 3 — Download files</span>
+
+<span class="o">!</span>wget http://data.bioembeddings.com/deeploc/reduced_embeddings_file.h5 --output-document reduced_embeddings_file.h5
+<span class="o">!</span>wget http://data.bioembeddings.com/deeploc/annotations.csv --output-document annotations.csv
+<span class="o">!</span>wget http://data.bioembeddings.com/deeploc/solubility_annotations.csv --output-document solubility_annotations.csv
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="visualize-sequence-spaces-drawn-by-deeploc-embeddings">
+<h1>Visualize sequence spaces drawn by DeepLoc embeddings<a class="headerlink" href="#visualize-sequence-spaces-drawn-by-deeploc-embeddings" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook, we use the output of the <em>embed</em> stage to draw custom UMAP sequence space plots. We will first use the annotations of subcellular localization from <a class="reference external" href="http://www.cbs.dtu.dk/services/DeepLoc/">DeepLoc</a>. These come in 10 subcellular localization classes.</p>
+<p>Following that, we will use a different anntoations file that describes the solubility of the proteins in the DeepLoc set. We will keep the same representations as drawn by UMAP before, so we can “side-by-side” see how embeddings separate the 10 subcellular localization classes, as well as the difference between soluble and membrane bound proteins.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 4 — Import dependencies</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.project</span> <span class="kn">import</span> <span class="n">umap_reduce</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.visualize</span> <span class="kn">import</span> <span class="n">render_scatter_plotly</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">QueryEmbeddingsFile</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 5 — Read annotations file</span>
+
+<span class="n">annotations</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s1">'annotations.csv'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 6 — Read the embeddings file</span>
+
+<span class="n">identifiers</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">values</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'reduced_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">embeddings_file</span><span class="p">:</span>
+    
+    <span class="c1"># Create a lookup table for the old ids</span>
+    <span class="n">embedding_querier</span> <span class="o">=</span> <span class="n">QueryEmbeddingsFile</span><span class="p">(</span><span class="n">embeddings_file</span><span class="p">)</span>
+
+    <span class="c1"># For every identifiery in the annotations file,</span>
+    <span class="c1"># look for the correct internal identifier</span>
+    <span class="c1"># and add the embedding for that protein to the embeddings list</span>
+    <span class="k">for</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="n">identifiers</span><span class="p">:</span>
+        <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">embedding_querier</span><span class="o">.</span><span class="n">query_original_id</span><span class="p">(</span><span class="n">identifier</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 7 — Project the embeddings in lower dimensions using UMAP</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'min_dist'</span><span class="p">:</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'spread'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s1">'n_neighbors'</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+    <span class="s1">'metric'</span><span class="p">:</span> <span class="s1">'euclidean'</span><span class="p">,</span>
+    <span class="s1">'n_components'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">'random_state'</span><span class="p">:</span> <span class="mi">10</span>
+<span class="p">}</span>
+
+<span class="n">projected_embeddings</span> <span class="o">=</span> <span class="n">umap_reduce</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 8 — Merge projected embeddings and annotations</span>
+
+<span class="n">projected_embeddings_dataframe</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">projected_embeddings</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"component_0"</span><span class="p">,</span> <span class="s2">"component_1"</span><span class="p">],</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">identifiers</span>
+<span class="p">)</span>
+
+<span class="n">merged_annotations_and_projected_embeddings</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">projected_embeddings_dataframe</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"identifier"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 2 — Step 9 — Plot the protein space spanned by the projected embeddings</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="n">render_scatter_plotly</span><span class="p">(</span><span class="n">merged_annotations_and_projected_embeddings</span><span class="p">)</span>
+<span class="n">figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="visualize-soluble-vs-membrane-vs-unknown-sequences">
+<h1>Visualize soluble vs. membrane vs. unknown sequences<a class="headerlink" href="#visualize-soluble-vs-membrane-vs-unknown-sequences" title="Permalink to this headline">¶</a></h1>
+<p>We can use the UMAP projections from before to re-color the visualization using a new annotation: solubility vs. membrane boundness. The annotations are again taken from DeepLoc. This highlights the versatility of the visualizations, e.g. if you have a protein sequence set with different properties you would like to study, you can do so by visualizing the different properties in different graphs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternate protocol 2 - Step 2</span>
+<span class="n">solubility_annotations</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s1">'solubility_annotations.csv'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">merged_solubility_annotations_and_projected_embeddings</span> <span class="o">=</span> <span class="n">solubility_annotations</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">projected_embeddings_dataframe</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"identifier"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">figure</span> <span class="o">=</span> <span class="n">render_scatter_plotly</span><span class="p">(</span><span class="n">merged_solubility_annotations_and_projected_embeddings</span><span class="p">)</span>
+<span class="n">figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="visualize-in-3d">
+<h1>Visualize in 3D<a class="headerlink" href="#visualize-in-3d" title="Permalink to this headline">¶</a></h1>
+<p>The bio_embeddings pipeline allows you to also plot 3D protein spaces, which might be better suited for overarching annotations. Additionally, we will only look at definite solubility (aka, drop the “unknown” annotations)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="c1"># Alternate protocol 1 - Step 2</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.visualize</span> <span class="kn">import</span> <span class="n">render_3D_scatter_plotly</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternate protocol 1 - Step 1</span>
+<span class="n">three_dimensional_options</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+<span class="c1"># We use three components, as we now want three-dimensional data points.</span>
+<span class="n">three_dimensional_options</span><span class="p">[</span><span class="s1">'n_components'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">three_dimensional_projected_embeddings</span> <span class="o">=</span> <span class="n">umap_reduce</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="o">**</span><span class="n">three_dimensional_options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">three_dimensional_projected_embeddings_dataframe</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">three_dimensional_projected_embeddings</span><span class="p">,</span>
+    <span class="c1"># Alternate protocol 1 - Step 2</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"component_0"</span><span class="p">,</span> <span class="s2">"component_1"</span><span class="p">,</span> <span class="s2">"component_2"</span><span class="p">],</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">identifiers</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">only_known</span> <span class="o">=</span> <span class="n">solubility_annotations</span><span class="p">[</span><span class="n">solubility_annotations</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"Unknown"</span><span class="p">]</span>
+
+<span class="n">merged_solubility_annotations_and_3D_projected_embeddings</span> <span class="o">=</span> <span class="n">only_known</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">three_dimensional_projected_embeddings_dataframe</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"identifier"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Alternate protocol 1 - Step 2</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">render_3D_scatter_plotly</span><span class="p">(</span><span class="n">merged_solubility_annotations_and_3D_projected_embeddings</span><span class="p">)</span>
+<span class="n">figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/notebooks/deeploc_visualizations.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Colab initialization</a></li>
+<li><a class="reference internal" href="#visualize-sequence-spaces-drawn-by-deeploc-embeddings">Visualize sequence spaces drawn by DeepLoc embeddings</a></li>
+<li><a class="reference internal" href="#visualize-soluble-vs-membrane-vs-unknown-sequences">Visualize soluble vs. membrane vs. unknown sequences</a></li>
+<li><a class="reference internal" href="#visualize-in-3d">Visualize in 3D</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

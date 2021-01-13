@@ -1,0 +1,259 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>Colab initialization - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="colab-initialization">
+<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>install the pipeline in the colab runtime</p></li>
+<li><p>download files neccessary for this example</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip3 install -U pip &gt; /dev/null
+<span class="o">!</span>pip3 install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span> &gt; /dev/null
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/custom_data/disprot_2019_09_labelled_0.2_0.8.csv --output-document disprot_2019_09_labelled_0.2_0.8.csv
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="remove-some-annotations-from-an-annotation-file">
+<h1>Remove some annotations from an annotation file<a class="headerlink" href="#remove-some-annotations-from-an-annotation-file" title="Permalink to this headline">¶</a></h1>
+<p>In order to make sure that you are only transfering annotations for embeddings in the reference embedding file, the pipeline checks that all identifiers in the reference annotations are present in the reference embeddings. If there is a mismatch (you have annotations for sequences/embeddings not present in the reference embeddings), the pipeline will ask you to remove those annotations from your annotation file. This is done to make sure that you don’t believe a certain sequence/embedding is in your reference set, if it in fact is not!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">remove_identifiers_from_annotations_file</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">faulty_identifiers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Q12905'</span><span class="p">,</span><span class="s1">'Q98XH7'</span><span class="p">,</span><span class="s1">'P61244-2'</span><span class="p">,</span><span class="s1">'Q62627'</span><span class="p">,</span><span class="s1">'O14936'</span><span class="p">,</span><span class="s1">'P19619'</span><span class="p">,</span><span class="s1">'Q86UX7'</span><span class="p">,</span><span class="s1">'B7T1D9'</span><span class="p">,</span><span class="s1">'Q8K4J6'</span><span class="p">,</span><span class="s1">'Q10Q08'</span><span class="p">,</span><span class="s1">'Q99ML1'</span><span class="p">,</span><span class="s1">'O76070'</span><span class="p">,</span><span class="s1">'Q00987'</span><span class="p">,</span><span class="s1">'P45481'</span><span class="p">,</span><span class="s1">'Q9Y6Q9'</span><span class="p">,</span><span class="s1">'O95718'</span><span class="p">,</span><span class="s1">'P10587'</span><span class="p">,</span><span class="s1">'Q9UM11'</span><span class="p">,</span><span class="s1">'P02313'</span><span class="p">,</span><span class="s1">'P03347'</span><span class="p">,</span><span class="s1">'Q9UGL1'</span><span class="p">,</span><span class="s1">'P05107'</span><span class="p">,</span><span class="s1">'Q9NR61'</span><span class="p">,</span><span class="s1">'Q13698'</span><span class="p">,</span><span class="s1">'P00533'</span><span class="p">,</span><span class="s1">'O60829'</span><span class="p">,</span><span class="s1">'P00514'</span><span class="p">,</span><span class="s1">'Q71UI9'</span><span class="p">,</span><span class="s1">'Q13541'</span><span class="p">,</span><span class="s1">'Q9Z0P7'</span><span class="p">,</span><span class="s1">'P02511'</span><span class="p">,</span><span class="s1">'P17677'</span><span class="p">,</span><span class="s1">'P12493'</span><span class="p">,</span><span class="s1">'P38919'</span><span class="p">,</span><span class="s1">'P22303'</span><span class="p">,</span><span class="s1">'P29990'</span><span class="p">,</span><span class="s1">'Q9NHC3'</span><span class="p">,</span><span class="s1">'O00204-2'</span><span class="p">,</span><span class="s1">'O88597'</span><span class="p">,</span><span class="s1">'Q548Y4'</span><span class="p">,</span><span class="s1">'P04486'</span><span class="p">,</span><span class="s1">'P52564'</span><span class="p">,</span><span class="s1">'P24928'</span><span class="p">,</span><span class="s1">'Q2YHF0'</span><span class="p">,</span><span class="s1">'P26554'</span><span class="p">,</span><span class="s1">'Q15796'</span><span class="p">,</span><span class="s1">'Q9BRG1'</span><span class="p">,</span><span class="s1">'Q04207'</span><span class="p">,</span><span class="s1">'P63165'</span><span class="p">,</span><span class="s1">'Q13573'</span><span class="p">,</span><span class="s1">'P14921'</span><span class="p">,</span><span class="s1">'Q6P8Z1'</span><span class="p">,</span><span class="s1">'P27577'</span><span class="p">,</span><span class="s1">'Q9JK11'</span><span class="p">,</span><span class="s1">'P62152'</span><span class="p">,</span><span class="s1">'P16535'</span><span class="p">,</span><span class="s1">'Q868N5'</span><span class="p">,</span><span class="s1">'P45561'</span><span class="p">,</span><span class="s1">'P14340'</span><span class="p">,</span><span class="s1">'P17763'</span><span class="p">,</span><span class="s1">'P62326'</span><span class="p">,</span><span class="s1">'Q92731'</span><span class="p">,</span><span class="s1">'P06935'</span><span class="p">,</span><span class="s1">'P03254'</span><span class="p">,</span><span class="s1">'P61925'</span><span class="p">,</span><span class="s1">'Q09472'</span><span class="p">,</span><span class="s1">'P10636-8'</span><span class="p">,</span><span class="s1">'P30281'</span><span class="p">,</span><span class="s1">'P96884'</span><span class="p">,</span><span class="s1">'P13861'</span><span class="p">,</span><span class="s1">'Q63450'</span><span class="p">,</span><span class="s1">'P17870'</span><span class="p">,</span><span class="s1">'O43236-6'</span><span class="p">,</span><span class="s1">'Q9Q6P4'</span><span class="p">,</span><span class="s1">'P42763'</span><span class="p">,</span><span class="s1">'Q9NQA5'</span><span class="p">,</span><span class="s1">'P04052'</span><span class="p">,</span><span class="s1">'P42759'</span><span class="p">,</span><span class="s1">'Q9FG31'</span><span class="p">,</span><span class="s1">'P23443'</span><span class="p">,</span><span class="s1">'P04370-5'</span><span class="p">,</span><span class="s1">'Q03519'</span><span class="p">,</span><span class="s1">'P20810'</span><span class="p">,</span><span class="s1">'P27958'</span><span class="p">,</span><span class="s1">'P02628'</span><span class="p">,</span><span class="s1">'C4PB33'</span><span class="p">,</span><span class="s1">'Q96270'</span><span class="p">,</span><span class="s1">'P41351'</span><span class="p">,</span><span class="s1">'P0CE48'</span><span class="p">,</span><span class="s1">'P05106'</span><span class="p">,</span><span class="s1">'K7J0R2'</span><span class="p">,</span><span class="s1">'B9UCQ5'</span><span class="p">,</span><span class="s1">'P06239'</span><span class="p">,</span><span class="s1">'P27782'</span><span class="p">,</span><span class="s1">'O92972'</span><span class="p">,</span><span class="s1">'P10923'</span><span class="p">,</span><span class="s1">'P84051'</span><span class="p">,</span><span class="s1">'P08592'</span><span class="p">,</span><span class="s1">'P19599'</span><span class="p">,</span><span class="s1">'P11632'</span><span class="p">,</span><span class="s1">'P12506'</span><span class="p">,</span><span class="s1">'P02686-5'</span><span class="p">,</span><span class="s1">'P81558'</span><span class="p">,</span><span class="s1">'P84022'</span><span class="p">,</span><span class="s1">'Q13469'</span><span class="p">,</span><span class="s1">'M5BF30'</span><span class="p">,</span><span class="s1">'Q15797'</span><span class="p">,</span><span class="s1">'Q9WMX2'</span><span class="p">,</span><span class="s1">'A0A068MVV3'</span><span class="p">,</span><span class="s1">'C4M0U8'</span><span class="p">,</span><span class="s1">'P02619'</span><span class="p">,</span><span class="s1">'P27695'</span><span class="p">,</span><span class="s1">'Q1K7R9'</span><span class="p">,</span><span class="s1">'P42224'</span><span class="p">,</span><span class="s1">'Q60795'</span><span class="p">,</span><span class="s1">'Q32ZE1'</span><span class="p">,</span><span class="s1">'A0A1Z3GD08'</span><span class="p">,</span><span class="s1">'O94444'</span><span class="p">,</span><span class="s1">'E2IHW6'</span><span class="p">,</span><span class="s1">'P02259'</span><span class="p">,</span><span class="s1">'D2JX42'</span><span class="p">,</span><span class="s1">'P31751'</span><span class="p">,</span><span class="s1">'P03129'</span><span class="p">,</span><span class="s1">'P12823'</span><span class="p">,</span><span class="s1">'P35222'</span><span class="p">,</span><span class="s1">'P10114'</span><span class="p">,</span><span class="s1">'Q96RI1'</span><span class="p">,</span><span class="s1">'P03404'</span><span class="p">,</span><span class="s1">'P16220'</span><span class="p">,</span><span class="s1">'P0A7L8'</span><span class="p">,</span><span class="s1">'P03259'</span><span class="p">,</span><span class="s1">'P05318'</span><span class="p">,</span><span class="s1">'P68363'</span><span class="p">,</span><span class="s1">'P49723'</span><span class="p">,</span><span class="s1">'P02687'</span><span class="p">,</span><span class="s1">'Q61548'</span><span class="p">,</span><span class="s1">'P18212'</span><span class="p">,</span><span class="s1">'P60604'</span><span class="p">,</span><span class="s1">'P14335'</span><span class="p">,</span><span class="s1">'P07746'</span><span class="p">,</span><span class="s1">'P27285'</span><span class="p">,</span><span class="s1">'Q16143'</span><span class="p">,</span><span class="s1">'Q9YGY0'</span><span class="p">,</span><span class="s1">'E1UJ20'</span><span class="p">,</span><span class="s1">'Q16222-2'</span><span class="p">,</span><span class="s1">'P17639'</span><span class="p">,</span><span class="s1">'P46108-2'</span><span class="p">,</span><span class="s1">'Q5UB51'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_annotations_file</span> <span class="o">=</span> <span class="n">remove_identifiers_from_annotations_file</span><span class="p">(</span>
+    <span class="n">faulty_identifiers</span><span class="p">,</span>
+    <span class="s2">"disprot_2019_09_labelled_0.2_0.8.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_annotations_file</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_annotations_file</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"disprot_2019_09_labelled_0.2_0.8_filtered.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/notebooks/remove_identifiers_from_annotation_file.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Colab initialization</a></li>
+<li><a class="reference internal" href="#remove-some-annotations-from-an-annotation-file">Remove some annotations from an annotation file</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>

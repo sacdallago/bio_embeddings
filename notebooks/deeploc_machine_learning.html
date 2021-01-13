@@ -1,0 +1,441 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.4.1, furo 2020.12.30.beta24"/>
+        <title>Colab initialization - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script defer="defer" src="../_static/jquery.js"></script>
+    <script defer="defer" src="../_static/underscore.js"></script>
+    <script defer="defer" src="../_static/doctools.js"></script>
+    <script defer="defer" src="../_static/togglebutton.js"></script>
+    <script defer="defer" src="../_static/clipboard.min.js"></script>
+    <script defer="defer" src="../_static/copybutton.js"></script>
+    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="colab-initialization">
+<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>install the pipeline in the colab runtime</p></li>
+<li><p>download files neccessary for this example</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip3 install -U pip &gt; /dev/null
+<span class="o">!</span>pip3 install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span> &gt; /dev/null
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/reference/deeploc/reduced_embeddings_file.h5 --output-document reduced_embeddings_file.h5
+<span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/reference/deeploc/annotations.csv --output-document annotations.csv
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-a-simple-neural-network-to-predict-subcellular-localization">
+<h1>Train a simple Neural Network to predict subcellular localization<a class="headerlink" href="#train-a-simple-neural-network-to-predict-subcellular-localization" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook we use the embeddings and annotations of the DeepLoc dataset to train a supervised classifier to predict subcellular localization based on embedding.</p>
+<p>You can obtain these embeddings yourself by running the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">deeploc</span></code> example</span>.</p>
+<p>We use popular libraries: <a class="reference external" href="https://scikit-learn.org/stable/index.html">sci-kit learn</a> for the machine learning part, <a class="reference external" href="https://pandas.pydata.org/">pandas</a> for data reading and management, and <span class="xref myst">Plotly</span> for visualizations.</p>
+<p>What you will need to perform something similar on your custom dataset are:</p>
+<ul class="simple">
+<li><p>embeddings for your dataset (using the embedder of your choice)</p></li>
+<li><p>an annotation file with labels you would like to predict</p></li>
+</ul>
+<div class="section" id="warning">
+<h2>WARNING<a class="headerlink" href="#warning" title="Permalink to this headline">¶</a></h2>
+<p>This is a simplified notebook with pre-processed data. When training on protein data, you need special attention to what you are doing, e.g. redunancy reduce training and testing sets. Additionally, it’s good practice to have three sets: training, testing and validation. In this case we only use two (training and testing). In general: you should use training and validation for parameter optimization (e.g. selecting how many layers produce the best prediction) and then test your final model on the test set. For best practices in machine learning with protein sequences check out <a class="reference external" href="https://www.wiley.com/en-us/Bioinformatics%2C+4th+Edition-p-9781119335955">Bioinformatics</a> and the chapter <code class="docutils literal notranslate"><span class="pre">Predictive</span> <span class="pre">methods</span> <span class="pre">using</span> <span class="pre">protein</span> <span class="pre">sequences</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 4</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Data utilities</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">QueryEmbeddingsFile</span>
+
+<span class="c1"># Machine learning</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 5</span>
+<span class="n">annotations</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s1">'annotations.csv'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we print the first few lines in our annotations CSV file we notice a “set” column. This column tells us whether that sample should be used for testing</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">annotations</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We devide our data based on samples labeled as for testing and for training (aka: not for testing).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 6</span>
+<span class="n">train_set</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">annotations</span><span class="o">.</span><span class="n">set</span> <span class="o">==</span> <span class="s2">"train"</span><span class="p">]</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">annotations</span><span class="o">.</span><span class="n">set</span> <span class="o">==</span> <span class="s2">"test"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The train set contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_set</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples, and we will test on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_set</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We create two sets:</p>
+<ul class="simple">
+<li><p>one for training (containing training identifiers, embeddings and labels)</p></li>
+<li><p>one for testing (containing testing identifiers, embeddings and labels)</p></li>
+</ul>
+<p>Embeddings are the “features” of our samples, so if you are used to thinking about X and y embeddings are our X, and labels are our y.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 7</span>
+
+<span class="n">training_embeddings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">training_identifiers</span> <span class="o">=</span> <span class="n">train_set</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">values</span>
+<span class="n">training_labels</span> <span class="o">=</span> <span class="n">train_set</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">testing_embeddings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">testing_identifiers</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">values</span>
+<span class="n">testing_labels</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">values</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'reduced_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">embeddings_file</span><span class="p">:</span>
+    <span class="n">embedding_querier</span> <span class="o">=</span> <span class="n">QueryEmbeddingsFile</span><span class="p">(</span><span class="n">embeddings_file</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="n">training_identifiers</span><span class="p">:</span>
+        <span class="n">training_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">embedding_querier</span><span class="o">.</span><span class="n">query_original_id</span><span class="p">(</span><span class="n">identifier</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="n">testing_identifiers</span><span class="p">:</span>
+        <span class="n">testing_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">embedding_querier</span><span class="o">.</span><span class="n">query_original_id</span><span class="p">(</span><span class="n">identifier</span><span class="p">))</span>
+        
+<span class="c1"># A sanity check: make sure that the numbers are equal!</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">training_identifiers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_embeddings</span><span class="p">))</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">testing_identifiers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">testing_embeddings</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the following we define the basic neural network architecture (<code class="docutils literal notranslate"><span class="pre">multilayerperceptron</span></code>) and a set of parameters that we want to test during parameter optimization. The basic architecture uses the “Limited-memory Broyden–Fletcher–Goldfarb–Shanno Algorithm” solver and a maximum of 1000 training iterations.</p>
+<p>The parameter which we want to optimize is the amount of hidden layers, as well as its size. In one case, we will try a network with one hidden layer containing 30 nodes. In another case, we will test a network with two hidden layers and 10 nodes.</p>
+<p>You can find more information about the MLPClassifier here: https://scikit-learn.org/stable/modules/neural_networks_supervised.html</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 8</span>
+
+<span class="n">multilayerperceptron</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">'lbfgs'</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'hidden_layer_sizes'</span><span class="p">:</span> <span class="p">[(</span><span class="mi">30</span><span class="p">,),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="warning-this-steps-takes-some-time-we-are-now-going-to-train-several-neural-networks-using-cross-validation">
+<h2>Warning: this steps takes some time! We are now going to train several neural networks using cross validation!<a class="headerlink" href="#warning-this-steps-takes-some-time-we-are-now-going-to-train-several-neural-networks-using-cross-validation" title="Permalink to this headline">¶</a></h2>
+<p>We now use the training_* data to train 6 Multi-Layer Perceptrons. Three neural networks will be trained using a neural network architecture with one hidden layer with 30 nodes, while the other three will be trained on a neural network architecture with two hidden layers each with 10 nodes. Each of the three networks will be trained on different validation splits. The various neural networks will be scored according to accuracy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 9</span>
+
+<span class="n">classifiers</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">multilayerperceptron</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s2">"accuracy"</span><span class="p">)</span>
+<span class="n">classifiers</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_embeddings</span><span class="p">,</span> <span class="n">training_labels</span><span class="p">)</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">classifiers</span><span class="o">.</span><span class="n">best_estimator_</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now use the classifier to predict labels based on embeddings. For evaluation purposes, we predict the labels of our testing set.</p>
+<p>Finally, we evaluate the accuracy of our predictions using “accuracy” from sci-kit learn.</p>
+<p>Read more about accuracy: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 10</span>
+
+<span class="n">predicted_testing_labels</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">testing_embeddings</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">testing_labels</span><span class="p">,</span> <span class="n">predicted_testing_labels</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Our model has an accuracy of </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="predict-subcellular-localization-of-arbitrary-sequence">
+<h1>Predict subcellular localization of arbitrary sequence<a class="headerlink" href="#predict-subcellular-localization-of-arbitrary-sequence" title="Permalink to this headline">¶</a></h1>
+<p>What if we want to predict the subcellular localization of an arbitrary sequence using our newly built classifier?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic Protocol 3 — Step 11</span>
+
+<span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">ProtTransBertBFDEmbedder</span>
+
+<span class="n">embedder</span> <span class="o">=</span> <span class="n">ProtTransBertBFDEmbedder</span><span class="p">()</span>
+
+<span class="c1"># Sequence from: https://www.uniprot.org/uniprot/P58426</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="s2">"DDCGKLFSGCDTNADCCEGYVCRLWCKLDW"</span>
+<span class="n">per_reisdue_embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+<span class="n">per_protein_embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">reduce_per_protein</span><span class="p">(</span><span class="n">per_reisdue_embedding</span><span class="p">)</span>
+<span class="n">sequence_subcellular_prediction</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="n">per_protein_embedding</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"The arbitrary sequence is predicted to be located in: "</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sequence_subcellular_prediction</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Going one step back, we can inspect how well our 6 models performed (on their respective validation sets)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">cv_results</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">classifiers</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span>
+
+<span class="n">cv_results</span><span class="p">[[</span><span class="s1">'param_hidden_layer_sizes'</span><span class="p">,</span><span class="s1">'split0_test_score'</span><span class="p">,</span> <span class="s1">'split1_test_score'</span><span class="p">,</span> <span class="s1">'split2_test_score'</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Another interesting evaluation when dealing with locaization prediction is the visualization of the “confusion matrix”. What this matrix tells us is how many samples have been predicted of a certain class when in reality they were of another class. Ideally, the diagonal of this matrix should be</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Further metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="c1"># Data visualization</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">testing_labels</span><span class="p">)</span>
+
+<span class="n">confusion_matrix_data</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">testing_labels</span><span class="p">,</span> <span class="n">predicted_testing_labels</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confusion_matrix_figure</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">confusion_matrix_data</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">"True label"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">"Predicted label"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"# of samples"</span><span class="p">),</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+    <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">'Gray_r'</span>
+<span class="p">)</span>
+<span class="n">confusion_matrix_figure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/notebooks/deeploc_machine_learning.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Colab initialization</a></li>
+<li><a class="reference internal" href="#train-a-simple-neural-network-to-predict-subcellular-localization">Train a simple Neural Network to predict subcellular localization</a><ul>
+<li><a class="reference internal" href="#warning">WARNING</a></li>
+<li><a class="reference internal" href="#warning-this-steps-takes-some-time-we-are-now-going-to-train-several-neural-networks-using-cross-validation">Warning: this steps takes some time! We are now going to train several neural networks using cross validation!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#predict-subcellular-localization-of-arbitrary-sequence">Predict subcellular localization of arbitrary sequence</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
+</html>
