@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.1.4"
+version = "0.1.5-alpha.3"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>", "Konstantin Schuetze <schuetze@in.tum.de>"]
 maintainers = ["Rostlab <admin@rostlab.org>"]
@@ -63,6 +63,8 @@ botocore = { version = "1.17.18", optional = true }
 urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
 pymongo = "^3.11.2"
+# Another weird dependency resolution issue
+jaxlib = "0.1.57"
 
 [tool.poetry.extras]
 seqvec = ["allennlp", "boto3", "botocore"]
@@ -92,6 +94,7 @@ mongomock = "^3.22.0"
 pytest-flask = "^1.1.0"
 pytest-celery = "^0.0.0-alpha.1"
 flask-restx = "^0.2.0"
+packaging = "^20.8"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

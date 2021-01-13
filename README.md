@@ -30,12 +30,6 @@ The project includes:
   - extracts annotations from per-sequence and per-amino-acid embeddings using supervised (when available) and unsupervised approaches (e.g. by network analysis)
 - A webserver that wraps the pipeline into a distributed API for scalable and consistent workfolws
 
-## News (current development cycle)
-
- * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)
- * Included [example](examples/goPredSim) to transfer GO annotations (a-la [goPredSim](https://github.com/Rostlab/goPredSim)). We also make the reference annotations and embeddings available!
- * We've added the language models [ESM](https://github.com/facebookresearch/esm), [PLUS](https://github.com/mswzeus/PLUS/) and [CPCProt](https://github.com/amyxlu/CPCProt)
-
 ## Installation
 
 You can install `bio_embeddings` via pip or use it via docker.
@@ -179,9 +173,3 @@ While we are working on a proper publication, if you are already using this tool
 - [x] PLUS (https://github.com/mswzeus/PLUS/)
 - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>
-
-## Building a Distribution
-Building the packages best happens using invoke.
-If you manage your dependencies with poetry this should be already installed.
-Simply use `poetry run invoke clean build` to update your requirements according to your current status
-and to generate the dist files
