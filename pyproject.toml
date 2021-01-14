@@ -62,7 +62,8 @@ botocore = { version = "1.17.18", optional = true }
 # https://github.com/boto/botocore/issues/2187#issuecomment-712819351
 urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
-pymongo = "^3.11.2"
+pymongo = { "version" = "^3.11.2", optional = true }
+sentry-sdk = { "version" = "^0.19.5", extras = ["flask"], optional = true }
 # Another weird dependency resolution issue
 jaxlib = "0.1.57"
 
@@ -75,6 +76,8 @@ cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 plus = ["bio-embeddings-plus"]
 bepler = ["bio-embeddings-bepler"]
 all = ["allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler"]
+# User don't need those, but we need it to run the tests
+webserver = ["pymongo", "sentry-sdk"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"

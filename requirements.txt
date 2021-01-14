@@ -71,7 +71,7 @@ numpydoc==1.1.0; python_version >= "3.5" and python_full_version >= "3.6.1"
 opt-einsum==3.3.0; python_version >= "3.6"
 optuna==2.4.0; python_version >= "3.6"
 overrides==3.1.0; python_full_version >= "3.6.1"
-packaging==20.8; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+packaging==20.8; python_version >= "3.6" and python_full_version >= "3.6.1" and (python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5") and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6")
 pandas==1.1.5; python_full_version >= "3.6.1"
 parsimonious==0.8.1; python_full_version >= "3.6.1"
 pbr==5.5.1; python_version >= "3.6"
@@ -107,6 +107,7 @@ sacremoses==0.0.43; python_full_version >= "3.6.0"
 scikit-learn==0.22.2.post1; python_version >= "3.5"
 scipy==1.5.4; python_version >= "3.6"
 sentencepiece==0.1.91; python_full_version >= "3.6.1"
+sentry-sdk==0.19.5
 six==1.15.0; python_full_version >= "3.6.1" and python_version >= "3.6" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0") and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6")
 smart-open==4.1.0; python_version >= "3.6"
 snowballstemmer==2.0.0; python_version >= "3.5" and python_full_version >= "3.6.1"
