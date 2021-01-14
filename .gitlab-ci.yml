@@ -24,7 +24,7 @@ stages:
     - virtualenv .venv
     - .venv/bin/pip install --upgrade pip
     - poetry config virtualenvs.in-project true
-    - poetry install -E all
+    - poetry install -E all -E webserver
 
 .test-template: &test
   <<: *install-deps

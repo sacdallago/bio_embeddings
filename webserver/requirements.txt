@@ -10,3 +10,4 @@ pymongo~=3.11.0
 ruamel.yaml<0.17.0,>=0.16.10
 pyyaml<6.0.0,>=5.3.1
 scikit-learn<0.23.0,>=0.22.2.post1
+sentry-sdk[flask]<0.20.0,>=0.19.5

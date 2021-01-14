@@ -143,6 +143,6 @@ examples/docker/output
 notebooks/*.h5
 notebooks/*.csv
 evotuning.log
-examples/*/simple
-docs/_build
+webserver/konsti
+examples/*/simpledocs/_build
 docs/docs-branch
