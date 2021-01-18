@@ -153,21 +153,14 @@
 <span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">EmbedderInterface</span>
 
 
-<div class="viewcode-block" id="ESMEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESMEmbedder</span><span class="p">(</span><span class="n">EmbedderInterface</span><span class="p">):</span>
-    <span class="sd">"""ESM-1 Embedder (Note: This is not ESM-1b)</span>
-
-<span class="sd">    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</span>
-
-<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from</span>
-<span class="sd">    scaling unsupervised learning to 250 million protein sequences."</span>
-<span class="sd">    bioRxiv (2019): 622803. https://doi.org/10.1101/622803</span>
-<span class="sd">    """</span>
-
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm"</span>
+<span class="k">class</span> <span class="nc">ESMEmbedderBase</span><span class="p">(</span><span class="n">EmbedderInterface</span><span class="p">):</span>
+    <span class="c1"># The only thing we need to overwrite is the name and _picked_layer</span>
     <span class="n">embedding_dimension</span> <span class="o">=</span> <span class="mi">1280</span>
-    <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Following ESM, we only consider layer 34</span>
+    <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Following ESM, we only consider layer 34 (ESM) or 33 (ESM1b)</span>
 
     <span class="n">_necessary_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"model_file"</span><span class="p">]</span>
+
+    <span class="n">_picked_layer</span><span class="p">:</span> <span class="nb">int</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -177,27 +170,57 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_batch_converter</span> <span class="o">=</span> <span class="n">alphabet</span><span class="o">.</span><span class="n">get_batch_converter</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ESMEmbedder.embed"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder.embed">[docs]</a>    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
         <span class="p">[</span><span class="n">embedding</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_batch</span><span class="p">([</span><span class="n">sequence</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">embedding</span></div>
+        <span class="k">return</span> <span class="n">embedding</span>
 
-<div class="viewcode-block" id="ESMEmbedder.embed_batch"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder.embed_batch">[docs]</a>    <span class="k">def</span> <span class="nf">embed_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">"""See https://github.com/facebookresearch/esm/blob/master/README.rst#quickstart"""</span>
+    <span class="k">def</span> <span class="nf">embed_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">"""https://github.com/facebookresearch/esm/blob/dfa524df54f91ef45b3919a00aaa9c33f3356085/README.md#quick-start-"""</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch</span><span class="p">)]</span>
         <span class="n">batch_labels</span><span class="p">,</span> <span class="n">batch_strs</span><span class="p">,</span> <span class="n">batch_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batch_converter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">(</span><span class="n">batch_tokens</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">),</span> <span class="n">repr_layers</span><span class="o">=</span><span class="p">[</span><span class="mi">34</span><span class="p">])</span>
-        <span class="n">token_embeddings</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"representations"</span><span class="p">][</span><span class="mi">34</span><span class="p">]</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">(</span>
+                <span class="n">batch_tokens</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">),</span> <span class="n">repr_layers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_picked_layer</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="n">token_embeddings</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"representations"</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_picked_layer</span><span class="p">]</span>
 
         <span class="c1"># Generate per-sequence embeddings via averaging</span>
         <span class="c1"># NOTE: token 0 is always a beginning-of-sequence token, so the first residue is token 1.</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">token_embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></div>
+            <span class="k">yield</span> <span class="n">token_embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ESMEmbedder.reduce_per_protein"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder.reduce_per_protein">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reduce_per_protein</span><span class="p">(</span><span class="n">embedding</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">embedding</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">embedding</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ESMEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESMEmbedder</span><span class="p">(</span><span class="n">ESMEmbedderBase</span><span class="p">):</span>
+    <span class="sd">"""ESM Embedder (Note: This is not ESM-1b)</span>
+
+<span class="sd">    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</span>
+
+<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from</span>
+<span class="sd">    scaling unsupervised learning to 250 million protein sequences."</span>
+<span class="sd">    bioRxiv (2019): 622803. https://doi.org/10.1101/622803</span>
+<span class="sd">    """</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm"</span>
+    <span class="n">_picked_layer</span> <span class="o">=</span> <span class="mi">34</span></div>
+
+
+<div class="viewcode-block" id="ESM1bEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESM1bEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESM1bEmbedder</span><span class="p">(</span><span class="n">ESMEmbedderBase</span><span class="p">):</span>
+    <span class="sd">"""ESM-1b Embedder (Note: This is not the original ESM)</span>
+
+<span class="sd">    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</span>
+
+<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from</span>
+<span class="sd">    scaling unsupervised learning to 250 million protein sequences."</span>
+<span class="sd">    bioRxiv (2019): 622803. https://doi.org/10.1101/622803</span>
+<span class="sd">    """</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm1b"</span>
+    <span class="n">_picked_layer</span> <span class="o">=</span> <span class="mi">33</span></div>
 </pre></div>
       </article>
       <footer>

@@ -261,56 +261,30 @@ representations by mutual information maximization.” bioRxiv (2020).
 </dd></dl>
 </dd></dl>
 <dl class="py class">
-<dt id="bio_embeddings.embed.ESMEmbedder">
-<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ESMEmbedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder" title="Permalink to this definition">¶</a></dt>
-<dd><p>ESM-1 Embedder (Note: This is not ESM-1b)</p>
+<dt id="bio_embeddings.embed.ESM1bEmbedder">
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ESM1bEmbedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESM1bEmbedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESM1bEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>ESM-1b Embedder (Note: This is not the original ESM)</p>
 <p>Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</p>
 <p>Rives, Alexander, et al. “Biological structure and function emerge from
 scaling unsupervised learning to 250 million protein sequences.”
 bioRxiv (2019): 622803. <a class="reference external" href="https://doi.org/10.1101/622803">https://doi.org/10.1101/622803</a></p>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ESMEmbedder.embed">
-<code class="sig-name descname">embed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder.embed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.embed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns embedding for one sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An embedding of the sequence.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ESMEmbedder.embed_batch">
-<code class="sig-name descname">embed_batch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">batch</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em><span class="sig-paren">)</span> → Generator<span class="p">[</span>numpy.ndarray<span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">]</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder.embed_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.embed_batch" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference external" href="https://github.com/facebookresearch/esm/blob/master/README.rst#quickstart">https://github.com/facebookresearch/esm/blob/master/README.rst#quickstart</a></p>
-</dd></dl>
 <dl class="py attribute">
-<dt id="bio_embeddings.embed.ESMEmbedder.embedding_dimension">
-<code class="sig-name descname">embedding_dimension</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1280</em><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
+<dt id="bio_embeddings.embed.ESM1bEmbedder.name">
+<code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'esm1b'</em><a class="headerlink" href="#bio_embeddings.embed.ESM1bEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.ESMEmbedder">
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ESMEmbedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>ESM Embedder (Note: This is not ESM-1b)</p>
+<p>Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</p>
+<p>Rives, Alexander, et al. “Biological structure and function emerge from
+scaling unsupervised learning to 250 million protein sequences.”
+bioRxiv (2019): 622803. <a class="reference external" href="https://doi.org/10.1101/622803">https://doi.org/10.1101/622803</a></p>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ESMEmbedder.name">
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'esm'</em><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="py attribute">
-<dt id="bio_embeddings.embed.ESMEmbedder.number_of_layers">
-<code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1</em><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ESMEmbedder.reduce_per_protein">
-<em class="property">static </em><code class="sig-name descname">reduce_per_protein</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedding</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder.reduce_per_protein"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
-<dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>embedding</strong> – the embedding</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
-</dd>
-</dl>
-</dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt id="bio_embeddings.embed.EmbedderInterface">
