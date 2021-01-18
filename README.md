@@ -129,7 +129,7 @@ While we are working on a proper publication, if you are already using this tool
   - [ ] Glove
   - [ ] Word2Vec
   - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-  - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+  - [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
   - [x] PLUS (https://github.com/mswzeus/PLUS/)
   - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 - project:
@@ -169,7 +169,7 @@ While we are working on a proper publication, if you are already using this tool
 - [x] Glove
 - [x] Word2Vec
 - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-- [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+- [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
 - [x] PLUS (https://github.com/mswzeus/PLUS/)
 - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>
