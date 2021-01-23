@@ -8,9 +8,11 @@ from pathlib import Path
 from typing import Union
 
 import ruamel.yaml as yaml
-from ruamel.yaml.parser import ParserError
+from ruamel import yaml as yaml
+from ruamel.yaml import YAMLError
 from ruamel.yaml.comments import CommentedBase
 
+from bio_embeddings.utilities import InvalidParameterError
 from bio_embeddings.utilities.exceptions import InvalidParameterError
 
 
@@ -36,11 +38,11 @@ def parse_config(config_str: str, preserve_order: bool = True) -> dict:
             return yaml.load(config_str, Loader=yaml.RoundTripLoader)
         else:
             return yaml.safe_load(config_str)
-    except ParserError as e:
+    except YAMLError as e:
         raise InvalidParameterError(
-            "Could not parse input configuration. "
+            f"Could not parse configuration file at {config_str} as yaml. "
             "Formatting mistake in config file? "
-            "See ParserError above for details."
+            "See Error above for details."
         ) from e
 
 
@@ -52,8 +54,18 @@ def read_config_file(config_path: Union[str, Path], preserve_order: bool = True)
     :param preserve_order:
     :return:
     """
-    with open(config_path, "r") as f:
-        return parse_config(f.read(), preserve_order)
+    with open(config_path, "r") as fp:
+        try:
+            if preserve_order:
+                return yaml.load(fp, Loader=yaml.RoundTripLoader)
+            else:
+                return yaml.safe_load(fp)
+        except YAMLError as e:
+            raise InvalidParameterError(
+                f"Could not parse configuration file at '{config_path}' as yaml. "
+                "Formatting mistake in config file? "
+                "See Error above for details."
+            ) from e
 
 
 def write_config_file(out_filename: str, config: dict) -> None:

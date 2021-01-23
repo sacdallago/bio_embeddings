@@ -13,7 +13,7 @@ from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
-    check_required, MD5ClashException
+    check_required, MD5ClashException, InvalidParameterError
 from bio_embeddings.utilities.config import read_config_file, write_config_file
 from bio_embeddings.utilities.filemanagers import FileManagerInterface
 from bio_embeddings.utilities.remote_file_retriever import TqdmUpTo
@@ -32,7 +32,7 @@ _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
 
 
-def _valid_file(file_path):
+def _validate_file(file_path: str):
     """
     Verify if a file exists and is not empty.
     Parameters
@@ -46,10 +46,10 @@ def _valid_file(file_path):
         False otherwise.
     """
     try:
-        return os.stat(file_path).st_size > 0
-    except (OSError, TypeError):
-        # catch TypeError for nonsense paths, e.g. None
-        return False
+        if os.stat(file_path).st_size == 0:
+            raise InvalidParameterError(f"The file at '{file_path}' is empty")
+    except (OSError, TypeError) as e:
+        raise InvalidParameterError(f"The configuration file at '{file_path}' does not exist") from e
 
 
 def _process_fasta_file(**kwargs):
@@ -266,8 +266,7 @@ def execute_pipeline_from_config(config: Dict,
 
 
 def parse_config_file_and_execute_run(config_file_path: str, **kwargs):
-    if not _valid_file(config_file_path):
-        raise Exception("No config or invalid config was passed.")
+    _validate_file(config_file_path)
 
     # read configuration and execute
     config = read_config_file(config_file_path)
