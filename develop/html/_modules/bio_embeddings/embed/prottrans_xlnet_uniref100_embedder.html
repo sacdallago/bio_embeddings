@@ -167,6 +167,7 @@
 <span class="sd">    Code Through Self-Supervised Deep Learning and High Performance Computing."</span>
 <span class="sd">    arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</span>
 <span class="sd">    """</span>
+
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"prottrans_xlnet_uniref100"</span>
     <span class="n">embedding_dimension</span> <span class="o">=</span> <span class="mi">1024</span>
     <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>
@@ -188,8 +189,8 @@
         <span class="c1"># 512 is from https://github.com/agemagician/ProtTrans/blob/master/Embedding/PyTorch/Advanced/ProtXLNet.ipynb</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">XLNetModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_directory</span><span class="p">,</span> <span class="n">mem_len</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -211,7 +212,7 @@
         <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[UZOBX]"</span><span class="p">,</span> <span class="s2">"&lt;unk&gt;"</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
 
         <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">batch_encode_plus</span><span class="p">(</span>
-            <span class="n">batch</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad_to_max_length</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">batch</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">"longest"</span>
         <span class="p">)</span>
 
         <span class="n">tokenized_sequences</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -219,7 +220,10 @@
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="n">embeddings</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">(</span>
-                <span class="n">input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span> <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span> <span class="n">mems</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span>
+                <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+                <span class="n">mems</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">return_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="n">embeddings</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -227,9 +231,11 @@
         <span class="k">for</span> <span class="n">seq_num</span><span class="p">,</span> <span class="n">seq_len</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)),</span> <span class="n">seq_lens</span><span class="p">):</span>
             <span class="n">attention_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">attention_mask</span><span class="p">[</span><span class="n">seq_num</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
             <span class="n">padded_seq_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">attention_mask</span><span class="p">[</span><span class="n">seq_num</span><span class="p">])</span>
-            <span class="n">embedding</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">seq_num</span><span class="p">][</span><span class="n">padded_seq_len</span> <span class="o">-</span> <span class="n">attention_len</span><span class="p">:</span><span class="n">padded_seq_len</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">embedding</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">seq_num</span><span class="p">][</span>
+                <span class="n">padded_seq_len</span> <span class="o">-</span> <span class="n">attention_len</span> <span class="p">:</span> <span class="n">padded_seq_len</span> <span class="o">-</span> <span class="mi">2</span>
+            <span class="p">]</span>
             <span class="k">assert</span> <span class="p">(</span>
-                    <span class="n">seq_len</span> <span class="o">==</span> <span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">seq_len</span> <span class="o">==</span> <span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">),</span> <span class="sa">f</span><span class="s2">"Sequence length mismatch: </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">yield</span> <span class="n">embedding</span></div>
 
