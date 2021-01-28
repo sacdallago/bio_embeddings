@@ -1,12 +1,11 @@
 import logging
 import re
 from itertools import zip_longest
-from pathlib import Path
-from typing import List, Generator
+from typing import List, Generator, Iterable, Optional
 
 import torch
 from numpy import ndarray
-from transformers import T5Tokenizer, T5Model
+from transformers import T5Tokenizer, T5Model, T5EncoderModel
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 
@@ -19,7 +18,7 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
     Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
     """
 
-    _model: T5Model
+    _model: T5EncoderModel
     _decoder: bool = False
     name = "prottrans_t5_bfd"
     embedding_dimension = 1024
@@ -41,12 +40,14 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
         self._decoder = self._options.get("decoder", False)
 
         # make model
-        self._model = T5Model.from_pretrained(self._model_directory)
-        self._model = self._model.eval().to(self._device)
+        if self._decoder:
+            self._model = T5EncoderModel.from_pretrained(self._model_directory)
+        else:
+            self._model = T5Model.from_pretrained(self._model_directory)
+        self._model = self._model.to(self._device).eval()
         self._model_fallback = None
-        self._tokenizer = T5Tokenizer(
-            str(Path(self._model_directory).joinpath("spiece.model")),
-            do_lower_case=False,
+        self._tokenizer = T5Tokenizer.from_pretrained(
+            self._model_directory, do_lower_case=False
         )
 
     def _get_fallback_model(self) -> T5Model:
@@ -64,8 +65,11 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
         # transformers needs spaces between the amino acids
         batch = [" ".join(list(seq)) for seq in batch]
 
+        if not batch:
+            return
+
         ids = self._tokenizer.batch_encode_plus(
-            batch, add_special_tokens=True, pad_to_max_length=True
+            batch, add_special_tokens=True, padding="longest"
         )
 
         tokenized_sequences = torch.tensor(ids["input_ids"]).to(model.device)
@@ -92,6 +96,16 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
             ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
 
             yield embedding
+
+    def embed_many(
+        self, sequences: Iterable[str], batch_size: Optional[int] = None
+    ) -> Generator[ndarray, None, None]:
+        if batch_size is not None:
+            raise RuntimeError(
+                "There is a bug in batching T5, so you currently must set batch_size to `None` for T5"
+            )
+
+        return super().embed_many(sequences, None)
 
     @staticmethod
     def reduce_per_protein(embedding):
