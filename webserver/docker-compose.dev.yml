@@ -52,6 +52,8 @@ services:
   mongo:
     image: mongo:4
     container_name: mongo
+    ports:
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -62,6 +64,8 @@ services:
     image: rabbitmq:3-alpine
     hostname: bio_embeddings_host
     container_name: rabbitmq
+    ports:
+      - 5672:5672
     networks:
       - bio_embeddings
 
