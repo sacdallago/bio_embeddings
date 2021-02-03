@@ -50,16 +50,16 @@ pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embe
 
 ### Docker
 
-We provide a docker image at `rostlab/bio_embeddings`. Simple usage example:
+We provide a docker image at `ghcr.io/bioembeddings/bio_embeddings`. Simple usage example:
 
 ```shell_script
 docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
     -u $(id -u ${USER}):$(id -g ${USER}) \
-    rostlab/bio_embeddings /mnt/config.yml
+    ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 ```
 
-See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
+See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. You can also use `ghcr.io/bioembeddings/bio_embeddings:latest` which is built from the latest commit.
 
 ### Installation notes:
 
