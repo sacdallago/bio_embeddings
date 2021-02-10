@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.1.5"
+version = "0.1.6"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>", "Konstantin Schuetze <schuetze@in.tum.de>"]
 maintainers = ["Rostlab <admin@rostlab.org>"]

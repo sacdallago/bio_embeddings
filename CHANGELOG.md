@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.6
+
+ * Published the ghcr.io/bioembeddings/bio_embeddings docker image
+
 ## v0.1.5
 
  * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)

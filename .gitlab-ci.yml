@@ -95,6 +95,12 @@ docker-worker-develop:
   script:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/webserver/Dockerfile.worker --destination ghcr.io/bioembeddings/worker:${CI_COMMIT_TAG:-latest}
 
+docker-bio_embeddings-develop:
+  <<: *setup-kaniko
+  stage: deploy
+  script:
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination ghcr.io/bioembeddings/bio_embeddings:${CI_COMMIT_TAG:-latest}
+
 release-to-pypi:
   stage: deploy
   rules:
