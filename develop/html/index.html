@@ -198,14 +198,14 @@
 </div>
 <div class="section" id="docker">
 <h3>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
-<p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">rostlab/bio_embeddings</span></code>. Simple usage example:</p>
+<p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings</span></code>. Simple usage example:</p>
 <div class="highlight-shell_script notranslate"><div class="highlight"><pre><span></span>docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
     -u $(id -u ${USER}):$(id -g ${USER}) \
-    rostlab/bio_embeddings /mnt/config.yml
+    ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 </pre></div>
 </div>
-<p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. We currently have published <code class="docutils literal notranslate"><span class="pre">rostlab/bio_embeddings:develop</span></code>. For our next stable release, we will publish tags for all releases and a <code class="docutils literal notranslate"><span class="pre">latest</span></code> tag pointing to the latest release.</p>
+<p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. You can also use <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings:latest</span></code> which is built from the latest commit.</p>
 </div>
 <div class="section" id="installation-notes">
 <h3>Installation notes:<a class="headerlink" href="#installation-notes" title="Permalink to this headline">¶</a></h3>
