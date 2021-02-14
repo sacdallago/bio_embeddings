@@ -1,10 +1,16 @@
+import re
 from pathlib import Path
 
 import importlib_metadata
+import pytest
 import toml
 from packaging import version
 
-from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
+from bio_embeddings.utilities import InvalidParameterError
+from bio_embeddings.utilities.pipeline import (
+    execute_pipeline_from_config,
+    parse_config_file_and_execute_run,
+)
 
 
 def test_pipeline_global(tmp_path):
@@ -39,3 +45,22 @@ def test_pipeline_global(tmp_path):
     ]
 
     assert sorted(expected_files) == sorted(path.name for path in prefix.iterdir())
+
+
+def test_no_config_file():
+    with pytest.raises(
+        InvalidParameterError,
+        match="The configuration file at '/no/such/path' does not exist",
+    ):
+        parse_config_file_and_execute_run("/no/such/path")
+
+
+def test_invalid_config_file():
+    with pytest.raises(
+        InvalidParameterError,
+        match=re.escape(
+            f"Could not parse configuration file at '{__file__}' as yaml. "
+            f"Formatting mistake in config file? See Error above for details."
+        ),
+    ):
+        parse_config_file_and_execute_run(__file__)
