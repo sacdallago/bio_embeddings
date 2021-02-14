@@ -21,7 +21,7 @@ def create_collection(self, name, **kwargs):
 def app(monkeypatch):
     monkeypatch.setenv("MODEL_DIRECTORY", "")
     # Create an in-memory broker so we don't need a running celery
-    monkeypatch.setenv("CELERY_BROKER_URL", "memory://localhost/")
+    monkeypatch.setenv("CELERY_BROKER_URL", "memory://")
     # Those will be used in webserver.database
     mongomock.gridfs.enable_gridfs_integration()
     monkeypatch.setattr(pymongo, "MongoClient", mongomock.MongoClient)
@@ -33,6 +33,10 @@ def app(monkeypatch):
     return app
 
 
-def test_app(client, celery_worker):
+def test_app(client, celery_app, celery_worker):
     """Simple 'Does this even start?' test"""
-    assert client.get(url_for("index")).status_code == 200
+    response = client.get(url_for("index"))
+
+    # TODO: Make this work
+    assert "Pipeline jobs are currently inactive." in response.data.decode()
+    assert response.status_code == 200
