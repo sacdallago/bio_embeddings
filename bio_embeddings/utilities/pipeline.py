@@ -1,12 +1,16 @@
 import logging
 import os
 import string
+import sys
+import traceback
+import urllib.parse
 from copy import deepcopy
 from datetime import datetime
 from typing import Dict, Callable, Optional, Any
 from urllib import request
 
 import importlib_metadata
+import torch
 from importlib_metadata import PackageNotFoundError
 
 from bio_embeddings.embed.pipeline import run as run_embed
@@ -30,6 +34,25 @@ _STAGES = {
 
 _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
+
+_ISSUE_URL = "https://github.com/sacdallago/bio_embeddings/issues/new"
+_ERROR_REPORTING_TEMPLATE = """## Metadata
+|key|value|
+|--|--|
+|**version**|{}|
+|**cuda**|{}|
+
+## Parameter
+|key|value|
+|--|--|
+{}
+
+## Traceback
+```
+{}```
+
+## More info
+"""
 
 
 def _valid_file(file_path):
@@ -197,6 +220,7 @@ def execute_pipeline_from_config(config: Dict,
 
     for stage_name in config:
         stage_parameters = config[stage_name]
+        original_stage_parameters = dict(**stage_parameters)
 
         check_required(
             stage_parameters,
@@ -234,7 +258,37 @@ def execute_pipeline_from_config(config: Dict,
         stage_in = file_manager.create_file(prefix, stage_name, _IN_CONFIG_NAME, extension='.yml')
         write_config_file(stage_in, stage_parameters)
 
-        stage_output_parameters = stage_runnable(**stage_parameters)
+        try:
+            stage_output_parameters = stage_runnable(**stage_parameters)
+        except Exception as e:
+            # Tell the user which stage failed and show an url to report an error on github
+            try:
+                version = importlib_metadata.version("bio_embeddings")
+            except PackageNotFoundError:
+                version = "unknown"
+
+            # Make a github flavored markdown table; the header is in the template
+            parameter_table = "\n".join(
+                f"{key}|{value}" for key, value in original_stage_parameters.items()
+            )
+            params = {
+                # https://stackoverflow.com/a/35498685/3549270
+                "title": f"Protocol {original_stage_parameters['protocol']}: {type(e).__name__}: {e}",
+                "body": _ERROR_REPORTING_TEMPLATE.format(
+                    version,
+                    torch.cuda.is_available(),
+                    parameter_table,
+                    traceback.format_exc(10),
+                ),
+            }
+            print(traceback.format_exc(), file=sys.stderr)
+            print(
+                f"Consider reporting this error at this url: {_ISSUE_URL}?{urllib.parse.urlencode(params)}\n\n"
+                f"Stage {stage_name} failed.",
+                file=sys.stderr,
+            )
+
+            sys.exit(1)
 
         # Register end time
         end_time = datetime.now().astimezone()
