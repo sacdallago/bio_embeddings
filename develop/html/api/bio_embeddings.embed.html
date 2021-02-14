@@ -463,6 +463,22 @@ arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
 </dd>
 </dl>
 </dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.embed_many">
+<code class="sig-name descname">embed_many</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> → Generator<span class="p">[</span>numpy.ndarray<span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">]</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_t5_bfd_embedder.html#ProtTransT5BFDEmbedder.embed_many"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.embed_many" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns embedding for one sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequences</strong> – List of proteins as AA strings</p></li>
+<li><p><strong>batch_size</strong> – For embedders that profit from batching, this is maximum number of AA per batch</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list object with embeddings of the sequences.</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.embedding_dimension">
 <code class="sig-name descname">embedding_dimension</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1024</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
