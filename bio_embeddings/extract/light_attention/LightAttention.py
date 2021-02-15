@@ -79,10 +79,9 @@ class LightAttentionAnnotationExtractor(object):
 
     def get_subcellular_location(self, raw_embedding: ndarray) -> BasicSubcellularLocalizationResult:
         '''
-        Args:
-            raw_embedding: np array of [sequence_length, 1024]
+        :param raw_embedding: np array of [sequence_length, 1024]
 
-        Returns: BasicSubcellularLocalizationResult with predictions for localization and membrane bound or not
+        :eturns: BasicSubcellularLocalizationResult with predictions for localization and membrane bound or not
         '''
         # turn to tensor and add singleton batch dimension
         embedding = torch.tensor(raw_embedding).to(self._device)[None, ...]
