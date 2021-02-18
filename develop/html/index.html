@@ -201,6 +201,7 @@
 <p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings</span></code>. Simple usage example:</p>
 <div class="highlight-shell_script notranslate"><div class="highlight"><pre><span></span>docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
+    -v bio_embeddings_weights_cache:/root/.cache/bio_embeddings \
     -u $(id -u ${USER}):$(id -g ${USER}) \
     ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 </pre></div>
