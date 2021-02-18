@@ -157,7 +157,7 @@ python-versions = "*"
 
 [[package]]
 name = "bio-embeddings-allennlp"
-version = "0.9.0"
+version = "0.9.1"
 description = "An open-source NLP research library, built on PyTorch."
 category = "main"
 optional = true
@@ -165,7 +165,7 @@ python-versions = ">=3.6.1"
 
 [package.dependencies]
 boto3 = "*"
-conllu = "1.3.1"
+conllu = "4.4"
 editdistance = "*"
 flaky = "*"
 flask = ">=1.0.2"
@@ -584,7 +584,7 @@ colorama = {version = "*", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "conllu"
-version = "1.3.1"
+version = "4.4"
 description = "CoNLL-U Parser parses a CoNLL-U formatted string into a nested python dictionary"
 category = "main"
 optional = true
@@ -3009,7 +3009,7 @@ webserver = ["pymongo", "sentry-sdk"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~ 3.6.6 || ^3.7 || ^3.8"
-content-hash = "3b0c5e4a83f564f72a8d86eeea155ee660aaf2974342d12d6eb613e9740e6201"
+content-hash = "dadc4f1f81f54529586bf9e87acb2608383f7a3fcc6fe384f83656e3326e5666"
 
 [metadata.files]
 absl-py = [
@@ -3088,7 +3088,8 @@ billiard = [
     {file = "billiard-3.6.3.0.tar.gz", hash = "sha256:d91725ce6425f33a97dfa72fb6bfef0e47d4652acd98a032bd1a7fbf06d5fa6a"},
 ]
 bio-embeddings-allennlp = [
-    {file = "bio_embeddings_allennlp-0.9.0-py3-none-any.whl", hash = "sha256:3668fa8068cdab901daa5ef888e62826392339818105db468ffdc6e2f7cfe1e7"},
+    {file = "bio-embeddings-allennlp-0.9.1.tar.gz", hash = "sha256:fe17d654d4d97ef01eb7f4e59c1e8a06b40e3b8896c9a05b438e493a858dde33"},
+    {file = "bio_embeddings_allennlp-0.9.1-py3-none-any.whl", hash = "sha256:c8ed89afdb18c861839181315cbd14b60e4c9802efdf5e615c45b56629ba4768"},
 ]
 bio-embeddings-bepler = [
     {file = "bio_embeddings_bepler-0.0.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:bf5f0c742eb0db24d0a30eb581d81737372737046f781ce790bef95bd822390a"},
@@ -3253,8 +3254,8 @@ colorlog = [
     {file = "colorlog-4.7.2.tar.gz", hash = "sha256:18d05b616438a75762d7d214b9ec3b05d274466c9f3ddd92807e755840c88251"},
 ]
 conllu = [
-    {file = "conllu-1.3.1-py2.py3-none-any.whl", hash = "sha256:2f5f169de1d3d629dbfb30c8f1077db3ce78f4d242d5bbdc9c773af703440add"},
-    {file = "conllu-1.3.1.tar.gz", hash = "sha256:40ae56d4b3c8ba0dc01a13f8eb716dde16fa4c885e1ce8be1018c9a115b337cc"},
+    {file = "conllu-4.4-py2.py3-none-any.whl", hash = "sha256:fe7e3547bc2beec8a0af8076cd564040dff7feec4ef20779a63a395e59e8116f"},
+    {file = "conllu-4.4.tar.gz", hash = "sha256:37b812ef3e30168232239d65564e257975c3399ec5d7fca9915a52b44bdc6553"},
 ]
 cycler = [
     {file = "cycler-0.10.0-py2.py3-none-any.whl", hash = "sha256:1d8a5ae1ff6c5cf9b93e8811e581232ad8920aeec647c37316ceac982b08cb2d"},

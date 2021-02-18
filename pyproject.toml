@@ -37,7 +37,7 @@ bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
 bio-embeddings-tape-proteins = { version = "0.4", optional = true }
 bio-embeddings-plus = { version = "0.1.0 ", optional = true }
 bio-embeddings-bepler = { version = "0.0.1", optional = true }
-bio-embeddings-allennlp = { version = "0.9.0", optional = true }
+bio-embeddings-allennlp = { version = "0.9.1", optional = true }
 
 numpy = "^1.18.3"
 gensim = "^3.8.2"
