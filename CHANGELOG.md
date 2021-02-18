@@ -2,6 +2,7 @@
 
 ## v0.1.6
 
+ * Updated to pytorch 1.7
  * Published the ghcr.io/bioembeddings/bio_embeddings docker image
 
 ## v0.1.5
