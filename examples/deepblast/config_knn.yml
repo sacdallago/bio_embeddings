@@ -1,0 +1,24 @@
+# Align those most similar in embedding space (supposed homologs)
+global:
+  sequences_file: mini-cath.fasta
+  prefix: deepblast_knn
+  simple_remapping: true
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  discard_per_amino_acid_embeddings: True
+  embeddings_transformer_function: "lambda x: x[1].mean(0)" # LSTM 1
+transferred_annotations_cosine:
+  type: extract
+  protocol: unsupervised
+  depends_on: seqvec_embeddings
+  reduced_embeddings_file: deepblast_knn/seqvec_embeddings/transformed_embeddings_file.h5
+  reference_embeddings_file: cath-db.h5
+  reference_annotations_file: cath-db.csv
+  k_nearest_neighbours: 2
+  metric: cosine
+deepblast_align_with_knn:
+  type: align
+  protocol: deepblast
+  depends_on: transferred_annotations_cosine
+  reference_fasta_file: cath-db.fasta

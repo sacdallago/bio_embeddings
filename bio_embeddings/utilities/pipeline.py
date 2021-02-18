@@ -29,8 +29,26 @@ _STAGES = {
     "embed": run_embed,
     "project": run_project,
     "visualize": run_visualize,
-    "extract": run_extract
+    "extract": run_extract,
 }
+
+try:
+    # noinspection PyUnresolvedReferences
+    from bio_embeddings.align.pipeline import run as run_align
+
+    _STAGES["align"] = run_align
+except ImportError as e:
+    if not str(e).startswith("No module named 'deepblast"):
+        raise
+    else:
+        def error(**kwargs):
+            raise RuntimeError(
+                "The extra for the deepblast protocol is missing. "
+                "See https://docs.bioembeddings.com/#installation on how to install all extras"
+            )
+
+
+        _STAGES["align"] = error
 
 _IN_CONFIG_NAME = "input_parameters_file"
 _OUT_CONFIG_NAME = "ouput_parameters_file"
