@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Notebooks" href="notebooks/README.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Pipeline Reference" href="parameter_blueprints.html" />
 
     <meta name="generator" content="sphinx-3.4.3, furo 2020.12.30.beta24"/>
         <title>Home - bio_embeddings</title>
@@ -120,6 +120,7 @@
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_blueprints.html">Pipeline Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/README.html">Notebooks</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
@@ -148,6 +149,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_blueprints.html">Pipeline Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/README.html">Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API</a></li>
 </ul>
@@ -196,14 +198,14 @@
 </div>
 <div class="section" id="docker">
 <h3>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
-<p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">rostlab/bio_embeddings</span></code>. Simple usage example:</p>
+<p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings</span></code>. Simple usage example:</p>
 <div class="highlight-shell_script notranslate"><div class="highlight"><pre><span></span>docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
     -u $(id -u ${USER}):$(id -g ${USER}) \
-    rostlab/bio_embeddings /mnt/config.yml
+    ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 </pre></div>
 </div>
-<p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. We currently have published <code class="docutils literal notranslate"><span class="pre">rostlab/bio_embeddings:develop</span></code>. For our next stable release, we will publish tags for all releases and a <code class="docutils literal notranslate"><span class="pre">latest</span></code> tag pointing to the latest release.</p>
+<p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. You can also use <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings:latest</span></code> which is built from the latest commit.</p>
 </div>
 <div class="section" id="installation-notes">
 <h3>Installation notes:<a class="headerlink" href="#installation-notes" title="Permalink to this headline">¶</a></h3>
@@ -271,7 +273,7 @@
 <li><p>[ ] Glove</p></li>
 <li><p>[ ] Word2Vec</p></li>
 <li><p>[x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
-<li><p>[x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>[x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
 <li><p>[x] PLUS (https://github.com/mswzeus/PLUS/)</p></li>
 <li><p>[x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
 </ul>
@@ -328,7 +330,7 @@
 <li><p>[x] Glove</p></li>
 <li><p>[x] Word2Vec</p></li>
 <li><p>[x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
-<li><p>[x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>[x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
 <li><p>[x] PLUS (https://github.com/mswzeus/PLUS/)</p></li>
 <li><p>[x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
 </ul>
@@ -340,12 +342,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="notebooks/README.html">
+          <a class="next-page" href="parameter_blueprints.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Notebooks</div>
+                <div class="title">Pipeline Reference</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
