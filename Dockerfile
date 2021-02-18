@@ -17,6 +17,7 @@ RUN python3 -m venv .venv && \
     # Make sure poetry install the metadata for bio_embeddings
     mkdir bio_embeddings && \
     touch bio_embeddings/__init__.py && \
+    touch README.md && \
     python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
     python3 $HOME/.poetry/bin/poetry install --no-dev -E all
 

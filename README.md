@@ -55,6 +55,7 @@ We provide a docker image at `ghcr.io/bioembeddings/bio_embeddings`. Simple usag
 ```shell_script
 docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
+    -v bio_embeddings_weights_cache:/root/.cache/bio_embeddings \
     -u $(id -u ${USER}):$(id -g ${USER}) \
     ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 ```
