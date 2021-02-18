@@ -70,11 +70,17 @@ def embedder_test_impl(
         embedder = embedder_class(warmup_rounds=0, device=device)
     else:
         embedder = embedder_class(device=device)
+
+    if embedder_class == ProtTransT5BFDEmbedder:
+        batch_size = None
+    else:
+        batch_size = 100
+
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
     padded_sequence = "VLSXXXIEP"
     [protein, seqwence, padded] = embedder.embed_many(
-        ["PROTEIN", "SEQWENCE", padded_sequence], 100
+        ["PROTEIN", "SEQWENCE", padded_sequence], batch_size
     )
 
     # Check that the XXX has kept its length during embedding
