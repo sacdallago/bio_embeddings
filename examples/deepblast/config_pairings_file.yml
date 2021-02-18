@@ -1,0 +1,9 @@
+# Align specific sequence pairs from the sequence file
+global:
+  sequences_file: mini-cath.fasta
+  prefix: deepblast_pairings_file
+  simple_remapping: true
+deepblast_align_with_pairings_file:
+  type: align
+  protocol: deepblast
+  pairings_file: pairings.csv

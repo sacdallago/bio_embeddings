@@ -1,0 +1,6 @@
+,original_id,sequence_length,k_nn_1_identifier,k_nn_2_identifier,k_nn_3_identifier,k_nn_1_distance,k_nn_2_distance,k_nn_3_distance,k_nn_1_annotations,k_nn_2_annotations,k_nn_3_annotations,transferred_annotations
+12fe229c316d544bfb78c332f181a5b9,QHN70907.1,1584,P13102,Q9IH62,P19250,0.19005388,0.21573544,0.24646342,Little disorder,Little disorder,Little disorder,Little disorder
+203ffb5e1a092701900e4e8f67403604,,544,Q9IH62,P13102,P20239,0.13671923,0.1547072,0.21894854,Little disorder,Little disorder,Little disorder,Little disorder
+2b65768fc35be5fdcd498e96bcf4e1b6,SP|P12345,518,P13102,P04578,Q9IH62,0.15869904,0.18436193,0.18502027,Little disorder,Little disorder,Little disorder,Little disorder
+4669ce4fdfe00681727babb867f6ee3d,my_fav_protein,300,P04578,Q9IH62,P13102,0.19545728,0.19914341,0.21673733,Little disorder,Little disorder,Little disorder,Little disorder
+7e9600bd5f15318e04b890bb3237b3dd,CAA75637.1,184,P20239,P03315,Q9IH62,0.12779546,0.1286071,0.16563255,Little disorder,Little disorder,Little disorder,Little disorder
