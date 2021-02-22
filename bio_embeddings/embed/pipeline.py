@@ -265,6 +265,7 @@ ALL_PROTOCOLS = [
     "prottrans_albert_bfd",
     "prottrans_bert_bfd",
     "prottrans_t5_bfd",
+    "prottrans_t5_uniref50",
     "prottrans_xlnet_uniref100",
     "seqvec",
     "unirep",
@@ -282,6 +283,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "prottrans_bert_bfd": 6024,
     # There is an untracked bug found by MH in batching that prevents using batching with T5
     "prottrans_t5_bfd": None,
+    "prottrans_t5_uniref": None,
     "prottrans_xlnet_uniref100": 4000,
     "seqvec": 15000,
     "unirep": 10000,

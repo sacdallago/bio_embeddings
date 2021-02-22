@@ -33,6 +33,7 @@ from bio_embeddings.embed import (
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransT5BFDEmbedder,
+    ProtTransT5UniRef50Embedder,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
@@ -50,6 +51,12 @@ all_embedders = [
     ProtTransBertBFDEmbedder,
     pytest.param(
         ProtTransT5BFDEmbedder,
+        marks=pytest.mark.skipif(
+            os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
+        ),
+    ),
+    pytest.param(
+        ProtTransT5UniRef50Embedder,
         marks=pytest.mark.skipif(
             os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
         ),

@@ -1,3 +1,4 @@
+import abc
 import logging
 import re
 from itertools import zip_longest
@@ -12,15 +13,15 @@ from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 logger = logging.getLogger(__name__)
 
 
-class ProtTransT5BFDEmbedder(EmbedderWithFallback):
-    """Encoder of the ProtTrans T5 BFD model
+class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
+    """Encoder of the ProtTrans T5 model, both BFD and BFD finetuned on UniRef50. To embed please pick either
+    ProtTransT5BFDEmbedder or ProtTransT5UniRef50Embedder
 
     Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
     """
 
     _model: T5EncoderModel
     _decoder: bool = False
-    name = "prottrans_t5_bfd"
     embedding_dimension = 1024
     number_of_layers = 1
     necessary_directories = ["model_directory"]
@@ -114,3 +115,21 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
     def embed(self, sequence: str) -> ndarray:
         [embedding] = self.embed_batch([sequence])
         return embedding
+
+
+class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
+    """Encoder of the ProtTrans T5 model trained on BFD
+
+    Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
+    """
+
+    name = "prottrans_t5_bfd"
+
+
+class ProtTransT5UniRef50Embedder(ProtTransT5Embedder):
+    """Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50
+
+    Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
+    """
+
+    name = "prottrans_t5_uniref50"
