@@ -6,6 +6,7 @@ from webserver.endpoints import api
 from webserver.endpoints.annotations import ns as annotations_namespace
 from webserver.endpoints.embeddings import ns as embeddings_namespace
 from webserver.endpoints.pipeline import ns as pipeline_namespace
+from webserver.endpoints.status import ns as status_namespace
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
 
@@ -34,6 +35,7 @@ def create_app():
     api.add_namespace(pipeline_namespace)
     api.add_namespace(embeddings_namespace)
     api.add_namespace(annotations_namespace)
+    api.add_namespace(status_namespace)
 
     app.register_blueprint(blueprint)
 
