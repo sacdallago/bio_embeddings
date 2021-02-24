@@ -22,6 +22,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
     _model: T5EncoderModel
     _decoder: bool = False
+    _half_model: bool = False
     embedding_dimension = 1024
     number_of_layers = 1
     necessary_directories = ["model_directory"]
@@ -39,12 +40,16 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         # Should the need arise we can just split this class in to an encoder and a decoder subclass
         # by setting one subclass to _decoder=True and the other to _decoder=False
         self._decoder = self._options.get("decoder", False)
+        self._half_model = self._options.get("half_model", False)
 
         # make model
         if self._decoder:
             self._model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
             self._model = T5Model.from_pretrained(self._model_directory)
+        # Compute in half precision, saving us half the memory
+        if self._half_model:
+            self._model.half()
         self._model = self._model.to(self._device).eval()
         self._model_fallback = None
         self._tokenizer = T5Tokenizer.from_pretrained(
@@ -120,7 +125,8 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD
 
-    Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
+    Note that this model alone takes about 12GB. You can reduce this to 7GB by using the setting `half_model=True`,
+    which makes T5 compute in float16 mode.
     """
 
     name = "prottrans_t5_bfd"
@@ -129,7 +135,8 @@ class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
 class ProtTransT5UniRef50Embedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50
 
-    Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
+    Note that this model alone takes about 12GB. You can reduce this to 7GB by using the setting `half_model=True`,
+    which makes T5 compute in float16 mode.
     """
 
     name = "prottrans_t5_uniref50"

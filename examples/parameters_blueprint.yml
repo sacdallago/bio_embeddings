@@ -83,6 +83,10 @@ stage_1:
   ## This makes predictions based on the embeddings less exact.
   # half_precision: [true, *false]
 
+  ## For T5 only: Use the model in half precision mode (float16)
+  ## On the tested GPU (Quadro RTX 3000) this reduces memory usage from 11.7GB to 7GB
+  # half_model: [true, *false]
+
 stage_2:
   type: project
   # Required: which projection algorithm to use

@@ -22,6 +22,7 @@ from unittest import mock
 import numpy
 import pytest
 import torch
+from numpy import ndarray
 
 from bio_embeddings.embed import (
     BeplerEmbedder,
@@ -38,7 +39,8 @@ from bio_embeddings.embed import (
     SeqVecEmbedder,
     UniRepEmbedder,
 )
-from bio_embeddings.utilities import read_fasta
+from bio_embeddings.embed.pipeline import embed_and_write_batched
+from bio_embeddings.utilities import read_fasta, FileSystemFileManager
 from tests.shared import check_embedding
 
 all_embedders = [
@@ -214,3 +216,36 @@ def test_batching_t5(pytestconfig):
         assert not numpy.allclose(a, b) and numpy.allclose(
             a, b, rtol=1.0e-4, atol=1.0e-5
         )
+
+
+def test_warn_half_precision(pytestconfig, caplog, tmp_path: Path):
+    class Float16Embedder(EmbedderInterface):
+        name = "float16embedder"
+        embedding_dimension = 1024
+        number_of_layers = 1
+
+        def embed(self, sequence: str) -> ndarray:
+            return numpy.random.random((len(sequence), 1024)).astype(numpy.float16)
+
+        @staticmethod
+        def reduce_per_protein(embedding: ndarray) -> ndarray:
+            return embedding.sum(axis=0)
+
+    result_kwargs = {
+        "prefix": str(tmp_path),
+        "remapped_sequences_file": str(
+            pytestconfig.rootpath.joinpath("test-data/remapped_sequences_file.fasta")
+        ),
+        "mapping_file": str(
+            pytestconfig.rootpath.joinpath("test-data/mapping_file.csv")
+        ),
+    }
+    embed_and_write_batched(
+        Float16Embedder(),
+        FileSystemFileManager(),
+        result_kwargs=result_kwargs,
+    )
+
+    assert caplog.messages == [
+        "Converting float16embedder embeddings from float16 to float32 for storage, this is inefficient"
+    ]
