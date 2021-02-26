@@ -7,6 +7,7 @@ from copy import deepcopy
 from typing import Dict, Any
 
 from Bio import SeqIO
+from humanize import naturalsize
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
@@ -42,36 +43,36 @@ def _print_expected_file_sizes(
     total_number_of_proteins = len(mapping_file)
     total_aa = mapping_file['sequence_length'].sum()
 
-    embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
-    reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
+    embeddings_file_size = per_amino_acid_size_in_bytes * total_aa
+    reduced_embeddings_file_size = per_protein_size_in_bytes * total_number_of_proteins
 
-    required_space_in_MB = 0
+    required_space = 0
 
     if result_kwargs.get("reduce") is True:
         logger.info(f"The minimum expected size for the reduced_embedding_file is "
-                    f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
+                    f"{naturalsize(reduced_embeddings_file_size)}.")
 
-        required_space_in_MB += reduced_embeddings_file_size_in_MB
+        required_space += reduced_embeddings_file_size
 
     # TODO: calculate size of transformed embeddings?
     if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
-        logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
+        logger.info(f"The minimum expected size for the embedding_file is {naturalsize(embeddings_file_size)}.")
 
-        required_space_in_MB += embeddings_file_size_in_MB
+        required_space += embeddings_file_size
 
     _, _, available_space_in_bytes = shutil.disk_usage(result_kwargs.get('prefix'))
 
-    available_space_in_MB = available_space_in_bytes * pow(10, -6)
+    available_space = available_space_in_bytes
 
-    if available_space_in_MB < required_space_in_MB:
-        logger.warning(f"You are attempting to generate {required_space_in_MB:.3f}MB worth of embeddings, "
-                       f"but only {available_space_in_MB:.3f}MB are available at "
+    if available_space < required_space:
+        logger.warning(f"You are attempting to generate {naturalsize(required_space)} worth of embeddings, "
+                       f"but only {naturalsize(available_space)} are available at "
                        f"the prefix({result_kwargs.get('prefix')}). \n"
                        f"We suggest you stop execution NOW and double check you have enough free space available. "
                        f"Alternatively, try reducing the input FASTA file.")
     else:
-        logger.info(f"You are going to generate a total of {required_space_in_MB:.3f}MB of embeddings, and have "
-                    f"{available_space_in_MB:.3f}MB available at {result_kwargs.get('prefix')}.")
+        logger.info(f"You are going to generate a total of {naturalsize(required_space)} of embeddings, and have "
+                    f"{naturalsize(available_space)} available at {result_kwargs.get('prefix')}.")
 
 
 def _get_reduced_embeddings_file_context(

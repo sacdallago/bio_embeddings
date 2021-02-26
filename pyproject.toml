@@ -69,6 +69,7 @@ sentry-sdk = { "version" = "^0.19.5", extras = ["flask"], optional = true }
 jaxlib = "0.1.57"
 python-slugify = "^4.0.1"
 fsspec = { version = "0.8.5", optional = true }
+humanize = "^3.2.0"
 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
