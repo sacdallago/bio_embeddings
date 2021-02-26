@@ -26,7 +26,7 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
     number_of_layers = 1
     _model: XLNetModel
     _model_fallback: Optional[XLNetModel]
-    _necessary_directories = ["model_directory"]
+    necessary_directories = ["model_directory"]
 
     def __init__(self, **kwargs):
         """

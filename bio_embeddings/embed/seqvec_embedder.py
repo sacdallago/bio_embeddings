@@ -29,7 +29,7 @@ class SeqVecEmbedder(EmbedderWithFallback):
     _model: ElmoEmbedder
     # The fallback model running on the cpu, which will be initialized if needed
     _model_fallback: Optional[ElmoEmbedder] = None
-    _necessary_files = ["weights_file", "options_file"]
+    necessary_files = ["weights_file", "options_file"]
 
     def __init__(self, warmup_rounds: int = 4, **kwargs):
         """
