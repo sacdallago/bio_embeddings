@@ -103,6 +103,8 @@ pytest-flask = "^1.1.0"
 pytest-celery = "^0.0.0-alpha.1"
 flask-restx = "^0.2.0"
 packaging = "^20.8"
+hypothesis = "^6.3.4"
+hypothesis-bio = { git = "https://github.com/IQTLabs/hypothesis-bio", rev = "393f080772ae7aa7ca0358ce1a6753c0b69546e2" }
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"

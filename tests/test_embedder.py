@@ -38,6 +38,7 @@ from bio_embeddings.embed import (
     UniRepEmbedder,
 )
 from bio_embeddings.utilities import read_fasta
+from tests.shared import check_embedding
 
 all_embedders = [
     BeplerEmbedder,
@@ -83,22 +84,8 @@ def embedder_test_impl(
         ["PROTEIN", "SEQWENCE", padded_sequence], batch_size
     )
 
-    # Check that the XXX has kept its length during embedding
-    if embedder_class == SeqVecEmbedder:
-        assert padded.shape[1] == len(padded_sequence)
-    elif embedder_class == UniRepEmbedder:
-        # Not sure why this is one longer, but the jax-unirep tests check
-        # `len(sequence) + 1`, so it seems to be intended
-        assert padded.shape[0] == len(padded_sequence) + 1
-    elif embedder_class == CPCProtEmbedder:
-        # There is only a per-protein embedding for CPCProt
-        assert padded.shape == (512,)
-    else:
-        assert padded.shape[0] == len(padded_sequence)
-
-    # Check reduce_per_protein
-    # https://github.com/sacdallago/bio_embeddings/issues/85
-    assert embedder.reduce_per_protein(protein).shape == (embedder.embedding_dimension,)
+    # Checks that the XXX has kept its length during embedding
+    check_embedding(embedder, padded, padded_sequence)
 
     # Check with reference embeddings
     expected = numpy.load(str(expected_file))
