@@ -132,9 +132,9 @@ def deepblast(**kwargs) -> Dict[str, Any]:
         )
         result_kwargs["alignment_files"][query] = filename
 
-    unknown_queies = set(list(zip(*pairings))[0]) - set(query_by_id.keys())
-    if unknown_queies:
-        raise ValueError(f"Unknown query sequences: {unknown_queies}")
+    unknown_queries = set(list(zip(*pairings))[0]) - set(query_by_id.keys())
+    if unknown_queries:
+        raise ValueError(f"Unknown query sequences: {unknown_queries}")
 
     unknown_targets = set(list(zip(*pairings))[1]) - set(target_by_id.keys())
     if unknown_targets:
