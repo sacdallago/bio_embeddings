@@ -1008,6 +1008,55 @@ python-versions = ">=3.6"
 tests = ["freezegun", "pytest", "pytest-cov"]
 
 [[package]]
+name = "hypothesis"
+version = "6.4.0"
+description = "A library for property-based testing"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+attrs = ">=19.2.0"
+sortedcontainers = ">=2.1.0,<3.0.0"
+
+[package.extras]
+all = ["black (>=19.10b0)", "click (>=7.0)", "django (>=2.2)", "dpcontracts (>=0.4)", "lark-parser (>=0.6.5)", "libcst (>=0.3.16)", "numpy (>=1.9.0)", "pandas (>=0.25)", "pytest (>=4.6)", "python-dateutil (>=1.4)", "pytz (>=2014.1)", "redis (>=3.0.0)", "importlib-resources (>=3.3.0)", "importlib-metadata", "backports.zoneinfo (>=0.2.1)", "tzdata (>=2020.4)"]
+cli = ["click (>=7.0)", "black (>=19.10b0)"]
+codemods = ["libcst (>=0.3.16)"]
+dateutil = ["python-dateutil (>=1.4)"]
+django = ["pytz (>=2014.1)", "django (>=2.2)"]
+dpcontracts = ["dpcontracts (>=0.4)"]
+ghostwriter = ["black (>=19.10b0)"]
+lark = ["lark-parser (>=0.6.5)"]
+numpy = ["numpy (>=1.9.0)"]
+pandas = ["pandas (>=0.25)"]
+pytest = ["pytest (>=4.6)"]
+pytz = ["pytz (>=2014.1)"]
+redis = ["redis (>=3.0.0)"]
+zoneinfo = ["importlib-resources (>=3.3.0)", "backports.zoneinfo (>=0.2.1)", "tzdata (>=2020.4)"]
+
+[[package]]
+name = "hypothesis-bio"
+version = "0.1.0"
+description = "Top-level package for hypothesis-bio."
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+develop = false
+
+[package.dependencies]
+hypothesis = ">=4.0.0"
+
+[package.extras]
+testing = ["pytest (>=2.7.3)", "pytest-cov"]
+
+[package.source]
+type = "git"
+url = "https://github.com/IQTLabs/hypothesis-bio"
+reference = "393f080772ae7aa7ca0358ce1a6753c0b69546e2"
+resolved_reference = "393f080772ae7aa7ca0358ce1a6753c0b69546e2"
+
+[[package]]
 name = "idna"
 version = "2.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -2656,6 +2705,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "sortedcontainers"
+version = "2.3.0"
+description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "soupsieve"
 version = "2.1"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -3336,7 +3393,7 @@ webserver = ["pymongo", "sentry-sdk"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~ 3.6.6 || ^3.7 || ^3.8"
-content-hash = "9e5d29700426c63d5c1f431d825094f415e7f104135241c8dc16605dc7236940"
+content-hash = "ac573c6830e1f70ff3c3ec68939bcc27076f6eb6a74e7200e23c1b06a51fd1e1"
 
 [metadata.files]
 absl-py = [
@@ -3972,6 +4029,11 @@ humanize = [
     {file = "humanize-3.2.0-py3-none-any.whl", hash = "sha256:d47d80cd47c1511ed3e49ca5f10c82ed940ea020b45b49ab106ed77fa8bb9d22"},
     {file = "humanize-3.2.0.tar.gz", hash = "sha256:ab69004895689951b79f2ae4fdd6b8127ff0c180aff107856d5d98119a33f026"},
 ]
+hypothesis = [
+    {file = "hypothesis-6.4.0-py3-none-any.whl", hash = "sha256:89e3b3c4252f07d1135f67679ee94ace507155242868d56e24640b445046d182"},
+    {file = "hypothesis-6.4.0.tar.gz", hash = "sha256:c41aed6cd183f5fe3f54613b3fc86c8eccd0d1dd158474dd424133fc038b94a3"},
+]
+hypothesis-bio = []
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
@@ -5055,6 +5117,10 @@ smmap = [
 snowballstemmer = [
     {file = "snowballstemmer-2.1.0-py2.py3-none-any.whl", hash = "sha256:b51b447bea85f9968c13b650126a888aabd4cb4463fca868ec596826325dedc2"},
     {file = "snowballstemmer-2.1.0.tar.gz", hash = "sha256:e997baa4f2e9139951b6f4c631bad912dfd3c792467e2f03d7239464af90e914"},
+]
+sortedcontainers = [
+    {file = "sortedcontainers-2.3.0-py2.py3-none-any.whl", hash = "sha256:37257a32add0a3ee490bb170b599e93095eed89a55da91fa9f48753ea12fd73f"},
+    {file = "sortedcontainers-2.3.0.tar.gz", hash = "sha256:59cc937650cf60d677c16775597c89a960658a09cf7c1a668f86e1e4464b10a1"},
 ]
 soupsieve = [
     {file = "soupsieve-2.1-py3-none-any.whl", hash = "sha256:4bb21a6ee4707bf43b61230e80740e71bfe56e55d1f1f50924b087bb2975c851"},
