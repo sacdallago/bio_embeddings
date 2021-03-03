@@ -1,0 +1,9 @@
+global:
+  sequences_file: knn_reference.fasta
+  prefix: knn_reference_embedding
+  simple_remapping: true
+knn_reference_embed:
+  type: embed
+  protocol: seqvec
+  reduce: True
+  discard_per_amino_acid_embeddings: True

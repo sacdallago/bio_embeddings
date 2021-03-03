@@ -1,0 +1,15 @@
+global:
+  sequences_file: sequences.fasta
+  prefix: gopredsim
+seqvec_embeddings:
+  type: embed
+  protocol: seqvec
+  reduce: True
+  discard_per_amino_acid_embeddings: True
+goa_transfer:
+  type: extract
+  protocol: unsupervised
+  depends_on: seqvec_embeddings
+  reference_embeddings_file: knn_reference.h5
+  reference_annotations_file: annotations.csv
+  k_nearest_neighbours: 3
