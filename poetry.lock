@@ -997,6 +997,17 @@ numpy = ">=1.7"
 six = "*"
 
 [[package]]
+name = "humanize"
+version = "3.2.0"
+description = "Python humanize utilities"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+tests = ["freezegun", "pytest", "pytest-cov"]
+
+[[package]]
 name = "idna"
 version = "2.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -3325,7 +3336,7 @@ webserver = ["pymongo", "sentry-sdk"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~ 3.6.6 || ^3.7 || ^3.8"
-content-hash = "cb1c72571ee7286e2396e8d0de98a5cb97af6b2ace3a2b0296760e8149ece804"
+content-hash = "9e5d29700426c63d5c1f431d825094f415e7f104135241c8dc16605dc7236940"
 
 [metadata.files]
 absl-py = [
@@ -3956,6 +3967,10 @@ h5py = [
     {file = "h5py-2.10.0-cp38-cp38-win32.whl", hash = "sha256:6ef7ab1089e3ef53ca099038f3c0a94d03e3560e6aff0e9d6c64c55fb13fc681"},
     {file = "h5py-2.10.0-cp38-cp38-win_amd64.whl", hash = "sha256:769e141512b54dee14ec76ed354fcacfc7d97fea5a7646b709f7400cf1838630"},
     {file = "h5py-2.10.0.tar.gz", hash = "sha256:84412798925dc870ffd7107f045d7659e60f5d46d1c70c700375248bf6bf512d"},
+]
+humanize = [
+    {file = "humanize-3.2.0-py3-none-any.whl", hash = "sha256:d47d80cd47c1511ed3e49ca5f10c82ed940ea020b45b49ab106ed77fa8bb9d22"},
+    {file = "humanize-3.2.0.tar.gz", hash = "sha256:ab69004895689951b79f2ae4fdd6b8127ff0c180aff107856d5d98119a33f026"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
