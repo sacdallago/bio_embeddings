@@ -31,6 +31,9 @@ prottrans_albert_bfd:
 prottrans_t5_bfd:
   model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/prottrans_t5_bfd.zip"
 
+prottrans_t5_uniref50:
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/prottrans_t5_uniref50.zip"
+
 esm:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
 

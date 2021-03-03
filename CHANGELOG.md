@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+ * Added `prottrans_t5_uniref50`/`ProtTransT5UniRef50Embedder`. This version improves over T5 BFD by being finetuned on UniRef50.
+ * Added [DeepBLAST](https://github.com/flatironinstitute/deepblast) from [Protein Structural Alignments From Sequence](https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1) (see example/deepblast for an example)
+
 ## v0.1.6
 
  * Updated to pytorch 1.7

@@ -1,11 +1,10 @@
 import logging
 import shutil
-import h5py
-import numpy
-
 from copy import deepcopy
 from typing import Dict, Any
 
+import h5py
+import numpy
 from Bio import SeqIO
 from humanize import naturalsize
 from pandas import read_csv, DataFrame
@@ -157,7 +156,6 @@ def _get_transformed_embeddings_file_context(
 
 
 def _check_transform_embeddings_function(embedder: EmbedderInterface, result_kwargs: Dict[str, Any]):
-
     result_kwargs.setdefault("embeddings_transformer_function", None)
 
     if result_kwargs["embeddings_transformer_function"] is not None:
@@ -208,7 +206,7 @@ def embed_and_write_batched(
     # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
     # https://stackoverflow.com/a/29793294/3549270
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
-    mapping_file.index = mapping_file.index.astype('str')
+    mapping_file.index = mapping_file.index.astype("str")
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
@@ -233,9 +231,8 @@ def embed_and_write_batched(
         for sequence_id, original_id, embedding in zip(
             mapping_file.index,
             mapping_file["original_id"],
-            tqdm(embedding_generator, total=len(mapping_file))
+            tqdm(embedding_generator, total=len(mapping_file)),
         ):
-            # embedding: numpy.ndarray
             if half_precision:
                 embedding = embedding.astype(numpy.float16)
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
@@ -265,6 +262,7 @@ ALL_PROTOCOLS = [
     "prottrans_albert_bfd",
     "prottrans_bert_bfd",
     "prottrans_t5_bfd",
+    "prottrans_t5_uniref50",
     "prottrans_xlnet_uniref100",
     "seqvec",
     "unirep",
@@ -282,6 +280,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "prottrans_bert_bfd": 6024,
     # There is an untracked bug found by MH in batching that prevents using batching with T5
     "prottrans_t5_bfd": None,
+    "prottrans_t5_uniref50": None,
     "prottrans_xlnet_uniref100": 4000,
     "seqvec": 15000,
     "unirep": 10000,
@@ -339,6 +338,19 @@ def prepare_kwargs(**kwargs):
         for option in set(kwargs) - known_parameters:
             logger.warning(
                 f"You set an unknown option for {embedder_class.name}: {option} (value: {kwargs[option]})"
+            )
+
+    if kwargs.get("half_model"):
+        if kwargs["protocol"] not in ["prottrans_t5_bfd", "prottrans_t5_uniref50"]:
+            raise InvalidParameterError(
+                "`half_model` is only supported with prottrans_t5_bfd and prottrans_t5_uniref50"
+            )
+
+        if kwargs.get("half_precision") is False:  # None remains allowed
+            raise InvalidParameterError(
+                "You can't have `half_model` be true and `half_precision` be false. "
+                "We suggest also setting `half_precision` to true, "
+                "which will compute and save embeddings as half-precision floats"
             )
 
     result_kwargs = deepcopy(kwargs)

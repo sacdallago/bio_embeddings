@@ -24,7 +24,7 @@ class MockElmoEmbedder:
         return [self.embed_sentence(i) for i in many]
 
     def embed_sentence(self, _sentence: str) -> ndarray:
-        return list(self.embeddedings)[0]  # TODO
+        return list(self.embeddedings.values())[0]  # TODO
 
 
 def test_seqvec():
