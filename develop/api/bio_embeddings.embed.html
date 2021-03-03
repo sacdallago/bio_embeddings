@@ -193,6 +193,10 @@ arXiv preprint arXiv:1902.08661 (2019).</p>
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'bepler'</em><a class="headerlink" href="#bio_embeddings.embed.BeplerEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
+<dt id="bio_embeddings.embed.BeplerEmbedder.necessary_files">
+<code class="sig-name descname">necessary_files</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_file']</em><a class="headerlink" href="#bio_embeddings.embed.BeplerEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
 <dt id="bio_embeddings.embed.BeplerEmbedder.number_of_layers">
 <code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1</em><a class="headerlink" href="#bio_embeddings.embed.BeplerEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -242,6 +246,10 @@ representations by mutual information maximization.” bioRxiv (2020).
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.CPCProtEmbedder.name">
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'cpcprot'</em><a class="headerlink" href="#bio_embeddings.embed.CPCProtEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.CPCProtEmbedder.necessary_files">
+<code class="sig-name descname">necessary_files</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_file']</em><a class="headerlink" href="#bio_embeddings.embed.CPCProtEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.CPCProtEmbedder.number_of_layers">
@@ -335,6 +343,14 @@ overwritten with the appropriate batching method for the model.</p>
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
+<dt id="bio_embeddings.embed.EmbedderInterface.necessary_directories">
+<code class="sig-name descname">necessary_directories</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = []</em><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.necessary_directories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.EmbedderInterface.necessary_files">
+<code class="sig-name descname">necessary_files</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = []</em><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
 <dt id="bio_embeddings.embed.EmbedderInterface.number_of_layers">
 <code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.number_of_layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -386,6 +402,10 @@ overwritten with the appropriate batching method for the model.</p>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.PLUSRNNEmbedder.name">
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'plus_rnn'</em><a class="headerlink" href="#bio_embeddings.embed.PLUSRNNEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.PLUSRNNEmbedder.necessary_files">
+<code class="sig-name descname">necessary_files</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_file']</em><a class="headerlink" href="#bio_embeddings.embed.PLUSRNNEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.PLUSRNNEmbedder.number_of_layers">
@@ -488,6 +508,10 @@ arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'prottrans_t5_bfd'</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
+<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.necessary_directories">
+<code class="sig-name descname">necessary_directories</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_directory']</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.necessary_directories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.number_of_layers">
 <code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -541,6 +565,10 @@ overwritten with the appropriate batching method for the model.</p>
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'prottrans_xlnet_uniref100'</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
+<dt id="bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.necessary_directories">
+<code class="sig-name descname">necessary_directories</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_directory']</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.necessary_directories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.number_of_layers">
 <code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -585,6 +613,10 @@ through transfer-learning protein sequences.” BMC bioinformatics 20.1 (2019): 
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.SeqVecEmbedder.name">
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'seqvec'</em><a class="headerlink" href="#bio_embeddings.embed.SeqVecEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.SeqVecEmbedder.necessary_files">
+<code class="sig-name descname">necessary_files</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['weights_file', 'options_file']</em><a class="headerlink" href="#bio_embeddings.embed.SeqVecEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.SeqVecEmbedder.number_of_layers">
