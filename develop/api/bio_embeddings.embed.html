@@ -159,7 +159,7 @@ includes a start token, so the embedding is one longer than the protein.</p>
 some embedders by selecting specific extras:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">allennlp</span></code>: seqvec</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">transformers</span></code>: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, prottrans_t5_bfd</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transformers</span></code>: prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">jax</span></code>-unirep: unirep</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">esm</span></code>: esm</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cpcprot</span></code>: cpcprot</p></li>
@@ -467,67 +467,27 @@ arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
 </dd></dl>
 <dl class="py class">
 <dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder">
-<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ProtTransT5BFDEmbedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_t5_bfd_embedder.html#ProtTransT5BFDEmbedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encoder of the ProtTrans T5 BFD model</p>
-<p>Note that this model alone takes 13GB, so you need a GPU with a lot of memory.</p>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.embed">
-<code class="sig-name descname">embed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em><span class="sig-paren">)</span> → numpy.ndarray<a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_t5_bfd_embedder.html#ProtTransT5BFDEmbedder.embed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.embed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns embedding for one sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An embedding of the sequence.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.embed_many">
-<code class="sig-name descname">embed_many</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> → Generator<span class="p">[</span>numpy.ndarray<span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><span class="p">]</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_t5_bfd_embedder.html#ProtTransT5BFDEmbedder.embed_many"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.embed_many" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns embedding for one sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sequences</strong> – List of proteins as AA strings</p></li>
-<li><p><strong>batch_size</strong> – For embedders that profit from batching, this is maximum number of AA per batch</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list object with embeddings of the sequences.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.embedding_dimension">
-<code class="sig-name descname">embedding_dimension</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1024</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ProtTransT5BFDEmbedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_embedder.html#ProtTransT5BFDEmbedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encoder of the ProtTrans T5 model trained on BFD</p>
+<p>We recommend settings <cite>half_model=True</cite>, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
+from 12GB to 7GB while the effect in benchmark is negligible (±0.1 percentages points in different sets,
+generally below standard error)</p>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.name">
 <code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'prottrans_t5_bfd'</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="py attribute">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.necessary_directories">
-<code class="sig-name descname">necessary_directories</code><em class="property">: ClassVar<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">]</span></em><em class="property"> = ['model_directory']</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.necessary_directories" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<dl class="py attribute">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.number_of_layers">
-<code class="sig-name descname">number_of_layers</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">]</span></em><em class="property"> = 1</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt id="bio_embeddings.embed.ProtTransT5BFDEmbedder.reduce_per_protein">
-<em class="property">static </em><code class="sig-name descname">reduce_per_protein</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">embedding</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_t5_bfd_embedder.html#ProtTransT5BFDEmbedder.reduce_per_protein"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5BFDEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
-<dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>embedding</strong> – the embedding</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
-</dd>
-</dl>
 </dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.ProtTransT5UniRef50Embedder">
+<em class="property">class </em><code class="sig-prename descclassname">bio_embeddings.embed.</code><code class="sig-name descname">ProtTransT5UniRef50Embedder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_embedder.html#ProtTransT5UniRef50Embedder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5UniRef50Embedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50</p>
+<p>We recommend settings <cite>half_model=True</cite>, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
+from 12GB to 7GB while the effect in benchmark is negligible (±0.1 percentages points in different sets,
+generally below standard error)</p>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.ProtTransT5UniRef50Embedder.name">
+<code class="sig-name descname">name</code><em class="property">: ClassVar<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><em class="property"> = 'prottrans_t5_uniref50'</em><a class="headerlink" href="#bio_embeddings.embed.ProtTransT5UniRef50Embedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt id="bio_embeddings.embed.ProtTransXLNetUniRef100Embedder">

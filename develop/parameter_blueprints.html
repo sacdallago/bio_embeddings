@@ -175,7 +175,7 @@
 <span class="n">stage_1</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">embed</span>
   <span class="c1"># Required: which embedder to use</span>
-  <span class="c1"># Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, plus_rnn, unirep, bepler</span>
+  <span class="c1"># Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, plus_rnn, unirep, bepler</span>
   <span class="n">protocol</span><span class="p">:</span> <span class="n">seqvec</span>
 
   <span class="c1"># Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.</span>
@@ -231,6 +231,12 @@
   <span class="c1">## storage space (replace float32 with float16).</span>
   <span class="c1">## This makes predictions based on the embeddings less exact.</span>
   <span class="c1"># half_precision: [true, *false]</span>
+
+  <span class="c1">## For prottrans_t5_bfd and prottrans_t5_uniref50 only: Use the model in half precision mode (float16)</span>
+  <span class="c1">## We recommend activating this with T5, since tested GPU (Quadro RTX 3000) reduces memory consumption</span>
+  <span class="c1">## from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,</span>
+  <span class="c1">## generally below standard error)</span>
+  <span class="c1"># half_model: [true, *false]</span>
 
 <span class="n">stage_2</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">project</span>
