@@ -30,8 +30,8 @@ class EmbedderInterface(abc.ABC):
     # An integer representing the number of layers from the RAW output of the LM.
     number_of_layers: ClassVar[int]
     # The files or directories with weights and config
-    _necessary_files: ClassVar[List[str]] = []
-    _necessary_directories: ClassVar[List[str]] = []
+    necessary_files: ClassVar[List[str]] = []
+    necessary_directories: ClassVar[List[str]] = []
     _device: torch.device
     _options: Dict[str, Any]
 
@@ -49,12 +49,12 @@ class EmbedderInterface(abc.ABC):
                 return
 
         files_loaded = 0
-        for file in self._necessary_files:
+        for file in self.necessary_files:
             if not self._options.get(file):
                 self._options[file] = get_model_file(model=self.name, file=file)
                 files_loaded += 1
 
-        for directory in self._necessary_directories:
+        for directory in self.necessary_directories:
             if not self._options.get(directory):
                 self._options[directory] = get_model_directories_from_zip(
                     model=self.name, directory=directory
@@ -62,7 +62,7 @@ class EmbedderInterface(abc.ABC):
 
                 files_loaded += 1
 
-        total_necessary = len(self._necessary_files) + len(self._necessary_directories)
+        total_necessary = len(self.necessary_files) + len(self.necessary_directories)
         if 0 < files_loaded < total_necessary:
             logger.warning(
                 f"You should pass either all necessary files or directories, or none, "

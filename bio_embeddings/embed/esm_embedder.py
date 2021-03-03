@@ -12,7 +12,7 @@ class ESMEmbedderBase(EmbedderInterface):
     embedding_dimension = 1280
     number_of_layers = 1  # Following ESM, we only consider layer 34 (ESM) or 33 (ESM1b)
 
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     _picked_layer: int
 

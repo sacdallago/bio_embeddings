@@ -24,7 +24,7 @@ class PLUSRNNEmbedder(EmbedderInterface):
     number_of_layers = 1
     embedding_dimension = 1024
 
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     _alphabet: Protein
     _model: PLUS_RNN

@@ -23,7 +23,7 @@ class ProtTransBertBaseEmbedder(EmbedderWithFallback):
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
     _model: Union[AlbertModel, BertModel]
 
-    _necessary_directories = ["model_directory"]
+    necessary_directories = ["model_directory"]
 
     def _get_fallback_model(self) -> Union[BertModel, AlbertModel]:
         raise NotImplementedError

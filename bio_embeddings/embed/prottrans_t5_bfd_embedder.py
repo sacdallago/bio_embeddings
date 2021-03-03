@@ -23,7 +23,7 @@ class ProtTransT5BFDEmbedder(EmbedderWithFallback):
     name = "prottrans_t5_bfd"
     embedding_dimension = 1024
     number_of_layers = 1
-    _necessary_directories = ["model_directory"]
+    necessary_directories = ["model_directory"]
 
     def __init__(self, **kwargs):
         """

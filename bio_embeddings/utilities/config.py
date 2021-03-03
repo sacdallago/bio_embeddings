@@ -7,12 +7,10 @@ Authors:
 from pathlib import Path
 from typing import Union
 
-import ruamel.yaml as yaml
-from ruamel import yaml as yaml
+from ruamel import yaml
 from ruamel.yaml import YAMLError
 from ruamel.yaml.comments import CommentedBase
 
-from bio_embeddings.utilities import InvalidParameterError
 from bio_embeddings.utilities.exceptions import InvalidParameterError
 
 

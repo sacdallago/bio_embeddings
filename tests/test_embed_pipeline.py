@@ -8,9 +8,11 @@ import numpy
 import pytest
 from numpy import ndarray
 
-from bio_embeddings.embed import name_to_embedder
+from bio_embeddings.embed import name_to_embedder, ESM1bEmbedder
 from bio_embeddings.embed.pipeline import run, DEFAULT_MAX_AMINO_ACIDS, ALL_PROTOCOLS
 from bio_embeddings.utilities import InvalidParameterError
+from bio_embeddings.utilities.config import read_config_file
+from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
 
 
 class MockElmoEmbedder:
@@ -62,3 +64,42 @@ def test_missing_extras():
                 remapped_sequences_file=MagicMock(),
                 mapping_file=MagicMock(),
             )
+
+
+class MockESM1bEmbedder(ESM1bEmbedder):
+    # noinspection PyMissingConstructor
+    def __init__(self, **kwargs):
+        pass
+
+    def embed_batch(self, many: List[str]) -> List[ndarray]:
+        return [self.embed_sentence(i) for i in many]
+
+    def embed_sentence(self, _sentence: str) -> ndarray:
+        return numpy.random.random((self.number_of_layers, self.embedding_dimension))
+
+
+def test_wrong_model_param(pytestconfig, tmp_path: Path, caplog):
+    """In this config, the protocol esm1b is chosen, but instead of a model_file a model_directory for T5 is given"""
+    pipeline_config = read_config_file(
+        str(pytestconfig.rootpath.joinpath("test-data/embed_config_mixup.yml"))
+    )
+    pipeline_config["global"]["sequences_file"] = str(
+        pytestconfig.rootpath.joinpath("test-data").joinpath(
+            pipeline_config["global"]["sequences_file"]
+        )
+    )
+    pipeline_config["global"]["prefix"] = str(
+        tmp_path.joinpath(pipeline_config["global"]["prefix"])
+    )
+
+    with mock.patch(
+        "bio_embeddings.embed.pipeline.name_to_embedder", {"esm1b": MockESM1bEmbedder}
+    ), mock.patch(
+        "bio_embeddings.embed.embedder_interfaces.get_model_file",
+        return_value="/dev/null",
+    ):
+        execute_pipeline_from_config(pipeline_config)
+
+    assert caplog.messages == [
+        "You set an unknown option for esm1b: model_directory (value: /mnt/project/bio_embeddings/models/lms/t5)"
+    ]
