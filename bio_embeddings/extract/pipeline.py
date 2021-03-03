@@ -41,7 +41,12 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # The reference annotations file must be CSV containing two columns & headers like:
     # identifier,label
     # ** identifier doesn't need to be unique **
-    reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
+    reference_annotations_file = read_csv(result_kwargs["reference_annotations_file"])
+    if not {"identifier", "label"} <= set(reference_annotations_file.columns):
+        raise InvalidAnnotationFileError(
+            f"The annotation file must contains columns 'identifier' and 'label', "
+            f"but yours has {set(reference_annotations_file.columns)}"
+        )
 
     # If reference annotations contain nans (either in label or identifier) throw an error!
     # https://github.com/sacdallago/bio_embeddings/issues/58
