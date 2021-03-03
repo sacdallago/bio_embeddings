@@ -342,10 +342,16 @@ def prepare_kwargs(**kwargs):
 
     if kwargs.get("half_model"):
         if kwargs["protocol"] not in ["prottrans_t5_bfd", "prottrans_t5_uniref50"]:
-            raise InvalidParameterError("`half_model` is only supported with T5")
+            raise InvalidParameterError(
+                "`half_model` is only supported with prottrans_t5_bfd and prottrans_t5_uniref50"
+            )
 
         if kwargs.get("half_precision") is False:  # None remains allowed
-            raise InvalidParameterError("You can't have `half_model` be true and `half_precision` be false")
+            raise InvalidParameterError(
+                "You can't have `half_model` be true and `half_precision` be false. "
+                "We suggest also setting `half_precision` to true, "
+                "which will compute and save embeddings as half-precision floats"
+            )
 
     result_kwargs = deepcopy(kwargs)
     result_kwargs.setdefault(

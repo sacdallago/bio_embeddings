@@ -83,7 +83,7 @@ stage_1:
   ## This makes predictions based on the embeddings less exact.
   # half_precision: [true, *false]
 
-  ## For T5 only: Use the model in half precision mode (float16)
+  ## For prottrans_t5_bfd and prottrans_t5_uniref50 only: Use the model in half precision mode (float16)
   ## We recommend activating this with T5, since tested GPU (Quadro RTX 3000) reduces memory consumption
   ## from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
   ## generally below standard error)
