@@ -39,7 +39,7 @@ class ProtTransBertBaseEmbedder(EmbedderWithFallback):
         batch = [" ".join(list(seq)) for seq in batch]
 
         ids = self._tokenizer.batch_encode_plus(
-            batch, add_special_tokens=True, pad_to_max_length=True
+            batch, add_special_tokens=True, padding="longest"
         )
 
         tokenized_sequences = torch.tensor(ids["input_ids"]).to(model.device)
