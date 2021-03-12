@@ -40,6 +40,7 @@ from bio_embeddings.embed import (
     UniRepEmbedder,
 )
 from bio_embeddings.embed.pipeline import embed_and_write_batched
+from bio_embeddings.embed.prottrans_embedder import ProtTransT5Embedder
 from bio_embeddings.utilities import read_fasta, FileSystemFileManager
 from tests.shared import check_embedding
 
@@ -81,7 +82,7 @@ def embedder_test_impl(
     else:
         embedder = embedder_class(device=device)
 
-    if embedder_class == ProtTransT5BFDEmbedder:
+    if isinstance(embedder, ProtTransT5Embedder):
         batch_size = None
     else:
         batch_size = 100
@@ -207,10 +208,10 @@ def test_batching_t5(pytestconfig):
     fasta_file = pytestconfig.rootpath.joinpath("examples/docker/fasta.fa")
     batch = [str(i.seq[:]) for i in read_fasta(str(fasta_file))]
     embeddings_single_sequence = list(
-        super(ProtTransT5BFDEmbedder, embedder).embed_many(batch, batch_size=None)
+        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=None)
     )
     embeddings_batched = list(
-        super(ProtTransT5BFDEmbedder, embedder).embed_many(batch, batch_size=10000)
+        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=10000)
     )
     for a, b in zip(embeddings_single_sequence, embeddings_batched):
         assert not numpy.allclose(a, b) and numpy.allclose(
