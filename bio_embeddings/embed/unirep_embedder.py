@@ -53,6 +53,10 @@ class UniRepEmbedder(EmbedderInterface):
         from jax import vmap, partial
         from jax_unirep.utils import get_embeddings
 
+        # https://github.com/sacdallago/bio_embeddings/issues/117
+        if not sequence:
+            return numpy.zeros((0, self.embedding_dimension))
+
         # Unirep only allows batching with sequences of the same length, so we don't do batching at all
         embedded_seqs = get_embeddings([sequence])
         # h and c refer to hidden and cell state

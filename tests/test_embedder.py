@@ -97,8 +97,8 @@ def embedder_test_impl(
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
     padded_sequence = "VLSXXXIEP"
-    [protein, seqwence, padded] = embedder.embed_many(
-        ["PROTEIN", "SEQWENCE", padded_sequence], batch_size
+    [protein, seqwence, padded, _empty] = embedder.embed_many(
+        ["PROTEIN", "SEQWENCE", padded_sequence, ""], batch_size
     )
 
     # Checks that the XXX has kept its length during embedding
