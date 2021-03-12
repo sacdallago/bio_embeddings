@@ -39,6 +39,7 @@ printed model params as you can see in the __init__ function.
 
 from typing import Union
 
+import numpy
 import torch
 from bepler.alphabets import Uniprot21
 from bepler.models.embedding import StackedRNN
@@ -121,6 +122,9 @@ class BeplerEmbedder(EmbedderInterface):
         self.lstm_stack = _unstack_lstm(self.model.embedding.rnn, self._device)
 
     def embed(self, sequence: str) -> ndarray:
+        # https://github.com/sacdallago/bio_embeddings/issues/116
+        if not sequence:
+            return numpy.zeros((0, self.embedding_dimension))
         x = sequence.upper().encode()
         # convert to alphabet index
         x = self.alphabet.encode(x)
