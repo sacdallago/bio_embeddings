@@ -119,8 +119,7 @@ filterwarnings = [
 ]
 
 [tool.black]
-target-version = ['py36']
-include = '/(bio_embeddings|tests)/'
+target-version = ['py37']
 
 [build-system]
 requires = ["poetry~=1.1.0"]
