@@ -321,7 +321,9 @@ def prepare_kwargs(**kwargs):
         "half_precision",
         "max_amino_acids",
         "reduce",
+        "tucker_model_file",
         "type",
+        "use_tucker",
     }
     known_parameters = (
         set(required_kwargs)
