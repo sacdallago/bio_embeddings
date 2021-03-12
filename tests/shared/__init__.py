@@ -10,12 +10,11 @@ from bio_embeddings.embed import (
 
 def check_embedding(embedder: EmbedderInterface, embedding, sequence: str):
     """Checks that the shape of the embeddings looks credible"""
-    # assert isinstance(embedding, ndarray) # TODO: Fix unirep and reenable
+    assert isinstance(embedding, ndarray)
     if embedder.__class__ == SeqVecEmbedder:
         assert embedding.shape[1] == len(sequence)
     elif embedder.__class__ == UniRepEmbedder:
-        # Not sure why this is one longer, but the jax-unirep tests check
-        # `len(sequence) + 1`, so it seems to be intended
+        # See https://github.com/ElArkk/jax-unirep/issues/85
         assert embedding.shape[0] == len(sequence) + 1
     elif embedder.__class__ == CPCProtEmbedder:
         # There is only a per-protein embedding for CPCProt

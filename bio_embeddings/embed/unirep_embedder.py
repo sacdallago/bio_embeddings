@@ -1,5 +1,6 @@
 from typing import Any, Dict, Union, Callable
 
+import numpy
 import torch
 from numpy import ndarray
 
@@ -60,7 +61,7 @@ class UniRepEmbedder(EmbedderInterface):
             embedded_seqs
         )
         # Go from a batch of 1, which is `(1, len(sequence), 1900)`, to `len(sequence), 1900)`
-        return h[0]
+        return numpy.asarray(h[0])
 
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
