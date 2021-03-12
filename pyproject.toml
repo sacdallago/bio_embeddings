@@ -56,6 +56,10 @@ torch = ">=1.7.0,<1.9.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
 jax-unirep = { version = "^2.0.0", optional = true }
+# https://github.com/google/jax/blob/23b82b99d2e178fc648d5ac9ebc8bf5e4049075e/CHANGELOG.md#jaxlib-0162-march-9-2021
+# "jaxlib wheels are now built to require AVX instructions on x86-64 machines by default"
+# However, our CI machine is too old for AVX
+jaxlib = { version = "<0.1.62", optional = true }
 appdirs = "^1.4.4"
 importlib_metadata = "^1.7.0"
 pymongo = { "version" = "^3.11.2", optional = true }
@@ -69,7 +73,7 @@ llvmlite = "0.36.0rc2"  # Python 3.9 compatibility; Remove once 0.53 stable has 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
-unirep = ["jax-unirep"]
+unirep = ["jax-unirep", "jaxlib"]
 esm = ["bio-embeddings-esm"]
 cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 plus = ["bio-embeddings-plus"]
