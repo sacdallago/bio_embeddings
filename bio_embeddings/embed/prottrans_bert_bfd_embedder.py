@@ -69,7 +69,7 @@ class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
                 model_file = get_model_file("prottrans_tucker_bert", "model_file")
             else:
                 model_file = self._options["model_file"]
-            self._tucker = Tucker.from_file(model_file)
+            self._tucker = Tucker.from_file(model_file).to(self._device)
 
         # make model
         self._model = BertModel.from_pretrained(self._model_directory)
@@ -86,7 +86,10 @@ class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
         for embedding in super()._embed_batch_impl(batch, model):
             if self._tucker:
                 with torch.no_grad():
-                    yield self._tucker.single_pass(torch.tensor(embedding)).numpy()
+                    # The back-and-forth is a bit awkward, but it shouldn't be a bottleneck
+                    yield self._tucker.single_pass(
+                        torch.tensor(embedding, device=self._device)
+                    ).cpu().numpy()
             else:
                 yield embedding
 
