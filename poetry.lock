@@ -1204,7 +1204,7 @@ opt_einsum = "*"
 
 [[package]]
 name = "jax-unirep"
-version = "2.0.1"
+version = "1.0.3"
 description = "A performant and user-friendly reimplementation of UniRep in JAX."
 category = "main"
 optional = true
@@ -1221,7 +1221,7 @@ tqdm = "*"
 
 [[package]]
 name = "jaxlib"
-version = "0.1.61"
+version = "0.1.57"
 description = "XLA library for JAX"
 category = "main"
 optional = true
@@ -1230,7 +1230,7 @@ python-versions = ">=3.6"
 [package.dependencies]
 absl-py = "*"
 flatbuffers = "*"
-numpy = ">=1.16"
+numpy = ">=1.12"
 scipy = "*"
 
 [[package]]
@@ -3428,7 +3428,7 @@ webserver = ["pymongo", "sentry-sdk"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "a270f9f30ec3caa6d0dfc69fc97a5b524767241d5e238c7e1a733ab8064dcd7d"
+content-hash = "2fd247bc2d0362076a36d699f44b4315e1eab3b385599e8d83801005fc2b0ea8"
 
 [metadata.files]
 absl-py = [
@@ -4114,18 +4114,18 @@ jax = [
     {file = "jax-0.1.77.tar.gz", hash = "sha256:63188ea819f3579b054952fbaa2b71e76823f1b60bccea64c95b5609edbdff83"},
 ]
 jax-unirep = [
-    {file = "jax_unirep-2.0.1-py3-none-any.whl", hash = "sha256:0e86dc953b98f4ee31d0d97649d0666afb2b50026705603850ac5b4151f59e79"},
-    {file = "jax_unirep-2.0.1.tar.gz", hash = "sha256:86c3971fe89303e0e7db095851658856795aeb6c3cf02b35c5ca4e1ce0f30a3b"},
+    {file = "jax_unirep-1.0.3-py3-none-any.whl", hash = "sha256:e584342a89ff5c441c2d4a0b6c4a114bbad3571d567cf7007e7b318958532bab"},
+    {file = "jax_unirep-1.0.3.tar.gz", hash = "sha256:38e9a157afd3c71df07bbad5d934685e0db73c359b6c4e40a6edecf5b6ec2a2c"},
 ]
 jaxlib = [
-    {file = "jaxlib-0.1.61-cp36-none-macosx_10_9_x86_64.whl", hash = "sha256:d88866813d6438cbb2f545b6983091525bdbe8633dbbc3ea7842b2e5d561ec6b"},
-    {file = "jaxlib-0.1.61-cp36-none-manylinux2010_x86_64.whl", hash = "sha256:0ef0449dad105144fde97aaae33585b7186c6fb80390e77771a745cc9a937357"},
-    {file = "jaxlib-0.1.61-cp37-none-macosx_10_9_x86_64.whl", hash = "sha256:abbd90228b48add038969f116ea85dd10a9efd8db185bb1a1a6339e48e0c2a41"},
-    {file = "jaxlib-0.1.61-cp37-none-manylinux2010_x86_64.whl", hash = "sha256:cff3a541567b5723314687f71dbcfd349faf78d362b0a6e96a5f2c354015b59c"},
-    {file = "jaxlib-0.1.61-cp38-none-macosx_10_9_x86_64.whl", hash = "sha256:3f53fb31297cf07d43ebf0a434313861f90e6ac685b98996bc1b77b48c48e097"},
-    {file = "jaxlib-0.1.61-cp38-none-manylinux2010_x86_64.whl", hash = "sha256:e0b81fcf77579702b2068bafe379ba04d153bd19239ffc2fd2cbe8308ffe3953"},
-    {file = "jaxlib-0.1.61-cp39-none-macosx_10_9_x86_64.whl", hash = "sha256:72d08423116bfa4fdd58f0264e73feb4263643b0407a0fc619246d2c9f9b1366"},
-    {file = "jaxlib-0.1.61-cp39-none-manylinux2010_x86_64.whl", hash = "sha256:713f2799158128f7af45d8cfb627bd585f142da9314485f345ccd80bd2eaf8c5"},
+    {file = "jaxlib-0.1.57-cp36-none-macosx_10_9_x86_64.whl", hash = "sha256:47d4bf94f38ab9a437a69c19be6a3e1d235811d6da70922a3ff6502c33361504"},
+    {file = "jaxlib-0.1.57-cp36-none-manylinux2010_x86_64.whl", hash = "sha256:669427a85df109995cf2689945c995fd36abce80d7dbc0ad1833fa9966fa935e"},
+    {file = "jaxlib-0.1.57-cp37-none-macosx_10_9_x86_64.whl", hash = "sha256:048596b2ba458b01eb0c5680936df851f2083f6135ec9cd984f2f5ea45ad619d"},
+    {file = "jaxlib-0.1.57-cp37-none-manylinux2010_x86_64.whl", hash = "sha256:2bc945849553dbc31eba737ca81546fb47ec1e7c3340872d9b7dd329006f51a7"},
+    {file = "jaxlib-0.1.57-cp38-none-macosx_10_9_x86_64.whl", hash = "sha256:0fd3a836ec91d96a2944b5fa610780c46166c9c501629446921bd406bc83fcd0"},
+    {file = "jaxlib-0.1.57-cp38-none-manylinux2010_x86_64.whl", hash = "sha256:252e2b0043dc655e889da4363af9bc22c22d4c9728b9b2b685eac763d3a4de30"},
+    {file = "jaxlib-0.1.57-cp39-none-macosx_10_9_x86_64.whl", hash = "sha256:4e449261a7a4b08525b88dda49636eae55b9c2be464f4683dd4fd25e96134dce"},
+    {file = "jaxlib-0.1.57-cp39-none-manylinux2010_x86_64.whl", hash = "sha256:2c07605172118ab3a5a62d639a62059e4c8d67cc44de655af6606c50afa1d8c9"},
 ]
 jedi = [
     {file = "jedi-0.18.0-py2.py3-none-any.whl", hash = "sha256:18456d83f65f400ab0c2d3319e48520420ef43b23a086fdc05dff34132f0fb93"},

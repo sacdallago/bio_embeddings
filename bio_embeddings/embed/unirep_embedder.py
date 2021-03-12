@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Callable
 
 import torch
 from numpy import ndarray
@@ -25,27 +25,40 @@ class UniRepEmbedder(EmbedderInterface):
     # An integer representing the number of layers from the RAW output of the LM.
     number_of_layers = 1
 
-    params: Dict[str, Any]
+    _params: Dict[str, Any]
+    _apply_fun: Callable
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         from jax_unirep.utils import load_params_1900
+        from jax_unirep.featurize import apply_fun
+
+        self._params = load_params_1900()
+        self._apply_fun = apply_fun
+
+        # For v2
+        # https://github.com/ElArkk/jax-unirep/issues/107
+        # from jax_unirep.utils import load_params
+        # from jax_unirep.layers import mLSTM
+        # from jax_unirep.utils import validate_mLSTM_params
+        # self._params = load_params()[1]
+        # _, self._apply_fun = mLSTM(output_dim=self.embedding_dimension)
+        # validate_mLSTM_params(self._params, n_outputs=self.embedding_dimension)
 
         if device:
             raise NotImplementedError("UniRep does not allow configuring the device")
         super().__init__(device, **kwargs)
 
-        self.params = load_params_1900()
-
     def embed(self, sequence: str) -> ndarray:
         from jax import vmap, partial
-        from jax_unirep.featurize import apply_fun
         from jax_unirep.utils import get_embeddings
 
         # Unirep only allows batching with sequences of the same length, so we don't do batching at all
         embedded_seqs = get_embeddings([sequence])
         # h and c refer to hidden and cell state
         # h contains all the hidden states, while h_final and c_final contain only the last state
-        h_final, c_final, h = vmap(partial(apply_fun, self.params))(embedded_seqs)
+        h_final, c_final, h = vmap(partial(self._apply_fun, self._params))(
+            embedded_seqs
+        )
         # Go from a batch of 1, which is `(1, len(sequence), 1900)`, to `len(sequence), 1900)`
         return h[0]
 
