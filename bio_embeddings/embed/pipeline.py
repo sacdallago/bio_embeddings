@@ -321,7 +321,7 @@ def prepare_kwargs(**kwargs):
         "half_precision",
         "max_amino_acids",
         "reduce",
-        "tucker_model_file",
+        "pb_tucker_model_file",
         "type",
         "use_tucker",
     }

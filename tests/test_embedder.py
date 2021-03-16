@@ -9,6 +9,7 @@ embedder = MyLanguageModel()
 numpy.savez(f"test-data/reference-embeddings/{embedder.name}.npz", **{"test_case 1": protein, "test_case 2": seqwence})
 ```
 
+Don't forget to add the weights in defaults.yml and to upload them
 """
 
 import os

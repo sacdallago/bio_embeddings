@@ -89,6 +89,11 @@ stage_1:
   ## generally below standard error)
   # half_model: [true, *false]
 
+  ## Optional and for prottrans_bert_bfd only: Postprocess embeddings with tucker, which is a contrastive
+  ## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.
+  # use_tucker: [true, *false]
+  # pb_tucker_model_file: @/path/to/file
+
 stage_2:
   type: project
   # Required: which projection algorithm to use

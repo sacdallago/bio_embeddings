@@ -65,8 +65,8 @@ class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
         self._model_directory = self._options["model_directory"]
 
         if self._options.get("use_tucker"):
-            if "tucker_model_file" not in self._options:
-                model_file = get_model_file("prottrans_tucker_bert", "model_file")
+            if "pb_tucker_model_file" not in self._options:
+                model_file = get_model_file("pb_tucker_bert", "model_file")
             else:
                 model_file = self._options["model_file"]
             self._tucker = Tucker.from_file(model_file).to(self._device)
