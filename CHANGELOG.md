@@ -1,9 +1,14 @@
 # Changelog
 
-## Unreleased
+## v0.1.7
 
  * Added `prottrans_t5_uniref50`/`ProtTransT5UniRef50Embedder`. This version improves over T5 BFD by being finetuned on UniRef50.
+ * Added a `half_model` option to both T5 models (`prottrans_t5_uniref50` and `prottrans_t5_bfd`). On the tested GPU (Quadro RTX 3000) `half_model: True` reduces memory consumption
+    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
+    generally below standard error). We therefore recommend switching to `half_model: True` for T5.
  * Added [DeepBLAST](https://github.com/flatironinstitute/deepblast) from [Protein Structural Alignments From Sequence](https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1) (see example/deepblast for an example)
+ * Dropped python 3.6 support and added python 3.9 support
+ * Updated the docker example to cache weights
 
 ## v0.1.6
 

@@ -126,7 +126,7 @@ class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD
 
     We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
-    from 12GB to 7GB while the effect in benchmark is negligible (±0.1 percentages points in different sets,
+    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
     generally below standard error)
     """
 
@@ -137,7 +137,7 @@ class ProtTransT5UniRef50Embedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50
 
     We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
-    from 12GB to 7GB while the effect in benchmark is negligible (±0.1 percentages points in different sets,
+    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
     generally below standard error)
     """
 
