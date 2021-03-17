@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Tucker(nn.Module):
     """Tucker is a contrastive learning model trained to distinguish CATH superfamilies.
 
-    It reduces the embedding dimensionality from 1024 to 128.
+    It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128.
     See https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1
     """
 
@@ -30,11 +30,11 @@ class Tucker(nn.Module):
         )
 
     @staticmethod
-    def from_file(model_file: Path) -> "Tucker":
+    def from_file(model_file: Path, device: torch.device) -> "Tucker":
         model = Tucker()
-        model.load_state_dict(torch.load(model_file)["state_dict"])
+        model.load_state_dict(torch.load(model_file, map_location=device)["state_dict"])
         model.eval()
-        return model
+        return model.to(device)
 
     def single_pass(self, x: tensor) -> tensor:
         return self.tucker(x)
@@ -66,10 +66,10 @@ class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
 
         if self._options.get("use_tucker"):
             if "pb_tucker_model_file" not in self._options:
-                model_file = get_model_file("pb_tucker_bert", "model_file")
+                model_file = get_model_file("pb_tucker", "model_file")
             else:
                 model_file = self._options["model_file"]
-            self._tucker = Tucker.from_file(model_file).to(self._device)
+            self._tucker = Tucker.from_file(model_file, self._device)
 
         # make model
         self._model = BertModel.from_pretrained(self._model_directory)

@@ -60,5 +60,5 @@ bepler:
 deepblast:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/deepblast/deepblast-lstm4x.pt"
 
-pb_tucker_bert:
-  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/pb_tucker_bert/checkpoint.pt"
+pb_tucker:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/pb_tucker/checkpoint.pt"
