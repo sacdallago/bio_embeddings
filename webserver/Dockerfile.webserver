@@ -12,4 +12,4 @@ WORKDIR /app
 
 ENV MODEL_DIRECTORY /mnt/models
 
-ENTRYPOINT ["gunicorn", "-w", "2", "-b", ":3000", "webserver.wsgi:app", "--capture-output", "--log-file", "-", "--access-logfile", "-"]
+ENTRYPOINT ["gunicorn", "--workers", "4", "--timeout", "180", "--bind", ":3000", "webserver.wsgi:app", "--capture-output", "--log-file", "-", "--access-logfile", "-"]
