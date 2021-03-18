@@ -86,7 +86,7 @@ class BeplerEmbedder(EmbedderInterface):
 
     # This is derived from ssa_L1_100d_lstm3x512_lm_i512_mb64_tau0.5_lambda0.1_p0.05_epoch100.sav
     # See text at the top of the file
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)

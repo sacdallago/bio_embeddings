@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.1.4"
+version = "0.1.7"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>", "Konstantin Schuetze <schuetze@in.tum.de>"]
 maintainers = ["Rostlab <admin@rostlab.org>"]
@@ -8,9 +8,9 @@ license = "MIT"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
@@ -29,21 +29,30 @@ homepage = "https://visualize.protein.properties"
 repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
-python = "~ 3.6.6 || ^3.7 || ^3.8"
-allennlp = { version = "^0.9.0", optional = true }
+python = ">=3.7,<3.10"
+
+# Packages which we had to patch
+bio-embeddings-esm = { version = "0.2.1", optional = true }
+bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
+bio-embeddings-tape-proteins = { version = "0.4", optional = true }
+bio-embeddings-plus = { version = "0.1.1", optional = true }
+bio-embeddings-bepler = { version = "0.0.1", optional = true }
+bio-embeddings-allennlp = { version = "0.9.1", optional = true }
+bio-embeddings-deepblast = { version = "0.1.0", optional = true }
+
 numpy = "^1.18.3"
 gensim = "^3.8.2"
 biopython = "^1.76"
 "ruamel.yaml" = "^0.16.10"
 pandas = "^1.0.3"
-h5py = "^2.10.0"
-transformers = { version = "^3.1.0", optional = true }
+h5py = "^3.2.1"
+transformers = { version = "^4.0.0", optional = true }
 plotly = "^4.6.0"
-umap-learn = "^0.4.2"
+umap-learn = "^0.5.1"
 matplotlib = "^3.2.1"
-scikit-learn = "^0.22.2.post1"
+scikit-learn = "^0.24.0"
 scipy = "^1.4.1"
-torch = "~1.5.0"
+torch = "~1.7.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
 jax-unirep = { version = "^1.0.1", optional = true }
@@ -54,22 +63,28 @@ botocore = { version = "1.17.18", optional = true }
 # https://github.com/boto/botocore/issues/2187#issuecomment-712819351
 urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
-esm = { git = "https://github.com/facebookresearch/esm.git", tag = "v0.1.0", optional = true }
-cpcprot = { git = "https://github.com/amyxlu/CPCProt.git", rev = "df1ad1118544ed349b5e711207660a7c205b3128", optional = true }
-tape-proteins = { git = "https://github.com/konstin/tape.git", branch = "patch-1", optional = true }
-plus = { git = "https://github.com/konstin/PLUS", rev = "762a7b8141c7a19c86741e5d874de803b5792f14", optional = true }
-# Doesn't use any exotic dependencies, so if we have a wheel we don't even need an extra
-bepler = { git = "https://github.com/konstin/protein-sequence-embedding-iclr2019", rev = "32942331f68e76584f1f6a35001a4d440fcee1c7", optional = true }
+pymongo = { "version" = "^3.11.2", optional = true }
+sentry-sdk = { "version" = "^0.20.3", extras = ["flask"], optional = true }
+# Another weird dependency resolution issue
+jaxlib = "0.1.57"
+python-slugify = "^4.0.1"
+fsspec = { version = "0.8.5", optional = true }
+humanize = "^3.2.0"
+numba = "0.53.0rc3" # Python 3.9 compatibility; Remove once 0.53 stable has been released
+llvmlite = "0.36.0rc2"  # Python 3.9 compatibility; Remove once 0.53 stable has been released
 
 [tool.poetry.extras]
-seqvec = ["allennlp", "boto3", "botocore"]
+seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
 unirep = ["jax-unirep"]
-esm = ["esm"]
-cpcprot = ["cpcprot", "tape-proteins"]
-plus = ["plus"]
-bepler = ["bepler"]
-all = ["allennlp", "transformers", "jax-unirep", "esm", "cpcprot", "tape-proteins", "plus", "bepler"]
+esm = ["bio-embeddings-esm"]
+cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
+plus = ["bio-embeddings-plus"]
+bepler = ["bio-embeddings-bepler"]
+deepblast = ["bio-embeddings-deepblast", "fsspec"]
+all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
+# User don't need those, but we need it to run the tests
+webserver = ["pymongo", "sentry-sdk"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
@@ -82,7 +97,16 @@ black = "^20.8b1"
 toml = "^0.10.1"
 furo = "^2020.10.15-beta.13"
 Sphinx = "^3.2.1"
-myst-parser = "^0.12.10"
+myst-parser = "^0.13.5"
+sphinx-copybutton = "^0.3.1"
+myst-nb = "^0.12.0"
+mongomock = "^3.22.0"
+pytest-flask = "^1.1.0"
+pytest-celery = "^0.0.0-alpha.1"
+flask-restx = "^0.2.0"
+packaging = "^20.8"
+hypothesis = "^6.3.4"
+hypothesis-bio = { git = "https://github.com/IQTLabs/hypothesis-bio", rev = "393f080772ae7aa7ca0358ce1a6753c0b69546e2" }
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"
@@ -95,8 +119,7 @@ filterwarnings = [
 ]
 
 [tool.black]
-target-version = ['py36']
-include = '/(bio_embeddings|tests)/'
+target-version = ['py37']
 
 [build-system]
 requires = ["poetry~=1.1.0"]

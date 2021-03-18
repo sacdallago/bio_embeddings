@@ -1,3 +1,16 @@
+"""
+How to add a new embedder:
+
+```
+from bio_embeddings.embed import MyLanguageModel
+import numpy
+embedder = MyLanguageModel()
+[protein, seqwence, padded] = embedder.embed_many(["PROTEIN", "SEQWENCE", "VLSXXXIEP"])
+numpy.savez(f"test-data/reference-embeddings/{embedder.name}.npz", **{"test_case 1": protein, "test_case 2": seqwence})
+```
+
+"""
+
 import os
 import typing
 from json import JSONDecodeError
@@ -9,27 +22,48 @@ from unittest import mock
 import numpy
 import pytest
 import torch
+from numpy import ndarray
 
 from bio_embeddings.embed import (
     BeplerEmbedder,
     CPCProtEmbedder,
     ESMEmbedder,
+    ESM1bEmbedder,
     EmbedderInterface,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
+    ProtTransT5BFDEmbedder,
+    ProtTransT5UniRef50Embedder,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
 )
+from bio_embeddings.embed.pipeline import embed_and_write_batched
+from bio_embeddings.embed.prottrans_embedder import ProtTransT5Embedder
+from bio_embeddings.utilities import read_fasta, FileSystemFileManager
+from tests.shared import check_embedding
 
 all_embedders = [
     BeplerEmbedder,
     CPCProtEmbedder,
     ESMEmbedder,
+    ESM1bEmbedder,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
+    pytest.param(
+        ProtTransT5BFDEmbedder,
+        marks=pytest.mark.skipif(
+            os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
+        ),
+    ),
+    pytest.param(
+        ProtTransT5UniRef50Embedder,
+        marks=pytest.mark.skipif(
+            os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
+        ),
+    ),
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
 ]
@@ -47,29 +81,21 @@ def embedder_test_impl(
         embedder = embedder_class(warmup_rounds=0, device=device)
     else:
         embedder = embedder_class(device=device)
+
+    if isinstance(embedder, ProtTransT5Embedder):
+        batch_size = None
+    else:
+        batch_size = 100
+
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63
     padded_sequence = "VLSXXXIEP"
     [protein, seqwence, padded] = embedder.embed_many(
-        ["PROTEIN", "SEQWENCE", padded_sequence], 100
+        ["PROTEIN", "SEQWENCE", padded_sequence], batch_size
     )
 
-    # Check that the XXX has kept its length during embedding
-    if embedder_class == SeqVecEmbedder:
-        assert padded.shape[1] == len(padded_sequence)
-    elif embedder_class == UniRepEmbedder:
-        # Not sure why this is one longer, but the jax-unirep tests check
-        # `len(sequence) + 1`, so it seems to be intended
-        assert padded.shape[0] == len(padded_sequence) + 1
-    elif embedder_class == CPCProtEmbedder:
-        # There is only a per-protein embedding for CPCProt
-        assert padded.shape == (512,)
-    else:
-        assert padded.shape[0] == len(padded_sequence)
-
-    # Check reduce_per_protein
-    # https://github.com/sacdallago/bio_embeddings/issues/85
-    assert embedder.reduce_per_protein(protein).shape == (embedder.embedding_dimension,)
+    # Checks that the XXX has kept its length during embedding
+    check_embedding(embedder, padded, padded_sequence)
 
     # Check with reference embeddings
     expected = numpy.load(str(expected_file))
@@ -163,3 +189,69 @@ def test_model_parameters_seqvec(caplog):
         SeqVecEmbedder(
             weights_file="/none/existent/path", options_file="/none/existent/path"
         )
+
+
+@pytest.mark.skipif(os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk")
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
+def test_batching_t5_blocked():
+    """Once the T5 bug is fixed, this should become a regression test"""
+    embedder = ProtTransT5BFDEmbedder()
+    with pytest.raises(RuntimeError):
+        embedder.embed_many([], batch_size=1000)
+
+
+@pytest.mark.skipif(os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk")
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
+def test_batching_t5(pytestconfig):
+    """Check that T5 batching is still failing"""
+    embedder = ProtTransT5BFDEmbedder()
+    fasta_file = pytestconfig.rootpath.joinpath("examples/docker/fasta.fa")
+    batch = [str(i.seq[:]) for i in read_fasta(str(fasta_file))]
+    embeddings_single_sequence = list(
+        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=None)
+    )
+    embeddings_batched = list(
+        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=10000)
+    )
+    for a, b in zip(embeddings_single_sequence, embeddings_batched):
+        assert not numpy.allclose(a, b) and numpy.allclose(
+            a, b, rtol=1.0e-4, atol=1.0e-5
+        )
+
+
+def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
+    """Currently a dummy test"""
+    class Float16Embedder(EmbedderInterface):
+        name = "float16embedder"
+        embedding_dimension = 1024
+        number_of_layers = 1
+
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            assert kwargs.get("half_model"), kwargs
+
+        def embed(self, sequence: str) -> ndarray:
+            return numpy.random.random((len(sequence), 1024)).astype(numpy.float16)
+
+        @staticmethod
+        def reduce_per_protein(embedding: ndarray) -> ndarray:
+            return embedding.sum(axis=0)
+
+    result_kwargs = {
+        "prefix": str(tmp_path),
+        "remapped_sequences_file": str(
+            pytestconfig.rootpath.joinpath("test-data/remapped_sequences_file.fasta")
+        ),
+        "mapping_file": str(
+            pytestconfig.rootpath.joinpath("test-data/mapping_file.csv")
+        ),
+        "half_model": True,
+    }
+    embed_and_write_batched(
+        Float16Embedder(**result_kwargs),
+        FileSystemFileManager(),
+        result_kwargs=result_kwargs,
+    )
+
+    assert caplog.messages == []
+

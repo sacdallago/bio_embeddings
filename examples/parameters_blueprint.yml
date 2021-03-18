@@ -26,7 +26,7 @@ global:
 stage_1:
   type: embed
   # Required: which embedder to use
-  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, protrans_xlnet_uniref100, unirep, esm, cpcprot, plusrnn
+  # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, plus_rnn, unirep, bepler
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -82,6 +82,12 @@ stage_1:
   ## storage space (replace float32 with float16).
   ## This makes predictions based on the embeddings less exact.
   # half_precision: [true, *false]
+
+  ## For prottrans_t5_bfd and prottrans_t5_uniref50 only: Use the model in half precision mode (float16)
+  ## We recommend activating this with T5, since tested GPU (Quadro RTX 3000) reduces memory consumption
+  ## from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
+  ## generally below standard error)
+  # half_model: [true, *false]
 
 stage_2:
   type: project

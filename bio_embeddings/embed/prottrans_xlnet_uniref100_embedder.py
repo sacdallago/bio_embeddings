@@ -20,12 +20,13 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
     Code Through Self-Supervised Deep Learning and High Performance Computing."
     arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225
     """
+
     name = "prottrans_xlnet_uniref100"
     embedding_dimension = 1024
     number_of_layers = 1
     _model: XLNetModel
     _model_fallback: Optional[XLNetModel]
-    _necessary_directories = ["model_directory"]
+    necessary_directories = ["model_directory"]
 
     def __init__(self, **kwargs):
         """
@@ -41,8 +42,8 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         # 512 is from https://github.com/agemagician/ProtTrans/blob/master/Embedding/PyTorch/Advanced/ProtXLNet.ipynb
         self._model = (
             XLNetModel.from_pretrained(self.model_directory, mem_len=512)
-                .to(self._device)
-                .eval()
+            .to(self._device)
+            .eval()
         )
         self._model_fallback = None
 
@@ -64,7 +65,7 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         batch = [re.sub(r"[UZOBX]", "<unk>", sequence) for sequence in batch]
 
         ids = self._tokenizer.batch_encode_plus(
-            batch, add_special_tokens=True, pad_to_max_length=True
+            batch, add_special_tokens=True, padding="longest"
         )
 
         tokenized_sequences = torch.tensor(ids["input_ids"]).to(self._model.device)
@@ -72,7 +73,10 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
 
         with torch.no_grad():
             embeddings, memory = self._model(
-                input_ids=tokenized_sequences, attention_mask=attention_mask, mems=None
+                input_ids=tokenized_sequences,
+                attention_mask=attention_mask,
+                mems=None,
+                return_dict=False,
             )
 
         embeddings = embeddings.cpu().numpy()
@@ -80,9 +84,11 @@ class ProtTransXLNetUniRef100Embedder(EmbedderInterface):
         for seq_num, seq_len in zip_longest(range(len(embeddings)), seq_lens):
             attention_len = (attention_mask[seq_num] == 1).sum()
             padded_seq_len = len(attention_mask[seq_num])
-            embedding = embeddings[seq_num][padded_seq_len - attention_len:padded_seq_len - 2]
+            embedding = embeddings[seq_num][
+                padded_seq_len - attention_len : padded_seq_len - 2
+            ]
             assert (
-                    seq_len == embedding.shape[0]
+                seq_len == embedding.shape[0]
             ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
             yield embedding
 

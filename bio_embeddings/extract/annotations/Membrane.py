@@ -5,7 +5,7 @@ class Membrane(Enum):
 
     MEMBRANE = 'Membrane bound'
     SOLUBLE = 'Soluble'
-    UNKONWN = "?"
+    UNKNOWN = "?"
 
     def __str__(self):
         return {

@@ -3,7 +3,7 @@ import logging
 from copy import deepcopy
 from pandas import read_csv
 from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, TooFewComponentsException
-from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly,\
+from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly, \
     save_plotly_figure_to_html
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ def plotly(**kwargs):
                                         f"If set to >3, will render 3D scatter plot.")
 
     # Get projected_embeddings_file containing x,y,z coordinates and identifiers
-    projected_embeddings_file = read_csv(result_kwargs['projected_embeddings_file'], index_col=0)
+    merged_annotation_file = read_csv(result_kwargs['projected_embeddings_file'], index_col=0)
 
     if result_kwargs.get('annotation_file'):
 
@@ -43,24 +43,26 @@ def plotly(**kwargs):
 
         if result_kwargs['merge_via_index']:
             if result_kwargs['display_unknown']:
-                merged_annotation_file = annotation_file.join(projected_embeddings_file, how="outer")
+                merged_annotation_file = annotation_file.join(merged_annotation_file, how="outer")
                 merged_annotation_file['label'].fillna('UNKNOWN', inplace=True)
             else:
-                merged_annotation_file = annotation_file.join(projected_embeddings_file)
+                merged_annotation_file = annotation_file.join(merged_annotation_file)
         else:
             if result_kwargs['display_unknown']:
-                merged_annotation_file = annotation_file.join(projected_embeddings_file.set_index('original_id'), how="outer")
+                merged_annotation_file = annotation_file.join(merged_annotation_file.set_index('original_id'), how="outer")
                 merged_annotation_file['label'].fillna('UNKNOWN', inplace=True)
             else:
-                merged_annotation_file = annotation_file.join(projected_embeddings_file.set_index('original_id'))
+                merged_annotation_file = annotation_file.join(merged_annotation_file.set_index('original_id'))
+    else:
+        merged_annotation_file['label'] = 'UNKNOWN'
 
-        merged_annotation_file_path = file_manager.create_file(kwargs.get('prefix'),
-                                                               result_kwargs.get('stage_name'),
-                                                               'merged_annotation_file',
-                                                               extension='.csv')
+    merged_annotation_file_path = file_manager.create_file(kwargs.get('prefix'),
+                                                           result_kwargs.get('stage_name'),
+                                                           'merged_annotation_file',
+                                                           extension='.csv')
 
-        merged_annotation_file.to_csv(merged_annotation_file_path)
-        result_kwargs['merged_annotation_file'] = merged_annotation_file_path
+    merged_annotation_file.to_csv(merged_annotation_file_path)
+    result_kwargs['merged_annotation_file'] = merged_annotation_file_path
 
     if result_kwargs['n_components'] == 2:
         figure = render_scatter_plotly(merged_annotation_file)

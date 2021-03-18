@@ -66,7 +66,7 @@ def umap(**kwargs):
     # Get parameters or set defaults
     result_kwargs['min_dist'] = kwargs.get('min_dist', .6)
     result_kwargs['n_neighbors'] = kwargs.get('n_neighbors', 15)
-
+    result_kwargs['spread'] = kwargs.get('spread', 1)
     result_kwargs['metric'] = kwargs.get('metric', 'cosine')
     result_kwargs['n_components'] = kwargs.get('n_components', 3)
     result_kwargs['random_state'] = kwargs.get('random_state', 420)

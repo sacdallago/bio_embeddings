@@ -1,33 +1,23 @@
 import logging
 import shutil
-import h5py
-import numpy
-
 from copy import deepcopy
 from typing import Dict, Any
 
+import h5py
+import numpy
 from Bio import SeqIO
+from humanize import naturalsize
 from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
-from bio_embeddings.embed import (
-    ProtTransAlbertBFDEmbedder,
-    ProtTransBertBFDEmbedder,
-    EmbedderInterface,
-    SeqVecEmbedder,
-    ProtTransXLNetUniRef100Embedder,
-    UniRepEmbedder,
-    ESMEmbedder,
-    CPCProtEmbedder,
-    PLUSRNNEmbedder,
-)
+from bio_embeddings.embed import name_to_embedder, EmbedderInterface
 from bio_embeddings.utilities import (
+    FileManagerInterface,
     InvalidParameterError,
-    get_model_file,
     check_required,
     get_file_manager,
     get_model_directories_from_zip,
-    FileManagerInterface,
+    get_model_file,
 )
 from bio_embeddings.utilities.backports import nullcontext
 
@@ -52,36 +42,36 @@ def _print_expected_file_sizes(
     total_number_of_proteins = len(mapping_file)
     total_aa = mapping_file['sequence_length'].sum()
 
-    embeddings_file_size_in_MB = per_amino_acid_size_in_bytes * total_aa * pow(10, -6)
-    reduced_embeddings_file_size_in_MB = per_protein_size_in_bytes * total_number_of_proteins * pow(10, -6)
+    embeddings_file_size = per_amino_acid_size_in_bytes * total_aa
+    reduced_embeddings_file_size = per_protein_size_in_bytes * total_number_of_proteins
 
-    required_space_in_MB = 0
+    required_space = 0
 
     if result_kwargs.get("reduce") is True:
         logger.info(f"The minimum expected size for the reduced_embedding_file is "
-                    f"{reduced_embeddings_file_size_in_MB:.3f}MB.")
+                    f"{naturalsize(reduced_embeddings_file_size)}.")
 
-        required_space_in_MB += reduced_embeddings_file_size_in_MB
+        required_space += reduced_embeddings_file_size
 
     # TODO: calculate size of transformed embeddings?
     if not (result_kwargs.get("reduce") is True and result_kwargs.get("discard_per_amino_acid_embeddings") is True):
-        logger.info(f"The minimum expected size for the embedding_file is {embeddings_file_size_in_MB:.3f}MB.")
+        logger.info(f"The minimum expected size for the embedding_file is {naturalsize(embeddings_file_size)}.")
 
-        required_space_in_MB += embeddings_file_size_in_MB
+        required_space += embeddings_file_size
 
     _, _, available_space_in_bytes = shutil.disk_usage(result_kwargs.get('prefix'))
 
-    available_space_in_MB = available_space_in_bytes * pow(10, -6)
+    available_space = available_space_in_bytes
 
-    if available_space_in_MB < required_space_in_MB:
-        logger.warning(f"You are attempting to generate {required_space_in_MB:.3f}MB worth of embeddings, "
-                       f"but only {available_space_in_MB:.3f}MB are available at "
+    if available_space < required_space:
+        logger.warning(f"You are attempting to generate {naturalsize(required_space)} worth of embeddings, "
+                       f"but only {naturalsize(available_space)} are available at "
                        f"the prefix({result_kwargs.get('prefix')}). \n"
                        f"We suggest you stop execution NOW and double check you have enough free space available. "
                        f"Alternatively, try reducing the input FASTA file.")
     else:
-        logger.info(f"You are going to generate a total of {required_space_in_MB:.3f}MB of embeddings, and have "
-                    f"{available_space_in_MB:.3f}MB available at {result_kwargs.get('prefix')}.")
+        logger.info(f"You are going to generate a total of {naturalsize(required_space)} of embeddings, and have "
+                    f"{naturalsize(available_space)} available at {result_kwargs.get('prefix')}.")
 
 
 def _get_reduced_embeddings_file_context(
@@ -166,7 +156,6 @@ def _get_transformed_embeddings_file_context(
 
 
 def _check_transform_embeddings_function(embedder: EmbedderInterface, result_kwargs: Dict[str, Any]):
-
     result_kwargs.setdefault("embeddings_transformer_function", None)
 
     if result_kwargs["embeddings_transformer_function"] is not None:
@@ -217,7 +206,7 @@ def embed_and_write_batched(
     # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
     # https://stackoverflow.com/a/29793294/3549270
     mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
-    mapping_file.index = mapping_file.index.astype('str')
+    mapping_file.index = mapping_file.index.astype("str")
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)
@@ -242,9 +231,8 @@ def embed_and_write_batched(
         for sequence_id, original_id, embedding in zip(
             mapping_file.index,
             mapping_file["original_id"],
-            tqdm(embedding_generator, total=len(mapping_file))
+            tqdm(embedding_generator, total=len(mapping_file)),
         ):
-            # embedding: numpy.ndarray
             if half_precision:
                 embedding = embedding.astype(numpy.float16)
             if result_kwargs.get("discard_per_amino_acid_embeddings") is False:
@@ -264,29 +252,113 @@ def embed_and_write_batched(
     return result_kwargs
 
 
-PROTOCOLS = {
-    "seqvec": SeqVecEmbedder,
-    "prottrans_albert_bfd": ProtTransAlbertBFDEmbedder,
-    "prottrans_bert_bfd": ProtTransBertBFDEmbedder,
-    "prottrans_xlnet_uniref100": ProtTransXLNetUniRef100Embedder,
-    "unirep": UniRepEmbedder,
-    "esm": ESMEmbedder,
-    "cpcprot": CPCProtEmbedder,
-    "plusrnn": PLUSRNNEmbedder,
-}
+# Some of this might not be available when installed without the `all` extra
+ALL_PROTOCOLS = [
+    "bepler",
+    "cpcprot",
+    "esm",
+    "esm1b",
+    "plus_rnn",
+    "prottrans_albert_bfd",
+    "prottrans_bert_bfd",
+    "prottrans_t5_bfd",
+    "prottrans_t5_uniref50",
+    "prottrans_xlnet_uniref100",
+    "seqvec",
+    "unirep",
+]
 
 # TODO: 10000 is a random guess
 # There remainder was measured for a GTX 1080 with 8GB memory
 DEFAULT_MAX_AMINO_ACIDS = {
-    "seqvec": 15000,
+    "bepler": 10000,
+    "cpcprot": 10000,
+    "esm": 10000,
+    "esm1b": 10000,
+    "plus_rnn": 10000,
     "prottrans_albert_bfd": 3035,
     "prottrans_bert_bfd": 6024,
+    # There is an untracked bug found by MH in batching that prevents using batching with T5
+    "prottrans_t5_bfd": None,
+    "prottrans_t5_uniref50": None,
     "prottrans_xlnet_uniref100": 4000,
+    "seqvec": 15000,
     "unirep": 10000,
-    "esm": 10000,
-    "cpcprot": 10000,
-    "plusrnn": 10000,
 }
+
+
+def prepare_kwargs(**kwargs):
+    required_kwargs = [
+        "protocol",
+        "prefix",
+        "stage_name",
+        "remapped_sequences_file",
+        "mapping_file",
+    ]
+    check_required(kwargs, required_kwargs)
+
+    if kwargs["protocol"] not in name_to_embedder:
+        if kwargs["protocol"] in ALL_PROTOCOLS:
+            raise InvalidParameterError(
+                f"The extra for the protocol {kwargs['protocol']} is missing. "
+                "See https://docs.bioembeddings.com/#installation on how to install all extras"
+            )
+        raise InvalidParameterError(
+            "Invalid protocol selection: {}. Valid protocols are: {}".format(
+                kwargs["protocol"], ", ".join(name_to_embedder.keys())
+            )
+        )
+
+    embedder_class = name_to_embedder[kwargs["protocol"]]
+
+    if kwargs["protocol"] == "unirep" and kwargs.get("use_cpu") is not None:
+        raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
+    # See parameter_blueprints.yml
+    global_options = {"sequences_file", "simple_remapping", "start_time"}
+    embed_options = {
+        "device",
+        "discard_per_amino_acid_embeddings",
+        "half_precision",
+        "max_amino_acids",
+        "reduce",
+        "type",
+    }
+    known_parameters = (
+        set(required_kwargs)
+        | global_options
+        | embed_options
+        | set(embedder_class.necessary_files)
+        | set(embedder_class.necessary_directories)
+    )
+    if embedder_class == "seqvec":
+        # We support two ways of configuration for seqvec
+        known_parameters.add("model_directory")
+    if not set(kwargs) < known_parameters:
+        # Complain louder if the input looks fishier
+        for option in set(kwargs) - known_parameters:
+            logger.warning(
+                f"You set an unknown option for {embedder_class.name}: {option} (value: {kwargs[option]})"
+            )
+
+    if kwargs.get("half_model"):
+        if kwargs["protocol"] not in ["prottrans_t5_bfd", "prottrans_t5_uniref50"]:
+            raise InvalidParameterError(
+                "`half_model` is only supported with prottrans_t5_bfd and prottrans_t5_uniref50"
+            )
+
+        if kwargs.get("half_precision") is False:  # None remains allowed
+            raise InvalidParameterError(
+                "You can't have `half_model` be true and `half_precision` be false. "
+                "We suggest also setting `half_precision` to true, "
+                "which will compute and save embeddings as half-precision floats"
+            )
+
+    result_kwargs = deepcopy(kwargs)
+    result_kwargs.setdefault(
+        "max_amino_acids", DEFAULT_MAX_AMINO_ACIDS[kwargs["protocol"]]
+    )
+
+    return embedder_class, result_kwargs
 
 
 def run(**kwargs):
@@ -306,39 +378,20 @@ def run(**kwargs):
     -------
     Dictionary with results of stage
     """
-    check_required(
-        kwargs,
-        ["protocol", "prefix", "stage_name", "remapped_sequences_file", "mapping_file"],
-    )
-
-    if kwargs["protocol"] not in PROTOCOLS:
-        raise InvalidParameterError(
-            "Invalid protocol selection: {}. Valid protocols are: {}".format(
-                kwargs["protocol"], ", ".join(PROTOCOLS.keys())
-            )
-        )
-
-    embedder_class = PROTOCOLS[kwargs["protocol"]]
-
-    if embedder_class == UniRepEmbedder and kwargs.get("use_cpu") is not None:
-        raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
-
-    result_kwargs = deepcopy(kwargs)
+    embedder_class, result_kwargs = prepare_kwargs(**kwargs)
 
     # Download necessary files if needed
     # noinspection PyProtectedMember
-    for file in embedder_class._necessary_files:
+    for file in embedder_class.necessary_files:
         if not result_kwargs.get(file):
             result_kwargs[file] = get_model_file(model=embedder_class.name, file=file)
 
     # noinspection PyProtectedMember
-    for directory in embedder_class._necessary_directories:
+    for directory in embedder_class.necessary_directories:
         if not result_kwargs.get(directory):
             result_kwargs[directory] = get_model_directories_from_zip(
                 model=embedder_class.name, directory=directory
             )
-
-    result_kwargs.setdefault("max_amino_acids", DEFAULT_MAX_AMINO_ACIDS[kwargs["protocol"]])
 
     file_manager = get_file_manager(**kwargs)
     embedder: EmbedderInterface = embedder_class(**result_kwargs)

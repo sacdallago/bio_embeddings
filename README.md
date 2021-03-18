@@ -30,12 +30,6 @@ The project includes:
   - extracts annotations from per-sequence and per-amino-acid embeddings using supervised (when available) and unsupervised approaches (e.g. by network analysis)
 - A webserver that wraps the pipeline into a distributed API for scalable and consistent workfolws
 
-## News (current development cycle)
-
- * Integrated [Evolutionary Scale Modeling (ESM)](https://github.com/facebookresearch/esm) from ["Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences" (Rives et al., 2019)](https://www.biorxiv.org/content/10.1101/622803v3)
- * Included [example](examples/goPredSim) to transfer GO annotations (a-la [goPredSim](https://github.com/Rostlab/goPredSim)). We also make the reference annotations and embeddings available!
- * We've added the language models [ESM](https://github.com/facebookresearch/esm), [PLUS](https://github.com/mswzeus/PLUS/) and [CPCProt](https://github.com/amyxlu/CPCProt)
-
 ## Installation
 
 You can install `bio_embeddings` via pip or use it via docker.
@@ -56,16 +50,17 @@ pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embe
 
 ### Docker
 
-We provide a docker image at `rostlab/bio_embeddings`. Simple usage example:
+We provide a docker image at `ghcr.io/bioembeddings/bio_embeddings`. Simple usage example:
 
 ```shell_script
 docker run --rm --gpus all \
     -v "$(pwd)/examples/docker":/mnt \
+    -v bio_embeddings_weights_cache:/root/.cache/bio_embeddings \
     -u $(id -u ${USER}):$(id -g ${USER}) \
-    rostlab/bio_embeddings /mnt/config.yml
+    ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
 ```
 
-See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. We currently have published `rostlab/bio_embeddings:develop`. For our next stable release, we will publish tags for all releases and a `latest` tag pointing to the latest release.
+See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. You can also use `ghcr.io/bioembeddings/bio_embeddings:latest` which is built from the latest commit.
 
 ### Installation notes:
 
@@ -135,7 +130,7 @@ While we are working on a proper publication, if you are already using this tool
   - [ ] Glove
   - [ ] Word2Vec
   - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-  - [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+  - [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
   - [x] PLUS (https://github.com/mswzeus/PLUS/)
   - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 - project:
@@ -175,13 +170,7 @@ While we are working on a proper publication, if you are already using this tool
 - [x] Glove
 - [x] Word2Vec
 - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-- [x] ESM (https://www.biorxiv.org/content/10.1101/622803v3)
+- [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
 - [x] PLUS (https://github.com/mswzeus/PLUS/)
 - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>
-
-## Building a Distribution
-Building the packages best happens using invoke.
-If you manage your dependencies with poetry this should be already installed.
-Simply use `poetry run invoke clean build` to update your requirements according to your current status
-and to generate the dist files

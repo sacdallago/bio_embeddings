@@ -8,7 +8,7 @@ class Word2VecEmbedder(EmbedderInterface):
     name = "word2vec"
     embedding_dimension = 1024
     number_of_layers = 1
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     def __init__(self, **kwargs):
         """
