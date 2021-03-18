@@ -8,6 +8,7 @@ from enum import Enum
 from bio_embeddings.extract.annotations import Location, Membrane
 from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
 from bio_embeddings.extract.light_attention.light_attention_model import LightAttention
+from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
 
@@ -33,41 +34,35 @@ _mem_labels = {
 
 
 class LightAttentionAnnotationExtractor(object):
+    necessary_files = ["subcellular_location_checkpoint_file", 'membrane_checkpoint_file']
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
-        :param secondary_structure_checkpoint_file: path of secondary structure inference model checkpoint file
+        :param membrane_checkpoint_file: path of secondary structure inference model checkpoint file
         :param subcellular_location_checkpoint_file: path of the subcellular location inference model checkpoint file
         """
 
         self._options = kwargs
-
-        self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
-        self._membrane_checkpoint_file = self._options.get('membrane_checkpoint_file')
-
-        # use GPU if available, otherwise run on CPU
-        # !important: GPU visibility can easily be hidden using this env variable: CUDA_VISIBLE_DEVICES=""
-        # This is especially useful if using an old CUDA device which is not supported by pytorch!
-
-        # TODO: better handling of CUDA device (instead of 0; available). To be done when multi-GPU machine available
-        self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self._device = get_device(device)
 
         # Create un-trained (raw) model
         self._subcellular_location_model = LightAttention(output_dim=10).to(self._device)
         self._membrane_model = LightAttention(output_dim=2).to(self._device)
 
-        if torch.cuda.is_available():
-            logger.info("CUDA available")
-            # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
-            membrane_state = torch.load(self._subcellular_location_checkpoint_file)
-        else:
-            logger.info("CUDA NOT available")
-            # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
-            membrane_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
+        # Download the checkpoint files if needed
+        for file in self.necessary_files:
+            if not self._options.get(file):
+                self._options[file] = get_model_file(model="light_attention_annotations_extractors", file=file)
+
+        self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
+        self._membrane_checkpoint_file = self._options.get('membrane_checkpoint_file')
+        self._device = get_device(device)
+
+        # load pre-trained weights for annotation machines
+        subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)
+        membrane_state = torch.load(self._membrane_checkpoint_file, map_location=self._device)
 
         # load pre-trained weights into raw model
         self._subcellular_location_model.load_state_dict(subcellular_state['state_dict'])
@@ -93,4 +88,3 @@ class LightAttentionAnnotationExtractor(object):
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
         return SubcellularLocalizationAndMembraneBoundness(localization=pred_loc, membrane=pred_mem)
-

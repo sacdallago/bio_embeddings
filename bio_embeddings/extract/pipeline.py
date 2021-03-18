@@ -194,12 +194,11 @@ def predict_annotations_using_light_attention(**kwargs) -> Dict[str, Any]:
     """
 
     check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
-    necessary_files = ['secondary_structure_checkpoint_file', 'subcellular_location_checkpoint_file']
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
     # Download necessary files if needed
-    for file in necessary_files:
+    for file in LightAttentionAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
             result_kwargs[file] = get_model_file(model=f'light_attention_annotations_extractors', file=file)
 
