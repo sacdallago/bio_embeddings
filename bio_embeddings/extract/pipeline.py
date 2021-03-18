@@ -219,16 +219,6 @@ def light_attention(**kwargs) -> Dict[str, Any]:
                                                                   extension='.csv')
     result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
 
-    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
-        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
-            embedding = np.array(embedding_file[protein_sequence.id])
-
-            annotations = annotation_extractor.get_subcellular_location(embedding)
-
-            # Per-sequence annotations, e.g. subcell loc & membrane boundness
-            mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
-            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
-
     # Write files
     mapping_file.to_csv(per_sequence_predictions_file_path)
 
