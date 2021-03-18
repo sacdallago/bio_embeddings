@@ -40,7 +40,7 @@ class LightAttentionAnnotationExtractor(object):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
-        :param membrane_checkpoint_file: path of secondary structure inference model checkpoint file
+        :param membrane_checkpoint_file: path of the membrane boundness inference model checkpoint file
         :param subcellular_location_checkpoint_file: path of the subcellular location inference model checkpoint file
         """
 
