@@ -14,3 +14,13 @@ annotations_from_seqvec:
   depends_on: seqvec_embeddings
   secondary_structure_checkpoint_file:
   subcellular_location_checkpoint_file:
+umap_projections:
+  type: project
+  protocol: umap
+  depends_on: seqvec_embeddings
+  n_components: 2
+plotly_visualization:
+  type: visualize
+  protocol: plotly
+  display_unknown: True
+  depends_on: umap_projections

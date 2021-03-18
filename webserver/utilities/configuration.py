@@ -1,6 +1,16 @@
 import os.path
 from os import environ
 
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+if "SENTRY_DSN" in environ:
+    sentry_sdk.init(
+        dsn=environ["SENTRY_DSN"],
+        integrations=[FlaskIntegration(), CeleryIntegration()],
+    )
+
 model_directory = environ["MODEL_DIRECTORY"]
 
 configuration = {

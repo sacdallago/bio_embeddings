@@ -2,12 +2,13 @@ import logging
 import torch
 import collections
 
-from typing import List
+from typing import List, Union
 from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import Location, Membrane, Disorder, SecondaryStructure
 from bio_embeddings.extract.basic.annotation_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
+from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
 
@@ -58,8 +59,9 @@ BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 
 
 
 class BasicAnnotationExtractor(object):
+    necessary_files = ["secondary_structure_checkpoint_file", "subcellular_location_checkpoint_file"]
 
-    def __init__(self, model_type, **kwargs):
+    def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -69,20 +71,9 @@ class BasicAnnotationExtractor(object):
 
         self._options = kwargs
         self._model_type = model_type
+        self._device = get_device(device)
 
-        self._secondary_structure_checkpoint_file = self._options.get('secondary_structure_checkpoint_file')
-        self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
-
-        # use GPU if available, otherwise run on CPU
-        # !important: GPU visibility can easily be hidden using this env variable: CUDA_VISIBLE_DEVICES=""
-        # This is especially useful if using an old CUDA device which is not supported by pytorch!
-
-        # TODO: better handling of CUDA device (instead of 0; available). To be done when multi-GPU machine available
-        self._device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
-        # Read in pre-trained model
-
-        # Create un-trained (raw) model
+        # Create un-trained (raw) model and ensure self._model_type is valid
         if self._model_type == "seqvec_from_publication":
             self._subcellular_location_model = SUBCELL_FNN().to(self._device)
         elif self._model_type == "bert_from_publication": # Drop batchNorm for ProtTrans models
@@ -91,21 +82,21 @@ class BasicAnnotationExtractor(object):
             print("You first need to define your custom model architecture.")
             raise NotImplementedError
 
+        # Download the checkpoint files if needed
+        for file in self.necessary_files:
+            if not self._options.get(file):
+                self._options[file] = get_model_file(model=f"{self._model_type}_annotations_extractors", file=file)
+
+        self._secondary_structure_checkpoint_file = self._options['secondary_structure_checkpoint_file']
+        self._subcellular_location_checkpoint_file = self._options['subcellular_location_checkpoint_file']
+
+        # Read in pre-trained model
+
         self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
-        if torch.cuda.is_available():
-            logger.info("CUDA available")
-
-            # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file)
-            secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file)
-        else:
-            logger.info("CUDA NOT available")
-
-            # load pre-trained weights for annotation machines
-            subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location='cpu')
-            secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location='cpu')
-            pass
+        # load pre-trained weights for annotation machines
+        subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)
+        secondary_structure_state = torch.load(self._secondary_structure_checkpoint_file, map_location=self._device)
 
         # load pre-trained weights into raw model
         self._subcellular_location_model.load_state_dict(subcellular_state['state_dict'])

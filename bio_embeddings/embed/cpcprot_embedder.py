@@ -22,7 +22,7 @@ class CPCProtEmbedder(EmbedderInterface):
     embedding_dimension = 512
     number_of_layers = 1
 
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         super().__init__(device, **kwargs)

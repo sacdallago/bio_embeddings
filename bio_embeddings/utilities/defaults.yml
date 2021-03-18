@@ -32,8 +32,17 @@ prottrans_xlnet_uniref100:
 prottrans_albert_bfd:
   model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/albert/prottrans_albert_bfd.zip"
 
+prottrans_t5_bfd:
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/prottrans_t5_bfd.zip"
+
+prottrans_t5_uniref50:
+  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/prottrans_t5_uniref50.zip"
+
 esm:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
+
+esm1b:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1b/esm1b_t33_650M_UR50S.pt"
 
 cpcprot:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/cpcprot/best.ckpt"
@@ -43,3 +52,6 @@ plus_rnn:
 
 bepler:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/bepler/ssa_L1_100d_lstm3x512_lm_i512_mb64_tau0.5_lambda0.1_p0.05_epoch100_updated.state_dict"
+
+deepblast:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/deepblast/deepblast-lstm4x.pt"

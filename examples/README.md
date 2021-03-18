@@ -1,3 +1,5 @@
+# Pipeline Examples
+
 In this folder you will find a couple examples of how to use the pipeline or its outputs.
 
 You can refer to the [`parameters_blueprint.yml`](parameters_blueprint.yml) file for all pipeline parameters, including details about their functionality.
@@ -23,6 +25,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[disprot](#disprot-used-for-our-manuscript)|Embedding generation & visualization|
 |[docker](#docker)|Pipeline use through Docker|
 |[advanced_use_case](#pass-your-own-reducer-advanced_use_case)|Embedding generation & transformation|
+|[deepblast](#deepblast)|Use [DeepBLAST](https://github.com/flatironinstitute/deepblast) to align sequences|
 
 ---
 

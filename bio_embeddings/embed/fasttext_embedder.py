@@ -8,7 +8,7 @@ class FastTextEmbedder(EmbedderInterface):
     name = "fasttext"
     embedding_dimension = 1024
     number_of_layers = 1
-    _necessary_files = ["model_file"]
+    necessary_files = ["model_file"]
 
     def __init__(self, **kwargs):
         """

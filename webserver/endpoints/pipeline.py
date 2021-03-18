@@ -46,14 +46,15 @@ class Pipeline(Resource):
 
 
 _extensions = {
-        "embeddings_file": ".h5",
-        "reduced_embeddings_file": ".h5",
-        "sequence_file": ".fasta",
-        "DSSP3_predictions_file": ".fasta",
-        "DSSP8_predictions_file": ".fasta",
-        "disorder_predictions_file": ".fasta",
-        "per_sequence_predictions_file": '.csv',
-        "mapping_file": ".csv"
+    "embeddings_file": ".h5",
+    "reduced_embeddings_file": ".h5",
+    "sequence_file": ".fasta",
+    "DSSP3_predictions_file": ".fasta",
+    "DSSP8_predictions_file": ".fasta",
+    "disorder_predictions_file": ".fasta",
+    "per_sequence_predictions_file": '.csv',
+    "mapping_file": ".csv",
+    "plot_file": ".html"
 }
 
 
@@ -68,19 +69,16 @@ class PipelineDownload(Resource):
 
         job_status = run_pipeline.AsyncResult(job_id).status
 
-        if job_status == "SUCCESS" or job_status == "STARTED":
-            file = get_file(job_id, file_request)
-            if file:
-                return send_file(
-                    file,
-                    attachment_filename=file_request+_extensions.get(file_request, ""),
-                    as_attachment=True)
-            else:
-                return abort(
-                    404,
-                    f"File {file_request} not found. "
-                    f"Either requesting invalid file or job not finished yet. "
-                    f"Job status {job_status}.",
-                )
+        file = get_file(job_id, file_request)
+        if file:
+            return send_file(
+                file,
+                attachment_filename=file_request+_extensions.get(file_request, ""),
+                as_attachment=True)
         else:
-            abort(404, "Job not found or not completed.")
+            return abort(
+                404,
+                f"File {file_request} not found. "
+                f"Either requesting invalid file or job not finished yet. "
+                f"Job status {job_status}.",
+            )

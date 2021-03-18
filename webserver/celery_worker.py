@@ -20,3 +20,4 @@ if "pipeline" in configuration['celery']['celery_worker_type']:
 
 if __name__ == "__main__":
     task_keeper.start()
+

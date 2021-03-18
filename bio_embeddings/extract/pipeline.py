@@ -42,7 +42,12 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # The reference annotations file must be CSV containing two columns & headers like:
     # identifier,label
     # ** identifier doesn't need to be unique **
-    reference_annotations_file = read_csv(result_kwargs['reference_annotations_file'])
+    reference_annotations_file = read_csv(result_kwargs["reference_annotations_file"])
+    if not {"identifier", "label"} <= set(reference_annotations_file.columns):
+        raise InvalidAnnotationFileError(
+            f"The annotation file must contains columns 'identifier' and 'label', "
+            f"but yours has {set(reference_annotations_file.columns)}"
+        )
 
     # If reference annotations contain nans (either in label or identifier) throw an error!
     # https://github.com/sacdallago/bio_embeddings/issues/58
@@ -236,12 +241,11 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
     """
 
     check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
-    necessary_files = ['secondary_structure_checkpoint_file', 'subcellular_location_checkpoint_file']
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    # Download necessary files if needed
-    for file in necessary_files:
+    # Download the checkpoint files if needed
+    for file in BasicAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
             result_kwargs[file] = get_model_file(model=f'{model}_annotations_extractors', file=file)
 

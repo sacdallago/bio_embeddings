@@ -1,18 +1,14 @@
-# Welcome to bio_embeddings's documentation!
+# Bio Embeddings
 
-```{eval-rst}
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+```{toctree}
+:maxdepth: 1
+
+Pipeline Examples <https://github.com/sacdallago/bio_embeddings/tree/develop/examples>
+parameter_blueprints
+notebooks/README
+api/index
 ```
 
-# Modules
-
-```{eval-rst}
-.. automodule:: bio_embeddings
-   :members:
-```
-
-```{eval-rst}
-.. mdinclude:: ../README.md
+```{include} ../README.md
+:start-after: "# Bio Embeddings"
 ```

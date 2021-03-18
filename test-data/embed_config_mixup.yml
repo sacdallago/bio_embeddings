@@ -1,0 +1,11 @@
+global:
+  sequences_file: seqwence-protein.fasta
+  prefix: fishy_embed_config
+embed:
+  type: embed
+  protocol: esm1b
+  # Here a mixup happened: the protocol is esm1b, but this use model_file,
+  # not model_directory with a T5 model
+  model_directory: /mnt/project/bio_embeddings/models/lms/t5
+  reduce: True
+  discard_per_amino_acid_embeddings: False

@@ -101,13 +101,18 @@
               "protocol": {
                 "type": "string",
                 "enum": [
-                  "seqvec",
+                  "bepler",
+                  "cpcprot",
+                  "esm",
+                  "esm1b",
+                  "plus_rnn",
                   "prottrans_albert_bfd",
                   "prottrans_bert_bfd",
+                  "prottrans_t5_bfd",
+                  "prottrans_t5_uniref50",
                   "prottrans_xlnet_uniref100",
-                  "unirep",
-                  "esm",
-                  "cpcprot"
+                  "seqvec",
+                  "unirep"
                 ]
               },
               "model_directory": {

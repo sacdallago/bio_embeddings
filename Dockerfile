@@ -5,7 +5,7 @@ FROM ubuntu:20.04 as venv-build
 # build-essential is for jsonnet
 RUN apt-get update && \
     apt-get install -y curl build-essential python3 python3-distutils python3-venv python3-dev git && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - --version 1.1.3
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 - --version 1.1.3
 
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
@@ -17,6 +17,7 @@ RUN python3 -m venv .venv && \
     # Make sure poetry install the metadata for bio_embeddings
     mkdir bio_embeddings && \
     touch bio_embeddings/__init__.py && \
+    touch README.md && \
     python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
     python3 $HOME/.poetry/bin/poetry install --no-dev -E all
 
