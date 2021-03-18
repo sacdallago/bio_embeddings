@@ -53,7 +53,7 @@ _disor_labels = {
 }
 
 BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder')
-BasicSubcellularLocalizationResult = collections.namedtuple('BasicSubcellularLocalizationResult', 'localization membrane')
+SubcellularLocalizationAndMembraneBoundness = collections.namedtuple('SubcellularLocalizationAndMembraneBoundness', 'localization membrane')
 BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
 
 
@@ -115,7 +115,7 @@ class BasicAnnotationExtractor(object):
         self._subcellular_location_model.eval()
         self._secondary_structure_model.eval()
 
-    def get_subcellular_location(self, raw_embedding: ndarray) -> BasicSubcellularLocalizationResult:
+    def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationAndMembraneBoundness:
         # Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --> 1024).
         # This is similar to embedder.reduce_per_protein(),
         # but more efficient since may be run in GPU (see self._device)
@@ -140,7 +140,7 @@ class BasicAnnotationExtractor(object):
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
-        return BasicSubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
+        return SubcellularLocalizationAndMembraneBoundness(localization=pred_loc, membrane=pred_mem)
 
     def get_secondary_structure(self, raw_embedding: ndarray) -> BasicSecondaryStructureResult:
         # TODO: xxmh: same as for subcell loc.:

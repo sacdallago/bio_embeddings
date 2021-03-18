@@ -1,2 +1,2 @@
 from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicAnnotationExtractor, \
-    BasicSecondaryStructureResult, BasicExtractedAnnotations, BasicSubcellularLocalizationResult
+    BasicSecondaryStructureResult, BasicExtractedAnnotations, SubcellularLocalizationAndMembraneBoundness

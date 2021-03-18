@@ -1,12 +1,12 @@
 import logging
 import torch
 
-from typing import List
+from typing import List, Union
 from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import Location, Membrane
-from bio_embeddings.extract.basic import BasicSubcellularLocalizationResult
+from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
 from bio_embeddings.extract.light_attention.light_attention_model import LightAttention
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ _mem_labels = {
 
 class LightAttentionAnnotationExtractor(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -77,11 +77,11 @@ class LightAttentionAnnotationExtractor(object):
         self._subcellular_location_model.eval()
         self._membrane_model.eval()
 
-    def get_subcellular_location(self, raw_embedding: ndarray) -> BasicSubcellularLocalizationResult:
+    def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationAndMembraneBoundness:
         '''
         :param raw_embedding: np array of [sequence_length, 1024]
 
-        :eturns: BasicSubcellularLocalizationResult with predictions for localization and membrane bound or not
+        :eturns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane bound or not
         '''
         # turn to tensor and add singleton batch dimension
         embedding = torch.tensor(raw_embedding).to(self._device)[None, ...]
@@ -92,5 +92,5 @@ class LightAttentionAnnotationExtractor(object):
         pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
         pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
-        return BasicSubcellularLocalizationResult(localization=pred_loc, membrane=pred_mem)
+        return SubcellularLocalizationAndMembraneBoundness(localization=pred_loc, membrane=pred_mem)
 
