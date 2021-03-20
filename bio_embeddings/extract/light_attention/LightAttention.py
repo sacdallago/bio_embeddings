@@ -33,7 +33,7 @@ _mem_labels = {
 }
 
 
-class LightAttentionAnnotationExtractor(object):
+class LightAttentionAnnotationExtractor:
     necessary_files = ["subcellular_location_checkpoint_file", 'membrane_checkpoint_file']
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
@@ -76,7 +76,7 @@ class LightAttentionAnnotationExtractor(object):
         '''
         :param raw_embedding: np array of [sequence_length, 1024]
 
-        :eturns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane bound or not
+        :returns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane boundness
         '''
         # turn to tensor and add singleton batch dimension
         embedding = torch.tensor(raw_embedding).to(self._device)[None, ...]
