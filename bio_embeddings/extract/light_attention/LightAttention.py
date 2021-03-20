@@ -33,7 +33,7 @@ _mem_labels = {
 }
 
 
-class LightAttentionAnnotationExtractor(object):
+class LightAttentionAnnotationExtractor:
     necessary_files = ["subcellular_location_checkpoint_file", 'membrane_checkpoint_file']
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
