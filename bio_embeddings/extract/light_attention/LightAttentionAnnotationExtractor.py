@@ -1,4 +1,6 @@
 import logging
+import os
+
 import torch
 
 from typing import List, Union
@@ -8,7 +10,8 @@ from enum import Enum
 from bio_embeddings.extract.annotations import Location, Membrane
 from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
 from bio_embeddings.extract.light_attention.light_attention_model import LightAttention
-from bio_embeddings.utilities import get_device, get_model_file
+from bio_embeddings.utilities import get_device, get_model_file, MissingParameterError
+from bio_embeddings.utilities.pipeline import _validate_file
 
 logger = logging.getLogger(__name__)
 
@@ -51,14 +54,15 @@ class LightAttentionAnnotationExtractor:
         self._subcellular_location_model = LightAttention(output_dim=10).to(self._device)
         self._membrane_model = LightAttention(output_dim=2).to(self._device)
 
-        # Download the checkpoint files if needed
-        for file in self.necessary_files:
-            if not self._options.get(file):
-                self._options[file] = get_model_file(model="light_attention_annotations_extractors", file=file)
-
         self._subcellular_location_checkpoint_file = self._options.get('subcellular_location_checkpoint_file')
         self._membrane_checkpoint_file = self._options.get('membrane_checkpoint_file')
         self._device = get_device(device)
+
+        # check that files exist
+        for file in self.necessary_files:
+            if not os.path.exists(file):
+                raise MissingParameterError(
+                    'Please provide subcellular_location_checkpoint_file and membrane_checkpoint_file paths as named parameters to the constructor. Mind that these should match the embeddings used, e.g.: prottrans_bert_bfd should use la_protbert weights')
 
         # load pre-trained weights for annotation machines
         subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)

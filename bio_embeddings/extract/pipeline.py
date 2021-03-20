@@ -9,7 +9,7 @@ from pandas import read_csv, DataFrame, concat as concatenate_dataframe
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
-from bio_embeddings.extract.light_attention.LightAttention import LightAttentionAnnotationExtractor
+from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -197,10 +197,20 @@ def bert_from_publication(**kwargs) -> Dict[str, Any]:
     return predict_annotations_using_basic_models("bert_from_publication", **kwargs)
 
 
-def light_attention(**kwargs) -> Dict[str, Any]:
+def la_prott5(**kwargs) -> Dict[str, Any]:
+    return light_attention('la_prott5', **kwargs)
+
+
+def la_protbert(**kwargs) -> Dict[str, Any]:
+    return light_attention('la_protbert', **kwargs)
+
+
+def light_attention(model, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts subcellular locationfrom "embeddings_file".
     Embeddings can be generated with ProtBert.
+
+    :param model: either "la_protbert" or "la_prott5". Used to download files
     """
 
     check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
@@ -210,7 +220,7 @@ def light_attention(**kwargs) -> Dict[str, Any]:
     # Download necessary files if needed
     for file in LightAttentionAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=f'light_attention_annotations_extractors', file=file)
+            result_kwargs[file] = get_model_file(model=model, file=file)
 
     annotation_extractor = LightAttentionAnnotationExtractor(**result_kwargs)
 
@@ -223,6 +233,16 @@ def light_attention(**kwargs) -> Dict[str, Any]:
                                                                   'per_sequence_predictions_file',
                                                                   extension='.csv')
     result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
+
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+            embedding = np.array(embedding_file[protein_sequence.id])
+
+            annotations = annotation_extractor.get_subcellular_location(embedding)
+
+            # Per-sequence annotations, e.g. subcell loc & membrane boundness
+            mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
+            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
 
     # Write files
     mapping_file.to_csv(per_sequence_predictions_file_path)
@@ -317,7 +337,8 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
 PROTOCOLS = {
     "bert_from_publication": bert_from_publication,
     "seqvec_from_publication": seqvec_from_publication,
-    "light_attention": light_attention,
+    "la_prott5": la_prott5,
+    "la_protbert": la_protbert,
     "unsupervised": unsupervised
 }
 
