@@ -10,8 +10,7 @@ from enum import Enum
 from bio_embeddings.extract.annotations import Location, Membrane
 from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
 from bio_embeddings.extract.light_attention.light_attention_model import LightAttention
-from bio_embeddings.utilities import get_device, get_model_file, MissingParameterError
-from bio_embeddings.utilities.pipeline import _validate_file
+from bio_embeddings.utilities import get_device, MissingParameterError
 
 logger = logging.getLogger(__name__)
 
