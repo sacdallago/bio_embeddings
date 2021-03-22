@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+ * The `projected_embeddings_file.csv` of project stages has been renamed to `projected_reduced_embeddings_file.csv`. For backwards compatibility, `projected_embeddings_file.csv` remains as symlink to `projected_reduced_embeddings_file.csv` 
+ * Added the pb_tucker model as project stage. Tucker is a contrastive learning model trained to distinguish CATH superfamilies. It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128. See https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1
+
 ## v0.1.7
 
  * Added `prottrans_t5_uniref50`/`ProtTransT5UniRef50Embedder`. This version improves over T5 BFD by being finetuned on UniRef50.
