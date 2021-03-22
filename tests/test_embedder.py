@@ -42,19 +42,9 @@ from bio_embeddings.embed import (
 )
 from bio_embeddings.embed.pipeline import embed_and_write_batched
 from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
-from bio_embeddings.utilities import read_fasta, FileSystemFileManager
+from bio_embeddings.project.pb_tucker import PBTucker
+from bio_embeddings.utilities import read_fasta, FileSystemFileManager, get_model_file
 from tests.shared import check_embedding
-
-
-class ProtTransBertBFDWithTuckerEmbedder(ProtTransBertBFDEmbedder):
-    embedding_dimension = 128
-
-    def __init__(self, **kwargs):
-        super().__init__(use_tucker=True, **kwargs)
-        # So we're cheating here a bit : We want the constructor to load the bert models,
-        # but after we use the _with_tucker name to get a distinct fixture
-        self.name += "_with_tucker"
-
 
 all_embedders = [
     BeplerEmbedder,
@@ -64,7 +54,6 @@ all_embedders = [
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
-    ProtTransBertBFDWithTuckerEmbedder,
     pytest.param(
         ProtTransT5BFDEmbedder,
         marks=pytest.mark.skipif(
@@ -267,3 +256,44 @@ def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
     )
 
     assert caplog.messages == []
+
+
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
+@pytest.mark.parametrize(
+    "device",
+    [
+        torch.device("cpu"),
+        pytest.param(
+            torch.device("cuda"),
+            marks=pytest.mark.skipif(
+                not torch.cuda.is_available(),
+                reason="Can't run CUDA tests without a GPU",
+            ),
+        ),
+    ],
+)
+def test_tucker(pytestconfig, device):
+    bert_embeddings_file = pytestconfig.rootpath.joinpath(
+        "test-data/reference-embeddings"
+    ).joinpath(ProtTransBertBFDEmbedder.name + ".npz")
+    bert_embeddings = numpy.load(bert_embeddings_file)
+    tucker_embeddings_file = pytestconfig.rootpath.joinpath(
+        "test-data/reference-embeddings"
+    ).joinpath(PBTucker.name + ".npz")
+    tucker_embeddings = numpy.load(tucker_embeddings_file)
+
+    pb_tucker_model = PBTucker.from_file(
+        get_model_file("pb_tucker", "model_file"), device
+    )
+
+    with torch.no_grad():
+        for name, embedding in bert_embeddings.items():
+            reduced_embedding = embedding.mean(axis=0)
+            tucker_embedding = (
+                pb_tucker_model.single_pass(
+                    torch.tensor(reduced_embedding, device=device)
+                )
+                .cpu()
+                .numpy()
+            )
+            assert numpy.allclose(tucker_embeddings[name], tucker_embedding), name

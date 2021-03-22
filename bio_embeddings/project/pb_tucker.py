@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Union
 
 import torch
 from torch import nn
@@ -11,6 +12,7 @@ class PBTucker(nn.Module):
     It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128.
     See https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1
     """
+    name: str = "pb_tucker"
 
     def __init__(self):
         super(PBTucker, self).__init__()
@@ -21,7 +23,7 @@ class PBTucker(nn.Module):
         )
 
     @staticmethod
-    def from_file(model_file: Path, device: torch.device) -> "PBTucker":
+    def from_file(model_file: Union[str, Path], device: torch.device) -> "PBTucker":
         model = PBTucker()
         model.load_state_dict(torch.load(model_file, map_location=device)["state_dict"])
         model.eval()
