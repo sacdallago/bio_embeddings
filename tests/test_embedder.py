@@ -296,4 +296,4 @@ def test_tucker(pytestconfig, device):
                 .cpu()
                 .numpy()
             )
-            assert numpy.allclose(tucker_embeddings[name], tucker_embedding), name
+            assert numpy.allclose(tucker_embeddings[name], tucker_embedding, rtol=1.0e-3, atol=1.0e-5), name
