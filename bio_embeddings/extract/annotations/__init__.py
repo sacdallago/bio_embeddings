@@ -4,3 +4,4 @@ from bio_embeddings.extract.annotations.Membrane import Membrane
 from bio_embeddings.extract.annotations.SecondaryStructure import SecondaryStructure
 
 __all__ = ["Disorder", "Location", "Membrane", "SecondaryStructure"]
+

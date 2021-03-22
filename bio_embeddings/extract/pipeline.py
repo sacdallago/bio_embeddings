@@ -9,6 +9,7 @@ from pandas import read_csv, DataFrame, concat as concatenate_dataframe
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
+from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -52,8 +53,9 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # https://github.com/sacdallago/bio_embeddings/issues/58
     # https://datatofish.com/check-nan-pandas-dataframe/
     if reference_annotations_file[['identifier', 'label']].isnull().values.any():
-        raise InvalidAnnotationFileError("Your annotation file contains NaN values in either identifier or label columns.\n"
-                                         "Please remove these and run the pipeline again.")
+        raise InvalidAnnotationFileError(
+            "Your annotation file contains NaN values in either identifier or label columns.\n"
+            "Please remove these and run the pipeline again.")
 
     # Save a copy of the annotation file with only necessary cols cols
     input_reference_annotations_file_path = file_manager.create_file(result_kwargs.get('prefix'),
@@ -125,7 +127,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
         n_jobs=result_kwargs['n_jobs']
     )
 
-    result_kwargs['keep_pairwise_distances_matrix_file'] = result_kwargs.get('keep_pairwise_distances_matrix_file', False)
+    result_kwargs['keep_pairwise_distances_matrix_file'] = result_kwargs.get('keep_pairwise_distances_matrix_file',
+                                                                             False)
 
     if result_kwargs['keep_pairwise_distances_matrix_file']:
         pairwise_distances_matrix_file_path = file_manager.create_file(result_kwargs.get('prefix'),
@@ -148,18 +151,22 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
 
     for row in k_nn_identifiers:
         k_nn_annotations.append([";".join(
-                reference_annotations_file[reference_annotations_file['identifier'] == identifier]['label'].values
-            ) for identifier in row])
+            reference_annotations_file[reference_annotations_file['identifier'] == identifier]['label'].values
+        ) for identifier in row])
 
     # At this stage I have: nxk list of identifiers (strings), nxk indices (ints), nxk distances (floats),
     # nxk annotations
     # Now I need to expand the lists into a table and store the table into a CSV
 
-    k_nn_identifiers_df = DataFrame(k_nn_identifiers, columns=[f"k_nn_{i+1}_identifier" for i in range(len(k_nn_identifiers[0]))])
-    k_nn_distances_df = DataFrame(k_nn_distances, columns=[f"k_nn_{i+1}_distance" for i in range(len(k_nn_distances[0]))])
-    k_nn_annotations_df = DataFrame(k_nn_annotations, columns=[f"k_nn_{i+1}_annotations" for i in range(len(k_nn_annotations[0]))])
+    k_nn_identifiers_df = DataFrame(k_nn_identifiers,
+                                    columns=[f"k_nn_{i + 1}_identifier" for i in range(len(k_nn_identifiers[0]))])
+    k_nn_distances_df = DataFrame(k_nn_distances,
+                                  columns=[f"k_nn_{i + 1}_distance" for i in range(len(k_nn_distances[0]))])
+    k_nn_annotations_df = DataFrame(k_nn_annotations,
+                                    columns=[f"k_nn_{i + 1}_annotations" for i in range(len(k_nn_annotations[0]))])
 
-    transferred_annotations_dataframe = concatenate_dataframe([k_nn_identifiers_df, k_nn_distances_df, k_nn_annotations_df], axis=1)
+    transferred_annotations_dataframe = concatenate_dataframe(
+        [k_nn_identifiers_df, k_nn_distances_df, k_nn_annotations_df], axis=1)
     transferred_annotations_dataframe.index = target_identifiers
 
     # At this stage we would like to aggregate all k_nn_XX_annotations into one column
@@ -170,7 +177,8 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
     # 2. Split joined string into separate annotations using split(";") (aka "A;B;A;C;D" --> ["A","B","A","C","D"])
     # 3. Take a unique set of annotations by using set(*) (aka ["A","B","A","C","D"] --> set{"A","B","C","D"})
     # 4. Join the new unique set of annotations using ";" (aka set{"A","B","C","D"}) --> "A;B;C;D")
-    transferred_annotations_dataframe['transferred_annotations'] = [";".join(set(";".join(k_nn_row).split(";"))) for k_nn_row in k_nn_annotations]
+    transferred_annotations_dataframe['transferred_annotations'] = [";".join(set(";".join(k_nn_row).split(";"))) for
+                                                                    k_nn_row in k_nn_annotations]
 
     # Merge with mapping file! Get also original ids!
     transferred_annotations_dataframe = mapping_file.join(transferred_annotations_dataframe)
@@ -187,6 +195,59 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
 
 def bert_from_publication(**kwargs) -> Dict[str, Any]:
     return predict_annotations_using_basic_models("bert_from_publication", **kwargs)
+
+
+def la_prott5(**kwargs) -> Dict[str, Any]:
+    return light_attention('la_prott5', **kwargs)
+
+
+def la_protbert(**kwargs) -> Dict[str, Any]:
+    return light_attention('la_protbert', **kwargs)
+
+
+def light_attention(model, **kwargs) -> Dict[str, Any]:
+    """
+    Protocol extracts subcellular locationfrom "embeddings_file".
+    Embeddings can be generated with ProtBert.
+
+    :param model: either "la_protbert" or "la_prott5". Used to download files
+    """
+
+    check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Download necessary files if needed
+    for file in LightAttentionAnnotationExtractor.necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model=model, file=file)
+
+    annotation_extractor = LightAttentionAnnotationExtractor(**result_kwargs)
+
+    # mapping file will be needed for protein-wide annotations
+    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+
+    # Try to create final files (if this fails, now is better than later
+    per_sequence_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                  result_kwargs.get('stage_name'),
+                                                                  'per_sequence_predictions_file',
+                                                                  extension='.csv')
+    result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
+
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+            embedding = np.array(embedding_file[protein_sequence.id])
+
+            annotations = annotation_extractor.get_subcellular_location(embedding)
+
+            # Per-sequence annotations, e.g. subcell loc & membrane boundness
+            mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
+            mapping_file.at[protein_sequence.id, 'membrane_or_soluble'] = annotations.membrane.value
+
+    # Write files
+    mapping_file.to_csv(per_sequence_predictions_file_path)
+
+    return result_kwargs
 
 
 def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
@@ -242,7 +303,6 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
 
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
         for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
-
             # Per-AA annotations: DSSP3, DSSP8 and disorder
             embedding = np.array(embedding_file[protein_sequence.id])
 
@@ -277,6 +337,8 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
 PROTOCOLS = {
     "bert_from_publication": bert_from_publication,
     "seqvec_from_publication": seqvec_from_publication,
+    "la_prott5": la_prott5,
+    "la_protbert": la_protbert,
     "unsupervised": unsupervised
 }
 

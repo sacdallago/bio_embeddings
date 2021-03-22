@@ -1,0 +1,1 @@
+from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
