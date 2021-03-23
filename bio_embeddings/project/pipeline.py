@@ -5,13 +5,61 @@ from typing import Dict, Any
 import h5py
 import numpy as np
 import torch
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 
 from bio_embeddings.project.pb_tucker import PBTucker
 from bio_embeddings.project.tsne import tsne_reduce
 from bio_embeddings.project.umap import umap_reduce
-from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, FileManagerInterface, \
-    get_model_file, get_device
+from bio_embeddings.utilities import (
+    InvalidParameterError,
+    check_required,
+    get_file_manager,
+    FileManagerInterface,
+    get_model_file,
+    get_device,
+)
+
+
+def write_embeddings(
+    mapping: DataFrame,
+    projected_embeddings: np.ndarray,
+    result_kwargs: Dict[str, Any],
+    file_manager: FileManagerInterface,
+):
+    """Writes t-sne/umap to both the legacy csv and the new h5 format"""
+    # Write old csv file
+    projected_reduced_embeddings_file_path = file_manager.create_file(
+        result_kwargs.get("prefix"),
+        result_kwargs.get("stage_name"),
+        "projected_embeddings_file",
+        extension=".csv",
+    )
+
+    for i in range(result_kwargs["n_components"]):
+        mapping[f"component_{i}"] = projected_embeddings[:, i]
+
+    mapping.to_csv(projected_reduced_embeddings_file_path)
+
+    # Write new h5 file
+    projected_reduced_embeddings_file_path = file_manager.create_file(
+        result_kwargs.get("prefix"),
+        result_kwargs.get("stage_name"),
+        "projected_reduced_embeddings_file",
+        extension=".h5",
+    )
+
+    with h5py.File(projected_reduced_embeddings_file_path, "w") as output_embeddings:
+        for (sequence_id, original_id), projected_embedding in zip(
+            mapping[["original_id"]].itertuples(), projected_embeddings
+        ):
+            dataset = output_embeddings.create_dataset(
+                sequence_id, data=projected_embedding
+            )
+            dataset.attrs["original_id"] = original_id
+
+    result_kwargs[
+        "projected_reduced_embeddings_file"
+    ] = projected_reduced_embeddings_file_path
 
 
 def tsne(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
@@ -37,16 +85,7 @@ def tsne(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> D
 
     projected_embeddings = tsne_reduce(reduced_embeddings, **result_kwargs)
 
-    for i in range(result_kwargs['n_components']):
-        mapping[f'component_{i}'] = projected_embeddings[:, i]
-
-    projected_reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                      result_kwargs.get('stage_name'),
-                                                                      'projected_reduced_embeddings_file',
-                                                                      extension='.csv')
-
-    mapping.to_csv(projected_reduced_embeddings_file_path)
-    result_kwargs['projected_reduced_embeddings_file'] = projected_reduced_embeddings_file_path
+    write_embeddings(mapping, projected_embeddings, result_kwargs, file_manager)
 
     return result_kwargs
 
@@ -74,16 +113,7 @@ def umap(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> D
 
     projected_embeddings = umap_reduce(reduced_embeddings, **result_kwargs)
 
-    for i in range(result_kwargs['n_components']):
-        mapping[f'component_{i}'] = projected_embeddings[:, i]
-
-    projected_reduced_embeddings_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                      result_kwargs.get('stage_name'),
-                                                                      'projected_reduced_embeddings_file',
-                                                                      extension='.csv')
-
-    mapping.to_csv(projected_reduced_embeddings_file_path)
-    result_kwargs['projected_reduced_embeddings_file'] = projected_reduced_embeddings_file_path
+    write_embeddings(mapping, projected_embeddings, result_kwargs, file_manager)
 
     return result_kwargs
 
@@ -165,9 +195,9 @@ def run(**kwargs):
     # We want to allow chaining protocols, e.g. first tucker than umap,
     # so we need to allow projected embeddings as input
     embeddings_input_file = (
-            kwargs.get("projected_reduced_embeddings_file")
-            or kwargs.get("projected_embeddings_file")
-            or kwargs.get("reduced_embeddings_file")
+        kwargs.get("projected_reduced_embeddings_file")
+        or kwargs.get("projected_embeddings_file")
+        or kwargs.get("reduced_embeddings_file")
     )
     if not embeddings_input_file:
         raise InvalidParameterError(
@@ -179,11 +209,5 @@ def run(**kwargs):
     file_manager = get_file_manager(**kwargs)
 
     result_kwargs = PROTOCOLS[kwargs["protocol"]](file_manager, result_kwargs)
-
-    # Backwards compatibility hack with the old wrong names
-    result_kwargs["projected_embeddings_file"] = result_kwargs["projected_reduced_embeddings_file"]
-    symlink_file = Path(result_kwargs["projected_embeddings_file"]).parent.joinpath("projected_embeddings_file.csv")
-    if not symlink_file.is_symlink():
-        symlink_file.symlink_to(result_kwargs["projected_embeddings_file"])
 
     return result_kwargs
