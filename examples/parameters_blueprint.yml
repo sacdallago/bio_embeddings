@@ -129,8 +129,8 @@ stage_3:
   protocol: plotly
   # Either depend on a project stage with projected embeddings file
   depends_on: stage_2
-  # or define projected embeddings file:
-  # projected_embeddings_file: path/to/projected_embeddings_file.csv
+  # or define projected_reduced_embeddings_file:
+  # projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5
 
   # Optional: csv file with annotations
   # csv must have header: identifier, label

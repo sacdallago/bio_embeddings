@@ -279,12 +279,12 @@
           },
           {
             "properties": {
-              "projected_embeddings_file": {
+              "projected_reduced_embeddings_file": {
                 "type": "string"
               }
             },
             "required": [
-              "projected_embeddings_file"
+              "projected_reduced_embeddings_file"
             ]
           }
         ]

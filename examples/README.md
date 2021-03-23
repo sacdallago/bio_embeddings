@@ -39,7 +39,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
   - The `embed` stage produces an `embeddings_file` and a `reduced_embeddings_file`.
   The former contains embeddings for each AA in each sequence, while the latter contains (fixed sized) embeddings for each sequence in your set.
   You can use the notebooks to check out how to open these. 
-  - The `project` stage produces a CSV `projected_embeddings_file`, which contains `(x,y,z)` coordinates for each sequence in your set.
+  - The `project` stage produces a h5 `projected_reduced_embeddings_file`, which contains `(x,y,z)` coordinates for each sequence in your set.
   - The `visualize` stage produces an HTML `plot_file` containing the plot of the sequences derived from the projection's coordinates.
 
 ---
