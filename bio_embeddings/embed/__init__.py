@@ -41,7 +41,7 @@ try:
     from bio_embeddings.embed.prottrans_xlnet_uniref100_embedder import (
         ProtTransXLNetUniRef100Embedder,
     )
-    from bio_embeddings.embed.prottrans_embedder import (
+    from bio_embeddings.embed.prottrans_t5_embedder import (
         ProtTransT5BFDEmbedder,
         ProtTransT5UniRef50Embedder,
     )
