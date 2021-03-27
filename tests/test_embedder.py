@@ -40,7 +40,7 @@ from bio_embeddings.embed import (
     UniRepEmbedder,
 )
 from bio_embeddings.embed.pipeline import embed_and_write_batched
-from bio_embeddings.embed.prottrans_embedder import ProtTransT5Embedder
+from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.utilities import read_fasta, FileSystemFileManager
 from tests.shared import check_embedding
 
@@ -221,6 +221,7 @@ def test_batching_t5(pytestconfig):
 
 def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
     """Currently a dummy test"""
+
     class Float16Embedder(EmbedderInterface):
         name = "float16embedder"
         embedding_dimension = 1024
@@ -254,4 +255,3 @@ def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
     )
 
     assert caplog.messages == []
-
