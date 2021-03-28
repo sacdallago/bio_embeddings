@@ -75,13 +75,14 @@ def render_scatter_plotly(embeddings_dataframe: DataFrame) -> _Figure:
                          color='label',
                          symbol='label',
                          hover_name=embeddings_dataframe.index,
-                         hover_data=["label"]
+                         hover_data=["label", "original_id"]
                          )
     else:
         fig = px.scatter(embeddings_dataframe,
                          x='component_0',
                          y='component_1',
                          hover_name=embeddings_dataframe.index,
+                         hover_data=["original_id"]
                          )
 
     fig.update_layout(

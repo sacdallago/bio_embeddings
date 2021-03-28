@@ -54,14 +54,18 @@
             "description": "Required: which embedder to use",
             "type": "string",
             "enum": [
+              "bepler",
+              "cpcprot",
+              "esm",
+              "esm1b",
+              "plus_rnn",
+              "prottrans_albert_bfd",
+              "prottrans_bert_bfd",
+              "prottrans_t5_bfd",
+              "prottrans_t5_uniref50",
+              "prottrans_xlnet_uniref100",
               "seqvec",
-              "albert",
-              "bert",
-              "xlnet",
-              "unirep",
-              "fasttext",
-              "word2vec",
-              "glove"
+              "unirep"
             ]
           },
           "reduce": {
@@ -123,21 +127,6 @@
                 "default": "cuda"
               }
             }
-          },
-          {
-            "properties": {
-              "protocol": {
-                "type": "string",
-                "enum": [
-                  "fasttext",
-                  "word2vec",
-                  "glove"
-                ]
-              },
-              "model_file": {
-                "type": "string"
-              }
-            }
           }
         ]
       },
@@ -151,7 +140,8 @@
             "type": "string",
             "enum": [
               "tsne",
-              "umap"
+              "umap",
+              "pb_tucker"
             ]
           },
           "metric": {
@@ -289,12 +279,12 @@
           },
           {
             "properties": {
-              "projected_embeddings_file": {
+              "projected_reduced_embeddings_file": {
                 "type": "string"
               }
             },
             "required": [
-              "projected_embeddings_file"
+              "projected_reduced_embeddings_file"
             ]
           }
         ]
