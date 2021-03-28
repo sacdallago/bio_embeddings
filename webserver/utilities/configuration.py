@@ -34,7 +34,24 @@ configuration = {
         "subcellular_location_checkpoint_file": os.path.join(
             model_directory, "bert_from_publication_annotations_extractors", "subcellular_location_checkpoint_file"
         ),
+        "la_subcellular_location_checkpoint_file": os.path.join(
+            model_directory, "light_attention", "la_protbert_subcellular_location"
+        ),
+        "la_solubility_checkpoint_file": os.path.join(
+            model_directory, "light_attention", "la_protbert_solubility"
+        ),
         # TODO: add goPredSim stuff
+    },
+    # T5 stuff
+    "prottrans_t5_bfd": {
+        "model_directory": os.path.join(model_directory, "prottrans_t5_bfd", "model_directory"),
+        "max_amino_acids": int(environ.get("T5_MAX_AMINO_ACIDS", 2000)),
+        "la_subcellular_location_checkpoint_file": os.path.join(
+            model_directory, "light_attention", "la_prott5_subcellular_location"
+        ),
+        "la_solubility_checkpoint_file": os.path.join(
+            model_directory, "light_attention", "la_prott5_solubility"
+        ),
     },
     # SeqVec stuff
     "seqvec": {
