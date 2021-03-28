@@ -3,9 +3,8 @@ import os
 
 import torch
 
-from typing import List, Union
+from typing import Union
 from numpy import ndarray
-from enum import Enum
 
 from bio_embeddings.extract.annotations import Location, Membrane
 from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
