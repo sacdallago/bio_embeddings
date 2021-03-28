@@ -241,7 +241,7 @@
 <span class="n">stage_2</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">project</span>
   <span class="c1"># Required: which projection algorithm to use</span>
-  <span class="c1"># Options: tsne, umap</span>
+  <span class="c1"># Options: tsne, umap, pb_tucker</span>
   <span class="n">protocol</span><span class="p">:</span> <span class="n">tsne</span>
   <span class="c1"># Either depend on an embedding stage with reduced embeddings</span>
   <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_1</span>
@@ -266,6 +266,11 @@
   <span class="c1"># random_state: *420</span>
   <span class="c1"># verbose: *1</span>
 
+  <span class="c1">## Optional with pb_tucker: Postprocess reduced embeddings with tucker, which is a contrastive</span>
+  <span class="c1">## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.</span>
+  <span class="c1"># model_file: @/path/to/file</span>
+
+
 <span class="n">stage_3</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">visualize</span>
   <span class="c1"># Required: which graph to render</span>
@@ -273,8 +278,8 @@
   <span class="n">protocol</span><span class="p">:</span> <span class="n">plotly</span>
   <span class="c1"># Either depend on a project stage with projected embeddings file</span>
   <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_2</span>
-  <span class="c1"># or define projected embeddings file:</span>
-  <span class="c1"># projected_embeddings_file: path/to/projected_embeddings_file.csv</span>
+  <span class="c1"># or define projected_reduced_embeddings_file:</span>
+  <span class="c1"># projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5</span>
 
   <span class="c1"># Optional: csv file with annotations</span>
   <span class="c1"># csv must have header: identifier, label</span>
