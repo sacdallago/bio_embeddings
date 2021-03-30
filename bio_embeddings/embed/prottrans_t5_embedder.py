@@ -5,12 +5,27 @@ from itertools import zip_longest
 from typing import List, Generator, Iterable, Optional
 
 import torch
+import transformers
 from numpy import ndarray
 from transformers import T5Tokenizer, T5Model, T5EncoderModel
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderWithFallback
 
 logger = logging.getLogger(__name__)
+
+
+class FilterT5DecoderWeightsWarning(logging.Filter):
+    """transformers complains at length that we pass decoder weights when initializing only the encoder,
+    which we can ignore"""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return (
+            "were not used when initializing T5EncoderModel: ['decoder."
+            not in record.getMessage()
+        )
+
+
+transformers.modeling_utils.logger.addFilter(FilterT5DecoderWeightsWarning())
 
 
 class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
@@ -42,24 +57,26 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         self._decoder = self._options.get("decoder", False)
         self._half_model = self._options.get("half_model", False)
 
-        # make model
-        if self._decoder:
-            self._model = T5EncoderModel.from_pretrained(self._model_directory)
-        else:
-            self._model = T5Model.from_pretrained(self._model_directory)
-        # Compute in half precision, saving us half the memory
-        if self._half_model:
-            self._model.half()
-        self._model = self._model.to(self._device).eval()
+        self._model = self.get_model().to(self._device).eval()
         self._model_fallback = None
         self._tokenizer = T5Tokenizer.from_pretrained(
             self._model_directory, do_lower_case=False
         )
 
-    def _get_fallback_model(self) -> T5Model:
+    def get_model(self) -> T5EncoderModel:
+        if not self._decoder:
+            model = T5EncoderModel.from_pretrained(self._model_directory)
+        else:
+            model = T5Model.from_pretrained(self._model_directory)
+        # Compute in half precision, saving us half the memory
+        if self._half_model:
+            model = model.half()
+        return model
+
+    def _get_fallback_model(self) -> T5EncoderModel:
         """ Returns the CPU model """
         if not self._model_fallback:
-            self._model_fallback = T5Model.from_pretrained(self._model_directory).eval()
+            self._model_fallback = self.get_model()
         return self._model_fallback
 
     def _embed_batch_impl(
@@ -82,14 +99,19 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         attention_mask = torch.tensor(ids["attention_mask"]).to(model.device)
 
         with torch.no_grad():
-            embeddings = model(
-                input_ids=tokenized_sequences,
-                attention_mask=attention_mask,
-                decoder_input_ids=tokenized_sequences,
-            )
+            if not self._decoder:
+                embeddings = model(
+                    input_ids=tokenized_sequences, attention_mask=attention_mask
+                )
+            else:
+                embeddings = model(
+                    input_ids=tokenized_sequences,
+                    attention_mask=attention_mask,
+                    decoder_input_ids=tokenized_sequences,
+                )
 
         # See comment in __init__
-        if self._decoder:
+        if not self._decoder:
             embeddings = embeddings[0].cpu().numpy()
         else:
             embeddings = embeddings[2].cpu().numpy()
