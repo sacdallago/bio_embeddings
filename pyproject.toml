@@ -32,7 +32,6 @@ repository = "https://github.com/sacdallago/bio_embeddings"
 python = ">=3.7.1,<3.10"
 
 # Packages which we had to patch
-bio-embeddings-esm = { version = "0.2.1", optional = true }
 bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
 bio-embeddings-tape-proteins = { version = "0.4", optional = true }
 bio-embeddings-plus = { version = "0.1.1", optional = true }
@@ -71,17 +70,18 @@ fsspec = { version = "0.8.5", optional = true }
 humanize = "^3.2.0"
 numba = "0.53.0rc3" # Python 3.9 compatibility; Remove once 0.53 stable has been released
 llvmlite = "0.36.0rc2"  # Python 3.9 compatibility; Remove once 0.53 stable has been released
+fair-esm = { version = "0.3.1", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
 unirep = ["jax-unirep", "jaxlib"]
-esm = ["bio-embeddings-esm"]
+esm = ["fair-esm"]
 cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 plus = ["bio-embeddings-plus"]
 bepler = ["bio-embeddings-bepler"]
 deepblast = ["bio-embeddings-deepblast", "fsspec"]
-all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
+all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
 webserver = ["pymongo", "sentry-sdk"]
 
