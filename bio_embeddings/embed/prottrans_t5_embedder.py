@@ -110,11 +110,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
                     decoder_input_ids=tokenized_sequences,
                 )
 
-        # See comment in __init__
-        if not self._decoder:
-            embeddings = embeddings[0].cpu().numpy()
-        else:
-            embeddings = embeddings[2].cpu().numpy()
+        embeddings = embeddings[0].cpu().numpy()
 
         for seq_num, seq_len in zip_longest(range(len(embeddings)), seq_lens):
             # slice off last position (special token)
