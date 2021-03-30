@@ -68,8 +68,6 @@ sentry-sdk = { "version" = "^1.0.0", extras = ["flask"], optional = true }
 python-slugify = "^4.0.1"
 fsspec = { version = "0.8.5", optional = true }
 humanize = "^3.2.0"
-numba = "0.53.0rc3" # Python 3.9 compatibility; Remove once 0.53 stable has been released
-llvmlite = "0.36.0rc2"  # Python 3.9 compatibility; Remove once 0.53 stable has been released
 fair-esm = { version = "0.3.1", optional = true }
 
 [tool.poetry.extras]

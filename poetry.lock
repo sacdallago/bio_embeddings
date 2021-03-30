@@ -270,17 +270,6 @@ scipy = "*"
 torch = ">=1.4"
 
 [[package]]
-name = "bio-embeddings-esm"
-version = "0.2.1"
-description = "Pre-trained evolutionary scale models for proteins, from Facebook AI Research."
-category = "main"
-optional = true
-python-versions = "*"
-
-[package.dependencies]
-torchvision = "*"
-
-[[package]]
 name = "bio-embeddings-plus"
 version = "0.1.1"
 description = "Protein sequence representations Learned Using Structural information (https://arxiv.org/abs/1912.05625)"
@@ -720,6 +709,14 @@ description = "Discover and load entry points from installed packages."
 category = "dev"
 optional = false
 python-versions = ">=2.7"
+
+[[package]]
+name = "fair-esm"
+version = "0.3.1"
+description = "Evolutionary Scale Modeling (esm): Pretrained language models for proteins. From Facebook AI Research."
+category = "main"
+optional = true
+python-versions = "*"
 
 [[package]]
 name = "filelock"
@@ -3112,22 +3109,6 @@ numpy = "*"
 typing-extensions = "*"
 
 [[package]]
-name = "torchvision"
-version = "0.8.2"
-description = "image and video datasets and models for torch deep learning"
-category = "main"
-optional = true
-python-versions = "*"
-
-[package.dependencies]
-numpy = "*"
-pillow = ">=4.1.1"
-torch = "1.7.1"
-
-[package.extras]
-scipy = ["scipy"]
-
-[[package]]
 name = "tornado"
 version = "6.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -3414,11 +3395,11 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [extras]
-all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
+all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 bepler = ["bio-embeddings-bepler"]
 cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 deepblast = ["bio-embeddings-deepblast", "fsspec"]
-esm = ["bio-embeddings-esm"]
+esm = ["fair-esm"]
 plus = ["bio-embeddings-plus"]
 seqvec = ["bio-embeddings-allennlp"]
 transformers = ["transformers"]
@@ -3428,7 +3409,7 @@ webserver = ["pymongo", "sentry-sdk"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "2fd247bc2d0362076a36d699f44b4315e1eab3b385599e8d83801005fc2b0ea8"
+content-hash = "bc176e99e719e9a056d4967d88f90c6caf62dc5810dfa52c1840da5a7f67e18c"
 
 [metadata.files]
 absl-py = [
@@ -3566,10 +3547,6 @@ bio-embeddings-cpcprot = [
 bio-embeddings-deepblast = [
     {file = "bio-embeddings-deepblast-0.1.0.tar.gz", hash = "sha256:26c1c18b405eeea57ad20d1d4c39c35dc40c9706705662a0af188523757bfae7"},
     {file = "bio_embeddings_deepblast-0.1.0-py3-none-any.whl", hash = "sha256:5959f8816a624043a27e3702f5fc52fe52b18bd294385ae17f526d5eb3eac10c"},
-]
-bio-embeddings-esm = [
-    {file = "bio_embeddings-esm-0.2.1.tar.gz", hash = "sha256:6cf7e402ded610a207c47cef40f599c55f07f79377c5458e74c1052bae8335d6"},
-    {file = "bio_embeddings_esm-0.2.1-py3-none-any.whl", hash = "sha256:92f24880bc2507d3c861b7687ced9e0d52e9e48af8522fa3307d5a60db440b15"},
 ]
 bio-embeddings-plus = [
     {file = "bio_embeddings_PLUS-0.1.1-py3-none-any.whl", hash = "sha256:468fad78e3be2759e0d4fd9977f7973a8c0fbef8f6af07835b83f6597b5d9cd2"},
@@ -3840,6 +3817,10 @@ editdistance = [
 entrypoints = [
     {file = "entrypoints-0.3-py2.py3-none-any.whl", hash = "sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19"},
     {file = "entrypoints-0.3.tar.gz", hash = "sha256:c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"},
+]
+fair-esm = [
+    {file = "fair-esm-0.3.1.tar.gz", hash = "sha256:f8302c67779b94fe561ec5e176d37893e6f1a00e5a8828dd252af690e182ce36"},
+    {file = "fair_esm-0.3.1-py3-none-any.whl", hash = "sha256:cc6d240eae033efad3b01c9252507a3bf951a0bfb3de4207f58111df81883bed"},
 ]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
@@ -5422,16 +5403,6 @@ torch = [
     {file = "torch-1.7.1-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:a3793dcceb12b1e2281290cca1277c5ce86ddfd5bf044f654285a4d69057aea7"},
     {file = "torch-1.7.1-cp39-cp39-win_amd64.whl", hash = "sha256:6652a767a0572ae0feb74ad128758e507afd3b8396b6e7f147e438ba8d4c6f63"},
     {file = "torch-1.7.1-cp39-none-macosx_10_9_x86_64.whl", hash = "sha256:38d67f4fb189a92a977b2c0a38e4f6dd413e0bf55aa6d40004696df7e40a71ff"},
-]
-torchvision = [
-    {file = "torchvision-0.8.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:86fae370d222f76ad57c57c3bee03f78b8db727743bfb4c1559a3d395159cea8"},
-    {file = "torchvision-0.8.2-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:951239b5fcb911dbf78c1385d677f5f48c7a1b12859e3d3ec287562821b17cf2"},
-    {file = "torchvision-0.8.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:24db8f4c3d812a032273f68563ad5dbd724f5bfbed523d0c6dce8cede26bb153"},
-    {file = "torchvision-0.8.2-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:b068f6bcbe91bdd34dda0a39e8a26392add45a3be82543f6dd523b76484fb56f"},
-    {file = "torchvision-0.8.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:afb76a66b9b0693f758a881a2bf333ed97e3c0c3f15a413c4f49d8dd8bd21307"},
-    {file = "torchvision-0.8.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:cd8817e9197fc60ebae37162a445db90bbf35591314a5767ad3d1490b5d65b0f"},
-    {file = "torchvision-0.8.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:1bd58acc3366ec02266aae56a7a752d43ef07de4a6ba420c4f907d0c9168bb8c"},
-    {file = "torchvision-0.8.2-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:976750a49db2e23dc5a1ed0b5c31f7af51ed2702eee410ee09ef985c3a3e48cf"},
 ]
 tornado = [
     {file = "tornado-6.1-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:d371e811d6b156d82aa5f9a4e08b58debf97c302a35714f6f45e35139c332e32"},
