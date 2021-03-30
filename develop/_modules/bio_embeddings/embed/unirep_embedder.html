@@ -3,9 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <meta name="generator" content="sphinx-3.5.2, furo 2020.12.30.beta24"/>
+    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
         <title>bio_embeddings.embed.unirep_embedder - bio_embeddings</title>
-      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
     <link rel="stylesheet" href="../../../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
     
@@ -39,16 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script defer="defer" src="../../../_static/jquery.js"></script>
-    <script defer="defer" src="../../../_static/underscore.js"></script>
-    <script defer="defer" src="../../../_static/doctools.js"></script>
-    <script defer="defer" src="../../../_static/togglebutton.js"></script>
-    <script defer="defer" src="../../../_static/clipboard.min.js"></script>
-    <script defer="defer" src="../../../_static/copybutton.js"></script>
-    <script defer="defer">var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script defer src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -145,7 +136,7 @@
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
         <h1>Source code for bio_embeddings.embed.unirep_embedder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
@@ -172,27 +163,40 @@
     <span class="c1"># An integer representing the number of layers from the RAW output of the LM.</span>
     <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">_apply_fun</span><span class="p">:</span> <span class="n">Callable</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">jax_unirep.utils</span> <span class="kn">import</span> <span class="n">load_params_1900</span>
+        <span class="kn">from</span> <span class="nn">jax_unirep.featurize</span> <span class="kn">import</span> <span class="n">apply_fun</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="n">load_params_1900</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_fun</span> <span class="o">=</span> <span class="n">apply_fun</span>
+
+        <span class="c1"># For v2</span>
+        <span class="c1"># https://github.com/ElArkk/jax-unirep/issues/107</span>
+        <span class="c1"># from jax_unirep.utils import load_params</span>
+        <span class="c1"># from jax_unirep.layers import mLSTM</span>
+        <span class="c1"># from jax_unirep.utils import validate_mLSTM_params</span>
+        <span class="c1"># self._params = load_params()[1]</span>
+        <span class="c1"># _, self._apply_fun = mLSTM(output_dim=self.embedding_dimension)</span>
+        <span class="c1"># validate_mLSTM_params(self._params, n_outputs=self.embedding_dimension)</span>
 
         <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"UniRep does not allow configuring the device"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">load_params_1900</span><span class="p">()</span>
-
 <div class="viewcode-block" id="UniRepEmbedder.embed"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.UniRepEmbedder.embed">[docs]</a>    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">vmap</span><span class="p">,</span> <span class="n">partial</span>
-        <span class="kn">from</span> <span class="nn">jax_unirep.featurize</span> <span class="kn">import</span> <span class="n">apply_fun</span>
         <span class="kn">from</span> <span class="nn">jax_unirep.utils</span> <span class="kn">import</span> <span class="n">get_embeddings</span>
 
         <span class="c1"># Unirep only allows batching with sequences of the same length, so we don't do batching at all</span>
         <span class="n">embedded_seqs</span> <span class="o">=</span> <span class="n">get_embeddings</span><span class="p">([</span><span class="n">sequence</span><span class="p">])</span>
         <span class="c1"># h and c refer to hidden and cell state</span>
         <span class="c1"># h contains all the hidden states, while h_final and c_final contain only the last state</span>
-        <span class="n">h_final</span><span class="p">,</span> <span class="n">c_final</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">apply_fun</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">))(</span><span class="n">embedded_seqs</span><span class="p">)</span>
+        <span class="n">h_final</span><span class="p">,</span> <span class="n">c_final</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_apply_fun</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">))(</span>
+            <span class="n">embedded_seqs</span>
+        <span class="p">)</span>
         <span class="c1"># Go from a batch of 1, which is `(1, len(sequence), 1900)`, to `len(sequence), 1900)`</span>
         <span class="k">return</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
@@ -227,5 +231,13 @@
     </aside>
   </main>
 </div>
-  </body>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
 </html>
