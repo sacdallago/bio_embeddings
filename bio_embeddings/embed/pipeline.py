@@ -316,8 +316,10 @@ def prepare_kwargs(**kwargs):
     # See parameter_blueprints.yml
     global_options = {"sequences_file", "simple_remapping", "start_time"}
     embed_options = {
+        "decoder",
         "device",
         "discard_per_amino_acid_embeddings",
+        "half_model",
         "half_precision",
         "max_amino_acids",
         "reduce",
