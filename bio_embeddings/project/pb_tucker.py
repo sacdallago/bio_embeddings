@@ -11,6 +11,11 @@ class PBTucker(nn.Module):
 
     It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128.
     See https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1
+
+    To use it outside of the pipeline, first instantiate it with
+    `pb_tucker = PBTucker.from_file("/path/to/model", device)`,
+    then project your reduced bert embedding with
+    `pb_tucker.single_pass(torch.tensor(bert_embedding, device=device)).cpu().numpy()`.
     """
     name: str = "pb_tucker"
 
