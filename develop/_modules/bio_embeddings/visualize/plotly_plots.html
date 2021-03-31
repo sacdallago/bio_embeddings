@@ -206,21 +206,28 @@
 <span class="sd">    :return: A 2D scatter plot</span>
 <span class="sd">    """</span>
 
+    <span class="n">hover_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">"original_id"</span> <span class="ow">in</span> <span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">hover_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"original_id"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"label"</span> <span class="ow">in</span> <span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">hover_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"label"</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="s1">'label'</span> <span class="ow">in</span> <span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embeddings_dataframe</span><span class="p">,</span>
                          <span class="n">x</span><span class="o">=</span><span class="s1">'component_0'</span><span class="p">,</span>
                          <span class="n">y</span><span class="o">=</span><span class="s1">'component_1'</span><span class="p">,</span>
                          <span class="n">color</span><span class="o">=</span><span class="s1">'label'</span><span class="p">,</span>
                          <span class="n">symbol</span><span class="o">=</span><span class="s1">'label'</span><span class="p">,</span>
                          <span class="n">hover_name</span><span class="o">=</span><span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                         <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s2">"label"</span><span class="p">,</span> <span class="s2">"original_id"</span><span class="p">]</span>
+                         <span class="n">hover_data</span><span class="o">=</span><span class="n">hover_data</span>
                          <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embeddings_dataframe</span><span class="p">,</span>
                          <span class="n">x</span><span class="o">=</span><span class="s1">'component_0'</span><span class="p">,</span>
                          <span class="n">y</span><span class="o">=</span><span class="s1">'component_1'</span><span class="p">,</span>
                          <span class="n">hover_name</span><span class="o">=</span><span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                         <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s2">"original_id"</span><span class="p">]</span>
+                         <span class="n">hover_data</span><span class="o">=</span><span class="n">hover_data</span>
                          <span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
