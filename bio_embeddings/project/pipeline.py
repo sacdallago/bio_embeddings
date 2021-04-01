@@ -127,7 +127,7 @@ def pb_tucker(
         model_file = get_model_file("pb_tucker", "model_file")
     else:
         model_file = result_kwargs["model_file"]
-    pb_tucker_model = PBTucker.from_file(model_file, device)
+    pb_tucker = PBTucker(model_file, device)
 
     reduced_embeddings_file_path = result_kwargs["reduced_embeddings_file"]
     projected_reduced_embeddings_file_path = file_manager.create_file(
@@ -143,14 +143,8 @@ def pb_tucker(
     with h5py.File(reduced_embeddings_file_path, "r") as input_embeddings, h5py.File(
         projected_reduced_embeddings_file_path, "w"
     ) as output_embeddings:
-        for h5_id, embedding in input_embeddings.items():
-            transformed_embedding = torch.tensor(embedding, device=device)
-            with torch.no_grad():
-                transformed_embedding = (
-                    pb_tucker_model.single_pass(transformed_embedding).cpu().numpy()
-                )
-
-            output_embeddings[h5_id] = transformed_embedding
+        for h5_id, reduced_embedding in input_embeddings.items():
+            output_embeddings[h5_id] = pb_tucker.project_reduced_embedding(reduced_embedding)
 
     return result_kwargs
 
