@@ -248,84 +248,103 @@
 <li><p>Michael Heinzinger</p></li>
 </ul>
 </div>
+<div class="section" id="non-exhaustive-list-of-tools-available-see-following-section-for-more-details">
+<h2>Non-exhaustive list of tools available (see following section for more details):<a class="headerlink" href="#non-exhaustive-list-of-tools-available-see-following-section-for-more-details" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fastext</p></li>
+<li><p>Glove</p></li>
+<li><p>Word2Vec</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p>
+<ul>
+<li><p>SeqVecSec and SeqVecLoc for secondary structure and subcellularlocalization prediction</p></li>
+</ul>
+</li>
+<li><p>ProtTrans (ProtBert, ProtAlbert, ProtT5) (https://doi.org/10.1101/2020.07.12.199554)</p>
+<ul>
+<li><p>ProtBertSec and ProtBertLoc for secondary structure and subcellular localization prediction</p></li>
+</ul>
+</li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+<li><p>PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)</p></li>
+<li><p>GoPredSim (https://www.nature.com/articles/s41598-020-80786-0)</p></li>
+<li><p>DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)</p></li>
+</ul>
+</div>
 <hr class="docutils"/>
-<div class="section" id="development-status">
-<h2>Development status<a class="headerlink" href="#development-status" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tools-by-category">
+<h2>Tools by category<a class="headerlink" href="#tools-by-category" title="Permalink to this headline">¶</a></h2>
 <details>
-<summary>Pipeline stages</summary>
+<summary>Pipeline</summary>
 <br/>
 <ul class="simple">
+<li><p>align:</p>
+<ul>
+<li><p>DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)</p></li>
+</ul>
+</li>
 <li><p>embed:</p>
 <ul>
-<li><p>[x] ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
-<li><p>[x] ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[x] ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[ ] Fastext</p></li>
-<li><p>[ ] Glove</p></li>
-<li><p>[ ] Word2Vec</p></li>
-<li><p>[x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
-<li><p>[x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
-<li><p>[x] PLUS (https://github.com/mswzeus/PLUS/)</p></li>
-<li><p>[x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+<li><p>ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
+<li><p>ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD and fine-tuned on UniRef50 (in-house)</p></li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
 </ul>
 </li>
 <li><p>project:</p>
 <ul>
-<li><p>[x] t-SNE</p></li>
-<li><p>[x] UMAP</p></li>
-<li><p>[x] PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)</p></li>
+<li><p>t-SNE</p></li>
+<li><p>UMAP</p></li>
+<li><p>PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)</p></li>
 </ul>
 </li>
 <li><p>visualize:</p>
 <ul>
-<li><p>[x] 2D/3D sequence embedding space</p></li>
+<li><p>2D/3D sequence embedding space</p></li>
 </ul>
 </li>
 <li><p>extract:</p>
 <ul>
 <li><p>supervised:</p>
 <ul>
-<li><p>[x] SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8</p></li>
-<li><p>[x] Bert: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://doi.org/10.1101/2020.07.12.199554</p></li>
+<li><p>SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8</p></li>
+<li><p>ProtBertSec and ProtBertLoc as reported in https://doi.org/10.1101/2020.07.12.199554</p></li>
 </ul>
 </li>
 <li><p>unsupervised:</p>
 <ul>
-<li><p>[x] via sequence-level (reduced_embeddings), pairwise distance (euclidean like <a class="reference external" href="https://github.com/Rostlab/goPredSim">goPredSim</a>, more options available, e.g. cosine)</p></li>
+<li><p>via sequence-level (reduced_embeddings), pairwise distance (euclidean like <a class="reference external" href="https://github.com/Rostlab/goPredSim">goPredSim</a>, more options available, e.g. cosine)</p></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-</details>
-<details>
-<summary>Web server (unpublished)</summary>
-<br/>
-<ul class="simple">
-<li><p>[x] SeqVec supervised predictions</p></li>
-<li><p>[x] Bert supervised predictions</p></li>
-<li><p>[ ] SeqVec unsupervised predictions for GO: CC, BP,..</p></li>
-<li><p>[ ] Bert unsupervised predictions for GO: CC, BP,..</p></li>
-<li><p>[ ] SeqVec unsupervised predictions for SwissProt (just a link to the 1st-k-nn)</p></li>
-<li><p>[ ] Bert unsupervised predictions for SwissProt (just a link to the 1st-k-nn)</p></li>
 </ul>
 </details>
 <details>
 <summary>General purpose embedders</summary>
 <br/>
 <ul class="simple">
-<li><p>[x] ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
-<li><p>[x] ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[x] ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
-<li><p>[x] Fastext</p></li>
-<li><p>[x] Glove</p></li>
-<li><p>[x] Word2Vec</p></li>
-<li><p>[x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
-<li><p>[x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
-<li><p>[x] PLUS (https://github.com/mswzeus/PLUS/)</p></li>
-<li><p>[x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+<li><p>ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
+<li><p>ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD + fine-tuned on UniRef50 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>Fastext</p></li>
+<li><p>Glove</p></li>
+<li><p>Word2Vec</p></li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
 </ul>
 </details>
 </div>
@@ -386,7 +405,8 @@
 <li><a class="reference internal" href="#usage-and-examples">Usage and examples</a></li>
 <li><a class="reference internal" href="#cite">Cite</a></li>
 <li><a class="reference internal" href="#contributors">Contributors</a></li>
-<li><a class="reference internal" href="#development-status">Development status</a></li>
+<li><a class="reference internal" href="#non-exhaustive-list-of-tools-available-see-following-section-for-more-details">Non-exhaustive list of tools available (see following section for more details):</a></li>
+<li><a class="reference internal" href="#tools-by-category">Tools by category</a></li>
 </ul>
 </li>
 </ul>
