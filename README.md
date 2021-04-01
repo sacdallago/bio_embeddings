@@ -136,6 +136,7 @@ While we are working on a proper publication, if you are already using this tool
 - project:
   - [x] t-SNE
   - [x] UMAP
+  - [x] PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)
 - visualize:
   - [x] 2D/3D sequence embedding space
 - extract:
