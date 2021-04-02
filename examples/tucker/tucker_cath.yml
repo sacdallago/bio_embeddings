@@ -1,0 +1,34 @@
+global:
+  prefix: tucker_cath
+  sequences_file: tucker_cath.fasta
+bert_embed:
+  type: embed
+  protocol: prottrans_bert_bfd
+  reduce: true
+  discard_per_amino_acid_embeddings: true
+# 1. Bert only
+umap_bert:
+  type: project
+  protocol: umap
+  depends_on: bert_embed
+visualize_bert_class:
+  type: visualize
+  protocol: plotly
+  depends_on: umap_bert
+  n_components: 2
+  annotation_file: cath_annotations_class.csv
+# 2. Bert + Tucker
+projected_tucker:
+  type: project
+  protocol: pb_tucker
+  depends_on: bert_embed
+umap_tucker:
+  type: project
+  protocol: umap
+  depends_on: projected_tucker
+visualize_tucker_class:
+  type: visualize
+  protocol: plotly
+  depends_on: umap_tucker
+  n_components: 2
+  annotation_file: cath_annotations_class.csv

@@ -282,18 +282,11 @@ def test_tucker(pytestconfig, device):
     ).joinpath(PBTucker.name + ".npz")
     tucker_embeddings = numpy.load(tucker_embeddings_file)
 
-    pb_tucker_model = PBTucker.from_file(
-        get_model_file("pb_tucker", "model_file"), device
-    )
+    pb_tucker = PBTucker(get_model_file("pb_tucker", "model_file"), device)
 
-    with torch.no_grad():
-        for name, embedding in bert_embeddings.items():
-            reduced_embedding = embedding.mean(axis=0)
-            tucker_embedding = (
-                pb_tucker_model.single_pass(
-                    torch.tensor(reduced_embedding, device=device)
-                )
-                .cpu()
-                .numpy()
-            )
-            assert numpy.allclose(tucker_embeddings[name], tucker_embedding, rtol=1.0e-3, atol=1.0e-5), name
+    for name, embedding in bert_embeddings.items():
+        reduced_embedding = embedding.mean(axis=0)
+        tucker_embedding = pb_tucker.project_reduced_embedding(reduced_embedding)
+        assert numpy.allclose(
+            tucker_embeddings[name], tucker_embedding, rtol=1.0e-3, atol=1.0e-5
+        ), name

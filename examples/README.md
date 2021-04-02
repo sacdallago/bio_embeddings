@@ -26,6 +26,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[docker](#docker)|Pipeline use through Docker|
 |[advanced_use_case](#pass-your-own-reducer-advanced_use_case)|Embedding generation & transformation|
 |[deepblast](#deepblast)|Use [DeepBLAST](https://github.com/flatironinstitute/deepblast) to align sequences|
+|[tucker](#tucker)|Shows how tucker embeddings better separates sequences by CATH class when compared to plain Bert embeddings|
 
 ---
 
@@ -154,6 +155,19 @@ docker run --rm --gpus all \
 
 In general, you should mount all input files into `/mnt`, e.g. you might need to add something like `-v /nfs/my_sequence_storage/proteomes.fasta:/mnt/sequences.fasta`. The `--gpus all` lets docker use the GPU and `-u $(id -u ${USER}):$(id -g ${USER})` makes sure that the results are owned by the current user and not by root.
 You'll find the results in `examples/docker/output`.
+
+---
+
+### `tucker`
+
+We compare tucker to plain Bert for separating CATH classes. As baseline, we embed a small test set of CATH domains (which were excluded from tucker training) with Bert (`prottrans_bert_bfd`, to be exact) and plot those with umap and plotly. We then project the bert embeddings with tucker (`pb_tucker`) and plot them in the same way. 
+
+**Noteworthy files produced**:
+  - The `visualize` stages produce:
+    - `tucker_cath/visualize_bert_class/plot_file.html` for plain Bert 
+    - `tucker_cath/visualize_tucker_class/plot_file.html` for Bert projected with tucker
+
+By comparing the two you can observe that tucker separates the mainly alpha and the mainly beta classes much clearer than plain Bert.
 
 ---
 
