@@ -137,7 +137,48 @@
         </label>
         <div class="section" id="module-bio_embeddings.project">
 <span id="bio-embeddings-project"></span><h1>bio_embeddings.project<a class="headerlink" href="#module-bio_embeddings.project" title="Permalink to this headline">¶</a></h1>
-<p>Visualize high dimensional data with t-SNE or UMAP projections</p>
+<p>Visualize high dimensional data with t-SNE or UMAP projections or project Bert embeddings with Tucker</p>
+<dl class="py class">
+<dt id="bio_embeddings.project.PBTucker">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.project.</span></code><code class="sig-name descname"><span class="pre">PBTucker</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)"><span class="pre">pathlib.Path</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTucker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTucker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tucker is a contrastive learning model trained to distinguish CATH superfamilies.</p>
+<p>It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128.
+See <a class="reference external" href="https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1">https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1</a></p>
+<p>To use it outside of the pipeline, first instantiate it with
+<cite>pb_tucker = PBTucker(“/path/to/model”, device)</cite>,
+then project your reduced bert embedding with
+<cite>pb_tucker.project_reduced_embedding(bert_embedding)</cite>.</p>
+<dl class="py attribute">
+<dt id="bio_embeddings.project.PBTucker.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">'pb_tucker'</span></em><a class="headerlink" href="#bio_embeddings.project.PBTucker.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.project.PBTucker.project_reduced_embedding">
+<code class="sig-name descname"><span class="pre">project_reduced_embedding</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reduced_embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTucker.project_reduced_embedding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTucker.project_reduced_embedding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.project.PBTuckerModel">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.project.</span></code><code class="sig-name descname"><span class="pre">PBTuckerModel</span></code><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTuckerModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the torch module behind <a class="reference internal" href="#bio_embeddings.project.PBTucker" title="bio_embeddings.project.PBTucker"><code class="xref py py-class docutils literal notranslate"><span class="pre">PBTucker</span></code></a></p>
+<dl class="py method">
+<dt id="bio_embeddings.project.PBTuckerModel.forward">
+<code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em><span class="sig-paren">)</span> → <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTuckerModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.project.PBTuckerModel.training">
+<code class="sig-name descname"><span class="pre">training</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></em><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
 <dl class="py function">
 <dt id="bio_embeddings.project.tsne_reduce">
 <code class="sig-prename descclassname"><span class="pre">bio_embeddings.project.</span></code><code class="sig-name descname"><span class="pre">tsne_reduce</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/project/tsne.html#tsne_reduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.tsne_reduce" title="Permalink to this definition">¶</a></dt>
