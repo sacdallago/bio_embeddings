@@ -140,6 +140,8 @@ private/
 .venv
 sync.sh
 examples/docker/output
+examples/tucker/cath-domain-list-v4_3_0.txt
+examples/tucker/tucker_cath
 notebooks/*.h5
 notebooks/*.csv
 evotuning.log

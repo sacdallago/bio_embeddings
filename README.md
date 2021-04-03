@@ -112,65 +112,74 @@ While we are working on a proper publication, if you are already using this tool
 - Tobias Olenyi
 - Michael Heinzinger
 
+## Non-exhaustive list of tools available (see following section for more details):
+
+- Fastext
+- Glove
+- Word2Vec
+- SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
+  - SeqVecSec and SeqVecLoc for secondary structure and subcellularlocalization prediction
+- ProtTrans (ProtBert, ProtAlbert, ProtT5) (https://doi.org/10.1101/2020.07.12.199554)
+  - ProtBertSec and ProtBertLoc for secondary structure and subcellular localization prediction
+- UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+- ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
+- PLUS (https://github.com/mswzeus/PLUS/)
+- CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
+- PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)
+- GoPredSim (https://www.nature.com/articles/s41598-020-80786-0)
+- DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)
+
 ----
 
-## Development status
+## Tools by category
 
 
 <details>
-<summary>Pipeline stages</summary>
+<summary>Pipeline</summary>
 <br>
 
+- align:
+  - DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)
 - embed:
-  - [x] ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
-  - [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
-  - [x] ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
-  - [x] ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)
-  - [ ] Fastext
-  - [ ] Glove
-  - [ ] Word2Vec
-  - [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-  - [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
-  - [x] PLUS (https://github.com/mswzeus/PLUS/)
-  - [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
+  - ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+  - SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
+  - ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+  - ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)
+  - ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+  - ProtTrans T5 trained on BFD and fine-tuned on UniRef50 (in-house)
+  - UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+  - ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
+  - PLUS (https://github.com/mswzeus/PLUS/)
+  - CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 - project:
-  - [x] t-SNE
-  - [x] UMAP
+  - t-SNE
+  - UMAP
+  - PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)
 - visualize:
-  - [x] 2D/3D sequence embedding space
+  - 2D/3D sequence embedding space
 - extract:
   - supervised:
-    - [x] SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8
-    - [x] Bert: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://doi.org/10.1101/2020.07.12.199554
+    - SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8
+    - ProtBertSec and ProtBertLoc as reported in https://doi.org/10.1101/2020.07.12.199554
   - unsupervised:
-    - [x] via sequence-level (reduced_embeddings), pairwise distance (euclidean like [goPredSim](https://github.com/Rostlab/goPredSim), more options available, e.g. cosine)
-</details>
-
-<details>
-<summary>Web server (unpublished)</summary>
-<br>
-
-- [x] SeqVec supervised predictions
-- [x] Bert supervised predictions
-- [ ] SeqVec unsupervised predictions for GO: CC, BP,..
-- [ ] Bert unsupervised predictions for GO: CC, BP,..
-- [ ] SeqVec unsupervised predictions for SwissProt (just a link to the 1st-k-nn)
-- [ ] Bert unsupervised predictions for SwissProt (just a link to the 1st-k-nn)
+    - via sequence-level (reduced_embeddings), pairwise distance (euclidean like [goPredSim](https://github.com/Rostlab/goPredSim), more options available, e.g. cosine)
 </details>
 
 <details>
 <summary>General purpose embedders</summary>
 <br>
 
-- [x] ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
-- [x] SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
-- [x] ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
-- [x] ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)
-- [x] Fastext
-- [x] Glove
-- [x] Word2Vec
-- [x] UniRep (https://www.nature.com/articles/s41592-019-0598-1)
-- [x] ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
-- [x] PLUS (https://github.com/mswzeus/PLUS/)
-- [x] CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
+- ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+- SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)
+- ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+- ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)
+- ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)
+- ProtTrans T5 trained on BFD + fine-tuned on UniRef50 (https://doi.org/10.1101/2020.07.12.199554)
+- Fastext
+- Glove
+- Word2Vec
+- UniRep (https://www.nature.com/articles/s41592-019-0598-1)
+- ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)
+- PLUS (https://github.com/mswzeus/PLUS/)
+- CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)
 </details>

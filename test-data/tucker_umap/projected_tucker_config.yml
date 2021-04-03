@@ -1,0 +1,35 @@
+global:
+  prefix: projected_tucker
+  sequences_file: knn_reference.fasta
+# This was run once and is now a fixture
+#bert_embed:
+#  type: embed
+#  protocol: prottrans_bert_bfd
+#  reduce: true
+#  discard_per_amino_acid_embeddings: true
+# 1. Bert only
+umap_bert:
+  type: project
+  protocol: umap
+  #depends_on: bert_embed
+  reduced_embeddings_file: reduced_embeddings_file.h5
+visualize_bert:
+  type: visualize
+  protocol: plotly
+  depends_on: umap_bert
+  n_components: 2
+# 2. Bert + Tucker
+projected_tucker:
+  type: project
+  protocol: pb_tucker
+  #depends_on: bert_embed
+  reduced_embeddings_file: reduced_embeddings_file.h5
+umap_tucker:
+  type: project
+  protocol: umap
+  depends_on: projected_tucker
+visualize_tucker:
+  type: visualize
+  protocol: plotly
+  depends_on: umap_tucker
+  n_components: 2
