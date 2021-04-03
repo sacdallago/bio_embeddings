@@ -58,7 +58,7 @@ class LightAttentionAnnotationExtractor:
 
         # check that files exist
         for file in self.necessary_files:
-            if not os.path.exists(file):
+            if not self._options.get(file):
                 raise MissingParameterError(
                     'Please provide subcellular_location_checkpoint_file and membrane_checkpoint_file paths as named parameters to the constructor. Mind that these should match the embeddings used, e.g.: prottrans_bert_bfd should use la_protbert weights')
 
