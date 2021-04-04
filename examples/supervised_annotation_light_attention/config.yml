@@ -1,0 +1,13 @@
+global:
+  sequences_file: fasta.fa
+  prefix: simple
+t5_embeddings:
+  type: embed
+  protocol: prottrans_t5_bfd
+  model_directory: /mnt/project/bio_embeddings/models/lms/t5
+annotations_from_seqvec:
+  type: extract
+  protocol: la_prott5
+  depends_on: t5_embeddings
+  subcellular_location_checkpoint_file: la_prott5_subcellular_localization.pt
+  membrane_checkpoint_file: la_prott5_subcellular_solubility.pt
