@@ -81,7 +81,8 @@ class LightAttentionAnnotationExtractor:
         :returns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane boundness
         '''
         # turn to tensor and add singleton batch dimension
-        embedding = torch.tensor(raw_embedding).to(self._device)[None, ...]
+        embedding = torch.tensor(raw_embedding).to(self._device)[None, ...].permute(0, 2,
+                                                                                    1)  # [1 , 1024, sequence_length]
 
         yhat_loc = self._subcellular_location_model(embedding)
         yhat_mem = self._membrane_model(embedding)
