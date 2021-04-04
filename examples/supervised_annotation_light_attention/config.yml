@@ -5,7 +5,7 @@ t5_embeddings:
   type: embed
   protocol: prottrans_t5_bfd
   model_directory: /mnt/project/bio_embeddings/models/lms/t5
-annotations_from_seqvec:
+annotations_from_t5:
   type: extract
   protocol: la_prott5
   depends_on: t5_embeddings
