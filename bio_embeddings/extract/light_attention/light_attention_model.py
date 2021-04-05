@@ -24,10 +24,9 @@ class LightAttention(nn.Module):
 
         self.output = nn.Linear(32, output_dim)
 
-    def forward(self, x: torch.Tensor, mask) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
             :param x: torch.Tensor [batch_size, embeddings_dim, sequence_length] embedding tensor that should be classified
-            :param mask: torch.Tensor [batch_size, sequence_length] mask corresponding to the zero padding used for the shorter sequecnes in the batch. All values corresponding to padding are False and the rest is True.
 
             :return: [batch_size,output_dim] tensor with logits
         """
@@ -35,10 +34,6 @@ class LightAttention(nn.Module):
         intermediate_state = self.feature_convolution(x)  # [batch_size, embeddings_dim, sequence_length]
         intermediate_state = self.dropout(intermediate_state)  # [batch_size, embeddings_dim, sequence_length]
         attention = self.attention_convolution(x)  # [batch_size, embeddings_dim, sequence_length]
-
-        # mask out the padding to which we do not want to pay any attention (we have the padding because the sequences have different lenghts).
-        # This padding is added by the dataloader when using the padded_permuted_collate function in utils/general.py
-        attention = attention.masked_fill(mask[:, None, :] == False, -1e9)
 
         # take the weighted sum according to the attention scores
         attention_pooled = torch.sum(intermediate_state * self.softmax(attention),
