@@ -8,6 +8,7 @@ from werkzeug.exceptions import abort
 from webserver.database import get_embedding_cache, get_features_cache
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
+from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 # ProtBert
 from webserver.tasks.protbert_annotations import get_protbert_annotations_sync
 from webserver.tasks.protbert_embeddings import get_protbert_embeddings_sync
@@ -83,6 +84,7 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     annotation_model = {
         "seqvec": get_seqvec_annotations_sync,
         "prottrans_bert_bfd": get_protbert_annotations_sync,
+        "prottrans_t5_bfd": get_prott5_annotations_sync,
     }.get(model_name)
 
     job = annotation_model.apply_async(

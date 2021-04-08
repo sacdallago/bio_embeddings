@@ -51,5 +51,5 @@ WORKDIR /app
 
 ENV MODEL_DIRECTORY /mnt/models
 
-ENTRYPOINT ["/app/.venv/bin/celery", "worker", "-A", "webserver.celery_worker.task_keeper", "--loglevel=info", "--pool=solo", "--queues=pipeline,seqvec,protbert,seqvec_annotations,protbert_annotations,prott5"]
+ENTRYPOINT ["/app/.venv/bin/celery", "worker", "-A", "webserver.celery_worker.task_keeper", "--loglevel=info", "--pool=solo", "--queues=pipeline,seqvec,protbert,seqvec_annotations,protbert_annotations,prott5,prott5_annotations"]
 

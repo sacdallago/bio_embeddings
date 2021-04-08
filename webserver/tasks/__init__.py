@@ -11,5 +11,6 @@ task_keeper.conf.task_routes = {
     'webserver.tasks.protbert_embeddings.get_protbert_embeddings_sync': {'queue': 'protbert'},
     'webserver.tasks.protbert_annotations.get_protbert_annotations_sync': {'queue': 'protbert_annotations'},
     'webserver.tasks.prott5_embeddings.get_prott5_embeddings_sync': {'queue': 'prott5'},
+    'webserver.tasks.prott5_annotations.get_prott5_annotations_sync': {'queue': 'prott5_annotations'},
     'webserver.tasks.pipeline.run_pipeline': {'queue': 'pipeline'},
 }
