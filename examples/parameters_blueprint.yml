@@ -92,7 +92,7 @@ stage_1:
 stage_2:
   type: project
   # Required: which projection algorithm to use
-  # Options: tsne, umap
+  # Options: tsne, umap, pb_tucker
   protocol: tsne
   # Either depend on an embedding stage with reduced embeddings
   depends_on: stage_1
@@ -117,6 +117,11 @@ stage_2:
   # random_state: *420
   # verbose: *1
 
+  ## Optional with pb_tucker: Postprocess reduced embeddings with tucker, which is a contrastive
+  ## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.
+  # model_file: @/path/to/file
+
+
 stage_3:
   type: visualize
   # Required: which graph to render
@@ -124,8 +129,8 @@ stage_3:
   protocol: plotly
   # Either depend on a project stage with projected embeddings file
   depends_on: stage_2
-  # or define projected embeddings file:
-  # projected_embeddings_file: path/to/projected_embeddings_file.csv
+  # or define projected_reduced_embeddings_file:
+  # projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5
 
   # Optional: csv file with annotations
   # csv must have header: identifier, label
@@ -161,7 +166,7 @@ stage_4:
   # embeddings_file:
   depends_on: stage_2
 
-  ## Optional for protocol: seqvec_from_publication, bert_from_publication
+  ## Optional for protocol: seqvec_from_publication, bert_from_publication,
   ## will be downloaded if not supplied
   # secondary_structure_checkpoint_file: path/to/checkpoint.pt
   # subcellular_location_checkpoint_file: path/to/checkpoint.pt

@@ -29,10 +29,9 @@ homepage = "https://visualize.protein.properties"
 repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.10"
+python = ">=3.7.1,<3.10"
 
 # Packages which we had to patch
-bio-embeddings-esm = { version = "0.2.1", optional = true }
 bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
 bio-embeddings-tape-proteins = { version = "0.4", optional = true }
 bio-embeddings-plus = { version = "0.1.1", optional = true }
@@ -44,7 +43,7 @@ numpy = "^1.18.3"
 gensim = "^3.8.2"
 biopython = "^1.76"
 "ruamel.yaml" = "^0.16.10"
-pandas = "^1.0.3"
+pandas = "^1.2.0"
 h5py = "^3.2.1"
 transformers = { version = "^4.0.0", optional = true }
 plotly = "^4.6.0"
@@ -52,37 +51,35 @@ umap-learn = "^0.5.1"
 matplotlib = "^3.2.1"
 scikit-learn = "^0.24.0"
 scipy = "^1.4.1"
-torch = "~1.7.0"
+torch = ">=1.7.0,<1.9.0"
 tqdm = "^4.45.0"
 lock = "^2018.3.25"
-jax-unirep = { version = "^1.0.1", optional = true }
+# https://github.com/ElArkk/jax-unirep/issues/107
+jax-unirep = { version = "^1.0.0", optional = true }
+# https://github.com/google/jax/blob/23b82b99d2e178fc648d5ac9ebc8bf5e4049075e/CHANGELOG.md#jaxlib-0162-march-9-2021
+# "jaxlib wheels are now built to require AVX instructions on x86-64 machines by default"
+# However, our CI machine is too old for AVX
+# We then go even lower due to https://github.com/google/jax/issues/5374
+jaxlib = { version = "0.1.57", optional = true }
 appdirs = "^1.4.4"
-# Help the version resolver with allennlp
-boto3 = { version = "1.14.18", optional = true }
-botocore = { version = "1.17.18", optional = true }
-# https://github.com/boto/botocore/issues/2187#issuecomment-712819351
-urllib3 = "1.25.10"
 importlib_metadata = "^1.7.0"
 pymongo = { "version" = "^3.11.2", optional = true }
-sentry-sdk = { "version" = "^0.20.3", extras = ["flask"], optional = true }
-# Another weird dependency resolution issue
-jaxlib = "0.1.57"
+sentry-sdk = { "version" = "^1.0.0", extras = ["flask"], optional = true }
 python-slugify = "^4.0.1"
 fsspec = { version = "0.8.5", optional = true }
 humanize = "^3.2.0"
-numba = "0.53.0rc3" # Python 3.9 compatibility; Remove once 0.53 stable has been released
-llvmlite = "0.36.0rc2"  # Python 3.9 compatibility; Remove once 0.53 stable has been released
+fair-esm = { version = "0.3.1", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
 transformers = ["transformers"]
-unirep = ["jax-unirep"]
-esm = ["bio-embeddings-esm"]
+unirep = ["jax-unirep", "jaxlib"]
+esm = ["fair-esm"]
 cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 plus = ["bio-embeddings-plus"]
 bepler = ["bio-embeddings-bepler"]
 deepblast = ["bio-embeddings-deepblast", "fsspec"]
-all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "bio-embeddings-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
+all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
 webserver = ["pymongo", "sentry-sdk"]
 
@@ -95,7 +92,7 @@ jupyter = "^1.0.0"
 tox = "^3.16.1"
 black = "^20.8b1"
 toml = "^0.10.1"
-furo = "^2020.10.15-beta.13"
+furo = "^2021.2.28b28"
 Sphinx = "^3.2.1"
 myst-parser = "^0.13.5"
 sphinx-copybutton = "^0.3.1"
