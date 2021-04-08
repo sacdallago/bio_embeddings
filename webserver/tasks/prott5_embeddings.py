@@ -16,8 +16,8 @@ if "prott5" in configuration['celery']['celery_worker_type']:
 
     model = ProtTransT5BFDEmbedder(
         model_directory=configuration['prottrans_t5_bfd']['model_directory'],
-        # TODO: it's very strange to set something to true to diactivate it
-        decoder=True
+        decoder=False,
+        half_model=False
     )
 
     logger.info("Finished initializing.")
