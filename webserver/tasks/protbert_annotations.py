@@ -54,9 +54,9 @@ def get_protbert_annotations_sync(embedding: np.array) -> Dict[str, str]:
             "predictedDSSP3": "ProtBertSec, https://arxiv.org/pdf/2007.06225",
             "predictedDSSP8": "ProtBertSec, https://arxiv.org/pdf/2007.06225",
             "predictedDisorder": "ProtBertSec, https://arxiv.org/pdf/2007.06225",
-            "predictedCCO": "goPredSim, https://doi.org/10.1038/s41598-020-80786-0",
-            "predictedBPO": "goPredSim, https://doi.org/10.1038/s41598-020-80786-0",
-            "predictedMFO": "goPredSim, https://doi.org/10.1038/s41598-020-80786-0",
+            "predictedCCO": "goPredSim ProtBert, https://doi.org/10.1038/s41598-020-80786-0",
+            "predictedBPO": "goPredSim ProtBert, https://doi.org/10.1038/s41598-020-80786-0",
+            "predictedMFO": "goPredSim ProtBert, https://doi.org/10.1038/s41598-020-80786-0",
             "predictedMembrane": "LA_ProtBERT",
             "predictedSubcellularLocalizations": "LA_ProtBERT",
         }
