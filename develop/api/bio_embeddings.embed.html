@@ -164,6 +164,11 @@ some embedders by selecting specific extras:</p>
 <p>Bepler, Tristan, and Bonnie Berger. “Learning protein sequence embeddings using information from structure.”
 arXiv preprint arXiv:1902.08661 (2019).</p>
 <dl class="py method">
+<dt id="bio_embeddings.embed.BeplerEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/bepler_embedder.html#BeplerEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.BeplerEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializer accepts location of a pre-trained model and options</p>
+</dd></dl>
+<dl class="py method">
 <dt id="bio_embeddings.embed.BeplerEmbedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/bepler_embedder.html#BeplerEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.BeplerEmbedder.embed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns embedding for one sequence.</p>
@@ -213,6 +218,11 @@ arXiv preprint arXiv:1902.08661 (2019).</p>
 <p>Lu, Amy X., et al. “Self-supervised contrastive learning of protein
 representations by mutual information maximization.” bioRxiv (2020).
 <a class="reference external" href="https://doi.org/10.1101/2020.09.04.283929">https://doi.org/10.1101/2020.09.04.283929</a></p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.CPCProtEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/cpcprot_embedder.html#CPCProtEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.CPCProtEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializer accepts location of a pre-trained model and options</p>
+</dd></dl>
 <dl class="py method">
 <dt id="bio_embeddings.embed.CPCProtEmbedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/cpcprot_embedder.html#CPCProtEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.CPCProtEmbedder.embed" title="Permalink to this definition">¶</a></dt>
@@ -291,6 +301,11 @@ bioRxiv (2019): 622803. <a class="reference external" href="https://doi.org/10.1
 <dt id="bio_embeddings.embed.EmbedderInterface">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">EmbedderInterface</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/embedder_interfaces.html#EmbedderInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
+<dt id="bio_embeddings.embed.EmbedderInterface.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/embedder_interfaces.html#EmbedderInterface.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializer accepts location of a pre-trained model and options</p>
+</dd></dl>
+<dl class="py method">
 <dt id="bio_embeddings.embed.EmbedderInterface.embed">
 <em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/embedder_interfaces.html#EmbedderInterface.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.EmbedderInterface.embed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns embedding for one sequence.</p>
@@ -368,6 +383,11 @@ overwritten with the appropriate batching method for the model.</p>
 Seonwoo Min, Seunghyun Park, Siwon Kim, Hyun-Soo Choi, Sungroh Yoon
 <a class="reference external" href="https://arxiv.org/abs/1912.05625">https://arxiv.org/abs/1912.05625</a></p>
 <dl class="py method">
+<dt id="bio_embeddings.embed.PLUSRNNEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/plus_rnn_embedder.html#PLUSRNNEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.PLUSRNNEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializer accepts location of a pre-trained model and options</p>
+</dd></dl>
+<dl class="py method">
 <dt id="bio_embeddings.embed.PLUSRNNEmbedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/plus_rnn_embedder.html#PLUSRNNEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.PLUSRNNEmbedder.embed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns embedding for one sequence.</p>
@@ -424,6 +444,16 @@ overwritten with the appropriate batching method for the model.</p>
 <p>Elnaggar, Ahmed, et al. “ProtTrans: Towards Cracking the Language of Life’s
 Code Through Self-Supervised Deep Learning and High Performance Computing.”
 arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.ProtTransAlbertBFDEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_albert_bfd_embedder.html#ProtTransAlbertBFDEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransAlbertBFDEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize Albert embedder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_directory</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransAlbertBFDEmbedder.embedding_dimension">
 <code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">4096</span></em><a class="headerlink" href="#bio_embeddings.embed.ProtTransAlbertBFDEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
@@ -444,6 +474,16 @@ arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
 <p>Elnaggar, Ahmed, et al. “ProtTrans: Towards Cracking the Language of Life’s
 Code Through Self-Supervised Deep Learning and High Performance Computing.”
 arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.ProtTransBertBFDEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_bert_bfd_embedder.html#ProtTransBertBFDEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransBertBFDEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize Bert embedder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_directory</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ProtTransBertBFDEmbedder.embedding_dimension">
 <code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">1024</span></em><a class="headerlink" href="#bio_embeddings.embed.ProtTransBertBFDEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
@@ -488,6 +528,16 @@ generally below standard error)</p>
 <p>Elnaggar, Ahmed, et al. “ProtTrans: Towards Cracking the Language of Life’s
 Code Through Self-Supervised Deep Learning and High Performance Computing.”
 arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_xlnet_uniref100_embedder.html#ProtTransXLNetUniRef100Embedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize XLNet embedder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_directory</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt id="bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/prottrans_xlnet_uniref100_embedder.html#ProtTransXLNetUniRef100Embedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ProtTransXLNetUniRef100Embedder.embed" title="Permalink to this definition">¶</a></dt>
@@ -546,6 +596,23 @@ overwritten with the appropriate batching method for the model.</p>
 through transfer-learning protein sequences.” BMC bioinformatics 20.1 (2019): 723.
 <a class="reference external" href="https://doi.org/10.1186/s12859-019-3220-8">https://doi.org/10.1186/s12859-019-3220-8</a></p>
 <dl class="py method">
+<dt id="bio_embeddings.embed.SeqVecEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">warmup_rounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/seqvec_embedder.html#SeqVecEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.SeqVecEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize Elmo embedder. Can define non-positional arguments for paths of files and other settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>warmup_rounds</strong> – A sample sequence will be embedded this often to
+work around elmo’s non-determinism (<a class="reference external" href="https://github.com/allenai/allennlp/blob/v0.9.0/tutorials/how_to/elmo.md#notes-on-statefulness-and-non-determinism">https://github.com/allenai/allennlp/blob/v0.9.0/tutorials/how_to/elmo.md#notes-on-statefulness-and-non-determinism</a>)</p></li>
+<li><p><strong>weights_file</strong> – path of weights file</p></li>
+<li><p><strong>options_file</strong> – path of options file</p></li>
+<li><p><strong>model_directory</strong> – Alternative of weights_file/options_file</p></li>
+<li><p><strong>max_amino_acids</strong> – max # of amino acids to include in embed_many batches. Default: 15k AA</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt id="bio_embeddings.embed.SeqVecEmbedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/seqvec_embedder.html#SeqVecEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.SeqVecEmbedder.embed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns embedding for one sequence.</p>
@@ -598,6 +665,11 @@ engineering with sequence-based deep representation learning. Nat Methods
 <p>We use a reimplementation of unirep:</p>
 <p>Ma, Eric, and Arkadij Kummer. “Reimplementing Unirep in JAX.” bioRxiv (2020).
 <a class="reference external" href="https://doi.org/10.1101/2020.05.11.088344">https://doi.org/10.1101/2020.05.11.088344</a></p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.UniRepEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/unirep_embedder.html#UniRepEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.UniRepEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializer accepts location of a pre-trained model and options</p>
+</dd></dl>
 <dl class="py method">
 <dt id="bio_embeddings.embed.UniRepEmbedder.embed">
 <code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/unirep_embedder.html#UniRepEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.UniRepEmbedder.embed" title="Permalink to this definition">¶</a></dt>

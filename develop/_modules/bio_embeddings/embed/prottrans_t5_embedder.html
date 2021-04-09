@@ -141,15 +141,30 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">transformers</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">T5Tokenizer</span><span class="p">,</span> <span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span>
 
 <span class="kn">from</span> <span class="nn">bio_embeddings.embed.embedder_interfaces</span> <span class="kn">import</span> <span class="n">EmbedderWithFallback</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FilterT5DecoderWeightsWarning</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
+    <span class="sd">"""transformers complains at length that we pass decoder weights when initializing only the encoder,</span>
+<span class="sd">    which we can ignore"""</span>
+
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">"were not used when initializing T5EncoderModel: ['decoder."</span>
+            <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span>
+        <span class="p">)</span>
+
+
+<span class="n">transformers</span><span class="o">.</span><span class="n">modeling_utils</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">FilterT5DecoderWeightsWarning</span><span class="p">())</span>
 
 
 <span class="k">class</span> <span class="nc">ProtTransT5Embedder</span><span class="p">(</span><span class="n">EmbedderWithFallback</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
@@ -159,9 +174,9 @@
 <span class="sd">    Note that this model alone takes 13GB, so you need a GPU with a lot of memory.</span>
 <span class="sd">    """</span>
 
-    <span class="n">_model</span><span class="p">:</span> <span class="n">T5EncoderModel</span>
+    <span class="n">_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]</span>
     <span class="n">_decoder</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">_half_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_half_precision_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">embedding_dimension</span> <span class="o">=</span> <span class="mi">1024</span>
     <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">necessary_directories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"model_directory"</span><span class="p">]</span>
@@ -170,7 +185,11 @@
         <span class="sd">"""</span>
 <span class="sd">        Initialize T5 embedder.</span>
 
-<span class="sd">        :param model_directory:</span>
+<span class="sd">        :param str model_directory: where the weights of the model can be found</span>
+<span class="sd">        :param device: whether to compute on the CPU or GPU</span>
+<span class="sd">        :type device: str or torch.device or None</span>
+<span class="sd">        :param bool decoder: Whether to use also the decoder (default: False)</span>
+<span class="sd">        :param bool haf_precision_model: Use the model in half precision (float16) mode (default: False)</span>
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -179,26 +198,28 @@
         <span class="c1"># Should the need arise we can just split this class in to an encoder and a decoder subclass</span>
         <span class="c1"># by setting one subclass to _decoder=True and the other to _decoder=False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"decoder"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_half_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"half_model"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"half_precision_model"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># make model</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
-        <span class="c1"># Compute in half precision, saving us half the memory</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_model</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">T5Tokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">,</span> <span class="n">do_lower_case</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_fallback_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T5Model</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
+        <span class="c1"># Compute in half precision, saving us half the memory</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">_get_fallback_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]:</span>
         <span class="sd">""" Returns the CPU model """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span>
 
     <span class="k">def</span> <span class="nf">_embed_batch_impl</span><span class="p">(</span>
@@ -221,17 +242,18 @@
         <span class="n">attention_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="s2">"attention_mask"</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="n">embeddings</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
-                <span class="n">input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span>
-                <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
-                <span class="n">decoder_input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="p">:</span>
+                <span class="n">embeddings</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
+                    <span class="n">input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span> <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">embeddings</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span>
+                    <span class="n">input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span>
+                    <span class="n">attention_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+                    <span class="n">decoder_input_ids</span><span class="o">=</span><span class="n">tokenized_sequences</span><span class="p">,</span>
+                <span class="p">)</span>
 
-        <span class="c1"># See comment in __init__</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="p">:</span>
-            <span class="n">embeddings</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">embeddings</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">seq_num</span><span class="p">,</span> <span class="n">seq_len</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)),</span> <span class="n">seq_lens</span><span class="p">):</span>
             <span class="c1"># slice off last position (special token)</span>

@@ -149,6 +149,11 @@ See <a class="reference external" href="https://www.biorxiv.org/content/10.1101/
 <cite>pb_tucker = PBTucker(“/path/to/model”, device)</cite>,
 then project your reduced bert embedding with
 <cite>pb_tucker.project_reduced_embedding(bert_embedding)</cite>.</p>
+<dl class="py method">
+<dt id="bio_embeddings.project.PBTucker.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)"><span class="pre">pathlib.Path</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">torch.device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTucker.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTucker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 <dl class="py attribute">
 <dt id="bio_embeddings.project.PBTucker.name">
 <code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">=</span> <span class="pre">'pb_tucker'</span></em><a class="headerlink" href="#bio_embeddings.project.PBTucker.name" title="Permalink to this definition">¶</a></dt>
@@ -162,6 +167,11 @@ then project your reduced bert embedding with
 <dt id="bio_embeddings.project.PBTuckerModel">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.project.</span></code><code class="sig-name descname"><span class="pre">PBTuckerModel</span></code><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTuckerModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the torch module behind <a class="reference internal" href="#bio_embeddings.project.PBTucker" title="bio_embeddings.project.PBTucker"><code class="xref py py-class docutils literal notranslate"><span class="pre">PBTucker</span></code></a></p>
+<dl class="py method">
+<dt id="bio_embeddings.project.PBTuckerModel.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTuckerModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
 <dl class="py method">
 <dt id="bio_embeddings.project.PBTuckerModel.forward">
 <code class="sig-name descname"><span class="pre">forward</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">None._VariableFunctionsClass.tensor</span></span></em><span class="sig-paren">)</span> → <span class="pre">None._VariableFunctionsClass.tensor</span><a class="reference internal" href="../_modules/bio_embeddings/project/pb_tucker.html#PBTuckerModel.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.project.PBTuckerModel.forward" title="Permalink to this definition">¶</a></dt>
