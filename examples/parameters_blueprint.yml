@@ -87,7 +87,7 @@ stage_1:
   ## We recommend activating this with T5, since tested GPU (Quadro RTX 3000) reduces memory consumption
   ## from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
   ## generally below standard error)
-  # half_model: [true, *false]
+  # half_precision_model: [true, *false]
 
 stage_2:
   type: project

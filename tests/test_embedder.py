@@ -230,7 +230,7 @@ def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
 
         def __init__(self, **kwargs):
             super().__init__(**kwargs)
-            assert kwargs.get("half_model"), kwargs
+            assert kwargs.get("half_precision_model"), kwargs
 
         def embed(self, sequence: str) -> ndarray:
             return numpy.random.random((len(sequence), 1024)).astype(numpy.float16)
@@ -247,7 +247,7 @@ def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
         "mapping_file": str(
             pytestconfig.rootpath.joinpath("test-data/mapping_file.csv")
         ),
-        "half_model": True,
+        "half_precision_model": True,
     }
     embed_and_write_batched(
         Float16Embedder(**result_kwargs),

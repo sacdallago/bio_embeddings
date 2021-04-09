@@ -2,7 +2,7 @@ import abc
 import logging
 import re
 from itertools import zip_longest
-from typing import List, Generator, Iterable, Optional
+from typing import List, Generator, Iterable, Optional, Union
 
 import torch
 import transformers
@@ -35,9 +35,9 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
     Note that this model alone takes 13GB, so you need a GPU with a lot of memory.
     """
 
-    _model: T5EncoderModel
+    _model: Union[T5Model, T5EncoderModel]
     _decoder: bool = False
-    _half_model: bool = False
+    _half_precision_model: bool = False
     embedding_dimension = 1024
     number_of_layers = 1
     necessary_directories = ["model_directory"]
@@ -46,7 +46,11 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         """
         Initialize T5 embedder.
 
-        :param model_directory:
+        :param str model_directory: where the weights of the model can be found
+        :param device: whether to compute on the CPU or GPU
+        :type device: str or torch.device or None
+        :param bool decoder: Whether to use also the decoder (default: False)
+        :param bool haf_precision_model: Use the model in half precision (float16) mode (default: False)
         """
         super().__init__(**kwargs)
 
@@ -55,7 +59,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         # Should the need arise we can just split this class in to an encoder and a decoder subclass
         # by setting one subclass to _decoder=True and the other to _decoder=False
         self._decoder = self._options.get("decoder", False)
-        self._half_model = self._options.get("half_model", False)
+        self._half_precision_model = self._options.get("half_precision_model", False)
 
         self._model = self.get_model().to(self._device).eval()
         self._model_fallback = None
@@ -63,17 +67,17 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
             self._model_directory, do_lower_case=False
         )
 
-    def get_model(self) -> T5EncoderModel:
+    def get_model(self) -> Union[T5Model, T5EncoderModel]:
         if not self._decoder:
             model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
             model = T5Model.from_pretrained(self._model_directory)
         # Compute in half precision, saving us half the memory
-        if self._half_model:
+        if self._half_precision_model:
             model = model.half()
         return model
 
-    def _get_fallback_model(self) -> T5EncoderModel:
+    def _get_fallback_model(self) -> Union[T5Model, T5EncoderModel]:
         """ Returns the CPU model """
         if not self._model_fallback:
             self._model_fallback = self.get_model()
