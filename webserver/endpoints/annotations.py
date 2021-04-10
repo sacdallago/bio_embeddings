@@ -53,30 +53,33 @@ def _get_annotations_from_params(params):
         protvista_features['sequence'] = sequence
 
         protvista_features['features'] = list()
-        protvista_features['features'].extend(
-            annotations_to_protvista_converter(
-                features_string=annotations['predictedDSSP8'],
-                evidences=[evidence],
-                type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})",
-                feature_enum=SecondaryStructure
+        if annotations.get('predictedDSSP8'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDSSP8'],
+                    evidences=[evidence],
+                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})",
+                    feature_enum=SecondaryStructure
+                )
             )
-        )
-        protvista_features['features'].extend(
-            annotations_to_protvista_converter(
-                features_string=annotations['predictedDSSP3'],
-                evidences=[evidence],
-                type=f"SECONDARY_STRUCTURE_3_STATES_({model_name})",
-                feature_enum=SecondaryStructure
+        if annotations.get('predictedDSSP3'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDSSP3'],
+                    evidences=[evidence],
+                    type=f"SECONDARY_STRUCTURE_3_STATES_({model_name})",
+                    feature_enum=SecondaryStructure
+                )
             )
-        )
-        protvista_features['features'].extend(
-            annotations_to_protvista_converter(
-                features_string=annotations['predictedDisorder'],
-                evidences=[evidence],
-                type=f"DISORDER_({model_name})",
-                feature_enum=Disorder
+        if annotations.get('predictedDSSP3'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedDisorder'],
+                    evidences=[evidence],
+                    type=f"DISORDER_({model_name})",
+                    feature_enum=Disorder
+                )
             )
-        )
 
         return protvista_features
     elif format == "legacy":

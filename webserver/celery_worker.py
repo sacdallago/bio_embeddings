@@ -14,6 +14,12 @@ if "protbert" in configuration['celery']['celery_worker_type']:
 if "protbert_annotations" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.protbert_annotations import get_protbert_annotations_sync
+if "prott5" in configuration['celery']['celery_worker_type']:
+    # noinspection PyUnresolvedReferences
+    from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
+if "prott5_annotations" in configuration['celery']['celery_worker_type']:
+    # noinspection PyUnresolvedReferences
+    from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 if "pipeline" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.pipeline import run_pipeline

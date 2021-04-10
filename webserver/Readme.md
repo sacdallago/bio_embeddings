@@ -18,6 +18,11 @@ You need to provide the worker with a model directory, either by mounting it to 
 ├── bert_from_publication_annotations_extractors
 │   ├── secondary_structure_checkpoint_file
 │   └── subcellular_location_checkpoint_file
+├── light_attention
+│   ├── la_protbert_solubility
+│   ├── la_protbert_subcellular_location
+│   ├── la_prott5_solubility
+│   └── la_prott5_subcellular_location
 ├── seqvec
 │   ├── options_file
 │   └── weights_file

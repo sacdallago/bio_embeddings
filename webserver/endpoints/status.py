@@ -11,6 +11,8 @@ _workers = [
     'seqvec_annotations',
     'protbert',
     'protbert_annotations',
+    'prott5',
+    'prott5_annotations',
     'pipeline',
 ]
 

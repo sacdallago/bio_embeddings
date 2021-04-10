@@ -1,5 +1,4 @@
 import logging
-import os
 
 import torch
 
@@ -56,11 +55,14 @@ class LightAttentionAnnotationExtractor:
         self._membrane_checkpoint_file = self._options.get('membrane_checkpoint_file')
         self._device = get_device(device)
 
-        # check that files exist
+        # check that file paths are passed
         for file in self.necessary_files:
-            if not self._options.get(file):
+            if file not in self._options:
                 raise MissingParameterError(
-                    'Please provide subcellular_location_checkpoint_file and membrane_checkpoint_file paths as named parameters to the constructor. Mind that these should match the embeddings used, e.g.: prottrans_bert_bfd should use la_protbert weights')
+                    'Please provide subcellular_location_checkpoint_file and membrane_checkpoint_file paths as named '
+                    'parameters to the constructor. Mind that these should match the embeddings used, '
+                    'e.g.: prottrans_bert_bfd should use la_protbert weights'
+                )
 
         # load pre-trained weights for annotation machines
         subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)

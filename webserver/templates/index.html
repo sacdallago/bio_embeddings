@@ -168,6 +168,10 @@
             <h2>Direct jobs</h2>
             <p>Direct jobs (e.g., getting secondary structure prediction from ProtBert on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
             <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
+            <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> ProtT5
+            <br />
+            <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> ProtT5 Annotations
+            <br />
             <label class="ui circular orange {{ "blue" if "protbert" in workers }} label"></label> ProtBert
             <br />
             <label class="ui circular orange {{ "blue" if "protbert_annotations" in workers }} label"></label> ProtBert Annotations
