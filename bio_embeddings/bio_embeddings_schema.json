@@ -63,6 +63,7 @@
               "prottrans_bert_bfd",
               "prottrans_t5_bfd",
               "prottrans_t5_uniref50",
+              "prottrans_t5_xl_u50",
               "prottrans_xlnet_uniref100",
               "seqvec",
               "unirep"
@@ -114,6 +115,7 @@
                   "prottrans_bert_bfd",
                   "prottrans_t5_bfd",
                   "prottrans_t5_uniref50",
+                  "prottrans_t5_xl_u50",
                   "prottrans_xlnet_uniref100",
                   "seqvec",
                   "unirep"

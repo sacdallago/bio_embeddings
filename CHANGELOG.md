@@ -2,10 +2,11 @@
 
 ## Unreleased
 
+ * Added the `prottrans_t5_xl_u50`/`ProtTransT5XLU50` embedder from the latest ProtTrans revision. You should use this over `prottrans_t5_bfd` and `prottrans_t5_uniref50`. 
  * The `projected_embeddings_file.csv` of project stages has been renamed to `projected_reduced_embeddings_file.h5`. For backwards compatibility, `projected_embeddings_file.csv` is still written.
  * The `projected_embeddings_file` parameter of visualize stages has been renamed to `projected_reduced_embeddings_file` and takes an h5 file. For backwards compatibility, `projected_embeddings_file` and csv files are still accepted.
  * Added the pb_tucker model as project stage. Tucker is a contrastive learning model trained to distinguish CATH superfamilies. It consumes prottrans_bert_bfd embeddings and reduces the embedding dimensionality from 1024 to 128. See https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1
- * Renamed `half_model` to `half_precision_model` 
+ * Renamed `half_model` to `half_precision_model`
 
 ## v0.1.7
 
