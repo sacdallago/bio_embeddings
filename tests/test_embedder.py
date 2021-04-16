@@ -28,14 +28,15 @@ from numpy import ndarray
 from bio_embeddings.embed import (
     BeplerEmbedder,
     CPCProtEmbedder,
-    ESMEmbedder,
     ESM1bEmbedder,
+    ESMEmbedder,
     EmbedderInterface,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
     ProtTransT5BFDEmbedder,
     ProtTransT5UniRef50Embedder,
+    ProtTransT5XLU50,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
@@ -57,11 +58,19 @@ all_embedders = [
     pytest.param(
         ProtTransT5BFDEmbedder,
         marks=pytest.mark.skipif(
-            os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
+            not os.environ.get("TEST_OLD_T%"),
+            reason="Those tests are slow and you should use prottrans_t5_xl_u50",
         ),
     ),
     pytest.param(
         ProtTransT5UniRef50Embedder,
+        marks=pytest.mark.skipif(
+            not os.environ.get("TEST_OLD_T%"),
+            reason="Those tests are slow and you should use prottrans_t5_xl_u50",
+        ),
+    ),
+    pytest.param(
+        ProtTransT5XLU50,
         marks=pytest.mark.skipif(
             os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk"
         ),

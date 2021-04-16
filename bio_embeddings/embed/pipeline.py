@@ -264,6 +264,7 @@ ALL_PROTOCOLS = [
     "prottrans_t5_bfd",
     "prottrans_t5_uniref50",
     "prottrans_xlnet_uniref100",
+    "prottrans_t5_xl_u50",
     "seqvec",
     "unirep",
 ]
@@ -281,6 +282,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     # There is an untracked bug found by MH in batching that prevents using batching with T5
     "prottrans_t5_bfd": None,
     "prottrans_t5_uniref50": None,
+    "prottrans_t5_xl_u50": None,
     "prottrans_xlnet_uniref100": 4000,
     "seqvec": 15000,
     "unirep": 10000,
@@ -343,9 +345,9 @@ def prepare_kwargs(**kwargs):
             )
 
     if kwargs.get("half_precision_model"):
-        if kwargs["protocol"] not in ["prottrans_t5_bfd", "prottrans_t5_uniref50"]:
+        if kwargs["protocol"] not in ["prottrans_t5_bfd", "prottrans_t5_uniref50", "prottrans_t5_xl_u50"]:
             raise InvalidParameterError(
-                "`half_precision_model` is only supported with prottrans_t5_bfd and prottrans_t5_uniref50"
+                "`half_precision_model` is only supported with prottrans_t5_bfd, prottrans_t5_uniref50 and prottrans_t5_xl_u50"
             )
 
         if kwargs.get("half_precision") is False:  # None remains allowed
