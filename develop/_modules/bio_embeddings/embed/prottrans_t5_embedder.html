@@ -284,7 +284,8 @@
 
 
 <div class="viewcode-block" id="ProtTransT5BFDEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransT5BFDEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ProtTransT5BFDEmbedder</span><span class="p">(</span><span class="n">ProtTransT5Embedder</span><span class="p">):</span>
-    <span class="sd">"""Encoder of the ProtTrans T5 model trained on BFD</span>
+    <span class="sd">"""Encoder of the ProtTrans T5 model trained on BFD.</span>
+<span class="sd">    Consider using :class:`ProtTransT5XLU50` instead of this</span>
 
 <span class="sd">    We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption</span>
 <span class="sd">    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,</span>
@@ -295,7 +296,8 @@
 
 
 <div class="viewcode-block" id="ProtTransT5UniRef50Embedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransT5UniRef50Embedder">[docs]</a><span class="k">class</span> <span class="nc">ProtTransT5UniRef50Embedder</span><span class="p">(</span><span class="n">ProtTransT5Embedder</span><span class="p">):</span>
-    <span class="sd">"""Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50</span>
+    <span class="sd">"""Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50.</span>
+<span class="sd">    Consider using :class:`ProtTransT5XLU50` instead of this</span>
 
 <span class="sd">    We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption</span>
 <span class="sd">    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,</span>
@@ -303,6 +305,17 @@
 <span class="sd">    """</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"prottrans_t5_uniref50"</span></div>
+
+
+<div class="viewcode-block" id="ProtTransT5XLU50"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransT5XLU50">[docs]</a><span class="k">class</span> <span class="nc">ProtTransT5XLU50</span><span class="p">(</span><span class="n">ProtTransT5Embedder</span><span class="p">):</span>
+    <span class="sd">"""Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50.</span>
+
+<span class="sd">    We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption</span>
+<span class="sd">    from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,</span>
+<span class="sd">    generally below standard error)</span>
+<span class="sd">    """</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"prottrans_t5_xl_u50"</span></div>
 </pre></div>
       </article>
       <footer>
