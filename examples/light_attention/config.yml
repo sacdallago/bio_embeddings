@@ -1,0 +1,14 @@
+global:
+  sequences_file: fasta.fa
+  prefix: la_prott5
+t5_embeddings:
+  type: embed
+  protocol: prottrans_t5_xl_u50
+  # Uses fp16 instead of fp32 weights
+  half_precision_model: True
+  # Stores embeddings in fp16 instead of fp32
+  half_precision: True
+annotations_from_t5:
+  type: extract
+  protocol: la_prott5
+  depends_on: t5_embeddings
