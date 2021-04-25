@@ -27,7 +27,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[advanced_use_case](#pass-your-own-reducer-advanced_use_case)|Embedding generation & transformation|
 |[deepblast](#deepblast)|Use [DeepBLAST](https://github.com/flatironinstitute/deepblast) to align sequences|
 |[tucker](#tucker)|Shows how tucker embeddings better separates sequences by CATH class when compared to plain Bert embeddings|
-
+|[light attention](#light-attention)|Embedding generation & Prediction of subcellular localization|
 ---
 
 ### A simple way to visualize embeddings, `use_case_one`
@@ -175,3 +175,9 @@ By comparing the two you can observe that tucker separates the mainly alpha and 
 
 In some cases, you are interested in doing something else then mean pooling the embeddings for per-sequence representations. The pipeline has an experimental feature which offers you to directly transform the per-amino acid embeddings into a different format (e.g. you can max pool, you can do other types of transformations).
 A small example extracting the first LSTM layer and mean pooling that (in the case of SeqVec) and max pooling instead of mean pooling (in the case of ProtTrans-BERT-BFD) is available in the advanced use case folder.
+
+---
+
+### Light Attention
+
+Using a light attention mechanism to aggregate residue embeddings for protein sequences we trained supervised models to predict subcellular localization.

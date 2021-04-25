@@ -50,7 +50,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         :param device: whether to compute on the CPU or GPU
         :type device: str or torch.device or None
         :param bool decoder: Whether to use also the decoder (default: False)
-        :param bool haf_precision_model: Use the model in half precision (float16) mode (default: False)
+        :param bool half_precision_model: Use the model in half precision (float16) mode (default: False)
         """
         super().__init__(**kwargs)
 

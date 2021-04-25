@@ -43,8 +43,8 @@ configuration = {
         # TODO: add goPredSim stuff
     },
     # T5 stuff
-    "prottrans_t5_bfd": {
-        "model_directory": os.path.join(model_directory, "prottrans_t5_bfd", "model_directory"),
+    "prottrans_t5_xl_u50": {
+        "model_directory": os.path.join(model_directory, "prottrans_t5_xl_u50", "model_directory"),
         "max_amino_acids": int(environ.get("T5_MAX_AMINO_ACIDS", 2000)),
         "la_subcellular_location_checkpoint_file": os.path.join(
             model_directory, "light_attention", "la_prott5_subcellular_location"

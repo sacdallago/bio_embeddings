@@ -12,9 +12,14 @@ You need to provide the worker with a model directory, either by mounting it to 
 ```
 ├── prottrans_bert_bfd
 │   └── model_directory
-│       ├── bert_vocab_model.model
 │       ├── config.json
-│       └── pytorch_model.bin
+│       ├── pytorch_model.bin
+│       └── vocab.txt
+├── prottrans_t5_xl_u50
+│   └── model_directory
+│       ├── config.json
+│       ├── pytorch_model.bin
+│       └── spiece.model
 ├── bert_from_publication_annotations_extractors
 │   ├── secondary_structure_checkpoint_file
 │   └── subcellular_location_checkpoint_file
