@@ -34,7 +34,7 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
     model = {
         "seqvec": get_seqvec_embeddings_sync,
         "prottrans_bert_bfd": get_protbert_embeddings_sync,
-        "prottrans_t5_bfd": get_prott5_embeddings_sync
+        "prottrans_t5_xl_u50": get_prott5_embeddings_sync
     }.get(model_name)
 
     if not model:
@@ -84,7 +84,7 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     annotation_model = {
         "seqvec": get_seqvec_annotations_sync,
         "prottrans_bert_bfd": get_protbert_annotations_sync,
-        "prottrans_t5_bfd": get_prott5_annotations_sync,
+        "prottrans_t5_xl_u50": get_prott5_annotations_sync,
     }.get(model_name)
 
     job = annotation_model.apply_async(

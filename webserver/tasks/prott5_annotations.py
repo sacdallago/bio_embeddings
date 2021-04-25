@@ -16,8 +16,8 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
     logger.info("Loading the feature extraction models...")
 
     la = LightAttentionAnnotationExtractor(
-        membrane_checkpoint_file=configuration['prottrans_t5_bfd']['la_solubility_checkpoint_file'],
-        subcellular_location_checkpoint_file=configuration['prottrans_t5_bfd']['la_subcellular_location_checkpoint_file']
+        membrane_checkpoint_file=configuration['prottrans_t5_xl_u50']['la_solubility_checkpoint_file'],
+        subcellular_location_checkpoint_file=configuration['prottrans_t5_xl_u50']['la_subcellular_location_checkpoint_file']
     )
 
     logger.info("Finished initializing.")

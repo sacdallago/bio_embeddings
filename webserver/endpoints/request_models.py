@@ -54,7 +54,7 @@ sequence_post_parameters.add_argument(
 
 lm_field = fields.String(
     location='json',
-    description='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_bfd.',
+    description='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_xl_u50.',
     required=False,
     default='seqvec',
     example='seqvec'
@@ -108,7 +108,7 @@ sequence_get_parameters_annotations.add_argument(
     location='args',
     type=str,
     required=False,
-    help='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_bfd.'
+    help='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_xl_u50.'
 )
 sequence_get_parameters_annotations.add_argument(
     'format',

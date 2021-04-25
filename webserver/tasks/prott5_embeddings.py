@@ -15,7 +15,7 @@ if "prott5" in configuration['celery']['celery_worker_type']:
     logger.info("Loading the language model...")
 
     model = ProtTransT5BFDEmbedder(
-        model_directory=configuration['prottrans_t5_bfd']['model_directory'],
+        model_directory=configuration['prottrans_t5_xl_u50']['model_directory'],
         decoder=False,
         half_precision_model=False
     )
