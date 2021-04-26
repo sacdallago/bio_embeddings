@@ -137,7 +137,7 @@
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
         <h1>Source code for bio_embeddings.embed.esm_embedder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">esm.pretrained</span> <span class="kn">import</span> <span class="n">load_model_and_alphabet_local</span>
@@ -150,8 +150,9 @@
     <span class="c1"># The only thing we need to overwrite is the name and _picked_layer</span>
     <span class="n">embedding_dimension</span> <span class="o">=</span> <span class="mi">1280</span>
     <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Following ESM, we only consider layer 34 (ESM) or 33 (ESM1b)</span>
-
     <span class="n">necessary_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"model_file"</span><span class="p">]</span>
+    <span class="c1"># https://github.com/facebookresearch/esm/issues/49#issuecomment-803110092</span>
+    <span class="n">max_len</span> <span class="o">=</span> <span class="mi">1022</span>
 
     <span class="n">_picked_layer</span><span class="p">:</span> <span class="nb">int</span>
 
@@ -169,6 +170,7 @@
 
     <span class="k">def</span> <span class="nf">embed_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="sd">"""https://github.com/facebookresearch/esm/blob/dfa524df54f91ef45b3919a00aaa9c33f3356085/README.md#quick-start-"""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_max_len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch</span><span class="p">)]</span>
         <span class="n">batch_labels</span><span class="p">,</span> <span class="n">batch_strs</span><span class="p">,</span> <span class="n">batch_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batch_converter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -182,6 +184,20 @@
         <span class="c1"># NOTE: token 0 is always a beginning-of-sequence token, so the first residue is token 1.</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">token_embeddings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">embed_many</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_assert_max_len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">embed_many</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_assert_max_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_len</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> only allows sequences up to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_len</span><span class="si">}</span><span class="s2"> residues, "</span>
+                <span class="sa">f</span><span class="s2">"but your longest sequence is </span><span class="si">{</span><span class="n">max_len</span><span class="si">}</span><span class="s2"> residues long"</span>
+            <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reduce_per_protein</span><span class="p">(</span><span class="n">embedding</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
