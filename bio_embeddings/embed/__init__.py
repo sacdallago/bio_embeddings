@@ -18,6 +18,33 @@ some embedders by selecting specific extras:
 * ``esm``: esm
 * ``cpcprot``: cpcprot
 * ``plus``: plus_rnn
+
+Model sizes
+-----------
+
+This is the disk size unzipped models.
+
+==============================================  =====
+model                                           size
+==============================================  =====
+bepler                                          122 MB
+bert_from_publication_annotations_extractors    8.2 MB
+cpcprot                                         6.6 MB
+deepblast                                       410 MB
+esm                                             6.3 GB
+esm1b                                           7.3 GB
+pb_tucker                                       9.1 MB
+plus_rnn                                        57 MB
+prottrans_albert_bfd                            857 MB
+prottrans_bert_bfd                              1.6 GB
+prottrans_t5_bfd                                7.2 GB
+prottrans_t5_uniref50                           7.2 GB
+prottrans_t5_xl_u50                             7.2 GB
+prottrans_tucker_bert                           9.1 MB
+prottrans_xlnet_uniref100                       1.6 GB
+seqvec                                          358 MB
+seqvec_from_publication_annotations_extractors  4.1 MB
+==============================================  =====
 """
 
 import logging
