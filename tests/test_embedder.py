@@ -299,3 +299,15 @@ def test_tucker(pytestconfig, device):
         assert numpy.allclose(
             tucker_embeddings[name], tucker_embedding, rtol=1.0e-3, atol=1.0e-5
         ), name
+
+
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
+def test_esm_max_len():
+    embedder = ESM1bEmbedder(device="cpu")
+    message = "esm1b only allows sequences up to 1022 residues, but your longest sequence is 2021 residues long"
+    with pytest.raises(ValueError, match=message):
+        embedder.embed("M" * 2021)
+    with pytest.raises(ValueError, match=message):
+        list(embedder.embed_batch(["SEQWENCE", "M" * 2021, "PROTEIN"]))
+    with pytest.raises(ValueError, match=message):
+        list(embedder.embed_many(["SEQWENCE", "M" * 2021, "PROTEIN"], batch_size=5000))
