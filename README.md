@@ -42,7 +42,7 @@ Install the pipeline like so:
 pip install bio-embeddings[all]
 ```
 
-To get the latest features, please install the pipeline like so:
+To install the unstable version, please install the pipeline like so:
 
 ```bash
 pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"
@@ -62,9 +62,9 @@ docker run --rm --gpus all \
 
 See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. You can also use `ghcr.io/bioembeddings/bio_embeddings:latest` which is built from the latest commit.
 
-### Installation notes:
+### Installation notes
 
-`bio_embeddings` was developed for unix machines with GPU capabilities and [CUDA](https://developer.nvidia.com/cuda-zone) installed. If your setup diverges from this, you may encounter some inconsitencies (e.g. speed is significantly affected by the absence of a GPU and CUDA). For Windows users, we strongly recommend the use of [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+`bio_embeddings` was developed for unix machines with GPU capabilities and [CUDA](https://developer.nvidia.com/cuda-zone) installed. If your setup diverges from this, you may encounter some inconsistencies (e.g. speed is significantly affected by the absence of a GPU and CUDA). For Windows users, we strongly recommend the use of [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 
 ## What model is right for you?
