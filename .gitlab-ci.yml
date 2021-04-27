@@ -13,8 +13,6 @@ stages:
   - deploy
 
 .install-deps-template: &install-deps
-  variables:
-    SKIP_T5: 1 # Until we fix that out of disk error
   before_script:
     - pip install --upgrade pip virtualenv
     - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
@@ -28,6 +26,8 @@ stages:
 
 .test-template: &test
   <<: *install-deps
+  variables:
+    SKIP_EXPENSIVE_TESTS: 1
   stage: tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
   script: poetry run pytest -v
@@ -39,6 +39,23 @@ python3.7:
 python3.9:
   <<: *test
   image: python:3.9
+
+# Those two are ran weekly to also run test the more expensive tests
+python3.7-scheduled:
+  <<: *install-deps
+  stage: tests
+  only:
+    - schedules
+  image: python:3.7
+  script: poetry run pytest -v
+
+python3.9-scheduled:
+  <<: *install-deps
+  stage: tests
+  only:
+    - schedules
+  image: python:3.9
+  script: poetry run pytest -v
 
 docs:
   <<: *install-deps
