@@ -22,7 +22,7 @@
     "# Protocol -- Step 2 — Install bio_embeddings\n",
     "\n",
     "!pip3 install -U pip > /dev/null\n",
-    "!pip3 install -U \"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git\" > /dev/null"
+    "!pip3 install -U bio_embeddings[all] > /dev/null"
    ]
   },
   {
