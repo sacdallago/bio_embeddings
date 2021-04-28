@@ -44,7 +44,7 @@ try:
     from bio_embeddings.embed.prottrans_t5_embedder import (
         ProtTransT5BFDEmbedder,
         ProtTransT5UniRef50Embedder,
-        ProtTransT5XLU50,
+        ProtTransT5XLU50Embedder,
     )
 
     name_to_embedder[ProtTransAlbertBFDEmbedder.name] = ProtTransAlbertBFDEmbedder
@@ -54,14 +54,14 @@ try:
     ] = ProtTransXLNetUniRef100Embedder
     name_to_embedder[ProtTransT5BFDEmbedder.name] = ProtTransT5BFDEmbedder
     name_to_embedder[ProtTransT5UniRef50Embedder.name] = ProtTransT5UniRef50Embedder
-    name_to_embedder[ProtTransT5XLU50.name] = ProtTransT5XLU50
+    name_to_embedder[ProtTransT5XLU50Embedder.name] = ProtTransT5XLU50Embedder
 
     __all__.append(ProtTransAlbertBFDEmbedder.__name__)
     __all__.append(ProtTransBertBFDEmbedder.__name__)
     __all__.append(ProtTransXLNetUniRef100Embedder.__name__)
     __all__.append(ProtTransT5BFDEmbedder.__name__)
     __all__.append(ProtTransT5UniRef50Embedder.__name__)
-    __all__.append(ProtTransT5XLU50.__name__)
+    __all__.append(ProtTransT5XLU50Embedder.__name__)
 except ImportError:
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"

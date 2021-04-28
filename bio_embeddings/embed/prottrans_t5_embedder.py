@@ -146,7 +146,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
 class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD.
-    Consider using :class:`ProtTransT5XLU50` instead of this
+    Consider using :class:`ProtTransT5XLU50Embedder` instead of this
 
     We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
     from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
@@ -158,7 +158,7 @@ class ProtTransT5BFDEmbedder(ProtTransT5Embedder):
 
 class ProtTransT5UniRef50Embedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50.
-    Consider using :class:`ProtTransT5XLU50` instead of this
+    Consider using :class:`ProtTransT5XLU50Embedder` instead of this
 
     We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
     from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,
@@ -168,7 +168,7 @@ class ProtTransT5UniRef50Embedder(ProtTransT5Embedder):
     name = "prottrans_t5_uniref50"
 
 
-class ProtTransT5XLU50(ProtTransT5Embedder):
+class ProtTransT5XLU50Embedder(ProtTransT5Embedder):
     """Encoder of the ProtTrans T5 model trained on BFD and finetuned on UniRef 50.
 
     We recommend settings `half_model=True`, which on the tested GPU (Quadro RTX 3000) reduces memory consumption
