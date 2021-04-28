@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 model = None
 
 if "prott5" in configuration['celery']['celery_worker_type']:
-    from bio_embeddings.embed import ProtTransT5XLU50
+    from bio_embeddings.embed import ProtTransT5XLU50Embedder
 
     logger.info("Loading the language model...")
 
-    model = ProtTransT5XLU50(
+    model = ProtTransT5XLU50Embedder(
         model_directory=configuration['prottrans_t5_xl_u50']['model_directory'],
         decoder=False,
         half_precision_model=True
