@@ -22,10 +22,9 @@ some embedders by selecting specific extras:
 Model sizes
 -----------
 
-This represent the disk size of the unzipped models or the combination of all files necessary for a particular embeddder.
-
-The GPU and CPU sizes are only for loading the model into gpu memory (VRAM) or the main RAM without the memory required
-to do any computation. They were measured for one specific set of hardware and software
+The disk size represents the size of the unzipped models or the combination of all files necessary for a particular
+embeddder. The GPU and CPU sizes are only for loading the model into GPU memory (VRAM) or the main RAM without the
+memory required to do any computation. They were measured for one specific set of hardware and software
 (Quadro RTX 8000, CUDA 11.1, torch 1.7.1, x86 64-bit Ubuntu 18.04) and will vary for different setups.
 
 ==============================================  ==============  =============   ==============
