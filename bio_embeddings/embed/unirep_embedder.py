@@ -1,5 +1,6 @@
 from typing import Any, Dict, Union, Callable
 
+import numpy
 import torch
 from numpy import ndarray
 
@@ -52,6 +53,10 @@ class UniRepEmbedder(EmbedderInterface):
         from jax import vmap, partial
         from jax_unirep.utils import get_embeddings
 
+        # https://github.com/sacdallago/bio_embeddings/issues/117
+        if not sequence:
+            return numpy.zeros((0, self.embedding_dimension))
+
         # Unirep only allows batching with sequences of the same length, so we don't do batching at all
         embedded_seqs = get_embeddings([sequence])
         # h and c refer to hidden and cell state
@@ -60,7 +65,7 @@ class UniRepEmbedder(EmbedderInterface):
             embedded_seqs
         )
         # Go from a batch of 1, which is `(1, len(sequence), 1900)`, to `len(sequence), 1900)`
-        return h[0]
+        return numpy.asarray(h[0])
 
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
