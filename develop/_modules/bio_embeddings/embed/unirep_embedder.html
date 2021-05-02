@@ -139,7 +139,6 @@
         <h1>Source code for bio_embeddings.embed.unirep_embedder</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 
@@ -192,10 +191,6 @@
         <span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">vmap</span><span class="p">,</span> <span class="n">partial</span>
         <span class="kn">from</span> <span class="nn">jax_unirep.utils</span> <span class="kn">import</span> <span class="n">get_embeddings</span>
 
-        <span class="c1"># https://github.com/sacdallago/bio_embeddings/issues/117</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sequence</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dimension</span><span class="p">))</span>
-
         <span class="c1"># Unirep only allows batching with sequences of the same length, so we don't do batching at all</span>
         <span class="n">embedded_seqs</span> <span class="o">=</span> <span class="n">get_embeddings</span><span class="p">([</span><span class="n">sequence</span><span class="p">])</span>
         <span class="c1"># h and c refer to hidden and cell state</span>
@@ -204,7 +199,7 @@
             <span class="n">embedded_seqs</span>
         <span class="p">)</span>
         <span class="c1"># Go from a batch of 1, which is `(1, len(sequence), 1900)`, to `len(sequence), 1900)`</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="UniRepEmbedder.reduce_per_protein"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.UniRepEmbedder.reduce_per_protein">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reduce_per_protein</span><span class="p">(</span><span class="n">embedding</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
