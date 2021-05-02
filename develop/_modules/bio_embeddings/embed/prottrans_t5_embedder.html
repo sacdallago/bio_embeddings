@@ -218,6 +218,12 @@
 
     <span class="k">def</span> <span class="nf">_get_fallback_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]:</span>
         <span class="sd">""" Returns the CPU model """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">"You sequence was too long for the GPU, "</span>
+                <span class="s2">"but we can't fall back to the CPU with half_precision_model=True "</span>
+                <span class="s2">"(https://github.com/huggingface/transformers/issues/11546)"</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span>

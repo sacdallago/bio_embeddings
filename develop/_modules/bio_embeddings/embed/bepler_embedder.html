@@ -178,6 +178,7 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">bepler.alphabets</span> <span class="kn">import</span> <span class="n">Uniprot21</span>
 <span class="kn">from</span> <span class="nn">bepler.models.embedding</span> <span class="kn">import</span> <span class="n">StackedRNN</span>
@@ -260,6 +261,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lstm_stack</span> <span class="o">=</span> <span class="n">_unstack_lstm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">rnn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BeplerEmbedder.embed"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.BeplerEmbedder.embed">[docs]</a>    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+        <span class="c1"># https://github.com/sacdallago/bio_embeddings/issues/116</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dimension</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
         <span class="c1"># convert to alphabet index</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
