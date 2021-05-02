@@ -18,6 +18,36 @@ some embedders by selecting specific extras:
 * ``esm``: esm
 * ``cpcprot``: cpcprot
 * ``plus``: plus_rnn
+
+Model sizes
+-----------
+
+The disk size represents the size of the unzipped models or the combination of all files necessary for a particular
+embeddder. The GPU and CPU sizes are only for loading the model into GPU memory (VRAM) or the main RAM without the
+memory required to do any computation. They were measured for one specific set of hardware and software
+(Quadro RTX 8000, CUDA 11.1, torch 1.7.1, x86 64-bit Ubuntu 18.04) and will vary for different setups.
+
+==============================================  ==============  =============   ==============
+Model                                           Disk size (GB)  GPU size (GB)   CPU size (GB)
+==============================================  ==============  =============   ==============
+bepler                                          0.1             1.4             0.2
+bert_from_publication                           0.008           1.1             0.006
+cpcprot                                         0.007           1.1             0.01
+deepblast                                       0.4             1.4             0.26
+esm                                             6.3             3.9             2.7
+esm1b                                           7.3             3.8             2.6
+pb_tucker                                       0.009           1.0             0.02
+plus_rnn                                        0.06            1.2             0.1
+prottrans_albert_bfd                            0.9             2.0             1.8
+prottrans_bert_bfd                              1.6             2.8             3.4
+prottrans_t5_bfd                                7.2             5.9             16.1
+prottrans_t5_uniref50                           7.2             5.9             16.1
+prottrans_t5_xl_u50                             7.2             5.9             16.1
+prottrans_xlnet_uniref100                       1.6             2.7             3.3
+seqvec                                          0.4             1.6             0.5
+seqvec_from_publication                         0.004           1.1             0.006
+unirep                                          n/a             n/a             0.2
+==============================================  ==============  =============   ==============
 """
 
 import logging
