@@ -79,6 +79,12 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
     def _get_fallback_model(self) -> Union[T5Model, T5EncoderModel]:
         """ Returns the CPU model """
+        if self._half_precision_model:
+            raise NotImplementedError(
+                "You sequence was too long for the GPU, "
+                "but we can't fall back to the CPU with half_precision_model=True "
+                "(https://github.com/huggingface/transformers/issues/11546)"
+            )
         if not self._model_fallback:
             self._model_fallback = self.get_model()
         return self._model_fallback
