@@ -10,6 +10,19 @@ The webserver provides an easy-to-use web interface to a part of the functionali
 You need to provide the worker with a model directory, either by mounting it to `/mnt/models` (docker only) or by setting `MODEL_DIRECTORY` to the location. You can download it from https://rostlab.org/~bio_embeddings/webserver_models.zip. After unzipping, it should look like this:
 
 ```
+├── bert_from_publication_annotations_extractors
+│   ├── secondary_structure_checkpoint_file
+│   └── subcellular_location_checkpoint_file
+├── goa
+│   ├── goa_annotations_2020_bpo.txt
+│   ├── goa_annotations_2020_cco.txt
+│   ├── goa_annotations_2020_mfo.txt
+│   └── seqvec_l1_embeddings.h5
+├── light_attention
+│   ├── la_protbert_solubility
+│   ├── la_protbert_subcellular_location
+│   ├── la_prott5_solubility
+│   └── la_prott5_subcellular_location
 ├── prottrans_bert_bfd
 │   └── model_directory
 │       ├── config.json
@@ -20,14 +33,6 @@ You need to provide the worker with a model directory, either by mounting it to 
 │       ├── config.json
 │       ├── pytorch_model.bin
 │       └── spiece.model
-├── bert_from_publication_annotations_extractors
-│   ├── secondary_structure_checkpoint_file
-│   └── subcellular_location_checkpoint_file
-├── light_attention
-│   ├── la_protbert_solubility
-│   ├── la_protbert_subcellular_location
-│   ├── la_prott5_solubility
-│   └── la_prott5_subcellular_location
 ├── seqvec
 │   ├── options_file
 │   └── weights_file
