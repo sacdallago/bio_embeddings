@@ -76,7 +76,7 @@ class BasicAnnotationExtractor(object):
         # Create un-trained (raw) model and ensure self._model_type is valid
         if self._model_type == "seqvec_from_publication":
             self._subcellular_location_model = SUBCELL_FNN().to(self._device)
-        elif self._model_type == "bert_from_publication": # Drop batchNorm for ProtTrans models
+        elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication": # Drop batchNorm for ProtTrans models
             self._subcellular_location_model = SUBCELL_FNN(use_batch_norm=False).to(self._device)
         else:
             print("You first need to define your custom model architecture.")
@@ -91,7 +91,6 @@ class BasicAnnotationExtractor(object):
         self._subcellular_location_checkpoint_file = self._options['subcellular_location_checkpoint_file']
 
         # Read in pre-trained model
-
         self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
 
         # load pre-trained weights for annotation machines
@@ -120,8 +119,8 @@ class BasicAnnotationExtractor(object):
         if self._model_type == "seqvec_from_publication":
             # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0).mean(dim=0, keepdim=True)
-        elif self._model_type == "bert_from_publication":
-            # Bert case
+        elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication":
+            # Bert/T5 case
             embedding = torch.tensor(raw_embedding).to(self._device).mean(dim=0, keepdim=True)
         else:
             raise NotImplementedError
@@ -139,8 +138,8 @@ class BasicAnnotationExtractor(object):
         if self._model_type == "seqvec_from_publication":
             # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
-        elif self._model_type == "bert_from_publication":
-            # Bert case
+        elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication":
+            # Bert/T5 case
             # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
             embedding = torch.tensor(raw_embedding).to(self._device).T[None, :, :, None]
         else:

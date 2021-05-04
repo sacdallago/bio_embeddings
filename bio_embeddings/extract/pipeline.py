@@ -196,6 +196,8 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
 def bert_from_publication(**kwargs) -> Dict[str, Any]:
     return predict_annotations_using_basic_models("bert_from_publication", **kwargs)
 
+def t5_xl_u50_from_publication(**kwargs) -> Dict[str, Any]:
+    return predict_annotations_using_basic_models("t5_xl_u50_from_publication", **kwargs)
 
 def la_prott5(**kwargs) -> Dict[str, Any]:
     return light_attention('la_prott5', **kwargs)
@@ -337,6 +339,7 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
 PROTOCOLS = {
     "bert_from_publication": bert_from_publication,
     "seqvec_from_publication": seqvec_from_publication,
+    "t5_xl_u50_from_publication" : t5_xl_u50_from_publication,
     "la_prott5": la_prott5,
     "la_protbert": la_protbert,
     "unsupervised": unsupervised
