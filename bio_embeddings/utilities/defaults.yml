@@ -26,6 +26,10 @@ t5_xl_u50_from_publication_annotations_extractors:
   secondary_structure_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/t5/secstruct_checkpoint.pt"
   subcellular_location_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/t5/subcell_checkpoint.pt"
 
+t5_from_publication_annotations_extractors:
+  secondary_structure_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/t5/secstruct_checkpoint.pt"
+  subcellular_location_checkpoint_file: "http://data.bioembeddings.com/public/embeddings/feature_models/t5/subcell_checkpoint.pt"
+
 la_protbert:
   subcellular_location_checkpoint_file: 'http://data.bioembeddings.com/public/embeddings/feature_models/light_attention/la_bert_subcellular_localization.pt'
   membrane_checkpoint_file: 'http://data.bioembeddings.com/public/embeddings/feature_models/light_attention/la_bert_solubility.pt'
