@@ -20,7 +20,7 @@ def cached_embedder(request) -> EmbedderInterface:
 
 
 @pytest.mark.skipif(
-    not os.environ.get("RUN_HYPOTHESIS"), reason="Hypothesis is the slowest of them all"
+    not os.environ.get("RUN_VERY_SLOW_TESTS"), reason="Hypothesis is the slowest of them all"
 )
 @pytest.mark.parametrize(
     "cached_embedder",

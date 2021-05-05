@@ -1,5 +1,6 @@
 import logging
 
+import numpy
 import torch
 
 from typing import Union
@@ -82,6 +83,7 @@ class LightAttentionAnnotationExtractor:
 
         :returns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane boundness
         '''
+        raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
         # turn to tensor and add singleton batch dimension
         embedding = torch.tensor(raw_embedding).to(self._device)[None, ...].permute(0, 2,
                                                                                     1)  # [1 , 1024, sequence_length]

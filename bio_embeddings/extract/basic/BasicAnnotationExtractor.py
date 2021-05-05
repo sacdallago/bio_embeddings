@@ -1,4 +1,6 @@
 import logging
+import numpy
+
 import torch
 import collections
 
@@ -106,6 +108,7 @@ class BasicAnnotationExtractor(object):
         self._secondary_structure_model.eval()
 
     def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationAndMembraneBoundness:
+        raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
         # Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --> 1024).
         # This is similar to embedder.reduce_per_protein(),
         # but more efficient since may be run in GPU (see self._device)
@@ -133,8 +136,8 @@ class BasicAnnotationExtractor(object):
         return SubcellularLocalizationAndMembraneBoundness(localization=pred_loc, membrane=pred_mem)
 
     def get_secondary_structure(self, raw_embedding: ndarray) -> BasicSecondaryStructureResult:
-        # TODO: xxmh: same as for subcell loc.:
-        #       SeqVec requires summing over layers while ProtTrans models only extract last layers
+        raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
+        # same as for subcell loc.: SeqVec requires summing over layers while ProtTrans models only extract last layers
         if self._model_type == "seqvec_from_publication":
             # SeqVec case
             embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
