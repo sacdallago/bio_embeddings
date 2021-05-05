@@ -200,35 +200,6 @@ def test_model_parameters_seqvec(caplog):
             weights_file="/none/existent/path", options_file="/none/existent/path"
         )
 
-
-@pytest.mark.skipif(os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk")
-@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
-def test_batching_t5_blocked():
-    """Once the T5 bug is fixed, this should become a regression test"""
-    embedder = ProtTransT5BFDEmbedder()
-    with pytest.raises(RuntimeError):
-        embedder.embed_many([], batch_size=1000)
-
-
-@pytest.mark.skipif(os.environ.get("SKIP_T5"), reason="T5 makes ci run out of disk")
-@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
-def test_batching_t5(pytestconfig):
-    """Check that T5 batching is still failing"""
-    embedder = ProtTransT5BFDEmbedder()
-    fasta_file = pytestconfig.rootpath.joinpath("examples/docker/fasta.fa")
-    batch = [str(i.seq[:]) for i in read_fasta(str(fasta_file))]
-    embeddings_single_sequence = list(
-        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=None)
-    )
-    embeddings_batched = list(
-        super(ProtTransT5Embedder, embedder).embed_many(batch, batch_size=10000)
-    )
-    for a, b in zip(embeddings_single_sequence, embeddings_batched):
-        assert not numpy.allclose(a, b) and numpy.allclose(
-            a, b, rtol=1.0e-4, atol=1.0e-5
-        )
-
-
 def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
     """Currently a dummy test"""
 
