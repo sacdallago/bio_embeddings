@@ -138,6 +138,8 @@
         </label>
         <h1>Source code for bio_embeddings.extract.basic.BasicAnnotationExtractor</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 
@@ -245,6 +247,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_secondary_structure_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BasicAnnotationExtractor.get_subcellular_location"><a class="viewcode-back" href="../../../../api/bio_embeddings.extract.html#bio_embeddings.extract.BasicAnnotationExtractor.get_subcellular_location">[docs]</a>    <span class="k">def</span> <span class="nf">get_subcellular_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_embedding</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubcellularLocalizationAndMembraneBoundness</span><span class="p">:</span>
+        <span class="n">raw_embedding</span> <span class="o">=</span> <span class="n">raw_embedding</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># For T5 fp16</span>
         <span class="c1"># Reduce embedding to fixed size, per-sequence (aka: Lx3x2014 --&gt; 1024).</span>
         <span class="c1"># This is similar to embedder.reduce_per_protein(),</span>
         <span class="c1"># but more efficient since may be run in GPU (see self._device)</span>
@@ -272,8 +275,8 @@
         <span class="k">return</span> <span class="n">SubcellularLocalizationAndMembraneBoundness</span><span class="p">(</span><span class="n">localization</span><span class="o">=</span><span class="n">pred_loc</span><span class="p">,</span> <span class="n">membrane</span><span class="o">=</span><span class="n">pred_mem</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BasicAnnotationExtractor.get_secondary_structure"><a class="viewcode-back" href="../../../../api/bio_embeddings.extract.html#bio_embeddings.extract.BasicAnnotationExtractor.get_secondary_structure">[docs]</a>    <span class="k">def</span> <span class="nf">get_secondary_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_embedding</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BasicSecondaryStructureResult</span><span class="p">:</span>
-        <span class="c1"># TODO: xxmh: same as for subcell loc.:</span>
-        <span class="c1">#       SeqVec requires summing over layers while ProtTrans models only extract last layers</span>
+        <span class="n">raw_embedding</span> <span class="o">=</span> <span class="n">raw_embedding</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># For T5 fp16</span>
+        <span class="c1"># same as for subcell loc.: SeqVec requires summing over layers while ProtTrans models only extract last layers</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type</span> <span class="o">==</span> <span class="s2">"seqvec_from_publication"</span><span class="p">:</span>
             <span class="c1"># SeqVec case</span>
             <span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">raw_embedding</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
