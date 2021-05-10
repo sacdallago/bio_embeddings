@@ -10,7 +10,7 @@ Resources to learn about bio_embeddings:
 - Quickly predict protein structure and function from sequence via embeddings: [embed.protein.properties](https://embed.protein.properties).
 - Read the current documentation: [docs.bioembeddings.com](https://docs.bioembeddings.com).
 - Chat with us: [chat.bioembeddings.com](https://chat.bioembeddings.com).
-- We presented the bio_embeddings pipeline as a talk at ISMB 2020 & LMRL 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), and [the poster on F1000](https://f1000research.com/posters/9-876).
+- We presented the bio_embeddings pipeline as a talk at ISMB 2020 & LMRL 2020. You can [find the talk on YouTube](https://www.youtube.com/watch?v=NucUA0QiOe0&feature=youtu.be), [the poster on F1000](https://f1000research.com/posters/9-876), and our [Current Protocol Manuscript](https://doi.org/10.1002/cpz1.113).
 - Check out the [`examples`](examples) of pipeline configurations a and [`notebooks`](notebooks).
 
 Project aims:
@@ -101,9 +101,26 @@ After having installed the package, you can:
     
 ## Cite
 
-While we are working on a proper publication, if you are already using this tool, we would appreciate if you could cite the following poster:
+> Dallago, C., Schütze, K., Heinzinger, M., Olenyi, T., Littmann, M., Lu, A. X., Yang, K. K., Min, S., Yoon, S., Morton, J. T., & Rost, B. (2021). Learned embeddings from deep learning to visualize and predict protein sets. Current Protocols, 1, e113. doi: [10.1002/cpz1.113](https://doi.org/10.1002/cpz1.113)
 
-> Dallago C, Schütze K, Heinzinger M et al. bio_embeddings: python pipeline for fast visualization of protein features extracted by language models [version 1; not peer reviewed]. F1000Research 2020, 9(ISCB Comm J):876 (poster) (doi: [10.7490/f1000research.1118163.1](https://doi.org/10.7490/f1000research.1118163.1))
+
+The corresponding bibtex:
+```
+@article{https://doi.org/10.1002/cpz1.113,
+author = {Dallago, Christian and Schütze, Konstantin and Heinzinger, Michael and Olenyi, Tobias and Littmann, Maria and Lu, Amy X. and Yang, Kevin K. and Min, Seonwoo and Yoon, Sungroh and Morton, James T. and Rost, Burkhard},
+title = {Learned Embeddings from Deep Learning to Visualize and Predict Protein Sets},
+journal = {Current Protocols},
+volume = {1},
+number = {5},
+pages = {e113},
+keywords = {deep learning embeddings, machine learning, protein annotation pipeline, protein representations, protein visualization},
+doi = {https://doi.org/10.1002/cpz1.113},
+url = {https://currentprotocols.onlinelibrary.wiley.com/doi/abs/10.1002/cpz1.113},
+eprint = {https://currentprotocols.onlinelibrary.wiley.com/doi/pdf/10.1002/cpz1.113},
+year = {2021}
+}
+
+```
 
 ## Contributors
 
