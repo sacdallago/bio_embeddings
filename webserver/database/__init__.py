@@ -2,6 +2,7 @@ import logging
 from typing import List
 
 import gridfs
+import pymongo
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 ten_days = 10 * 24 * 60 * 60
 
-_client = MongoClient(configuration['web']['mongo_url'])
+_client = MongoClient(configuration["web"]["mongo_url"])
 _response_cache_db: Database = _client.response_cache
 _collection: Database = _client.file_storage
 _fs = gridfs.GridFS(_collection)
@@ -34,6 +35,18 @@ def get_or_create_cache(name: str) -> Collection:
 # Caches for the direct feature extractors
 get_embedding_cache = get_or_create_cache("get_embedding_cache")
 get_features_cache = get_or_create_cache("get_features_cache")
+
+# Indexes, otherwise it gets really slow with some GB of data
+if "model_name_sequence" not in get_features_cache.index_information():
+    get_features_cache.create_index(
+        ([("model_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
+        name="model_name_sequence",
+    )
+if "model_name_sequence" not in get_embedding_cache.index_information():
+    get_embedding_cache.create_index(
+        ([("model_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
+        name="model_name_sequence",
+    )
 
 
 def write_file(job_id, file_identifier, file_path):
