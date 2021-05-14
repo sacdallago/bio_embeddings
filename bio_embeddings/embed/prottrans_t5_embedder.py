@@ -131,16 +131,6 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
             yield embedding
 
-    def embed_many(
-        self, sequences: Iterable[str], batch_size: Optional[int] = None
-    ) -> Generator[ndarray, None, None]:
-        if batch_size is not None:
-            raise RuntimeError(
-                "There is a bug in batching T5, so you currently must set batch_size to `None` for T5"
-            )
-
-        return super().embed_many(sequences, None)
-
     @staticmethod
     def reduce_per_protein(embedding):
         return embedding.mean(axis=0)
