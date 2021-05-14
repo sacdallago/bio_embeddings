@@ -36,7 +36,7 @@ bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
 bio-embeddings-tape-proteins = { version = "0.4", optional = true }
 bio-embeddings-plus = { version = "0.1.1", optional = true }
 bio-embeddings-bepler = { version = "0.0.1", optional = true }
-bio-embeddings-allennlp = { version = "0.9.1", optional = true }
+bio-embeddings-allennlp = { version = "0.9.2", optional = true }
 bio-embeddings-deepblast = { version = "0.1.0", optional = true }
 
 numpy = "^1.18.3"
@@ -69,6 +69,7 @@ python-slugify = "^4.0.1"
 fsspec = { version = "0.8.5", optional = true }
 humanize = "^3.2.0"
 fair-esm = { version = "0.3.1", optional = true }
+flask = { version = "^1.0.0", optional = true }
 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
@@ -81,7 +82,7 @@ bepler = ["bio-embeddings-bepler"]
 deepblast = ["bio-embeddings-deepblast", "fsspec"]
 all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
-webserver = ["pymongo", "sentry-sdk"]
+webserver = ["pymongo", "sentry-sdk", "flask"]
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.1"
