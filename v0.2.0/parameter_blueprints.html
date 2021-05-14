@@ -1,0 +1,397 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Notebooks" href="notebooks/README.html" /><link rel="prev" title="Bio Embeddings" href="index.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+        <title>Pipeline Reference - bio_embeddings</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Pipeline Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="pipeline-reference">
+<h1>Pipeline Reference<a class="headerlink" href="#pipeline-reference" title="Permalink to this headline">¶</a></h1>
+<p>Reference with all the possible options for the pipeline configuration file (“config.yml”), which uses the <a class="reference external" href="https://learnxinyminutes.com/docs/yaml/">yaml format</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># global options must be defined</span>
+
+<span class="k">global</span><span class="p">:</span>
+  <span class="c1"># Required: Path to a Fasta file</span>
+  <span class="n">sequences_file</span><span class="p">:</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">sequences</span><span class="o">.</span><span class="n">fasta</span>
+  <span class="c1"># Required: String for output</span>
+  <span class="n">prefix</span><span class="p">:</span> <span class="n">my_embeddings</span>
+
+  <span class="c1">## Optional: file manager</span>
+  <span class="c1"># file_manager: [*filesystem]</span>
+
+  <span class="c1">## Optional: remap index simple (not via md5, this is not encouraged)</span>
+  <span class="c1"># simple_remapping: [True, *False]</span>
+
+  <span class="c1">## Stages are executed in sequential order as they are outlined in this file.</span>
+  <span class="c1">## Stage names must be different!! If not: they will overwrite each_other</span>
+  <span class="c1">## The same stage type (e.g. embed,..) can be executed multiple types.</span>
+  <span class="c1">## Dependencies for a stage are defined in the dependencies parameter</span>
+
+  <span class="c1">## This config file includes options for initializing classes and options specific to the protocol</span>
+
+  <span class="c1">## Options notation:</span>
+  <span class="c1">## *: denotes the default option</span>
+  <span class="c1">## @: denotes that the file or directory will be downloaded and stored locally if not provided</span>
+
+<span class="n">stage_1</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">embed</span>
+  <span class="c1"># Required: which embedder to use</span>
+  <span class="c1"># Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_t5_uniref50,</span>
+  <span class="c1"># prottrans_t5_xl_u50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, plus_rnn, unirep, bepler</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">seqvec</span>
+
+  <span class="c1"># Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.</span>
+  <span class="c1"># Note that you can always compute the reduced embeddings from the full embeddings</span>
+  <span class="c1"># but some further stages (e.g. unsupervised extract) need this option</span>
+  <span class="n">reduce</span><span class="p">:</span> <span class="kc">True</span>
+
+  <span class="c1"># Optional: discard per amino acid embeddings.</span>
+  <span class="c1"># Setting this parameter to True will disable storing full size embeddings (per amino acid).</span>
+  <span class="c1"># This parameter only works in combination with `reduce: True` or `embeddings_transformer_function`.</span>
+  <span class="c1"># discard_per_amino_acid_embeddings: [True, *False]</span>
+
+  <span class="c1"># Optional/Advanced: apply a transformation on the per-amino-acid embeddings</span>
+  <span class="c1"># === This is an advanced parameter ===</span>
+  <span class="c1"># This parameter will be "eval"-uated. It must be a callable. Most likely, you'll want to define lambda functions.</span>
+  <span class="c1"># The input of the function is a per-amino-acid embedding (aka. an np array of shape n_layers*embedding_dimension*sequence_length).</span>
+  <span class="c1"># You can use numpy functions via "np".</span>
+  <span class="c1"># The result of the transformation will be stored in the transformed_embeddings_file.</span>
+  <span class="c1"># The pipeline *WILL NOT* check file size of the prospective transformed_embeddings_file.</span>
+  <span class="c1"># This parameter can be used in conjunction with `discard_per_amino_acid_embeddings`.</span>
+  <span class="c1"># Two examples:</span>
+  <span class="c1">#   - "lambda x: x[0].mean(0)" --&gt; for SeqVec, this will return the mean pooled embedding of the first layer</span>
+  <span class="c1">#   - "lambda x: x.max(0)" --&gt; for ProtTrans-BERT-BFD, this will return the max pooled embedding, instead of mean pooled</span>
+  <span class="c1"># embeddings_transformer_function:</span>
+
+  <span class="c1">#### Optional parameters to instantiate classes</span>
+
+  <span class="c1">### Optional for protocol: seqvec</span>
+  <span class="c1"># weights_file: @/path/to/file</span>
+  <span class="c1"># options_file: @/path/to/file</span>
+  <span class="c1">## The following parameter sets an upper bound on total AA to include when embedding many sequences.</span>
+  <span class="c1">## Adjust this parameter if CUDA runs out of memory! The default (15.000) works for a 1080 with 8GB RAM.</span>
+  <span class="c1"># max_amino_acids: [*15000]</span>
+  <span class="c1">## The following parameters sets the amount of AA to include in a batch before writing to disk.</span>
+
+  <span class="c1">### Optional for protocol: fasttext, word2vec, glove, esm</span>
+  <span class="c1"># model_file: @/path/to/file</span>
+
+  <span class="c1">### Optional for protocol: albert, bert, xlnet</span>
+  <span class="c1"># model_directory: @/path/to/directory</span>
+
+  <span class="c1">### Optional for protocol: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_xlnet_uniref100, esm</span>
+  <span class="c1">## Set the following parameter to calculate embeddings on a specific device or a specific GPU on multi-GPU hosts.</span>
+  <span class="c1">## The default, "cuda", runs on the default GPU. You can switch to CPU with "cpu" or select a GPU on</span>
+  <span class="c1">## multi-GPU systems with "cuda:0" or "cuda:1" etc.</span>
+  <span class="c1">## See https://pytorch.org/docs/stable/tensor_attributes.html?highlight=device#torch.torch.device</span>
+  <span class="c1">## for a complete list</span>
+  <span class="c1">## unirep will use the cpu by default; Follow https://github.com/google/jax#pip-installation</span>
+  <span class="c1">## to run it on the gpu</span>
+  <span class="c1"># device: cuda</span>
+
+  <span class="c1">## Save numbers with lower precision, so that they take only about half the</span>
+  <span class="c1">## storage space (replace float32 with float16).</span>
+  <span class="c1">## This makes predictions based on the embeddings less exact.</span>
+  <span class="c1"># half_precision: [true, *false]</span>
+
+  <span class="c1">## For prottrans_t5_bfd, prottrans_t5_uniref50 and prottrans_t5_xl_u50 only:</span>
+  <span class="c1"># Use the model in half precision mode (float16)</span>
+  <span class="c1">## We recommend activating this with T5, since tested GPU (Quadro RTX 3000) reduces memory consumption</span>
+  <span class="c1">## from 12GB to 7GB while the effect in benchmarks is negligible (±0.1 percentages points in different sets,</span>
+  <span class="c1">## generally below standard error)</span>
+  <span class="c1"># half_precision_model: [true, *false]</span>
+
+<span class="n">stage_2</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">project</span>
+  <span class="c1"># Required: which projection algorithm to use</span>
+  <span class="c1"># Options: tsne, umap, pb_tucker</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">tsne</span>
+  <span class="c1"># Either depend on an embedding stage with reduced embeddings</span>
+  <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_1</span>
+  <span class="c1"># or define mapping and reduced embedding file:</span>
+  <span class="c1"># reduced_embeddings_file: path/to/reduced_embeddings_file.h5</span>
+  <span class="c1"># mapping_file: path/to/mapping_file.csv</span>
+
+
+  <span class="c1">### Optional for protocol: tsne</span>
+  <span class="c1"># n_iter: *15000</span>
+  <span class="c1"># perplexity: *6</span>
+  <span class="c1"># n_jobs: *-1</span>
+
+  <span class="c1">### Optional for protocol: umap</span>
+  <span class="c1"># min_dist: *0.6</span>
+  <span class="c1"># spread: *1</span>
+  <span class="c1"># n_neighbors: *15</span>
+
+  <span class="c1">### Optional for protocol: tsne and umap</span>
+  <span class="c1"># metric: *'cosine'</span>
+  <span class="c1"># n_components: *3</span>
+  <span class="c1"># random_state: *420</span>
+  <span class="c1"># verbose: *1</span>
+
+  <span class="c1">## Optional with pb_tucker: Postprocess reduced embeddings with tucker, which is a contrastive</span>
+  <span class="c1">## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.</span>
+  <span class="c1"># model_file: @/path/to/file</span>
+
+
+<span class="n">stage_3</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">visualize</span>
+  <span class="c1"># Required: which graph to render</span>
+  <span class="c1"># Options: plotly</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">plotly</span>
+  <span class="c1"># Either depend on a project stage with projected embeddings file</span>
+  <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_2</span>
+  <span class="c1"># or define projected_reduced_embeddings_file:</span>
+  <span class="c1"># projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5</span>
+
+  <span class="c1"># Optional: csv file with annotations</span>
+  <span class="c1"># csv must have header: identifier, label</span>
+  <span class="c1"># annotation_file: path/to/annotation_file.csv</span>
+
+  <span class="c1"># Optional: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)</span>
+  <span class="c1"># display_unknown: [False, *True]</span>
+
+  <span class="c1"># Optional: set to True if in annotation_file identifiers correspond to sequence MD5 hashes</span>
+  <span class="c1"># if set to False (default), mapping will be performed on original identifiers.</span>
+  <span class="c1"># Where missing or duplicate, will be ignored</span>
+  <span class="c1"># merge_via_index: [True, *False]</span>
+
+  <span class="c1"># Optional: 2D vs 3D plot</span>
+  <span class="c1"># n_components: [2,*3]</span>
+
+<span class="n">stage_4</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">extract</span>
+  <span class="c1">## Required: which method to use.</span>
+  <span class="c1">## Current options:</span>
+  <span class="c1">##   - seqvec_from_publication (Uses models evaluated in https://doi.org/10.1186/s12859-019-3220-8 )</span>
+  <span class="c1">##   - bert_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )</span>
+  <span class="c1">##   - unsupervised (Uses concepts presented in https://github.com/Rostlab/goPredSim )</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">seqvec_from_publication</span>
+
+  <span class="c1">## The supervised extract (bert_from_publication and seqvec_from_publication) needs</span>
+  <span class="c1">## the full embeddings, i.e. `discard_per_amino_acid_embeddings` must be false in the</span>
+  <span class="c1">## embed stage, which is the default. For the unsupervised extract, you need the</span>
+  <span class="c1">## reduced embeddings, i.e. set `reduce: True`.</span>
+  <span class="c1">## Instead of an embed stage, you can also provide a file manually, either supply for unsupervised:</span>
+  <span class="c1"># reduced_embeddings_file:</span>
+  <span class="c1">## or for bert_from_publication and seqvec_from_publication</span>
+  <span class="c1"># embeddings_file:</span>
+  <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_2</span>
+
+  <span class="c1">## Optional for protocol: seqvec_from_publication, bert_from_publication,</span>
+  <span class="c1">## will be downloaded if not supplied</span>
+  <span class="c1"># secondary_structure_checkpoint_file: path/to/checkpoint.pt</span>
+  <span class="c1"># subcellular_location_checkpoint_file: path/to/checkpoint.pt</span>
+
+  <span class="c1">## Required for protocol: unsupervised</span>
+  <span class="c1"># reference_embeddings_file: path/to/embeddings.hd5</span>
+  <span class="c1"># reference_annotations_file: path/to/annotation_file.csv</span>
+
+  <span class="c1">## Optional for protocol: unsupervised</span>
+  <span class="c1">## The following two options refer to the pairwise_distance function of scikit-learn 0.23.2</span>
+  <span class="c1">## https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise_distances.html#sklearn.metrics.pairwise_distances</span>
+  <span class="c1"># n_jobs: [1*]</span>
+  <span class="c1"># metric: [euclidean*]</span>
+  <span class="c1">## The following will define how many neighbours to consider to transfer annotations.</span>
+  <span class="c1">## k = 1 means transfer the annotations from the nearest neighbor</span>
+  <span class="c1">## k &gt; 1 will result in merging the annotations of all k &gt; 1 neighbors onto the target embedding</span>
+  <span class="c1"># k_nearest_neighbours: [1*]</span>
+  <span class="c1">## The following informs the pipeline whether you want to keep the pairwise distance matrix file.</span>
+  <span class="c1">## This is a CSV containing pairwise distances between query and reference embeddings using your metric.</span>
+  <span class="c1">## The file can become quite big (e.g. UniProt Human (query) vs. SwissProt (reference) results in 45GB)</span>
+  <span class="c1">## By default, this file will be discarded, but you can decide to keep it to perform other calculations.</span>
+  <span class="c1"># keep_pairwise_distances_matrix_file: [*False]</span>
+</pre></div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="notebooks/README.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Notebooks</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/parameter_blueprints.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>

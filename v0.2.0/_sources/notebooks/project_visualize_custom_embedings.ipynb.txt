@@ -1,0 +1,195 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Colab initialization\n",
+    "- install the pipeline in the colab runtime"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!pip3 install -U pip > /dev/null\n",
+    "!pip3 install -U bio_embeddings[all] > /dev/null"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "outputs": [],
+   "source": [
+    "!wget http://data.bioembeddings.com/public/embeddings/notebooks/custom_data/antibodies_dummy.xlsx --output-document antibodies_dummy.xlsx"
+   ],
+   "metadata": {
+    "collapsed": false,
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   }
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Visualize sequence space for custom embeddings\n",
+    "In this notebook we dig deeper into an analytical application of protein LM embeddings. For this example, a private set of antibodies was used. This notebook is for illustrative purposes only."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "from IPython.core.display import display\n",
+    "from bio_embeddings.embed import SeqVecEmbedder\n",
+    "from bio_embeddings.project import tsne_reduce\n",
+    "from bio_embeddings.visualize import render_3D_scatter_plotly\n",
+    "from pandas import read_excel, DataFrame\n",
+    "\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Construct the embedder class.\n",
+    "\n",
+    "embedder = SeqVecEmbedder()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Read excel sheet and display first two entries\n",
+    "\n",
+    "data = read_excel('antibodies_dummy.xlsx', index_col=0)\n",
+    "display(data[:2])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Generate embeddings for heay and light CDR3 AA sequences\n",
+    "\n",
+    "heavy_embeddings = [embedder.reduce_per_protein(embedding) for embedding in embedder.embed_many(data['HEAVY CDR3 (aa)'])]\n",
+    "ligth_embeddings = [embedder.reduce_per_protein(embedding) for embedding in embedder.embed_many(data['LIGHT CDR3 (aa)'])]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# If merge is set to True, embeddings will be summed and the resulting vector will be of size 1024\n",
+    "# If merge is set to False, embeddings will be concatenated, and the resulting vector will be of size 2048\n",
+    "merge = False\n",
+    "\n",
+    "_data = []\n",
+    "\n",
+    "for heavy_part, light_part in zip(heavy_embeddings, ligth_embeddings):\n",
+    "    if merge:\n",
+    "        _data.append(heavy_part+light_part)\n",
+    "    else:\n",
+    "        _data.append(np.concatenate([heavy_part, light_part]))\n",
+    "\n",
+    "transformed_embeddings = tsne_reduce(_data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "embeddings_dataframe = DataFrame(transformed_embeddings, columns=[\"component_0\", \"component_1\", \"component_2\"])\n",
+    "embeddings_dataframe['label'] = data['Poly'].values\n",
+    "embeddings_dataframe.index = data.index"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "fig = render_3D_scatter_plotly(embeddings_dataframe=embeddings_dataframe)\n",
+    "fig.show()\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.6"
+  },
+  "pycharm": {
+   "stem_cell": {
+    "cell_type": "raw",
+    "source": [],
+    "metadata": {
+     "collapsed": false
+    }
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
