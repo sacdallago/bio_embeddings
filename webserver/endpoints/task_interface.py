@@ -47,20 +47,16 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
     array = np.array(job.get())
     assert array.dtype == numpy.float64, array.dtype
 
-    # TODO: enable caching of embeddings IFF this becomes a necessity
-    # NOTE: Disabled on 2021.03.18 after establishing that this caused significant wall time
-    #       if the cache was populated (in this case: 5GB of cache caused 3 seconds more per request!)
-    #       The wall time may be caused by single thread execution of mongo in docker or RAM/Disk data swapping
-    #if len(sequence) < 500:
-    #    get_embedding_cache.insert_one(
-    #        {
-    #            "uploadDate": datetime.utcnow(),
-    #            "model_name": model_name,
-    #            "sequence": sequence,
-    #            "shape": array.shape,
-    #            "array": array.tobytes(),
-    #        }
-    #    )
+    if len(sequence) < 500:
+        get_embedding_cache.insert_one(
+            {
+                "uploadDate": datetime.utcnow(),
+                "model_name": model_name,
+                "sequence": sequence,
+                "shape": array.shape,
+                "array": array.tobytes(),
+            }
+        )
     return array
 
 
