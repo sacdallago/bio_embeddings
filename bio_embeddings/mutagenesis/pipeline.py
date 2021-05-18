@@ -1,3 +1,4 @@
+import math
 from copy import deepcopy
 from pathlib import Path
 
@@ -59,8 +60,12 @@ def run(**kwargs):
                     sequence, tokenizer, model, device, None, None, pbar
                 )
 
+            for p in probabilities:
+                assert math.isclose(
+                    1, (sum(p.values()) - p["position"]), rel_tol=1e-6
+                ), "softmax values should add up to 1"
+
             fig = plot(sequence, probabilities, original_id, None, None)
             plotly.offline.plot(
                 fig, filename=str(Path(stage).joinpath(f"{sequence_id}.html"))
             )
-            plotly.offline.plot(fig, filename=f"{sequence_id}.html")
