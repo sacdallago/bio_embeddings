@@ -34,26 +34,28 @@ def plotly(result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
         rows = []
         with h5py.File(result_kwargs["projected_reduced_embeddings_file"], "r") as file:
             for sequence_id, embedding in file.items():
-                if embedding.shape != (3,):
+                if result_kwargs['n_components'] > 2 and embedding.shape != (3,):
                     raise RuntimeError(
                         f"Expected embeddings in projected_reduced_embeddings_file "
                         f"to be of shape (3,), not {embedding.shape}"
                     )
-                row = (
+                row = [
                     sequence_id,
                     embedding.attrs["original_id"],
                     embedding[0],
                     embedding[1],
-                    embedding[2],
-                )
+                ]
+                if result_kwargs['n_components'] > 2:
+                    row.append(embedding[2])
                 rows.append(row)
         columns = [
             "sequence_id",
             "original_id",
             "component_0",
             "component_1",
-            "component_2",
         ]
+        if result_kwargs['n_components'] > 2:
+            columns.append("component_2")
         merged_annotation_file = DataFrame.from_records(
             rows, index="sequence_id", columns=columns
         )
