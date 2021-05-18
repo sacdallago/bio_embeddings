@@ -8,7 +8,7 @@ from bio_embeddings.mutagenesis.pipeline import run
 
 @pytest.mark.skipif(
     not os.environ.get("RUN_VERY_SLOW_TESTS"),
-    reason="This ",
+    reason="This is experimental",
 )
 def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
     run(
@@ -16,13 +16,9 @@ def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
         prefix=tmp_path,
         stage_name="protbert_bfd_mutagenesis_test",
         remapped_sequences_file=str(
-            pytestconfig.rootpath.joinpath(
-                "test-data/remapped_sequences_file.fasta"
-            )
+            pytestconfig.rootpath.joinpath("test-data/remapped_sequences_file.fasta")
         ),
-        mapping_file=str(
-            pytestconfig.rootpath.joinpath("test-data/mapping_file.csv")
-        ),
+        mapping_file=str(pytestconfig.rootpath.joinpath("test-data/mapping_file.csv")),
     )
 
     assert tmp_path.joinpath(

@@ -42,7 +42,7 @@ def get_sequence_probabilities(
     device = get_device(device)
 
     # init softmax to get mutagenesis later on
-    sm = torch.nn.Softmax(dim=0)
+    sm = torch.nn.Softmax(dim=-1)
     AAs = "FLSYXCWPHQRIMTNKVADEG"
     AA_tokens = [tokenizer.convert_tokens_to_ids(AA) for AA in list(AAs)]
 
