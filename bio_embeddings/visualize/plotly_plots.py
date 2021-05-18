@@ -75,7 +75,6 @@ def render_scatter_plotly(embeddings_dataframe: DataFrame) -> _Figure:
         hover_data.append("label")
 
     if 'label' in embeddings_dataframe.columns:
-        print(embeddings_dataframe.columns)
         fig = px.scatter(embeddings_dataframe,
                          x='component_0',
                          y='component_1',

@@ -76,6 +76,10 @@
           "discard_per_amino_acid_embeddings": {
             "type": "boolean",
             "default": false
+          },
+          "half_precision_model": {
+            "type": "boolean",
+            "default": false
           }
         },
         "required": [
