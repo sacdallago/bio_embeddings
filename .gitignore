@@ -134,17 +134,18 @@ dmypy.json
 # End of https://www.gitignore.io/api/python,jupyternotebooks,visualstudiocode
 
 .DS_Store
-models/
-private/
 .idea/
 .venv
-sync.sh
+docs/docs-branch
+evotuning.log
+examples/*/simpledocs/_build
 examples/docker/output
 examples/tucker/cath-domain-list-v4_3_0.txt
 examples/tucker/tucker_cath
-notebooks/*.h5
+models/
 notebooks/*.csv
-evotuning.log
+notebooks/*.h5
+private/
+sync.sh
+test-data/mutagenesis/mutagenesis
 webserver/konsti
-examples/*/simpledocs/_build
-docs/docs-branch
