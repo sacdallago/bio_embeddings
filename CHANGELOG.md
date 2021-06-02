@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Support `half_precision_model` for `prottrans_bert_bfd` and `prottrans_albert_bfd`
+ * BETA: in-silico mutagensis using ProtTransBertBFD. This computes the likelihood that, according to Bert, a residue in a protein can be a certain amino acid, which can be used as an estimate for the effect of a mutation. This adds two new stages, `mutagenesis` and `mutagenesis_visualize`, of which the first one computes the probabilities and writes them to a csv file while the later visualizes the results as interactive plotly figure.
+ * Support `half_precision_model` for `prottrans_bert_bfd` and `prottrans_albert_bfd`
 
 ## v0.2.0
 
