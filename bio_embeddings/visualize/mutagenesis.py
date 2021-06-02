@@ -1,6 +1,3 @@
-from copy import deepcopy
-from pathlib import Path
-
 import pandas
 import plotly
 from pandas import DataFrame
@@ -56,26 +53,23 @@ def plot(probabilities: DataFrame) -> Figure:
     return fig
 
 
-def run(**kwargs):
-    """WIP Do Not Use
+def plot_mutagenesis(result_kwargs):
+    """BETA: visualize in-silico mutagenesis as a heatmap with plotly
 
     mandatory:
-    * probabilities_file
+    * residue_probabilities_file
     """
     required_kwargs = [
         "protocol",
         "prefix",
         "stage_name",
-        "probabilities_file",
+        "residue_probabilities_file",
     ]
-    check_required(kwargs, required_kwargs)
-    result_kwargs = deepcopy(kwargs)
+    check_required(result_kwargs, required_kwargs)
     file_manager = get_file_manager()
-    stage = file_manager.create_stage(
-        result_kwargs["prefix"], result_kwargs["stage_name"]
-    )
+    file_manager.create_stage(result_kwargs["prefix"], result_kwargs["stage_name"])
 
-    probabilities_all = pandas.read_csv(result_kwargs["probabilities_file"])
+    probabilities_all = pandas.read_csv(result_kwargs["residue_probabilities_file"])
     assert (
         list(probabilities_all.columns) == PROBABILITIES_COLUMNS
     ), f"probabilities file is expected to have the following columns: {PROBABILITIES_COLUMNS}"
@@ -86,7 +80,13 @@ def run(**kwargs):
     ):
         fig = plot(probabilities)
         plotly.offline.plot(
-            fig, filename=str(Path(stage).joinpath(f"{sequence_id}.html"))
+            fig,
+            filename=file_manager.create_file(
+                result_kwargs.get("prefix"),
+                result_kwargs.get("stage_name"),
+                sequence_id,
+                extension=".html",
+            ),
         )
 
     return result_kwargs

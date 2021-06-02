@@ -4,9 +4,7 @@ from pathlib import Path
 import pytest
 
 from bio_embeddings.mutagenesis.pipeline import run as run_mutagenesis
-from bio_embeddings.mutagenesis_visualize.pipeline import (
-    run as run_mutagenesis_visualize,
-)
+from bio_embeddings.visualize.pipeline import run as run_visualize
 
 
 @pytest.mark.skipif(
@@ -26,12 +24,12 @@ def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
 
     stage_parameters = dict(
         stage_name="mutagenesis_visualize_test",
-        type="mutagenesis_visualize",
-        protocol="mutagenesis_visualize",
+        type="visualize",
+        protocol="mutagenesis",
         depends_on="mutagenesis",
     )
 
-    run_mutagenesis_visualize(**{**result_kwargs, **stage_parameters})
+    run_visualize(**{**result_kwargs, **stage_parameters})
 
     assert tmp_path.joinpath(
         "mutagenesis_visualize_test/78c685273a9456e98046482c09b31473.html"

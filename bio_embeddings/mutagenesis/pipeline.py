@@ -1,6 +1,5 @@
 import math
 from copy import deepcopy
-from pathlib import Path
 from typing import List, Dict, Type
 
 import torch
@@ -61,7 +60,7 @@ def run(**kwargs):
     result_kwargs = deepcopy(kwargs)
     if result_kwargs["protocol"] not in PROTOCOLS:
         raise RuntimeError(
-            f"The only supported protocol is 'protbert_bfd_mutagenesis', not '{result_kwargs['protocol']}'"
+            f"Passed protocol {result_kwargs['protocol']}, but allowed are: {', '.join(PROTOCOLS)}"
         )
     temperature = result_kwargs.setdefault("temperature", 1)
     device = get_device(result_kwargs.get("device"))
@@ -101,9 +100,16 @@ def run(**kwargs):
                 ), "softmax values should add up to 1"
 
             probabilities_all[sequence_id] = probabilities
-    df = probabilities_as_dataframe(mapping_file, probabilities_all, sequences)
+    residue_probabilities = probabilities_as_dataframe(
+        mapping_file, probabilities_all, sequences
+    )
 
-    probabilities_file = str(Path(stage).joinpath("probabilities.csv"))
-    df.to_csv(probabilities_file, index=False)
-    result_kwargs["probabilities_file"] = probabilities_file
+    probabilities_file = file_manager.create_file(
+        result_kwargs.get("prefix"),
+        result_kwargs.get("stage_name"),
+        "residue_probabilities_file",
+        extension=".csv",
+    )
+    residue_probabilities.to_csv(probabilities_file, index=False)
+    result_kwargs["residue_probabilities_file"] = probabilities_file
     return result_kwargs

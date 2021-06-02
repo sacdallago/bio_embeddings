@@ -17,7 +17,6 @@ from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
 from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.mutagenesis.pipeline import run as run_mutagenesis
-from bio_embeddings.mutagenesis_visualize.pipeline import run as run_mutagenesis_visualize
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException, InvalidParameterError
 from bio_embeddings.utilities.config import read_config_file, write_config_file
@@ -33,7 +32,6 @@ _STAGES = {
     "visualize": run_visualize,
     "extract": run_extract,
     "mutagenesis": run_mutagenesis,
-    "mutagenesis_visualize": run_mutagenesis_visualize,
 }
 
 try:

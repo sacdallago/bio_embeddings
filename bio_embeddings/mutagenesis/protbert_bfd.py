@@ -63,7 +63,19 @@ class ProtTransBertBFDMutagenesis:
         stop: Optional[int] = None,
         progress_bar: Optional[tqdm] = None,
     ) -> List[Dict[str, float]]:
-        """Returns for each position the probabilities for each amino acid if the token is masked"""
+        """Returns the likelihood for each of the 20 natural amino acids to be at residue positions between `start` and
+        `end` considering the context of the remainder of the sequence (aka: by using. BERT's mask token and
+        reconstructing the corrupted sequence). Probabilities may be adjusted by a `temperature` factor.
+        If set to `1` (default) no adjustment is made.
+
+        :param sequence: The amino acid sequence. Please pass whole sequences, not regions
+        :param start: the start index (inclusive) of the region for which to compute residue probabilities (starting with 0)
+        :param stop: the end (exclusive) of the region for which to compute residue probabilities
+        :param temperature: temperature for the softmax computation
+        :param progress_bar: optional tqdm progress bar
+
+        :return: An ordered list for the region of probabilities for each of the 20 natural amino acids to be at said
+        position."""
         # https://stackoverflow.com/questions/59435020/get-probability-of-multi-token-word-in-mask-position
 
         # init softmax to get mutagenesis later on
