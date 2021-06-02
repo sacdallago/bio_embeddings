@@ -183,6 +183,15 @@ class QueryEmbeddingsFile:
     either an MD5 hash of the input sequence, or an integer (if `remapping_simple: True`).
 
     Available for embeddings created with the pipeline starting with v0.1.5
+
+    .. code-block:: python
+
+        import h5py
+        from bio_embeddings.utilities import QueryEmbeddingsFile
+
+        with h5py.File("path/to/file.h5", "r") as file:
+            embedding_querier = QueryEmbeddingsFile(file)
+            print(embedding_querier.query_original_id("Some_Database_ID_1234").mean())
     """
 
     def __init__(self, embeddings_file: h5py.File):

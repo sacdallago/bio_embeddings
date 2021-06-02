@@ -18,6 +18,7 @@ __all__ = [
     "FileManagerInterface",
     "FileSystemFileManager",
     "InvalidParameterError",
+    "QueryEmbeddingsFile",
     "check_required",
     "get_device",
     "get_file_manager",
