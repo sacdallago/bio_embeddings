@@ -147,7 +147,11 @@ class EmbedderWithFallback(EmbedderInterface, abc.ABC):
 
     @abc.abstractmethod
     def _get_fallback_model(self):
-        """ Returns a (cached) cpu model """
+        """Returns a (cached) cpu model.
+
+        Note that the fallback models generally don't support half precision mode and therefore ignore
+        the `half_precision_model` option (https://github.com/huggingface/transformers/issues/11546).
+        """
         ...
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
