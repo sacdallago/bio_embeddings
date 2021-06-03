@@ -210,6 +210,57 @@
 <em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.utilities.</span></code><code class="sig-name descname"><span class="pre">InvalidParameterError</span></code><a class="reference internal" href="../_modules/bio_embeddings/utilities/exceptions.html#InvalidParameterError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.InvalidParameterError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception for invalid parameter settings</p>
 </dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.utilities.QueryEmbeddingsFile">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.utilities.</span></code><code class="sig-name descname"><span class="pre">QueryEmbeddingsFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">h5py._hl.files.File</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#QueryEmbeddingsFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.QueryEmbeddingsFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper class that allows you to retrieve embeddings from an embeddings file based on either the <cite>original_id</cite>
+(extracted from the FASTA header during the embed stage), or via the <cite>new_id</cite> (assigned during the embed stage,
+either an MD5 hash of the input sequence, or an integer (if <cite>remapping_simple: True</cite>).</p>
+<p>Available for embeddings created with the pipeline starting with v0.1.5</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">QueryEmbeddingsFile</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">"path/to/file.h5"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">embedding_querier</span> <span class="o">=</span> <span class="n">QueryEmbeddingsFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">embedding_querier</span><span class="o">.</span><span class="n">query_original_id</span><span class="p">(</span><span class="s2">"Some_Database_ID_1234"</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.QueryEmbeddingsFile.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">h5py._hl.files.File</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#QueryEmbeddingsFile.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.QueryEmbeddingsFile.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>embeddings_file</strong> – an h5py File, aka <cite>h5py.File(“/path/to/file.h5”)</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.QueryEmbeddingsFile.query_new_id">
+<code class="sig-name descname"><span class="pre">query_new_id</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.array</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#QueryEmbeddingsFile.query_new_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.QueryEmbeddingsFile.query_new_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query embeddings file using the new id, aka. either the MD5 hash of the sequence or a number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_id</strong> – a string representing the new id.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the embedding as a numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.utilities.QueryEmbeddingsFile.query_original_id">
+<code class="sig-name descname"><span class="pre">query_original_id</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.array</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#QueryEmbeddingsFile.query_original_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.QueryEmbeddingsFile.query_original_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query embeddings file using the original id, aka. the string extracted from the FASTA header of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>original_id</strong> – a string representing the id extracted from the FASTA header</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the embedding as a numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
 <dl class="py function">
 <dt id="bio_embeddings.utilities.check_required">
 <code class="sig-prename descclassname"><span class="pre">bio_embeddings.utilities.</span></code><code class="sig-name descname"><span class="pre">check_required</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/utilities/helpers.html#check_required"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.utilities.check_required" title="Permalink to this definition">¶</a></dt>

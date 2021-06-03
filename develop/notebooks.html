@@ -281,6 +281,44 @@
 </tbody>
 </table></div>
 </div>
+<div class="section" id="output-files">
+<h2>Output files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h2>
+<p>The h5 files created by the embed and project stages store the embeddings as key-value-pairs (like a python dict). With the defaults, the key is a unique hash of the sequence (md5). If you chose <code class="docutils literal notranslate"><span class="pre">simple_remapping:</span> <span class="pre">True</span></code> instead, it’s the position of the sequence in the fasta file. You can get the original id from the fasta file through the <code class="docutils literal notranslate"><span class="pre">original_id</span></code> attribute, i.e. with <code class="docutils literal notranslate"><span class="pre">.attrs["original_id"]</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">"path/to/file.h5"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">sequence_id</span><span class="p">,</span> <span class="n">embedding</span> <span class="ow">in</span> <span class="n">file</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"id: </span><span class="si">{</span><span class="n">sequence_id</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"original id: </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'original_id'</span><span class="p">]</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"embeddings mean: </span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>Example with default remapping (<code class="docutils literal notranslate"><span class="pre">simple_remapping:</span> <span class="pre">False</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">id</span><span class="p">:</span> <span class="mi">582</span><span class="n">c3fb2d88b268dc5690ea5397062ef</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="mi">153</span><span class="n">lA00</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="mf">6.362990856170654</span>
+<span class="nb">id</span><span class="p">:</span> <span class="mi">70</span><span class="n">de5a8a1677bbf5c3b29b5becc80410</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="mi">16</span><span class="n">pkA02</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="mf">6.845481872558594</span>
+<span class="nb">id</span><span class="p">:</span> <span class="mi">9</span><span class="n">aa52af02444afd9e69d7a12f6ae7ef4</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="mi">16</span><span class="n">vpA00</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="mf">6.108543872833252</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">simple_remapping:</span> <span class="pre">True</span></code> (note that the order is not numerical):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">id</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Q09165</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00168827164452523</span>
+<span class="nb">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Q5VST9</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00138779915869236</span>
+<span class="nb">id</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="n">O75592</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0018009127816185355</span>
+<span class="nb">id</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="n">original</span> <span class="nb">id</span><span class="p">:</span> <span class="n">P83741</span><span class="p">,</span> <span class="n">embeddings</span> <span class="n">mean</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0006061643362045288</span>
+</pre></div>
+</div>
+<p>Additionally, we provide <a class="reference external" href="../api/bio_embeddings.utilities.html#bio_embeddings.utilities.QueryEmbeddingsFile"><code class="docutils literal notranslate"><span class="pre">QueryEmbeddingsFile</span></code></a> for convenient lookup from the original id.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">QueryEmbeddingsFile</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s2">"path/to/file.h5"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">embedding_querier</span> <span class="o">=</span> <span class="n">QueryEmbeddingsFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">embedding_querier</span><span class="o">.</span><span class="n">query_original_id</span><span class="p">(</span><span class="s2">"Some_Database_ID_1234"</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
 </div>
 
       </article>
@@ -327,6 +365,7 @@
 <li><a class="reference internal" href="#exploring-pipeline-output-files">Exploring pipeline output files</a></li>
 <li><a class="reference internal" href="#advanced-use-cases">Advanced use cases</a></li>
 <li><a class="reference internal" href="#utilities">Utilities</a></li>
+<li><a class="reference internal" href="#output-files">Output files</a></li>
 </ul>
 </li>
 </ul>

@@ -315,16 +315,25 @@
     <span class="p">)]</span>
 
 
-<span class="k">class</span> <span class="nc">QueryEmbeddingsFile</span><span class="p">:</span>
+<div class="viewcode-block" id="QueryEmbeddingsFile"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.QueryEmbeddingsFile">[docs]</a><span class="k">class</span> <span class="nc">QueryEmbeddingsFile</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    A helper class that allows you to retrieve embeddings from an embeddings file based on either the `original_id`</span>
 <span class="sd">    (extracted from the FASTA header during the embed stage), or via the `new_id` (assigned during the embed stage,</span>
 <span class="sd">    either an MD5 hash of the input sequence, or an integer (if `remapping_simple: True`).</span>
 
 <span class="sd">    Available for embeddings created with the pipeline starting with v0.1.5</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import h5py</span>
+<span class="sd">        from bio_embeddings.utilities import QueryEmbeddingsFile</span>
+
+<span class="sd">        with h5py.File("path/to/file.h5", "r") as file:</span>
+<span class="sd">            embedding_querier = QueryEmbeddingsFile(file)</span>
+<span class="sd">            print(embedding_querier.query_original_id("Some_Database_ID_1234").mean())</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings_file</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
+<div class="viewcode-block" id="QueryEmbeddingsFile.__init__"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.QueryEmbeddingsFile.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings_file</span><span class="p">:</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        :param embeddings_file: an h5py File, aka `h5py.File("/path/to/file.h5")`.</span>
 <span class="sd">        """</span>
@@ -332,25 +341,25 @@
             <span class="p">(</span><span class="n">embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"original_id"</span><span class="p">],</span> <span class="n">new_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">new_id</span> <span class="ow">in</span> <span class="n">embeddings_file</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span> <span class="o">=</span> <span class="n">embeddings_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span> <span class="o">=</span> <span class="n">embeddings_file</span></div>
 
-    <span class="k">def</span> <span class="nf">query_original_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="QueryEmbeddingsFile.query_original_id"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.QueryEmbeddingsFile.query_original_id">[docs]</a>    <span class="k">def</span> <span class="nf">query_original_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Query embeddings file using the original id, aka. the string extracted from the FASTA header of the sequence.</span>
 
 <span class="sd">        :param original_id: a string representing the id extracted from the FASTA header</span>
 <span class="sd">        :return: the embedding as a numpy array</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup_table</span><span class="p">[</span><span class="n">original_id</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup_table</span><span class="p">[</span><span class="n">original_id</span><span class="p">]])</span></div>
 
-    <span class="k">def</span> <span class="nf">query_new_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="QueryEmbeddingsFile.query_new_id"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.QueryEmbeddingsFile.query_new_id">[docs]</a>    <span class="k">def</span> <span class="nf">query_new_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Query embeddings file using the new id, aka. either the MD5 hash of the sequence or a number.</span>
 
 <span class="sd">        :param new_id: a string representing the new id.</span>
 <span class="sd">        :return: the embedding as a numpy array</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">])</span></div></div>
 </pre></div>
       </article>
       <footer>
