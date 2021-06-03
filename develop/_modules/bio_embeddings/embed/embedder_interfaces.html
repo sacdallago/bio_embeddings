@@ -286,7 +286,11 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_fallback_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">""" Returns a (cached) cpu model """</span>
+        <span class="sd">"""Returns a (cached) cpu model.</span>
+
+<span class="sd">        Note that the fallback models generally don't support half precision mode and therefore ignore</span>
+<span class="sd">        the `half_precision_model` option (https://github.com/huggingface/transformers/issues/11546).</span>
+<span class="sd">        """</span>
         <span class="o">...</span>
 
     <span class="k">def</span> <span class="nf">embed_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>

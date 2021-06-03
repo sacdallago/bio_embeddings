@@ -211,7 +211,7 @@
             <span class="n">model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
-        <span class="c1"># Compute in half precision, saving us half the memory</span>
+        <span class="c1"># Compute in half precision, which is a lot faster and saves us half the memory</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">model</span>

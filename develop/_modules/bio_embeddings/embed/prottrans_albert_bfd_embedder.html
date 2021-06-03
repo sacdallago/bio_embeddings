@@ -151,23 +151,28 @@
 <span class="sd">    Code Through Self-Supervised Deep Learning and High Performance Computing."</span>
 <span class="sd">    arXiv preprint arXiv:2007.06225 (2020). https://arxiv.org/abs/2007.06225</span>
 <span class="sd">    """</span>
+
     <span class="n">_model</span><span class="p">:</span> <span class="n">AlbertModel</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"prottrans_albert_bfd"</span>
     <span class="n">embedding_dimension</span> <span class="o">=</span> <span class="mi">4096</span>
     <span class="n">number_of_layers</span> <span class="o">=</span> <span class="mi">1</span>
 
 <div class="viewcode-block" id="ProtTransAlbertBFDEmbedder.__init__"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransAlbertBFDEmbedder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        Initialize Albert embedder.</span>
+        <span class="sd">"""Initialize Albert embedder.</span>
 
 <span class="sd">        :param model_directory:</span>
+<span class="sd">        :param half_precision_model:</span>
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="s2">"model_directory"</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"half_precision_model"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># make model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">AlbertModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
+        <span class="c1"># Compute in half precision, which is a lot faster and saves us half the memory</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">AlbertTokenizer</span><span class="p">(</span>
