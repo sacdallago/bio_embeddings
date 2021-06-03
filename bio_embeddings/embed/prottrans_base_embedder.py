@@ -22,6 +22,7 @@ class ProtTransBertBaseEmbedder(EmbedderWithFallback):
 
     _tokenizer: Union[AlbertTokenizer, BertTokenizer]
     _model: Union[AlbertModel, BertModel]
+    _half_precision_model: bool
 
     necessary_directories = ["model_directory"]
 

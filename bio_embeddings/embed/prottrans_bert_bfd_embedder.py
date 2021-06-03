@@ -22,17 +22,21 @@ class ProtTransBertBFDEmbedder(ProtTransBertBaseEmbedder):
     number_of_layers = 1
 
     def __init__(self, **kwargs):
-        """
-        Initialize Bert embedder.
+        """Initialize Bert embedder.
 
         :param model_directory:
+        :param half_precision_model:
         """
         super().__init__(**kwargs)
 
         self._model_directory = self._options["model_directory"]
+        self._half_precision_model = self._options.get("half_precision_model", False)
 
         # make model
         self._model = BertModel.from_pretrained(self._model_directory)
+        # Compute in half precision, which is a lot faster and saves us half the memory
+        if self._half_precision_model:
+            self._model = self._model.half()
         self._model = self._model.eval().to(self._device)
         self._model_fallback = None
         self._tokenizer = BertTokenizer(

@@ -72,7 +72,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
             model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
             model = T5Model.from_pretrained(self._model_directory)
-        # Compute in half precision, saving us half the memory
+        # Compute in half precision, which is a lot faster and saves us half the memory
         if self._half_precision_model:
             model = model.half()
         return model

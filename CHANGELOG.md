@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Support `half_precision_model` for `prottrans_bert_bfd` and `prottrans_albert_bfd`
+
 ## v0.2.0
 
  * Added the `prottrans_t5_xl_u50`/`ProtTransT5XLU50Embedder` embedder from the latest ProtTrans revision. You should use this over `prottrans_t5_bfd` and `prottrans_t5_uniref50`. 
