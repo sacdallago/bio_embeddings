@@ -126,7 +126,7 @@ def plotly(result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
 # list of available projection protocols
 PROTOCOLS = {
     "plotly": plotly,
-    "mutagenesis": plot_mutagenesis,
+    "plot_mutagenesis": plot_mutagenesis,
 }
 
 
@@ -145,7 +145,7 @@ def run(**kwargs):
     For plotly:
         projected_reduced_embeddings_file: The projected (dimensionality reduced) embeddings, normally coming from the project stage
 
-    For mutagenesis:
+    For plot_mutagenesis:
         residue_probabilities_file: The csv with the probabilities, normally coming from the mutagenesis stage
         *temperature: The temperature for the softmax function
 

@@ -12,7 +12,7 @@ from bio_embeddings.mutagenesis.protbert_bfd import ProtTransBertBFDMutagenesis
 from bio_embeddings.utilities import check_required, get_device, get_file_manager
 
 # list of available mutagenesis protocols
-PROTOCOLS = {
+_PROTOCOLS = {
     "protbert_bfd_mutagenesis": ProtTransBertBFDMutagenesis,
 }
 
@@ -47,6 +47,7 @@ def run(**kwargs):
     optional:
      * model_directory
      * device
+     * half_precision_model
      * temperature: temperature for softmax
     """
     required_kwargs = [
@@ -58,21 +59,23 @@ def run(**kwargs):
     ]
     check_required(kwargs, required_kwargs)
     result_kwargs = deepcopy(kwargs)
-    if result_kwargs["protocol"] not in PROTOCOLS:
+    if result_kwargs["protocol"] not in _PROTOCOLS:
         raise RuntimeError(
-            f"Passed protocol {result_kwargs['protocol']}, but allowed are: {', '.join(PROTOCOLS)}"
+            f"Passed protocol {result_kwargs['protocol']}, but allowed are: {', '.join(_PROTOCOLS)}"
         )
     temperature = result_kwargs.setdefault("temperature", 1)
     device = get_device(result_kwargs.get("device"))
-    model_class: Type[ProtTransBertBFDMutagenesis] = PROTOCOLS[
+    model_class: Type[ProtTransBertBFDMutagenesis] = _PROTOCOLS[
         result_kwargs["protocol"]
     ]
-    model = model_class(device, result_kwargs.get("model_directory"))
+    model = model_class(
+        device,
+        result_kwargs.get("model_directory"),
+        result_kwargs.get("half_precision_model"),
+    )
 
     file_manager = get_file_manager()
-    stage = file_manager.create_stage(
-        result_kwargs["prefix"], result_kwargs["stage_name"]
-    )
+    file_manager.create_stage(result_kwargs["prefix"], result_kwargs["stage_name"])
 
     # The mapping file contains the corresponding ids in the same order
     sequences = [
@@ -91,7 +94,7 @@ def run(**kwargs):
         ):
             with torch.no_grad():
                 probabilities = model.get_sequence_probabilities(
-                    sequence, temperature, None, None, progress_bar
+                    sequence, temperature, progress_bar=progress_bar
                 )
 
             for p in probabilities:

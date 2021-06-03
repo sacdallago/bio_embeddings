@@ -36,14 +36,17 @@ class ProtTransBertBFDMutagenesis:
     device: torch.device
     model: BertForMaskedLM
     tokenizer: BertTokenizer
+    _half_precision_model: bool
 
     def __init__(
         self,
         device: Union[None, str, torch.device] = None,
         model_directory: Optional[str] = None,
+        half_precision_model: bool = False,
     ):
         """Loads the Bert Model for Masked LM"""
         self.device = get_device(device)
+        self._half_precision_model = half_precision_model
 
         if not model_directory:
             model_directory = get_model_directories_from_zip(
@@ -53,6 +56,9 @@ class ProtTransBertBFDMutagenesis:
             model_directory, do_lower_case=False
         )
         self.model = BertForMaskedLM.from_pretrained(model_directory)
+        # Compute in half precision, which is a lot faster and saves us half the memory
+        if self._half_precision_model:
+            self.model = self.model.half()
         self.model = self.model.eval().to(self.device)
 
     def get_sequence_probabilities(
@@ -112,11 +118,10 @@ class ProtTransBertBFDMutagenesis:
 
             # TODO: can batch this!
             output = self.model(tokenized_sequence.to(self.device))
-            last_hidden_state = output[0].squeeze(0).cpu()
-
+            last_hidden_state = output[0].squeeze(0)
             # only get output for masked token
             # output is the size of the vocabulary
-            mask_hidden_state = last_hidden_state[masked_position]
+            mask_hidden_state = last_hidden_state[masked_position].cpu()
 
             # convert to mutagenesis (softmax)
             # giving a probability for each item in the vocabulary
