@@ -25,7 +25,7 @@ def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
     stage_parameters = dict(
         stage_name="mutagenesis_visualize_test",
         type="visualize",
-        protocol="mutagenesis",
+        protocol="plot_mutagenesis",
         depends_on="mutagenesis",
     )
 
