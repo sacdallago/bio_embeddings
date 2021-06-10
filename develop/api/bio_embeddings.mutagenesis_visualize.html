@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.project" href="bio_embeddings.project.html" /><link rel="prev" title="bio_embeddings.mutagenesis" href="bio_embeddings.mutagenesis.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
-        <title>Overview: module code - bio_embeddings</title>
+        <title>bio_embeddings.mutagenesis_visualize - bio_embeddings</title>
       <link rel="stylesheet" href="../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
@@ -110,18 +110,18 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parameter_blueprints.html">Pipeline Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/README.html">Notebooks</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">bio_embeddings.mutagenesis_visualize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
 </ul>
 </li>
 </ul>
@@ -138,40 +138,34 @@
         <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <h1>All modules for which code is available</h1>
-<ul><li><a href="bio_embeddings/embed/bepler_embedder.html">bio_embeddings.embed.bepler_embedder</a></li>
-<li><a href="bio_embeddings/embed/cpcprot_embedder.html">bio_embeddings.embed.cpcprot_embedder</a></li>
-<li><a href="bio_embeddings/embed/embedder_interfaces.html">bio_embeddings.embed.embedder_interfaces</a></li>
-<li><a href="bio_embeddings/embed/esm_embedder.html">bio_embeddings.embed.esm_embedder</a></li>
-<li><a href="bio_embeddings/embed/plus_rnn_embedder.html">bio_embeddings.embed.plus_rnn_embedder</a></li>
-<li><a href="bio_embeddings/embed/prottrans_albert_bfd_embedder.html">bio_embeddings.embed.prottrans_albert_bfd_embedder</a></li>
-<li><a href="bio_embeddings/embed/prottrans_bert_bfd_embedder.html">bio_embeddings.embed.prottrans_bert_bfd_embedder</a></li>
-<li><a href="bio_embeddings/embed/prottrans_t5_embedder.html">bio_embeddings.embed.prottrans_t5_embedder</a></li>
-<li><a href="bio_embeddings/embed/prottrans_xlnet_uniref100_embedder.html">bio_embeddings.embed.prottrans_xlnet_uniref100_embedder</a></li>
-<li><a href="bio_embeddings/embed/seqvec_embedder.html">bio_embeddings.embed.seqvec_embedder</a></li>
-<li><a href="bio_embeddings/embed/unirep_embedder.html">bio_embeddings.embed.unirep_embedder</a></li>
-<li><a href="bio_embeddings/extract/basic/BasicAnnotationExtractor.html">bio_embeddings.extract.basic.BasicAnnotationExtractor</a></li>
-<li><a href="bio_embeddings/extract/unsupervised_utilities.html">bio_embeddings.extract.unsupervised_utilities</a></li>
-<li><a href="bio_embeddings/mutagenesis/pipeline.html">bio_embeddings.mutagenesis.pipeline</a></li>
-<li><a href="bio_embeddings/mutagenesis/protbert_bfd.html">bio_embeddings.mutagenesis.protbert_bfd</a></li>
-<li><a href="bio_embeddings/project/pb_tucker.html">bio_embeddings.project.pb_tucker</a></li>
-<li><a href="bio_embeddings/project/tsne.html">bio_embeddings.project.tsne</a></li>
-<li><a href="bio_embeddings/project/umap.html">bio_embeddings.project.umap</a></li>
-<li><a href="bio_embeddings/utilities/exceptions.html">bio_embeddings.utilities.exceptions</a></li>
-<li><a href="bio_embeddings/utilities/filemanagers.html">bio_embeddings.utilities.filemanagers</a></li>
-<ul><li><a href="bio_embeddings/utilities/filemanagers/FileManagerInterface.html">bio_embeddings.utilities.filemanagers.FileManagerInterface</a></li>
-<li><a href="bio_embeddings/utilities/filemanagers/FileSystemFileManager.html">bio_embeddings.utilities.filemanagers.FileSystemFileManager</a></li>
-</ul><li><a href="bio_embeddings/utilities/helpers.html">bio_embeddings.utilities.helpers</a></li>
-<li><a href="bio_embeddings/utilities/remote_file_retriever.html">bio_embeddings.utilities.remote_file_retriever</a></li>
-<li><a href="bio_embeddings/visualize/mutagenesis.html">bio_embeddings.visualize.mutagenesis</a></li>
-<li><a href="bio_embeddings/visualize/plotly_plots.html">bio_embeddings.visualize.plotly_plots</a></li>
-</ul>
+        <div class="section" id="bio-embeddings-mutagenesis-visualize">
+<h1>bio_embeddings.mutagenesis_visualize<a class="headerlink" href="#bio-embeddings-mutagenesis-visualize" title="Permalink to this headline">¶</a></h1>
+</div>
+
       </article>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="bio_embeddings.project.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">bio_embeddings.project</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="bio_embeddings.mutagenesis.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">bio_embeddings.mutagenesis</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
@@ -181,6 +175,11 @@
               and
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/api/bio_embeddings.mutagenesis_visualize.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
         </div>
         
       </footer>

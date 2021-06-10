@@ -116,6 +116,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.project.html">bio_embeddings.project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
@@ -138,7 +140,7 @@
         
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#W"><strong>W</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#W"><strong>W</strong></a></div>
 </section>
 <section id="_" class="genindex-section">
   <h2>_</h2>
@@ -164,6 +166,8 @@
           <li><a href="api/bio_embeddings.embed.html#bio_embeddings.embed.UniRepEmbedder.__init__">(bio_embeddings.embed.UniRepEmbedder method)</a>
 </li>
           <li><a href="api/bio_embeddings.extract.html#bio_embeddings.extract.BasicAnnotationExtractor.__init__">(bio_embeddings.extract.BasicAnnotationExtractor method)</a>
+</li>
+          <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis.__init__">(bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis method)</a>
 </li>
           <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.PBTucker.__init__">(bio_embeddings.project.PBTucker method)</a>
 </li>
@@ -200,6 +204,13 @@
 
         <ul>
           <li><a href="api/bio_embeddings.extract.html#module-bio_embeddings.extract">module</a>
+</li>
+        </ul></li>
+        <li>
+    bio_embeddings.mutagenesis
+
+        <ul>
+          <li><a href="api/bio_embeddings.mutagenesis.html#module-bio_embeddings.mutagenesis">module</a>
 </li>
         </ul></li>
     </ul></td>
@@ -263,6 +274,16 @@
           <li><a href="api/bio_embeddings.utilities.html#bio_embeddings.utilities.FileSystemFileManager.create_stage">(bio_embeddings.utilities.FileSystemFileManager method)</a>
 </li>
         </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="D" class="genindex-section">
+  <h2>D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis.device">device (bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis attribute)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -379,6 +400,8 @@
 </li>
         <li><a href="api/bio_embeddings.extract.html#bio_embeddings.extract.BasicAnnotationExtractor.get_secondary_structure">get_secondary_structure() (bio_embeddings.extract.BasicAnnotationExtractor method)</a>
 </li>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis.get_sequence_probabilities">get_sequence_probabilities() (bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis method)</a>
+</li>
         <li><a href="api/bio_embeddings.extract.html#bio_embeddings.extract.BasicAnnotationExtractor.get_subcellular_location">get_subcellular_location() (bio_embeddings.extract.BasicAnnotationExtractor method)</a>
 </li>
     </ul></td>
@@ -399,6 +422,8 @@
   <h2>M</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis.model">model (bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis attribute)</a>
+</li>
         <li>
     module
 
@@ -406,6 +431,8 @@
           <li><a href="api/bio_embeddings.embed.html#module-bio_embeddings.embed">bio_embeddings.embed</a>
 </li>
           <li><a href="api/bio_embeddings.extract.html#module-bio_embeddings.extract">bio_embeddings.extract</a>
+</li>
+          <li><a href="api/bio_embeddings.mutagenesis.html#module-bio_embeddings.mutagenesis">bio_embeddings.mutagenesis</a>
 </li>
           <li><a href="api/bio_embeddings.project.html#module-bio_embeddings.project">bio_embeddings.project</a>
 </li>
@@ -510,7 +537,11 @@
 </li>
         <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.PBTuckerModel">PBTuckerModel (class in bio_embeddings.project)</a>
 </li>
+        <li><a href="api/bio_embeddings.visualize.html#bio_embeddings.visualize.plot_mutagenesis">plot_mutagenesis() (in module bio_embeddings.visualize)</a>
+</li>
         <li><a href="api/bio_embeddings.embed.html#bio_embeddings.embed.PLUSRNNEmbedder">PLUSRNNEmbedder (class in bio_embeddings.embed)</a>
+</li>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.probabilities_as_dataframe">probabilities_as_dataframe() (in module bio_embeddings.mutagenesis)</a>
 </li>
         <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.PBTucker.project_reduced_embedding">project_reduced_embedding() (bio_embeddings.project.PBTucker method)</a>
 </li>
@@ -519,6 +550,8 @@
         <li><a href="api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransAlbertBFDEmbedder">ProtTransAlbertBFDEmbedder (class in bio_embeddings.embed)</a>
 </li>
         <li><a href="api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransBertBFDEmbedder">ProtTransBertBFDEmbedder (class in bio_embeddings.embed)</a>
+</li>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis">ProtTransBertBFDMutagenesis (class in bio_embeddings.mutagenesis)</a>
 </li>
         <li><a href="api/bio_embeddings.embed.html#bio_embeddings.embed.ProtTransT5BFDEmbedder">ProtTransT5BFDEmbedder (class in bio_embeddings.embed)</a>
 </li>
@@ -580,6 +613,8 @@
 </li>
         <li><a href="api/bio_embeddings.visualize.html#bio_embeddings.visualize.render_scatter_plotly">render_scatter_plotly() (in module bio_embeddings.visualize)</a>
 </li>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.run">run() (in module bio_embeddings.mutagenesis)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -602,10 +637,12 @@
   <h2>T</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.PBTuckerModel.training">training (bio_embeddings.project.PBTuckerModel attribute)</a>
+        <li><a href="api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis.tokenizer">tokenizer (bio_embeddings.mutagenesis.ProtTransBertBFDMutagenesis attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.PBTuckerModel.training">training (bio_embeddings.project.PBTuckerModel attribute)</a>
+</li>
         <li><a href="api/bio_embeddings.project.html#bio_embeddings.project.tsne_reduce">tsne_reduce() (in module bio_embeddings.project)</a>
 </li>
     </ul></td>

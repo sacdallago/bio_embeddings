@@ -117,6 +117,8 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.project.html">bio_embeddings.project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">bio_embeddings.visualize</a></li>
@@ -139,6 +141,13 @@
         <div class="section" id="module-bio_embeddings.visualize">
 <span id="bio-embeddings-visualize"></span><h1>bio_embeddings.visualize<a class="headerlink" href="#module-bio_embeddings.visualize" title="Permalink to this headline">¶</a></h1>
 <p>Display t-SNE or UMAP projections from the project stage</p>
+<dl class="py function">
+<dt id="bio_embeddings.visualize.plot_mutagenesis">
+<code class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></code><code class="sig-name descname"><span class="pre">plot_mutagenesis</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/visualize/mutagenesis.html#plot_mutagenesis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.plot_mutagenesis" title="Permalink to this definition">¶</a></dt>
+<dd><p>BETA: visualize in-silico mutagenesis as a heatmap with plotly</p>
+<p>mandatory:
+* residue_probabilities_file</p>
+</dd></dl>
 <dl class="py function">
 <dt id="bio_embeddings.visualize.render_3D_scatter_plotly">
 <code class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></code><code class="sig-name descname"><span class="pre">render_3D_scatter_plotly</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> → <span class="pre">plotly.graph_objs._figure.Figure</span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#render_3D_scatter_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.render_3D_scatter_plotly" title="Permalink to this definition">¶</a></dt>
