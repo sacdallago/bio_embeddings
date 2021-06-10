@@ -11,6 +11,7 @@ from typing import Callable
 import torch
 from tqdm import tqdm
 
+from bio_embeddings.embed import name_to_embedder
 from bio_embeddings.utilities.model_size_impl import get_gpu_size, get_cpu_size
 
 
@@ -33,10 +34,9 @@ def main():
         "pb_tucker",
         "seqvec_from_publication",
     ]
-    # all_models = list(name_to_embedder) + other_models
-    all_models = other_models
+    all_models = list(name_to_embedder) + other_models
     for name in tqdm(list(sorted(all_models))):
-        if name == "unirep" and device == "gpu":
+        if name in ["unirep", "glove", "fasttext", "word2vec"] and device == "gpu":
             continue
         with ProcessPoolExecutor() as isolation:
             mib = isolation.submit(get_size, name).result()
