@@ -31,6 +31,8 @@ from bio_embeddings.embed import (
     ESM1bEmbedder,
     ESMEmbedder,
     EmbedderInterface,
+    FastTextEmbedder,
+    GloveEmbedder,
     OneHotEncodingEmbedder,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
@@ -41,6 +43,7 @@ from bio_embeddings.embed import (
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
+    Word2VecEmbedder,
 )
 from bio_embeddings.embed.pipeline import embed_and_write_batched
 from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
@@ -53,6 +56,8 @@ all_embedders = [
     CPCProtEmbedder,
     ESMEmbedder,
     ESM1bEmbedder,
+    FastTextEmbedder,
+    GloveEmbedder,
     OneHotEncodingEmbedder,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
@@ -79,6 +84,7 @@ all_embedders = [
     ),
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
+    Word2VecEmbedder,
 ]
 
 

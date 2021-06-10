@@ -60,15 +60,27 @@ import logging
 from typing import Dict, Type
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
+from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
+from bio_embeddings.embed.glove_embedder import GloveEmbedder
 from bio_embeddings.embed.one_hot_encoding_embedder import OneHotEncodingEmbedder
+from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder
 
 logger = logging.getLogger(__name__)
 
 name_to_embedder: Dict[str, Type[EmbedderInterface]] = {
-    OneHotEncodingEmbedder.name: OneHotEncodingEmbedder
+    OneHotEncodingEmbedder.name: OneHotEncodingEmbedder,
+    FastTextEmbedder.name: FastTextEmbedder,
+    GloveEmbedder.name: GloveEmbedder,
+    Word2VecEmbedder.name: Word2VecEmbedder,
 }
 
-__all__ = ["EmbedderInterface", "OneHotEncodingEmbedder"]
+__all__ = [
+    "EmbedderInterface",
+    "OneHotEncodingEmbedder",
+    "FastTextEmbedder",
+    "GloveEmbedder",
+    "Word2VecEmbedder",
+]
 
 # Transformers
 try:
@@ -168,8 +180,3 @@ try:
     __all__.append(BeplerEmbedder.__name__)
 except ImportError:
     logger.debug("bepler extra not installed, PLUSRNNEmbedder will not be available")
-
-# Unmaintained embedders
-from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
-from bio_embeddings.embed.glove_embedder import GloveEmbedder
-from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder
