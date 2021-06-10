@@ -11,12 +11,13 @@ from urllib import request
 
 import importlib_metadata
 import torch
+from atomicwrites import atomic_write
 from importlib_metadata import PackageNotFoundError
 
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
-from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.mutagenesis.pipeline import run as run_mutagenesis
+from bio_embeddings.project.pipeline import run as run_project
 from bio_embeddings.utilities import get_file_manager, read_fasta, reindex_sequences, write_fasta_file, \
     check_required, MD5ClashException, InvalidParameterError
 from bio_embeddings.utilities.config import read_config_file, write_config_file
@@ -188,10 +189,11 @@ def download_files_for_stage(
             filename = file_manager.create_file(prefix, stage_name, key)
             logger.info(f"Downloading {stage_parameters[key]} to {filename}")
             desc = stage_parameters[key].split("/")[-1]
-            with TqdmUpTo(unit="B", unit_scale=True, miniters=1, desc=desc) as tqdm:
-                request.urlretrieve(
-                    stage_parameters[key], filename=filename, reporthook=tqdm.update_to
-                )
+            with atomic_write(filename, overwrite=True) as temp_file:
+                with TqdmUpTo(unit="B", unit_scale=True, miniters=1, desc=desc) as tqdm:
+                    request.urlretrieve(
+                        stage_parameters[key], filename=temp_file.name, reporthook=tqdm.update_to
+                    )
             stage_parameters[key] = filename
     return stage_parameters
 
