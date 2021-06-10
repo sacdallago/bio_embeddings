@@ -38,7 +38,9 @@
           "embed",
           "project",
           "visualize",
-          "extract"
+          "extract",
+          "mutagenesis",
+          "mutagenesis_visualize"
         ]
       }
     },
@@ -415,6 +417,48 @@
               }
             ]
           }
+        ]
+      },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "mutagenesis"
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "protbert_bfd_mutagenesis"
+            ]
+          },
+          "temperature": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
+        ]
+      },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "mutagenesis_visualize"
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "mutagenesis_visualize"
+            ]
+          },
+          "probabilities_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "protocol"
         ]
       }
     ]

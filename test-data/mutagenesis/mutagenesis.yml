@@ -1,0 +1,10 @@
+global:
+  sequences_file: very_smol.fasta
+  prefix: mutagenesis
+mutagenesis:
+  type: mutagenesis
+  protocol: protbert_bfd_mutagenesis
+mutagenesis_visualize:
+  type: mutagenesis_visualize
+  protocol: mutagenesis_visualize
+  depends_on: mutagenesis

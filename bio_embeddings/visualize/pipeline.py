@@ -9,6 +9,7 @@ from pandas import read_csv, DataFrame
 from bio_embeddings.utilities import InvalidParameterError, check_required, get_file_manager, TooFewComponentsException
 from bio_embeddings.visualize import render_3D_scatter_plotly, render_scatter_plotly, \
     save_plotly_figure_to_html
+from bio_embeddings.visualize.mutagenesis import plot_mutagenesis
 
 logger = logging.getLogger(__name__)
 
@@ -125,6 +126,7 @@ def plotly(result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
 # list of available projection protocols
 PROTOCOLS = {
     "plotly": plotly,
+    "plot_mutagenesis": plot_mutagenesis,
 }
 
 
@@ -139,6 +141,13 @@ def run(**kwargs):
         prefix: Output prefix for all generated files
         stage_name: The stage name
         protocol: Which plot to generate
+
+    For plotly:
+        projected_reduced_embeddings_file: The projected (dimensionality reduced) embeddings, normally coming from the project stage
+
+    For plot_mutagenesis:
+        residue_probabilities_file: The csv with the probabilities, normally coming from the mutagenesis stage
+        *temperature: The temperature for the softmax function
 
     Returns
     -------
@@ -156,16 +165,17 @@ def run(**kwargs):
 
     result_kwargs = deepcopy(kwargs)
 
-    # Support legacy projected_embeddings_file
-    projected_reduced_embeddings_file = (
-        kwargs.get("projected_reduced_embeddings_file")
-        or kwargs.get("projected_embeddings_file")
-    )
-    if not projected_reduced_embeddings_file:
-        raise InvalidParameterError(
-            f"You need to provide either projected_reduced_embeddings_file or projected_embeddings_file or "
-            f"reduced_embeddings_file for {kwargs['protocol']}"
+    if kwargs["protocol"] == "plotly":
+        # Support legacy projected_embeddings_file
+        projected_reduced_embeddings_file = (
+            kwargs.get("projected_reduced_embeddings_file")
+            or kwargs.get("projected_embeddings_file")
         )
-    result_kwargs["projected_reduced_embeddings_file"] = projected_reduced_embeddings_file
+        if not projected_reduced_embeddings_file:
+            raise InvalidParameterError(
+                f"You need to provide either projected_reduced_embeddings_file or projected_embeddings_file or "
+                f"reduced_embeddings_file for {kwargs['protocol']}"
+            )
+        result_kwargs["projected_reduced_embeddings_file"] = projected_reduced_embeddings_file
 
     return PROTOCOLS[kwargs["protocol"]](result_kwargs)
