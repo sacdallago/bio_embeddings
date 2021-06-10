@@ -31,6 +31,7 @@ from bio_embeddings.embed import (
     ESM1bEmbedder,
     ESMEmbedder,
     EmbedderInterface,
+    OneHotEncodingEmbedder,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
@@ -44,7 +45,7 @@ from bio_embeddings.embed import (
 from bio_embeddings.embed.pipeline import embed_and_write_batched
 from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.project.pb_tucker import PBTucker
-from bio_embeddings.utilities import read_fasta, FileSystemFileManager, get_model_file
+from bio_embeddings.utilities import FileSystemFileManager, get_model_file
 from tests.shared import check_embedding
 
 all_embedders = [
@@ -52,6 +53,7 @@ all_embedders = [
     CPCProtEmbedder,
     ESMEmbedder,
     ESM1bEmbedder,
+    OneHotEncodingEmbedder,
     PLUSRNNEmbedder,
     ProtTransAlbertBFDEmbedder,
     ProtTransBertBFDEmbedder,
@@ -199,6 +201,7 @@ def test_model_parameters_seqvec(caplog):
         SeqVecEmbedder(
             weights_file="/none/existent/path", options_file="/none/existent/path"
         )
+
 
 def test_half_precision_embedder(pytestconfig, caplog, tmp_path: Path):
     """Currently a dummy test"""
