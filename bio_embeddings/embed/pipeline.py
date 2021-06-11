@@ -258,6 +258,9 @@ ALL_PROTOCOLS = [
     "cpcprot",
     "esm",
     "esm1b",
+    "fasttext",
+    "glove",
+    "one_hot_encoding",
     "plus_rnn",
     "prottrans_albert_bfd",
     "prottrans_bert_bfd",
@@ -267,6 +270,7 @@ ALL_PROTOCOLS = [
     "prottrans_t5_xl_u50",
     "seqvec",
     "unirep",
+    "word2vec",
 ]
 
 # TODO: 10000 is a random guess
@@ -279,13 +283,16 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "plus_rnn": 10000,
     "prottrans_albert_bfd": 3035,
     "prottrans_bert_bfd": 6024,
-    # There is an untracked bug found by MH in batching that prevents using batching with T5
-    "prottrans_t5_bfd": None,
-    "prottrans_t5_uniref50": None,
-    "prottrans_t5_xl_u50": None,
+    "prottrans_t5_bfd": 5000,
+    "prottrans_t5_uniref50": 5000,
+    "prottrans_t5_xl_u50": 5000,
     "prottrans_xlnet_uniref100": 4000,
     "seqvec": 15000,
     "unirep": 10000,
+    "fasttext": None,
+    "glove": None,
+    "one_hot_encoding": None,
+    "word2vec": None,
 }
 
 
