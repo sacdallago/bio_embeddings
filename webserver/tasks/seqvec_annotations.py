@@ -97,13 +97,13 @@ def get_seqvec_annotations_sync(embedding: np.ndarray) -> Dict[str, str]:
         "predictedBPO": k_nn_BPO.to_dict("records"),
         "predictedMFO": k_nn_MFO.to_dict("records"),
         "meta": {
-            "predictedDSSP3": "SecVecSec, https://doi.org/10.1186/s12859-019-3220-8",
-            "predictedDSSP8": "SecVecSec, https://doi.org/10.1186/s12859-019-3220-8",
-            "predictedDisorder": "SecVecSec, https://doi.org/10.1186/s12859-019-3220-8",
+            "predictedDSSP3": "SeqVecSec, https://doi.org/10.1186/s12859-019-3220-8",
+            "predictedDSSP8": "SeqVecSec, https://doi.org/10.1186/s12859-019-3220-8",
+            "predictedDisorder": "SeqVecSec, https://doi.org/10.1186/s12859-019-3220-8",
             "predictedCCO": "goPredSim SeqVec, https://doi.org/10.1038/s41598-020-80786-0",
             "predictedBPO": "goPredSim SeqVec, https://doi.org/10.1038/s41598-020-80786-0",
             "predictedMFO": "goPredSim SeqVec, https://doi.org/10.1038/s41598-020-80786-0",
-            "predictedMembrane": "SecVecLoc, https://doi.org/10.1186/s12859-019-3220-8",
-            "predictedSubcellularLocalizations": "SecVecLoc, https://doi.org/10.1186/s12859-019-3220-8",
+            "predictedMembrane": "SeqVecLoc, https://doi.org/10.1186/s12859-019-3220-8",
+            "predictedSubcellularLocalizations": "SeqVecLoc, https://doi.org/10.1186/s12859-019-3220-8",
         }
     }

@@ -54,7 +54,7 @@ def get_protbert_annotations_sync(embedding: np.array) -> Dict[str, str]:
             "predictedCCO": "unavailable",
             "predictedBPO": "unavailable",
             "predictedMFO": "unavailable",
-            "predictedMembrane": "LA_ProtBert",
-            "predictedSubcellularLocalizations": "LA_ProtBert",
+            "predictedMembrane": "LA_ProtBert, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
+            "predictedSubcellularLocalizations": "LA_ProtBert, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
         }
     }
