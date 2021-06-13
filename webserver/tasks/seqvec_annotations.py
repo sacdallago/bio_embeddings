@@ -1,5 +1,5 @@
 import logging
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 
@@ -51,7 +51,9 @@ if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
 
 
 @task_keeper.task()
-def get_seqvec_annotations_sync(embedding: np.ndarray) -> Dict[str, str]:
+def get_seqvec_annotations_sync(embedding: List) -> Dict[str, str]:
+    embedding = np.asarray(embedding)
+
     annotations = featureExtractor.get_annotations(embedding)
 
     l1_embedding = np.array(embedding[1]).mean(0)

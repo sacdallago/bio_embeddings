@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 
-from typing import Dict
+from typing import Dict, List
 
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
@@ -34,7 +34,9 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
 
 
 @task_keeper.task()
-def get_prott5_annotations_sync(embedding: np.array) -> Dict[str, str]:
+def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
+    embedding = np.asarray(embedding)
+
     annotations = featureExtractor.get_annotations(embedding)
     la_annotations = la.get_subcellular_location(embedding)
 

@@ -89,6 +89,7 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
         soft_time_limit=60 * 5,
         expires=60 * 60,
     )
+
     features = job.get()
     get_features_cache.insert_one(
         {
