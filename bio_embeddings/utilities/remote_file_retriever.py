@@ -7,6 +7,7 @@ from typing import Dict, Optional
 from urllib import request
 
 from appdirs import user_cache_dir
+from atomicwrites import atomic_write
 from tqdm import tqdm
 
 from bio_embeddings.utilities.config import read_config_file
@@ -105,7 +106,10 @@ def get_model_file(
 
     logger.info(f"Downloading {file} for {model} and storing it in '{cache_path}'")
 
-    with TqdmUpTo(unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]) as t:
-        request.urlretrieve(url, filename=cache_path, reporthook=t.update_to)
+    with atomic_write(cache_path, overwrite=True) as temp_file:
+        with TqdmUpTo(
+            unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+        ) as t:
+            request.urlretrieve(url, filename=temp_file.name, reporthook=t.update_to)
 
     return str(cache_path)
