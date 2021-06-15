@@ -148,7 +148,12 @@ CPCProt and UniRep generate per-residue embeddings, which you can summarize
 into a fixed size per-protein embedding by calling
 <a class="reference internal" href="#bio_embeddings.embed.EmbedderInterface.reduce_per_protein" title="bio_embeddings.embed.EmbedderInterface.reduce_per_protein"><code class="xref py py-meth docutils literal notranslate"><span class="pre">EmbedderInterface.reduce_per_protein()</span></code></a>. CPCProt only generates a
 per-protein embedding (<code class="docutils literal notranslate"><span class="pre">reduce_per_protein</span></code> does nothing), while UniRep
-includes a start token, so the embedding is one longer than the protein.</p>
+includes a start token, so the embedding is one longer than the protein.
+UniRep, GloVe, fastText and word2vec only support the CPU.</p>
+<p><a class="reference internal" href="#bio_embeddings.embed.OneHotEncodingEmbedder" title="bio_embeddings.embed.OneHotEncodingEmbedder"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneHotEncodingEmbedder</span></code></a> offers a naive baseline to compare the language model
+embeddings against, with one hot encoding as per-residue and amino acid composition
+as per-protein embedding. It accepts keyword arguments but ignores them since it does
+not do any notable computation.</p>
 <p>Instead of using <code class="docutils literal notranslate"><span class="pre">bio_embeddings[all]</span></code>, it’s possible to only install
 some embedders by selecting specific extras:</p>
 <ul class="simple">
@@ -210,60 +215,80 @@ memory required to do any computation. They were measured for one specific set o
 <td><p>3.8</p></td>
 <td><p>2.6</p></td>
 </tr>
-<tr class="row-even"><td><p>pb_tucker</p></td>
+<tr class="row-even"><td><p>fasttext</p></td>
+<td><p>0.05</p></td>
+<td><p>n/a</p></td>
+<td><p>0.03</p></td>
+</tr>
+<tr class="row-odd"><td><p>glove</p></td>
+<td><p>0.06</p></td>
+<td><p>n/a</p></td>
+<td><p>0.03</p></td>
+</tr>
+<tr class="row-even"><td><p>one_hot_encoding</p></td>
+<td><p>n/a</p></td>
+<td><p>n/a</p></td>
+<td><p>n/a</p></td>
+</tr>
+<tr class="row-odd"><td><p>pb_tucker</p></td>
 <td><p>0.009</p></td>
 <td><p>1.0</p></td>
 <td><p>0.02</p></td>
 </tr>
-<tr class="row-odd"><td><p>plus_rnn</p></td>
+<tr class="row-even"><td><p>plus_rnn</p></td>
 <td><p>0.06</p></td>
 <td><p>1.2</p></td>
 <td><p>0.1</p></td>
 </tr>
-<tr class="row-even"><td><p>prottrans_albert_bfd</p></td>
+<tr class="row-odd"><td><p>prottrans_albert_bfd</p></td>
 <td><p>0.9</p></td>
 <td><p>2.0</p></td>
 <td><p>1.8</p></td>
 </tr>
-<tr class="row-odd"><td><p>prottrans_bert_bfd</p></td>
+<tr class="row-even"><td><p>prottrans_bert_bfd</p></td>
 <td><p>1.6</p></td>
 <td><p>2.8</p></td>
 <td><p>3.4</p></td>
 </tr>
-<tr class="row-even"><td><p>prottrans_t5_bfd</p></td>
+<tr class="row-odd"><td><p>prottrans_t5_bfd</p></td>
 <td><p>7.2</p></td>
 <td><p>5.9</p></td>
 <td><p>16.1</p></td>
 </tr>
-<tr class="row-odd"><td><p>prottrans_t5_uniref50</p></td>
+<tr class="row-even"><td><p>prottrans_t5_uniref50</p></td>
 <td><p>7.2</p></td>
 <td><p>5.9</p></td>
 <td><p>16.1</p></td>
 </tr>
-<tr class="row-even"><td><p>prottrans_t5_xl_u50</p></td>
+<tr class="row-odd"><td><p>prottrans_t5_xl_u50</p></td>
 <td><p>7.2</p></td>
 <td><p>5.9</p></td>
 <td><p>16.1</p></td>
 </tr>
-<tr class="row-odd"><td><p>prottrans_xlnet_uniref100</p></td>
+<tr class="row-even"><td><p>prottrans_xlnet_uniref100</p></td>
 <td><p>1.6</p></td>
 <td><p>2.7</p></td>
 <td><p>3.3</p></td>
 </tr>
-<tr class="row-even"><td><p>seqvec</p></td>
+<tr class="row-odd"><td><p>seqvec</p></td>
 <td><p>0.4</p></td>
 <td><p>1.6</p></td>
 <td><p>0.5</p></td>
 </tr>
-<tr class="row-odd"><td><p>seqvec_from_publication</p></td>
+<tr class="row-even"><td><p>seqvec_from_publication</p></td>
 <td><p>0.004</p></td>
 <td><p>1.1</p></td>
 <td><p>0.006</p></td>
 </tr>
-<tr class="row-even"><td><p>unirep</p></td>
+<tr class="row-odd"><td><p>unirep</p></td>
 <td><p>n/a</p></td>
 <td><p>n/a</p></td>
 <td><p>0.2</p></td>
+</tr>
+<tr class="row-even"><td><p>word2vec</p></td>
+<td><p>0.07</p></td>
+<td><p>n/a</p></td>
+<td><p>0.06</p></td>
 </tr>
 </tbody>
 </table></div>
@@ -483,6 +508,153 @@ overwritten with the appropriate batching method for the model.</p>
 <dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
 </dd>
 </dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.FastTextEmbedder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">FastTextEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/fasttext_embedder.html#FastTextEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="bio_embeddings.embed.FastTextEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/fasttext_embedder.html#FastTextEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_file</strong> – path of model file. If not supplied, will be downloaded.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.FastTextEmbedder.embed">
+<code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/fasttext_embedder.html#FastTextEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns embedding for one sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An embedding of the sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.FastTextEmbedder.embedding_dimension">
+<code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">512</span></em><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.FastTextEmbedder.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'fasttext'</span></em><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.FastTextEmbedder.necessary_files">
+<code class="sig-name descname"><span class="pre">necessary_files</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">['model_file']</span></em><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.FastTextEmbedder.number_of_layers">
+<code class="sig-name descname"><span class="pre">number_of_layers</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.FastTextEmbedder.reduce_per_protein">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">reduce_per_protein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/fasttext_embedder.html#FastTextEmbedder.reduce_per_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.FastTextEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>embedding</strong> – the embedding</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.GloveEmbedder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">GloveEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/glove_embedder.html#GloveEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="bio_embeddings.embed.GloveEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/glove_embedder.html#GloveEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_file</strong> – path of model file. If not supplied, will be downloaded.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.GloveEmbedder.embed">
+<code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/glove_embedder.html#GloveEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns embedding for one sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An embedding of the sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.GloveEmbedder.embedding_dimension">
+<code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">512</span></em><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.GloveEmbedder.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'glove'</span></em><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.GloveEmbedder.necessary_files">
+<code class="sig-name descname"><span class="pre">necessary_files</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">['model_file']</span></em><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.GloveEmbedder.number_of_layers">
+<code class="sig-name descname"><span class="pre">number_of_layers</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.GloveEmbedder.reduce_per_protein">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">reduce_per_protein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/glove_embedder.html#GloveEmbedder.reduce_per_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.GloveEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>embedding</strong> – the embedding</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">OneHotEncodingEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/one_hot_encoding_embedder.html#OneHotEncodingEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Baseline embedder: One hot encoding as per-residue embedding, amino acid composition for per-protein</p>
+<p>This embedder is meant to be used as naive baseline for comparing different types of inputs or training method.</p>
+<p>While option such as device aren’t used, you may still pass them for consistency.</p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder.embed">
+<code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/one_hot_encoding_embedder.html#OneHotEncodingEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder.embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns embedding for one sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An embedding of the sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder.embedding_dimension">
+<code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">21</span></em><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'one_hot_encoding'</span></em><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder.number_of_layers">
+<code class="sig-name descname"><span class="pre">number_of_layers</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.OneHotEncodingEmbedder.reduce_per_protein">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">reduce_per_protein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/one_hot_encoding_embedder.html#OneHotEncodingEmbedder.reduce_per_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.OneHotEncodingEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
+<dd><p>This returns the amino acid composition of the sequence as vector</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
@@ -828,6 +1000,61 @@ engineering with sequence-based deep representation learning. Nat Methods
 <dl class="py method">
 <dt id="bio_embeddings.embed.UniRepEmbedder.reduce_per_protein">
 <em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">reduce_per_protein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/unirep_embedder.html#UniRepEmbedder.reduce_per_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.UniRepEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>embedding</strong> – the embedding</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A fixed size embedding (a vector of size N, where N is fixed)</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="bio_embeddings.embed.Word2VecEmbedder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">Word2VecEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/word2vec_embedder.html#Word2VecEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/word2vec_embedder.html#Word2VecEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_file</strong> – path of model file. If not supplied, will be downloaded.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.embed">
+<code class="sig-name descname"><span class="pre">embed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/word2vec_embedder.html#Word2VecEmbedder.embed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.embed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns embedding for one sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong> – Valid amino acid sequence as String</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An embedding of the sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.embedding_dimension">
+<code class="sig-name descname"><span class="pre">embedding_dimension</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">512</span></em><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.embedding_dimension" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'word2vec'</span></em><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.necessary_files">
+<code class="sig-name descname"><span class="pre">necessary_files</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">['model_file']</span></em><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.necessary_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.number_of_layers">
+<code class="sig-name descname"><span class="pre">number_of_layers</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.number_of_layers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="bio_embeddings.embed.Word2VecEmbedder.reduce_per_protein">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">reduce_per_protein</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/bio_embeddings/embed/word2vec_embedder.html#Word2VecEmbedder.reduce_per_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.Word2VecEmbedder.reduce_per_protein" title="Permalink to this definition">¶</a></dt>
 <dd><p>For a variable size embedding, returns a fixed size embedding encoding all information of a sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
