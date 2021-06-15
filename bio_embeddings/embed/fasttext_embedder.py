@@ -1,12 +1,15 @@
+import re
+
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
+from numpy import ndarray
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
 
 
 class FastTextEmbedder(EmbedderInterface):
     name = "fasttext"
-    embedding_dimension = 1024
+    embedding_dimension = 512
     number_of_layers = 1
     necessary_files = ["model_file"]
 
@@ -24,7 +27,8 @@ class FastTextEmbedder(EmbedderInterface):
         self._zero_vector = np.zeros(self._vector_size, dtype=np.float32)
         self._window_size = 3
 
-    def embed(self, sequence):
+    def embed(self, sequence: str) -> ndarray:
+        sequence = re.sub(r"[UZOB]", "X", sequence)
         # pad sequence with special character (only 3-mers are considered)
         padded_sequence = "-" + sequence + "-"
 
@@ -55,6 +59,5 @@ class FastTextEmbedder(EmbedderInterface):
                 return self._get_kmer_representation(k_mer[idx_center])
 
     @staticmethod
-    def reduce_per_protein(embedding):
-        # TODO
-        raise NotImplementedError
+    def reduce_per_protein(embedding: ndarray) -> ndarray:
+        return embedding.mean(axis=0)

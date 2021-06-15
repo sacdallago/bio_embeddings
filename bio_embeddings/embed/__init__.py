@@ -8,6 +8,12 @@ into a fixed size per-protein embedding by calling
 :meth:`EmbedderInterface.reduce_per_protein`. CPCProt only generates a
 per-protein embedding (``reduce_per_protein`` does nothing), while UniRep
 includes a start token, so the embedding is one longer than the protein.
+UniRep, GloVe, fastText and word2vec only support the CPU.
+
+:class:`OneHotEncodingEmbedder` offers a naive baseline to compare the language model
+embeddings against, with one hot encoding as per-residue and amino acid composition
+as per-protein embedding. It accepts keyword arguments but ignores them since it does
+not do any notable computation.
 
 Instead of using ``bio_embeddings[all]``, it's possible to only install
 some embedders by selecting specific extras:
@@ -36,6 +42,9 @@ cpcprot                                         0.007           1.1             
 deepblast                                       0.4             1.4             0.26
 esm                                             6.3             3.9             2.7
 esm1b                                           7.3             3.8             2.6
+fasttext                                        0.05            n/a             0.03
+glove                                           0.06            n/a             0.03
+one_hot_encoding                                n/a             n/a             n/a
 pb_tucker                                       0.009           1.0             0.02
 plus_rnn                                        0.06            1.2             0.1
 prottrans_albert_bfd                            0.9             2.0             1.8
@@ -47,6 +56,7 @@ prottrans_xlnet_uniref100                       1.6             2.7             
 seqvec                                          0.4             1.6             0.5
 seqvec_from_publication                         0.004           1.1             0.006
 unirep                                          n/a             n/a             0.2
+word2vec                                        0.07            n/a             0.06
 ==============================================  ==============  =============   ==============
 """
 
@@ -54,11 +64,27 @@ import logging
 from typing import Dict, Type
 
 from bio_embeddings.embed.embedder_interfaces import EmbedderInterface
+from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
+from bio_embeddings.embed.glove_embedder import GloveEmbedder
+from bio_embeddings.embed.one_hot_encoding_embedder import OneHotEncodingEmbedder
+from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder
 
 logger = logging.getLogger(__name__)
 
-name_to_embedder: Dict[str, Type[EmbedderInterface]] = {}
-__all__ = ["EmbedderInterface"]
+name_to_embedder: Dict[str, Type[EmbedderInterface]] = {
+    OneHotEncodingEmbedder.name: OneHotEncodingEmbedder,
+    FastTextEmbedder.name: FastTextEmbedder,
+    GloveEmbedder.name: GloveEmbedder,
+    Word2VecEmbedder.name: Word2VecEmbedder,
+}
+
+__all__ = [
+    "EmbedderInterface",
+    "OneHotEncodingEmbedder",
+    "FastTextEmbedder",
+    "GloveEmbedder",
+    "Word2VecEmbedder",
+]
 
 # Transformers
 try:
@@ -158,8 +184,3 @@ try:
     __all__.append(BeplerEmbedder.__name__)
 except ImportError:
     logger.debug("bepler extra not installed, PLUSRNNEmbedder will not be available")
-
-# Unmaintained embedders
-from bio_embeddings.embed.fasttext_embedder import FastTextEmbedder
-from bio_embeddings.embed.glove_embedder import GloveEmbedder
-from bio_embeddings.embed.word2vec_embedder import Word2VecEmbedder
