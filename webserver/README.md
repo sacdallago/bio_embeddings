@@ -10,6 +10,9 @@ The webserver provides an easy-to-use web interface to a part of the functionali
 You need to provide the worker with a model directory, either by mounting it to `/mnt/models` (docker only) or by setting `MODEL_DIRECTORY` to the location. You can download it from https://rostlab.org/~bio_embeddings/webserver_models.zip. After unzipping, it should look like this:
 
 ```
+├── t5_xl_u50_from_publication_annotations_extractors
+│   ├── secondary_structure_checkpoint_file
+│   └── subcellular_location_checkpoint_file
 ├── bert_from_publication_annotations_extractors
 │   ├── secondary_structure_checkpoint_file
 │   └── subcellular_location_checkpoint_file

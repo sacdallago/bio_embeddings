@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 
-from typing import Dict
+from typing import Dict, List
 
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
@@ -34,7 +34,9 @@ if "protbert_annotations" in configuration['celery']['celery_worker_type']:
 
 
 @task_keeper.task()
-def get_protbert_annotations_sync(embedding: np.array) -> Dict[str, str]:
+def get_protbert_annotations_sync(embedding: List) -> Dict[str, str]:
+    embedding = np.asarray(embedding)
+
     annotations = featureExtractor.get_annotations(embedding)
     la_annotations = la.get_subcellular_location(embedding)
 
@@ -54,7 +56,7 @@ def get_protbert_annotations_sync(embedding: np.array) -> Dict[str, str]:
             "predictedCCO": "unavailable",
             "predictedBPO": "unavailable",
             "predictedMFO": "unavailable",
-            "predictedMembrane": "LA_ProtBert",
-            "predictedSubcellularLocalizations": "LA_ProtBert",
+            "predictedMembrane": "LA_ProtBert, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
+            "predictedSubcellularLocalizations": "LA_ProtBert, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
         }
     }
