@@ -26,7 +26,7 @@ FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update \
-    && apt-get install -y python3 \
+    && apt-get install -y python3 python3-distutils \
     && rm -rf /var/lib/apt/lists/*
 
 # Workaround for when switching the docker user
