@@ -37,6 +37,9 @@ RUN apt-get update \
     && apt-get install -y python3 \
     && rm -rf /var/lib/apt/lists/*
 
+# 2021.06.28 [CD] I suppose that by branching FROM cuda we miss distutils. Try to re-install some deps by hand.
+RUN apt-get install -y python3 python3-distutils python3-venv python3-dev git
+
 # Workaround for when switching the docker user
 # https://github.com/numba/numba/issues/4032#issuecomment-547088606
 RUN mkdir /tmp/numba_cache && chmod 777 /tmp/numba_cache
