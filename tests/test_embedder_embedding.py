@@ -35,6 +35,10 @@ from bio_embeddings.embed import (
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
     UniRepEmbedder,
+    Word2VecEmbedder,
+    FastTextEmbedder,
+    GloveEmbedder,
+    OneHotEncodingEmbedder,
 )
 from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.project.pb_tucker import PBTucker
@@ -45,9 +49,13 @@ common_embedders: List[Any] = [
     BeplerEmbedder,
     CPCProtEmbedder,
     ESM1bEmbedder,
+    FastTextEmbedder,
+    GloveEmbedder,
+    OneHotEncodingEmbedder,
     PLUSRNNEmbedder,
     ProtTransBertBFDEmbedder,
     SeqVecEmbedder,
+    Word2VecEmbedder,
 ]
 
 # Those embedder aren't ran by default on CI
