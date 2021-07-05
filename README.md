@@ -101,6 +101,8 @@ After having installed the package, you can:
     
 ## Cite
 
+If you use `bio_embeddings` for your research, we would appreciate it if you could cite the following paper:
+
 > Dallago, C., Schütze, K., Heinzinger, M., Olenyi, T., Littmann, M., Lu, A. X., Yang, K. K., Min, S., Yoon, S., Morton, J. T., & Rost, B. (2021). Learned embeddings from deep learning to visualize and predict protein sets. Current Protocols, 1, e113. doi: [10.1002/cpz1.113](https://doi.org/10.1002/cpz1.113)
 
 
@@ -119,6 +121,8 @@ url = {https://currentprotocols.onlinelibrary.wiley.com/doi/abs/10.1002/cpz1.113
 eprint = {https://currentprotocols.onlinelibrary.wiley.com/doi/pdf/10.1002/cpz1.113},
 year = {2021}
 }
+
+Additionally, we invite you to cite the work from others that was collected in `bio_embeddings` (see section _"Tools by category"_ below). We are working on an enhanced user guide which will include proper references to all citable work collected in `bio_embeddings`.
 
 ```
 
@@ -145,6 +149,10 @@ year = {2021}
 - PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)
 - GoPredSim (https://www.nature.com/articles/s41598-020-80786-0)
 - DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)
+
+## Datasets 
+
+- `prottrans_t5_xl_u50` residue and sequence embeddings of the Human proteome at full precision + secondary structure predictions + sub-cellular localisation predictions: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5047020.svg)](https://doi.org/10.5281/zenodo.5047020)
 
 ----
 
