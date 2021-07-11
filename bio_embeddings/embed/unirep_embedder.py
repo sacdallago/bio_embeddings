@@ -30,20 +30,14 @@ class UniRepEmbedder(EmbedderInterface):
     _apply_fun: Callable
 
     def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
-        from jax_unirep.utils import load_params_1900
-        from jax_unirep.featurize import apply_fun
-
-        self._params = load_params_1900()
-        self._apply_fun = apply_fun
-
         # For v2
         # https://github.com/ElArkk/jax-unirep/issues/107
-        # from jax_unirep.utils import load_params
-        # from jax_unirep.layers import mLSTM
-        # from jax_unirep.utils import validate_mLSTM_params
-        # self._params = load_params()[1]
-        # _, self._apply_fun = mLSTM(output_dim=self.embedding_dimension)
-        # validate_mLSTM_params(self._params, n_outputs=self.embedding_dimension)
+        from jax_unirep.utils import load_params
+        from jax_unirep.layers import mLSTM
+        from jax_unirep.utils import validate_mLSTM_params
+        self._params = load_params()[1]
+        _, self._apply_fun = mLSTM(output_dim=self.embedding_dimension)
+        validate_mLSTM_params(self._params, n_outputs=self.embedding_dimension)
 
         if device:
             raise NotImplementedError("UniRep does not allow configuring the device")

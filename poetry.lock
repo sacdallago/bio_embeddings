@@ -1248,14 +1248,14 @@ opt_einsum = "*"
 
 [[package]]
 name = "jax-unirep"
-version = "1.0.3"
+version = "2.0.2"
 description = "A performant and user-friendly reimplementation of UniRep in JAX."
 category = "main"
 optional = true
 python-versions = ">=3.6"
 
 [package.dependencies]
-jax = "<0.2.0"
+jax = "*"
 jaxlib = "*"
 multipledispatch = "*"
 numpy = "*"
@@ -2773,7 +2773,7 @@ python-versions = "*"
 
 [[package]]
 name = "sentry-sdk"
-version = "1.1.0"
+version = "1.3.0"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = true
@@ -2794,6 +2794,7 @@ chalice = ["chalice (>=1.16.0)"]
 django = ["django (>=1.8)"]
 falcon = ["falcon (>=1.4)"]
 flask = ["flask (>=0.11)", "blinker (>=1.1)"]
+httpx = ["httpx (>=0.16.0)"]
 pure_eval = ["pure-eval", "executing", "asttokens"]
 pyspark = ["pyspark (>=2.4.4)"]
 rq = ["rq (>=0.6)"]
@@ -3571,7 +3572,7 @@ webserver = ["pymongo", "sentry-sdk", "flask"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "fab5dd37ac4932f422ab96758c1016ad6ed9e22c699d854c56b12c250ba2ce00"
+content-hash = "fb69c2fbd17d645942acf5bd61843893390ae6cb9e67805155df9a958852eea1"
 
 [metadata.files]
 absl-py = [
@@ -4275,8 +4276,8 @@ jax = [
     {file = "jax-0.1.77.tar.gz", hash = "sha256:63188ea819f3579b054952fbaa2b71e76823f1b60bccea64c95b5609edbdff83"},
 ]
 jax-unirep = [
-    {file = "jax_unirep-1.0.3-py3-none-any.whl", hash = "sha256:e584342a89ff5c441c2d4a0b6c4a114bbad3571d567cf7007e7b318958532bab"},
-    {file = "jax_unirep-1.0.3.tar.gz", hash = "sha256:38e9a157afd3c71df07bbad5d934685e0db73c359b6c4e40a6edecf5b6ec2a2c"},
+    {file = "jax_unirep-2.0.2-py3-none-any.whl", hash = "sha256:8b0c7aabc6278c1691ac725b3e3f565a6896b99838bb06306ecd12f3dfd02d6d"},
+    {file = "jax_unirep-2.0.2.tar.gz", hash = "sha256:2095b4bbe5cb4822d78c91193d3962c9099580835c0b8a01040bc628359b265d"},
 ]
 jaxlib = [
     {file = "jaxlib-0.1.57-cp36-none-macosx_10_9_x86_64.whl", hash = "sha256:47d4bf94f38ab9a437a69c19be6a3e1d235811d6da70922a3ff6502c33361504"},
@@ -5323,8 +5324,8 @@ sentinels = [
     {file = "sentinels-1.0.0.tar.gz", hash = "sha256:7be0704d7fe1925e397e92d18669ace2f619c92b5d4eb21a89f31e026f9ff4b1"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-1.1.0.tar.gz", hash = "sha256:c1227d38dca315ba35182373f129c3e2722e8ed999e52584e6aca7d287870739"},
-    {file = "sentry_sdk-1.1.0-py2.py3-none-any.whl", hash = "sha256:c7d380a21281e15be3d9f67a3c4fbb4f800c481d88ff8d8931f39486dd7b4ada"},
+    {file = "sentry-sdk-1.3.0.tar.gz", hash = "sha256:5210a712dd57d88d225c1fc3fe3a3626fee493637bcd54e204826cf04b8d769c"},
+    {file = "sentry_sdk-1.3.0-py2.py3-none-any.whl", hash = "sha256:6864dcb6f7dec692635e5518c2a5c80010adf673c70340817f1a1b713d65bb41"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
