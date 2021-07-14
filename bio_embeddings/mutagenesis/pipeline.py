@@ -8,7 +8,20 @@ from pandas import read_csv, DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.mutagenesis.constants import PROBABILITIES_COLUMNS
-from bio_embeddings.mutagenesis.protbert_bfd import ProtTransBertBFDMutagenesis
+
+try:
+    from bio_embeddings.mutagenesis.protbert_bfd import ProtTransBertBFDMutagenesis
+
+except ImportError as e:
+
+    class ProtTransBertBFDMutagenesis:
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                f"The 'transformers' required for protbert_bfd_mutagenesis is missing. "
+                "See https://docs.bioembeddings.com/#installation on how to install all extras"
+            ) from e
+
+
 from bio_embeddings.utilities import check_required, get_device, get_file_manager
 
 # list of available mutagenesis protocols
