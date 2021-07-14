@@ -149,7 +149,20 @@
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="kn">from</span> <span class="nn">bio_embeddings.mutagenesis.constants</span> <span class="kn">import</span> <span class="n">PROBABILITIES_COLUMNS</span>
-<span class="kn">from</span> <span class="nn">bio_embeddings.mutagenesis.protbert_bfd</span> <span class="kn">import</span> <span class="n">ProtTransBertBFDMutagenesis</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">bio_embeddings.mutagenesis.protbert_bfd</span> <span class="kn">import</span> <span class="n">ProtTransBertBFDMutagenesis</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">ProtTransBertBFDMutagenesis</span><span class="p">:</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The 'transformers' required for protbert_bfd_mutagenesis is missing. "</span>
+                <span class="s2">"See https://docs.bioembeddings.com/#installation on how to install all extras"</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+
 <span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">check_required</span><span class="p">,</span> <span class="n">get_device</span><span class="p">,</span> <span class="n">get_file_manager</span>
 
 <span class="c1"># list of available mutagenesis protocols</span>
