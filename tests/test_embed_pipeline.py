@@ -1,6 +1,7 @@
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import List
+from typing import List, Any, Dict
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -78,11 +79,10 @@ class MockESM1bEmbedder(ESM1bEmbedder):
         return numpy.random.random((self.number_of_layers, self.embedding_dimension))
 
 
-def test_wrong_model_param(pytestconfig, tmp_path: Path, caplog):
-    """In this config, the protocol esm1b is chosen, but instead of a model_file a model_directory for T5 is given"""
-    pipeline_config = read_config_file(
-        str(pytestconfig.rootpath.joinpath("test-data/embed_config_mixup.yml"))
-    )
+def read_and_patch_config(
+    pytestconfig, tmp_path: Path, yml_file: str
+) -> Dict[str, Any]:
+    pipeline_config = read_config_file(str(pytestconfig.rootpath.joinpath(yml_file)))
     pipeline_config["global"]["sequences_file"] = str(
         pytestconfig.rootpath.joinpath("test-data").joinpath(
             pipeline_config["global"]["sequences_file"]
@@ -90,6 +90,14 @@ def test_wrong_model_param(pytestconfig, tmp_path: Path, caplog):
     )
     pipeline_config["global"]["prefix"] = str(
         tmp_path.joinpath(pipeline_config["global"]["prefix"])
+    )
+    return pipeline_config
+
+
+def test_wrong_model_param(pytestconfig, tmp_path: Path, caplog):
+    """In this config, the protocol esm1b is chosen, but instead of a model_file a model_directory for T5 is given"""
+    pipeline_config = read_and_patch_config(
+        pytestconfig, tmp_path, "test-data/embed_config_mixup.yml"
     )
 
     with mock.patch(
@@ -103,3 +111,16 @@ def test_wrong_model_param(pytestconfig, tmp_path: Path, caplog):
     assert caplog.messages == [
         "You set an unknown option for esm1b: model_directory (value: /mnt/project/bio_embeddings/models/lms/t5)"
     ]
+
+
+def test_esm1v_missing_ensemble_id(pytestconfig, tmp_path: Path):
+    pipeline_config = read_and_patch_config(
+        pytestconfig, tmp_path, "test-data/esm1v_missing_ensemble_id.yml"
+    )
+    with pytest.raises(
+        InvalidParameterError,
+        match=re.escape(
+            "You must set `ensemble_id` to select which of the five models you want to use [1-5]"
+        ),
+    ):
+        execute_pipeline_from_config(pipeline_config)

@@ -39,6 +39,7 @@ from bio_embeddings.embed import (
     FastTextEmbedder,
     GloveEmbedder,
     OneHotEncodingEmbedder,
+    ESM1vEmbedder,
 )
 from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.project.pb_tucker import PBTucker
@@ -49,6 +50,7 @@ common_embedders: List[Any] = [
     BeplerEmbedder,
     CPCProtEmbedder,
     ESM1bEmbedder,
+    ESM1vEmbedder,
     FastTextEmbedder,
     GloveEmbedder,
     OneHotEncodingEmbedder,
@@ -85,13 +87,12 @@ def embedder_test_impl(
     """ Compute embeddings and check them against a stored reference file """
     if embedder_class == SeqVecEmbedder:
         embedder = embedder_class(warmup_rounds=0, device=device)
+    elif embedder_class == ESM1vEmbedder:
+        embedder = embedder_class(ensemble_id=1, device=device)
     else:
         embedder = embedder_class(device=device)
 
-    if isinstance(embedder, ProtTransT5Embedder):
-        batch_size = None
-    else:
-        batch_size = 100
+    batch_size = 100
 
     # The XXX tests that the unknown padding works
     # https://github.com/sacdallago/bio_embeddings/issues/63

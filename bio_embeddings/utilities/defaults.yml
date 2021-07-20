@@ -59,6 +59,13 @@ esm:
 esm1b:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1b/esm1b_t33_650M_UR50S.pt"
 
+esm1v:
+  model_file_1: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1v/esm1v_t33_650M_UR90S_1.pt"
+  model_file_2: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1v/esm1v_t33_650M_UR90S_2.pt"
+  model_file_3: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1v/esm1v_t33_650M_UR90S_3.pt"
+  model_file_4: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1v/esm1v_t33_650M_UR90S_4.pt"
+  model_file_5: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm1v/esm1v_t33_650M_UR90S_5.pt"
+
 cpcprot:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/cpcprot/best.ckpt"
 

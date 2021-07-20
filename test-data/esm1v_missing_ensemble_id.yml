@@ -1,0 +1,8 @@
+global:
+  sequences_file: seqwence-protein.fasta
+  prefix: test_esm1v
+embed:
+  type: embed
+  protocol: esm1v
+  reduce: True
+  discard_per_amino_acid_embeddings: True

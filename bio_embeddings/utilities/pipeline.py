@@ -283,6 +283,10 @@ def execute_pipeline_from_config(config: Dict,
         try:
             stage_output_parameters = stage_runnable(**stage_parameters)
         except Exception as e:
+            # We are pretty sure that it's wrong configuration and not a bug
+            if isinstance(e, InvalidParameterError):
+                raise
+
             # Tell the user which stage failed and show an url to report an error on github
             try:
                 version = importlib_metadata.version("bio_embeddings")
