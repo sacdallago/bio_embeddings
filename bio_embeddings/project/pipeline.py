@@ -1,11 +1,9 @@
 from copy import deepcopy
-from pathlib import Path
 from typing import Dict, Any
 
 import h5py
 import numpy as np
-import torch
-from pandas import read_csv, DataFrame
+from pandas import DataFrame
 
 from bio_embeddings.project.pb_tucker import PBTucker
 from bio_embeddings.project.tsne import tsne_reduce
@@ -17,6 +15,7 @@ from bio_embeddings.utilities import (
     FileManagerInterface,
     get_model_file,
     get_device,
+    read_mapping_file,
 )
 
 
@@ -64,7 +63,7 @@ def write_embeddings(
 
 def tsne(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
     # Get sequence mapping to use as information source
-    mapping = read_csv(result_kwargs['mapping_file'], index_col=0)
+    mapping = read_mapping_file(result_kwargs["mapping_file"])
 
     reduced_embeddings_file_path = result_kwargs['reduced_embeddings_file']
 
@@ -92,7 +91,7 @@ def tsne(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> D
 
 def umap(file_manager: FileManagerInterface, result_kwargs: Dict[str, Any]) -> Dict[str, Any]:
     # Get sequence mapping to use as information source
-    mapping = read_csv(result_kwargs['mapping_file'], index_col=0)
+    mapping = read_mapping_file(result_kwargs["mapping_file"])
 
     reduced_embeddings_file_path = result_kwargs['reduced_embeddings_file']
 

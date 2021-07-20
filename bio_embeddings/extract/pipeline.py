@@ -14,7 +14,7 @@ from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbou
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
-    write_fasta_file
+    write_fasta_file, read_mapping_file
 from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
     InvalidAnnotationFileError
 
@@ -105,8 +105,7 @@ def unsupervised(**kwargs) -> Dict[str, Any]:
                 input_reference_embeddings_file.create_dataset(identifier, data=current_embedding)
 
     # mapping file will be needed to transfer annotations
-    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
-    mapping_file.index = mapping_file.index.map(str)
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
     # Important to have consistent ordering!
     target_identifiers = mapping_file.index.values
@@ -227,7 +226,7 @@ def light_attention(model, **kwargs) -> Dict[str, Any]:
     annotation_extractor = LightAttentionAnnotationExtractor(**result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
-    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
     # Try to create final files (if this fails, now is better than later
     per_sequence_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
@@ -274,7 +273,7 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
     annotation_extractor = BasicAnnotationExtractor(model, **result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
-    mapping_file = read_csv(result_kwargs['mapping_file'], index_col=0)
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
     # Try to create final files (if this fails, now is better than later
     DSSP3_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),

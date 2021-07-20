@@ -25,6 +25,7 @@ __all__ = [
     "get_model_directories_from_zip",
     "get_model_file",
     "read_fasta",
+    "read_mapping_file",
     "reindex_h5_file",
     "reindex_sequences",
     "write_fasta_file",
