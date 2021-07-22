@@ -118,7 +118,6 @@
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.project.html">bio_embeddings.project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
@@ -266,33 +265,50 @@
   <span class="c1">## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.</span>
   <span class="c1"># model_file: @/path/to/file</span>
 
-
 <span class="n">stage_3</span><span class="p">:</span>
-  <span class="nb">type</span><span class="p">:</span> <span class="n">visualize</span>
-  <span class="c1"># Required: which graph to render</span>
-  <span class="c1"># Options: plotly</span>
-  <span class="n">protocol</span><span class="p">:</span> <span class="n">plotly</span>
-  <span class="c1"># Either depend on a project stage with projected embeddings file</span>
-  <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_2</span>
-  <span class="c1"># or define projected_reduced_embeddings_file:</span>
-  <span class="c1"># projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">mutagenesis</span>
+  <span class="c1">## Required: Which language model to use</span>
+  <span class="c1">## Options: protbert_bfd_mutagenesis</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">protbert_bfd_mutagenesis</span>
+  <span class="c1">## Optional: temperature for softmax, see https://arxiv.org/abs/1503.02531</span>
+  <span class="c1"># temperature: [1*]</span>
 
-  <span class="c1"># Optional: csv file with annotations</span>
-  <span class="c1"># csv must have header: identifier, label</span>
-  <span class="c1"># annotation_file: path/to/annotation_file.csv</span>
-
-  <span class="c1"># Optional: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)</span>
-  <span class="c1"># display_unknown: [False, *True]</span>
-
-  <span class="c1"># Optional: set to True if in annotation_file identifiers correspond to sequence MD5 hashes</span>
-  <span class="c1"># if set to False (default), mapping will be performed on original identifiers.</span>
-  <span class="c1"># Where missing or duplicate, will be ignored</span>
-  <span class="c1"># merge_via_index: [True, *False]</span>
-
-  <span class="c1"># Optional: 2D vs 3D plot</span>
-  <span class="c1"># n_components: [2,*3]</span>
+  <span class="c1">## Optional: Since we're running ProtBert, the common ProtBert options explained in `extract` are supported</span>
+  <span class="c1"># model_directory: @/path/to/directory</span>
+  <span class="c1"># device: cuda</span>
+  <span class="c1"># half_precision: [true, *false]</span>
+  <span class="c1"># half_precision_model: [true, *false]</span>
 
 <span class="n">stage_4</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">visualize</span>
+  <span class="c1">## Required: which graph to render</span>
+  <span class="c1">## Options: plotly, plot_mutagenesis</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">plotly</span>
+  <span class="c1">## For plotly: Either depend on a project stage with projected embeddings file</span>
+  <span class="n">depends_on</span><span class="p">:</span> <span class="n">stage_2</span>
+  <span class="c1">## or define projected_reduced_embeddings_file:</span>
+  <span class="c1"># projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5</span>
+  <span class="c1">## For plot_mutagenesis: Either depend on a mutagenesis stage</span>
+  <span class="c1"># depends_on: stage_3</span>
+  <span class="c1">## or define residue_probabilities_file:</span>
+  <span class="c1"># residue_probabilities_file: path/to/residue_probabilities_file.csv</span>
+
+  <span class="c1">## Optional for plotly: csv file with annotations</span>
+  <span class="c1">## csv must have header: identifier, label</span>
+  <span class="c1"># annotation_file: path/to/annotation_file.csv</span>
+
+  <span class="c1">## Optional for plotly: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)</span>
+  <span class="c1"># display_unknown: [False, *True]</span>
+
+  <span class="c1">## Optional for plotly: set to True if in annotation_file identifiers correspond to sequence MD5 hashes</span>
+  <span class="c1">## if set to False (default), mapping will be performed on original identifiers.</span>
+  <span class="c1">## Where missing or duplicate, will be ignored</span>
+  <span class="c1"># merge_via_index: [True, *False]</span>
+
+  <span class="c1">## Optional for plotly: 2D vs 3D plot</span>
+  <span class="c1"># n_components: [2,*3]</span>
+
+<span class="n">stage_5</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">extract</span>
   <span class="c1">## Required: which method to use.</span>
   <span class="c1">## Current options:</span>

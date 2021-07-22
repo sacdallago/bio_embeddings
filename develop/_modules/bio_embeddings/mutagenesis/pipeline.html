@@ -118,7 +118,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
@@ -198,9 +197,10 @@
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../api/bio_embeddings.mutagenesis.html#bio_embeddings.mutagenesis.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""BETA: in-silico mutagenesis using BertForMaskedLM</span>
 
-<span class="sd">    optional:</span>
+<span class="sd">    optional (see extract stage for details):</span>
 <span class="sd">     * model_directory</span>
 <span class="sd">     * device</span>
+<span class="sd">     * half_precision</span>
 <span class="sd">     * half_precision_model</span>
 <span class="sd">     * temperature: temperature for softmax</span>
 <span class="sd">    """</span>

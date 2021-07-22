@@ -2,7 +2,7 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.mutagenesis_visualize" href="bio_embeddings.mutagenesis_visualize.html" /><link rel="prev" title="bio_embeddings.extract" href="bio_embeddings.extract.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.project" href="bio_embeddings.project.html" /><link rel="prev" title="bio_embeddings.extract" href="bio_embeddings.extract.html" />
 
     <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
         <title>bio_embeddings.mutagenesis - bio_embeddings</title>
@@ -118,7 +118,6 @@
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.extract.html">bio_embeddings.extract</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">bio_embeddings.mutagenesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bio_embeddings.mutagenesis_visualize.html">bio_embeddings.mutagenesis_visualize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.project.html">bio_embeddings.project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
@@ -196,9 +195,10 @@ If set to <cite>1</cite> (default) no adjustment is made.</p>
 <code class="sig-prename descclassname"><span class="pre">bio_embeddings.mutagenesis.</span></code><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/mutagenesis/pipeline.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.mutagenesis.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>BETA: in-silico mutagenesis using BertForMaskedLM</p>
 <dl class="simple">
-<dt>optional:</dt><dd><ul class="simple">
+<dt>optional (see extract stage for details):</dt><dd><ul class="simple">
 <li><p>model_directory</p></li>
 <li><p>device</p></li>
+<li><p>half_precision</p></li>
 <li><p>half_precision_model</p></li>
 <li><p>temperature: temperature for softmax</p></li>
 </ul>
@@ -211,12 +211,12 @@ If set to <cite>1</cite> (default) no adjustment is made.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="bio_embeddings.mutagenesis_visualize.html">
+          <a class="next-page" href="bio_embeddings.project.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">bio_embeddings.mutagenesis_visualize</div>
+                <div class="title">bio_embeddings.project</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
