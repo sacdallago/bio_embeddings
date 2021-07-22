@@ -24,10 +24,12 @@ class FakeEmbedder(EmbedderInterface):
         return embedding
 
 
-def test_simple_remapping(tmp_path: Path):
+def test_simple_remapping(pytestconfig, tmp_path: Path):
     """ https://github.com/sacdallago/bio_embeddings/issues/50 """
     global_parameters = {
-        "sequences_file": "test-data/seqwence-protein.fasta",
+        "sequences_file": str(
+            pytestconfig.rootpath.joinpath("test-data/seqwence-protein.fasta")
+        ),
         "prefix": str(tmp_path),
         "simple_remapping": True,
     }
@@ -39,18 +41,13 @@ def test_simple_remapping(tmp_path: Path):
     )
 
 
-def test_illegal_amino_acids(caplog, tmp_path: Path):
+def test_illegal_amino_acids(caplog, pytestconfig, tmp_path: Path):
     """ https://github.com/sacdallago/bio_embeddings/issues/54 """
-    input_file = "test-data/illegal_amino_acids.fasta"
-    with pytest.raises(
-        ValueError,
-        match=f"The entry 'illegal' in {input_file} contains the characters 'ä', 'ö', "
-        "while only single letter code is allowed",
-    ):
-        _process_fasta_file(
-            sequences_file=input_file,
-            prefix=str(tmp_path),
-        )
+    input_file = pytestconfig.rootpath.joinpath("test-data/illegal_amino_acids.fasta")
+    _process_fasta_file(
+        sequences_file=str(input_file),
+        prefix=str(tmp_path),
+    )
     assert caplog.messages == [
         f"The entry 'lowercase' in {input_file} contains lower "
         "case amino acids. Lower case letters are uninterpretable by most language "
@@ -61,7 +58,21 @@ def test_illegal_amino_acids(caplog, tmp_path: Path):
     ]
 
 
-def test_broken_fasta(tmp_path: Path):
+def test_unparsable_fasta(caplog, pytestconfig, tmp_path: Path):
+    input_file = pytestconfig.rootpath.joinpath("test-data/unparsable.fasta")
+
+    with pytest.raises(
+        ValueError,
+        match=f"Could not parse '{input_file}'. Are you sure this is a valid fasta file?",
+    ):
+        _process_fasta_file(
+            sequences_file=str(input_file),
+            prefix=str(tmp_path),
+        )
+    assert caplog.messages == []
+
+
+def test_broken_fasta(pytestconfig, tmp_path: Path):
     """Ensure that we print a reasonable message when the user feeds in a broken fasta file.
 
     Unfortunately, we can't detect if the user fed in a markdown file
@@ -83,7 +94,7 @@ def test_broken_fasta(tmp_path: Path):
     but is otherwise still extremely lenient.
     (https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=BlastHelp)
     """
-    input_file = "test-data/embeddings.npz"
+    input_file = pytestconfig.rootpath.joinpath("test-data/embeddings.npz")
     with pytest.raises(ValueError, match="Are you sure this is a valid fasta file?"):
         _process_fasta_file(
             sequences_file=input_file,
