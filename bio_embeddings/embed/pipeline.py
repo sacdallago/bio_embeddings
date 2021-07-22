@@ -7,7 +7,7 @@ import h5py
 import numpy
 from Bio import SeqIO
 from humanize import naturalsize
-from pandas import read_csv, DataFrame
+from pandas import DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.embed import name_to_embedder, EmbedderInterface
@@ -18,6 +18,7 @@ from bio_embeddings.utilities import (
     get_file_manager,
     get_model_directories_from_zip,
     get_model_file,
+    read_mapping_file,
 )
 from bio_embeddings.utilities.backports import nullcontext
 
@@ -203,10 +204,7 @@ def embed_and_write_batched(
         str(entry.seq)
         for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], "fasta")
     )
-    # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
-    # https://stackoverflow.com/a/29793294/3549270
-    mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
-    mapping_file.index = mapping_file.index.astype("str")
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
     # Print the minimum required file sizes
     _print_expected_file_sizes(embedder, mapping_file, result_kwargs)

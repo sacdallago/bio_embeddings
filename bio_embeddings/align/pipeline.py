@@ -17,7 +17,7 @@ from bio_embeddings.utilities import (
     read_fasta,
 )
 from bio_embeddings.utilities.exceptions import InvalidParameterError
-from bio_embeddings.utilities.helpers import check_required
+from bio_embeddings.utilities.helpers import check_required, read_mapping_file
 
 
 def pairwise_alignments_to_msa(
@@ -91,7 +91,7 @@ def deepblast(**kwargs) -> Dict[str, Any]:
             )
         device = torch.device("cuda")
 
-    mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
     mapping = {
         str(remapped): original
         for remapped, original in mapping_file[["original_id"]].itertuples()

@@ -221,3 +221,12 @@ class QueryEmbeddingsFile:
         :return: the embedding as a numpy array
         """
         return np.array(self._embeddings_file[new_id])
+
+
+def read_mapping_file(mapping_file: str) -> DataFrame:
+    """Reads mapping_file.csv and ensures consistent types"""
+    # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
+    # https://stackoverflow.com/a/29793294/3549270
+    mapping_file = read_csv(mapping_file, index_col=0)
+    mapping_file.index = mapping_file.index.astype("str")
+    return mapping_file

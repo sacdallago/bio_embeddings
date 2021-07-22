@@ -4,7 +4,7 @@ from typing import List, Dict, Type
 
 import torch
 from Bio import SeqIO
-from pandas import read_csv, DataFrame
+from pandas import DataFrame
 from tqdm import tqdm
 
 from bio_embeddings.mutagenesis.constants import PROBABILITIES_COLUMNS
@@ -22,7 +22,7 @@ except ImportError as e:
             ) from e
 
 
-from bio_embeddings.utilities import check_required, get_device, get_file_manager
+from bio_embeddings.utilities import check_required, get_device, get_file_manager, read_mapping_file
 
 # list of available mutagenesis protocols
 _PROTOCOLS = {
@@ -95,10 +95,7 @@ def run(**kwargs):
         str(entry.seq)
         for entry in SeqIO.parse(result_kwargs["remapped_sequences_file"], "fasta")
     ]
-    # We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds
-    # https://stackoverflow.com/a/29793294/3549270
-    mapping_file = read_csv(result_kwargs["mapping_file"], index_col=0)
-    mapping_file.index = mapping_file.index.astype("str")
+    mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
     probabilities_all = dict()
     with tqdm(total=int(mapping_file["sequence_length"].sum())) as progress_bar:
