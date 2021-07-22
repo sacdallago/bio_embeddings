@@ -44,16 +44,16 @@ python3.9:
 python3.7-scheduled:
   <<: *install-deps
   stage: tests
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   image: python:3.7
   script: poetry run pytest -v
 
 python3.9-scheduled:
   <<: *install-deps
   stage: tests
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   image: python:3.9
   script: poetry run pytest -v
 
