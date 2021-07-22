@@ -23,7 +23,7 @@ def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
     )
 
     stage_parameters = dict(
-        stage_name="mutagenesis_visualize_test",
+        stage_name="plot_mutagenesis_test",
         type="visualize",
         protocol="plot_mutagenesis",
         depends_on="mutagenesis",
@@ -32,8 +32,8 @@ def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
     run_visualize(**{**result_kwargs, **stage_parameters})
 
     assert tmp_path.joinpath(
-        "mutagenesis_visualize_test/78c685273a9456e98046482c09b31473.html"
+        "plot_mutagenesis_test/78c685273a9456e98046482c09b31473.html"
     ).is_file()
     assert tmp_path.joinpath(
-        "mutagenesis_visualize_test/a75fa3e22c2a164e8d5632867b4e2dd8.html"
+        "plot_mutagenesis_test/a75fa3e22c2a164e8d5632867b4e2dd8.html"
     ).is_file()

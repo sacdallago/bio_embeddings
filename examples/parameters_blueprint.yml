@@ -123,33 +123,50 @@ stage_2:
   ## learning model trained to distinguish CATH superfamilies. It reduces the dimensionality from 1024 to 128.
   # model_file: @/path/to/file
 
-
 stage_3:
-  type: visualize
-  # Required: which graph to render
-  # Options: plotly
-  protocol: plotly
-  # Either depend on a project stage with projected embeddings file
-  depends_on: stage_2
-  # or define projected_reduced_embeddings_file:
-  # projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5
+  type: mutagenesis
+  ## Required: Which language model to use
+  ## Options: protbert_bfd_mutagenesis
+  protocol: protbert_bfd_mutagenesis
+  ## Optional: temperature for softmax, see https://arxiv.org/abs/1503.02531
+  # temperature: [1*]
 
-  # Optional: csv file with annotations
-  # csv must have header: identifier, label
-  # annotation_file: path/to/annotation_file.csv
-
-  # Optional: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)
-  # display_unknown: [False, *True]
-
-  # Optional: set to True if in annotation_file identifiers correspond to sequence MD5 hashes
-  # if set to False (default), mapping will be performed on original identifiers.
-  # Where missing or duplicate, will be ignored
-  # merge_via_index: [True, *False]
-
-  # Optional: 2D vs 3D plot
-  # n_components: [2,*3]
+  ## Optional: Since we're running ProtBert, the common ProtBert options explained in `extract` are supported
+  # model_directory: @/path/to/directory
+  # device: cuda
+  # half_precision: [true, *false]
+  # half_precision_model: [true, *false]
 
 stage_4:
+  type: visualize
+  ## Required: which graph to render
+  ## Options: plotly, plot_mutagenesis
+  protocol: plotly
+  ## For plotly: Either depend on a project stage with projected embeddings file
+  depends_on: stage_2
+  ## or define projected_reduced_embeddings_file:
+  # projected_reduced_embeddings_file: path/to/projected_reduced_embeddings_file.h5
+  ## For plot_mutagenesis: Either depend on a mutagenesis stage
+  # depends_on: stage_3
+  ## or define residue_probabilities_file:
+  # residue_probabilities_file: path/to/residue_probabilities_file.csv
+
+  ## Optional for plotly: csv file with annotations
+  ## csv must have header: identifier, label
+  # annotation_file: path/to/annotation_file.csv
+
+  ## Optional for plotly: hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)
+  # display_unknown: [False, *True]
+
+  ## Optional for plotly: set to True if in annotation_file identifiers correspond to sequence MD5 hashes
+  ## if set to False (default), mapping will be performed on original identifiers.
+  ## Where missing or duplicate, will be ignored
+  # merge_via_index: [True, *False]
+
+  ## Optional for plotly: 2D vs 3D plot
+  # n_components: [2,*3]
+
+stage_5:
   type: extract
   ## Required: which method to use.
   ## Current options:

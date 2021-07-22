@@ -39,8 +39,7 @@
           "project",
           "visualize",
           "extract",
-          "mutagenesis",
-          "mutagenesis_visualize"
+          "mutagenesis"
         ]
       }
     },
@@ -252,7 +251,10 @@
           },
           "protocol": {
             "type": "string",
-            "const": "plotly"
+            "enum": [
+              "plotly",
+              "plot_mutagenesis"
+            ]
           },
           "annotation_file": {
             "type": "string"
@@ -444,12 +446,12 @@
         "properties": {
           "type": {
             "type": "string",
-            "const": "mutagenesis_visualize"
+            "const": "plot_mutagenesis"
           },
           "protocol": {
             "type": "string",
             "enum": [
-              "mutagenesis_visualize"
+              "plot_mutagenesis"
             ]
           },
           "probabilities_file": {
