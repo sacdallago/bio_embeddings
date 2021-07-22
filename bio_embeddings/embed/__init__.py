@@ -118,7 +118,10 @@ try:
     __all__.append(ProtTransT5BFDEmbedder.__name__)
     __all__.append(ProtTransT5UniRef50Embedder.__name__)
     __all__.append(ProtTransT5XLU50Embedder.__name__)
-except ImportError:
+except ModuleNotFoundError as e:
+    # Check that the error is actually the missing transformers extra
+    if e.name != "transformers":
+        raise
     logger.debug(
         "transformers extra not installed, Bert, Albert and XLNet will not be available"
     )
