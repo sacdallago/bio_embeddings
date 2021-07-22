@@ -362,6 +362,15 @@
 <span class="sd">        :return: the embedding as a numpy array</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_embeddings_file</span><span class="p">[</span><span class="n">new_id</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="read_mapping_file"><a class="viewcode-back" href="../../../api/bio_embeddings.utilities.html#bio_embeddings.utilities.read_mapping_file">[docs]</a><span class="k">def</span> <span class="nf">read_mapping_file</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">"""Reads mapping_file.csv and ensures consistent types"""</span>
+    <span class="c1"># We want to read the unnamed column 0 as str (esp. with simple_remapping), which requires some workarounds</span>
+    <span class="c1"># https://stackoverflow.com/a/29793294/3549270</span>
+    <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mapping_file</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">mapping_file</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"str"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping_file</span></div>
 </pre></div>
       </article>
       <footer>
