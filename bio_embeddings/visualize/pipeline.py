@@ -144,10 +144,13 @@ def run(**kwargs):
 
     For plotly:
         projected_reduced_embeddings_file: The projected (dimensionality reduced) embeddings, normally coming from the project stage
+        annotation_file: csv file with annotations
+        display_unknown: Hide proteins for which there is no annotation in the annotation file (only relevant if annotation file is provided)
+        merge_via_index: Set to True if in annotation_file identifiers correspond to sequence MD5 hashes
+        n_components: 2D vs 3D plot
 
     For plot_mutagenesis:
         residue_probabilities_file: The csv with the probabilities, normally coming from the mutagenesis stage
-        *temperature: The temperature for the softmax function
 
     Returns
     -------

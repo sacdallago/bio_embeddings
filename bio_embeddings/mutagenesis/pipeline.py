@@ -57,9 +57,10 @@ def probabilities_as_dataframe(
 def run(**kwargs):
     """BETA: in-silico mutagenesis using BertForMaskedLM
 
-    optional:
+    optional (see extract stage for details):
      * model_directory
      * device
+     * half_precision
      * half_precision_model
      * temperature: temperature for softmax
     """

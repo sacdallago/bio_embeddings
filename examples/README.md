@@ -28,6 +28,7 @@ For each of the following examples, `cd` in the directory (e.g. `cd use_case_one
 |[deepblast](#deepblast)|Use [DeepBLAST](https://github.com/flatironinstitute/deepblast) to align sequences|
 |[tucker](#tucker)|Shows how tucker embeddings better separates sequences by CATH class when compared to plain Bert embeddings|
 |[light attention](#light-attention)|Embedding generation & Prediction of subcellular localization|
+|[mutagenesis](#mutagenesis)|Prediction of mutation effects|
 ---
 
 ### A simple way to visualize embeddings, `use_case_one`
@@ -181,3 +182,18 @@ A small example extracting the first LSTM layer and mean pooling that (in the ca
 ### Light Attention
 
 Using a light attention mechanism to aggregate residue embeddings for protein sequences we trained supervised models to predict subcellular localization.
+
+**Noteworthy files produced**:
+ - `la_prott5` creates `per_sequence_predictions_file.csv`
+
+---
+
+### Mutagenesis
+
+In-silico mutagenesis using ProtTrans-Bert-BFD. This computes the likelihood that, according to Bert, a residue in a protein can be a certain amino acid. This can be used as an estimate for the effect of a mutation.
+
+**Noteworthy files produced**:
+ - The `protbert_bfd_mutagenesis` protocol writes `residue_probabilities_file.csv` with probabilities for all sequences
+ - `plot_mutagenesis` creates a separate interactive plot for each sequence as html file
+
+**Note**: Mutagenesis is much slower than embedding, so only use it with few sequences. Internally, we have to rerun the entire model for each residue we want to predict, so we do the computation for each residue instead of once per protein.

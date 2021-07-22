@@ -1,5 +1,5 @@
 global:
-  sequences_file: very_smol.fasta
+  sequences_file: sequences.fasta
   prefix: mutagenesis
 mutagenesis:
   type: mutagenesis
