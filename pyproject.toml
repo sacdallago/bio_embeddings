@@ -41,12 +41,12 @@ bio-embeddings-deepblast = { version = "0.1.0", optional = true }
 
 numpy = "^1.18.3"
 gensim = "^3.8.2"
-biopython = "^1.76"
-"ruamel.yaml" = "^0.16.10"
+biopython = "^1.79"
+"ruamel.yaml" = "^0.17.10"
 pandas = "^1.2.0"
 h5py = "^3.2.1"
 transformers = { version = "^4.5.0", optional = true }
-plotly = "^4.6.0"
+plotly = "^5.1.0"
 umap-learn = "^0.5.1"
 matplotlib = "^3.2.1"
 scikit-learn = "^0.24.0"
@@ -62,14 +62,14 @@ jax-unirep = { version = "^1.0.0", optional = true }
 # We then go even lower due to https://github.com/google/jax/issues/5374
 jaxlib = { version = "0.1.57", optional = true }
 appdirs = "^1.4.4"
-importlib_metadata = "^1.7.0"
+importlib_metadata = "^4.6.1"
 pymongo = { "version" = "^3.11.2", optional = true }
 sentry-sdk = { "version" = "^1.0.0", extras = ["flask"], optional = true }
-python-slugify = "^4.0.1"
+python-slugify = "^5.0.2"
 fsspec = { version = "0.8.5", optional = true }
 humanize = "^3.2.0"
 fair-esm = { version = "0.3.1", optional = true }
-flask = { version = "^1.0.0", optional = true }
+flask = { version = "^2.0.0", optional = true }
 atomicwrites = "^1.4.0"
 
 [tool.poetry.extras]
@@ -92,17 +92,17 @@ check-manifest = "^0.41"
 wheel = "^0.34.2"
 jupyter = "^1.0.0"
 tox = "^3.16.1"
-black = "^20.8b1"
+black = "21.7b0"
 toml = "^0.10.1"
 furo = "^2021.2.28b28"
-Sphinx = "^3.2.1"
+Sphinx = "^3.2.1" # Sphinx 4 is blocked on https://github.com/executablebooks/MyST-NB/issues/338
 myst-parser = "^0.13.5"
-sphinx-copybutton = "^0.3.1"
 myst-nb = "^0.12.0"
+sphinx-copybutton = "^0.4.0"
 mongomock = "^3.22.0"
 pytest-flask = "^1.1.0"
 pytest-celery = "^0.0.0-alpha.1"
-flask-restx = "^0.2.0"
+flask-restx = "^0.5.0"
 packaging = "^20.8"
 hypothesis = "^6.3.4"
 hypothesis-bio = { git = "https://github.com/IQTLabs/hypothesis-bio", rev = "393f080772ae7aa7ca0358ce1a6753c0b69546e2" }
