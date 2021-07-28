@@ -1,0 +1,387 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Colab initialization\n",
+    "- install the pipeline in the colab runtime\n",
+    "- download files neccessary for this example"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": true,
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "!pip3 install -U pip > /dev/null\n",
+    "!pip3 install -U bio_embeddings[all] > /dev/null"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": true,
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "!wget http://data.bioembeddings.com/public/embeddings/reference/deeploc/reduced_embeddings_file.h5 --output-document reduced_embeddings_file.h5\n",
+    "!wget http://data.bioembeddings.com/public/embeddings/reference/deeploc/annotations.csv --output-document annotations.csv"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "pycharm": {
+     "name": "#%% md\n"
+    }
+   },
+   "source": [
+    "# Train a simple Neural Network to predict subcellular localization\n",
+    "In this notebook we use the embeddings and annotations of the DeepLoc dataset to train a supervised classifier to predict subcellular localization based on embedding.\n",
+    "\n",
+    "You can obtain these embeddings yourself by running the [`deeploc` example](../examples/deeploc).\n",
+    "\n",
+    "We use popular libraries: [sci-kit learn](https://scikit-learn.org/stable/index.html) for the machine learning part, [pandas](https://pandas.pydata.org/) for data reading and management, and [Plotly](plotly.com) for visualizations.\n",
+    "\n",
+    "What you will need to perform something similar on your custom dataset are:\n",
+    "  - embeddings for your dataset (using the embedder of your choice)\n",
+    "  - an annotation file with labels you would like to predict\n",
+    " \n",
+    "### WARNING\n",
+    "\n",
+    "This is a simplified notebook with pre-processed data. When training on protein data, you need special attention to what you are doing, e.g. redunancy reduce training and testing sets. Additionally, it's good practice to have three sets: training, testing and validation. In this case we only use two (training and testing). In general: you should use training and validation for parameter optimization (e.g. selecting how many layers produce the best prediction) and then test your final model on the test set. For best practices in machine learning with protein sequences check out [Bioinformatics](https://www.wiley.com/en-us/Bioinformatics%2C+4th+Edition-p-9781119335955) and the chapter `Predictive methods using protein sequences`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": true,
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 4\n",
+    "\n",
+    "import h5py\n",
+    "import numpy as np\n",
+    "\n",
+    "# Data utilities\n",
+    "from pandas import read_csv\n",
+    "from bio_embeddings.utilities import QueryEmbeddingsFile\n",
+    "\n",
+    "# Machine learning\n",
+    "from sklearn.neural_network import MLPClassifier\n",
+    "from sklearn.model_selection import GridSearchCV\n",
+    "from sklearn.metrics import accuracy_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": true,
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 5\n",
+    "annotations = read_csv('annotations.csv')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "If we print the first few lines in our annotations CSV file we notice a \"set\" column. This column tells us whether that sample should be used for testing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "annotations[:3]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We devide our data based on samples labeled as for testing and for training (aka: not for testing)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 6\n",
+    "train_set = annotations[annotations.set == \"train\"]\n",
+    "test_set = annotations[annotations.set == \"test\"]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(f\"The train set contains {len(train_set)} samples, and we will test on {len(test_set)} samples.\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We create two sets:\n",
+    "  - one for training (containing training identifiers, embeddings and labels)\n",
+    "  - one for testing (containing testing identifiers, embeddings and labels)\n",
+    "\n",
+    "Embeddings are the \"features\" of our samples, so if you are used to thinking about X and y embeddings are our X, and labels are our y."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "is_executing": true,
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 7\n",
+    "\n",
+    "training_embeddings = list()\n",
+    "training_identifiers = train_set.identifier.values\n",
+    "training_labels = train_set.label.values\n",
+    "\n",
+    "testing_embeddings = list()\n",
+    "testing_identifiers = test_set.identifier.values\n",
+    "testing_labels = test_set.label.values\n",
+    "\n",
+    "with h5py.File('reduced_embeddings_file.h5', 'r') as embeddings_file:\n",
+    "    embedding_querier = QueryEmbeddingsFile(embeddings_file)\n",
+    "    \n",
+    "    for identifier in training_identifiers:\n",
+    "        training_embeddings.append(embedding_querier.query_original_id(identifier))\n",
+    "    \n",
+    "    for identifier in testing_identifiers:\n",
+    "        testing_embeddings.append(embedding_querier.query_original_id(identifier))\n",
+    "        \n",
+    "# A sanity check: make sure that the numbers are equal!\n",
+    "assert(len(training_identifiers) == len(training_embeddings))\n",
+    "assert(len(testing_identifiers) == len(testing_embeddings))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In the following we define the basic neural network architecture (`multilayerperceptron`) and a set of parameters that we want to test during parameter optimization. The basic architecture uses the \"Limited-memory Broyden–Fletcher–Goldfarb–Shanno Algorithm\" solver and a maximum of 1000 training iterations.\n",
+    "\n",
+    "The parameter which we want to optimize is the amount of hidden layers, as well as its size. In one case, we will try a network with one hidden layer containing 30 nodes. In another case, we will test a network with two hidden layers and 10 nodes.\n",
+    "\n",
+    "You can find more information about the MLPClassifier here: https://scikit-learn.org/stable/modules/neural_networks_supervised.html"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 8\n",
+    "\n",
+    "multilayerperceptron = MLPClassifier(solver='lbfgs', random_state=10, max_iter=1000)\n",
+    "\n",
+    "parameters = {\n",
+    "    'hidden_layer_sizes': [(30,), (10,2)]\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Warning: this steps takes some time! We are now going to train several neural networks using cross validation!\n",
+    "\n",
+    "We now use the training_* data to train 6 Multi-Layer Perceptrons. Three neural networks will be trained using a neural network architecture with one hidden layer with 30 nodes, while the other three will be trained on a neural network architecture with two hidden layers each with 10 nodes. Each of the three networks will be trained on different validation splits. The various neural networks will be scored according to accuracy."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 9\n",
+    "\n",
+    "classifiers = GridSearchCV(multilayerperceptron, parameters, cv=3, scoring=\"accuracy\")\n",
+    "classifiers.fit(training_embeddings, training_labels)\n",
+    "classifier = classifiers.best_estimator_"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can now use the classifier to predict labels based on embeddings. For evaluation purposes, we predict the labels of our testing set.\n",
+    "\n",
+    "Finally, we evaluate the accuracy of our predictions using \"accuracy\" from sci-kit learn.\n",
+    "\n",
+    "Read more about accuracy: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 10\n",
+    "\n",
+    "predicted_testing_labels = classifier.predict(testing_embeddings)\n",
+    "accuracy = accuracy_score(testing_labels, predicted_testing_labels)\n",
+    "\n",
+    "print(f\"Our model has an accuracy of {accuracy:.2}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Predict subcellular localization of arbitrary sequence\n",
+    "What if we want to predict the subcellular localization of an arbitrary sequence using our newly built classifier?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 3 — Step 11\n",
+    "\n",
+    "from bio_embeddings.embed import ProtTransBertBFDEmbedder\n",
+    "\n",
+    "embedder = ProtTransBertBFDEmbedder()\n",
+    "\n",
+    "# Sequence from: https://www.uniprot.org/uniprot/P58426\n",
+    "sequence = \"DDCGKLFSGCDTNADCCEGYVCRLWCKLDW\"\n",
+    "per_reisdue_embedding = embedder.embed(sequence)\n",
+    "per_protein_embedding = embedder.reduce_per_protein(per_reisdue_embedding)\n",
+    "sequence_subcellular_prediction = classifier.predict([per_protein_embedding])[0]\n",
+    "\n",
+    "print(\"The arbitrary sequence is predicted to be located in: \"\n",
+    "      f\"{sequence_subcellular_prediction}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Going one step back, we can inspect how well our 6 models performed (on their respective validation sets)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pandas import DataFrame\n",
+    "cv_results = DataFrame(classifiers.cv_results_)\n",
+    "\n",
+    "cv_results[['param_hidden_layer_sizes','split0_test_score', 'split1_test_score', 'split2_test_score']]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Another interesting evaluation when dealing with locaization prediction is the visualization of the \"confusion matrix\". What this matrix tells us is how many samples have been predicted of a certain class when in reality they were of another class. Ideally, the diagonal of this matrix should be"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Further metrics\n",
+    "from sklearn.metrics import confusion_matrix\n",
+    "\n",
+    "# Data visualization\n",
+    "import plotly.express as px"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "classes = np.unique(testing_labels)\n",
+    "\n",
+    "confusion_matrix_data = confusion_matrix(testing_labels, predicted_testing_labels, labels=classes)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "confusion_matrix_figure = px.imshow(\n",
+    "    confusion_matrix_data,\n",
+    "    labels=dict(x=\"True label\", y=\"Predicted label\", color=\"# of samples\"),\n",
+    "    x=classes,\n",
+    "    y=classes,\n",
+    "    color_continuous_scale='Gray_r'\n",
+    ")\n",
+    "confusion_matrix_figure.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
