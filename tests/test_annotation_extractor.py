@@ -31,5 +31,6 @@ def test_basic_annotation_extractor(
     # Check that results look reasonable
     assert len(annotations.DSSP3) == len(sequence)
     assert len(annotations.DSSP8) == len(sequence)
+    assert len(annotations.disorder) == len(sequence)
     assert isinstance(annotations.localization, Location)
     assert isinstance(annotations.membrane, Membrane)
