@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+ * Added the `esm1v` embedder from [Meier et al. 2021](https://www.biorxiv.org/content/10.1101/2021.07.09.450648v1), which is part of facebook's [esm](https://github.com/facebookresearch/esm). Note that this is an ensemble model, so you need to pass `ensemble_id` with a value from 1 to 5 to select which weights to use.
+
 ## v0.2.1
 
  * BETA: in-silico mutagenesis using ProtTransBertBFD. This computes the likelihood that, according to Bert, a residue in a protein can be a certain amino acid, which can be used as an estimate for the effect of a mutation. This adds two a new `mutagenesis` and a new protocol `plot_mutagenesis` in the `visualize` stages, of which the first one computes the probabilities and writes them to a csv file while the latter visualizes the results as interactive plotly figure.

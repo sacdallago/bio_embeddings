@@ -14,6 +14,8 @@ from bio_embeddings.utilities import get_model_file
 def get_model(name: str, device: Union[None, str, torch.device]) -> Any:
     if name in ["bert_from_publication", "seqvec_from_publication"]:
         return BasicAnnotationExtractor(name, device)
+    elif name == "esm1v":
+        return name_to_embedder[name](ensemble_id=1, device=device)
     elif name in name_to_embedder:
         return name_to_embedder[name](device=device)
     elif name == "pb_tucker":
