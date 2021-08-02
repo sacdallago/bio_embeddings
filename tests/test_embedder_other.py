@@ -15,9 +15,11 @@ from bio_embeddings.embed import (
     ProtTransBertBFDEmbedder,
     ProtTransXLNetUniRef100Embedder,
     SeqVecEmbedder,
+    name_to_embedder,
 )
 from bio_embeddings.embed.pipeline import embed_and_write_batched
 from bio_embeddings.utilities import FileSystemFileManager
+from bio_embeddings.utilities.config import read_config_file
 
 
 @pytest.mark.parametrize(
@@ -134,3 +136,34 @@ def test_esm_max_len():
         list(embedder.embed_batch(["SEQWENCE", "M" * 2021, "PROTEIN"]))
     with pytest.raises(ValueError, match=message):
         list(embedder.embed_many(["SEQWENCE", "M" * 2021, "PROTEIN"], batch_size=5000))
+
+
+def test_model_sizes_for_all_embedder(pytestconfig):
+    """Make sure we have the model sizes documented for each model
+
+    If this test is failing, run the following and enter the results in bio_embeddings/embed/__init__.py:
+
+    ```
+    python -m bio_embeddings.utilities.model_size_main cpu
+    python -m bio_embeddings.utilities.model_size_main gpu
+    ```
+    """
+    models = read_config_file(
+        pytestconfig.rootpath.joinpath("bio_embeddings/utilities/defaults.yml")
+    )
+    set(models.keys())
+    doc_text: str = pytestconfig.rootpath.joinpath(
+        "bio_embeddings/embed/__init__.py"
+    ).read_text()
+    # Quick and stupid rst parsing
+    documented_embedder = set()
+    for line in doc_text.split("=" * 46)[2].splitlines()[1:]:
+        documented_embedder.add(line.split(" ")[0])
+    assert name_to_embedder.keys() - set(documented_embedder) == set()
+    # Handle the non-embedder models
+    assert set(documented_embedder) - name_to_embedder.keys() == {
+        "bert_from_publication",
+        "deepblast",
+        "pb_tucker",
+        "seqvec_from_publication",
+    }
