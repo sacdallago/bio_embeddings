@@ -1,10 +1,25 @@
-from typing import List, Generator, Union, Iterable, Optional
+import warnings
+from typing import List, Generator, Union, Iterable, Optional, Any, Tuple
 
 import torch
-from esm.pretrained import load_model_and_alphabet_local
+from esm.pretrained import load_model_and_alphabet_core
 from numpy import ndarray
 
 from bio_embeddings.embed import EmbedderInterface
+from bio_embeddings.utilities import get_model_file
+
+
+def load_model_and_alphabet_local(model_location: str) -> Tuple[Any, Any]:
+    """Custom bio_embeddings versions because we change names and don't have regression weights"""
+    # We don't predict contacts
+    warnings.filterwarnings(
+        "ignore",
+        category=UserWarning,
+        message="Regression weights not found, predicting contacts will not produce correct results.",
+    )
+
+    model_data = torch.load(model_location, map_location="cpu")
+    return load_model_and_alphabet_core(model_data, None)
 
 
 class ESMEmbedderBase(EmbedderInterface):
@@ -49,8 +64,13 @@ class ESMEmbedderBase(EmbedderInterface):
     def embed_many(
         self, sequences: Iterable[str], batch_size: Optional[int] = None
     ) -> Generator[ndarray, None, None]:
+        # We need to check for empty sequences and sequences, so a single iteration doesn't work
+        sequences = list(sequences)
+        # ESM1v doesn't like empty batches
+        if not sequences:
+            return
         self._assert_max_len(sequences)
-        return super().embed_many(sequences, batch_size)
+        yield from super().embed_many(sequences, batch_size)
 
     def _assert_max_len(self, sequences: Iterable[str]):
         max_len = max(len(i) for i in sequences)
@@ -68,11 +88,9 @@ class ESMEmbedderBase(EmbedderInterface):
 class ESMEmbedder(ESMEmbedderBase):
     """ESM Embedder (Note: This is not ESM-1b)
 
-    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences
-
-    Rives, Alexander, et al. "Biological structure and function emerge from
-    scaling unsupervised learning to 250 million protein sequences."
-    bioRxiv (2019): 622803. https://doi.org/10.1101/622803
+    Rives, Alexander, et al. "Biological structure and function emerge from scaling unsupervised learning to 250 million
+    protein sequences." Proceedings of the National Academy of Sciences 118.15 (2021).
+    https://doi.org/10.1073/pnas.2016239118
     """
 
     name = "esm"
@@ -82,12 +100,41 @@ class ESMEmbedder(ESMEmbedderBase):
 class ESM1bEmbedder(ESMEmbedderBase):
     """ESM-1b Embedder (Note: This is not the original ESM)
 
-    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences
-
-    Rives, Alexander, et al. "Biological structure and function emerge from
-    scaling unsupervised learning to 250 million protein sequences."
-    bioRxiv (2019): 622803. https://doi.org/10.1101/622803
+    Rives, Alexander, et al. "Biological structure and function emerge from scaling unsupervised learning to 250 million
+    protein sequences." Proceedings of the National Academy of Sciences 118.15 (2021).
+    https://doi.org/10.1073/pnas.2016239118
     """
 
     name = "esm1b"
     _picked_layer = 33
+
+
+class ESM1vEmbedder(ESMEmbedderBase):
+    """ESM-1v Embedder (one of five)
+
+    ESM1v uses an ensemble of five models, called `esm1v_t33_650M_UR90S_[1-5]`. An instance of this class is one
+    of the five, specified by `ensemble_id`.
+
+    Meier, Joshua, et al. "Language models enable zero-shot prediction of the effects of mutations on protein function."
+    bioRxiv (2021). https://doi.org/10.1101/2021.07.09.450648
+    """
+
+    name = "esm1v"
+    ensemble_id: int
+    _picked_layer = 33
+
+    def __init__(
+        self, ensemble_id: int, device: Union[None, str, torch.device] = None, **kwargs
+    ):
+        """You must pass the number of the model (1-5) as first parameter, though you can override the weights file with
+        model_file"""
+        assert ensemble_id in range(1, 6), "The model number must be in 1-5"
+        self.ensemble_id = ensemble_id
+
+        # EmbedderInterface assumes static model files, but we need to dynamically select one of the five
+        if "model_file" not in kwargs:
+            kwargs["model_file"] = get_model_file(
+                model=self.name, file=f"model_file_{ensemble_id}"
+            )
+
+        super().__init__(device, **kwargs)

@@ -27,7 +27,7 @@ stage_1:
   type: embed
   # Required: which embedder to use
   # Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_t5_uniref50,
-  # prottrans_t5_xl_u50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, plus_rnn, unirep, bepler
+  # prottrans_t5_xl_u50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, esm1v, plus_rnn, unirep, bepler
   protocol: seqvec
 
   # Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.
@@ -52,6 +52,9 @@ stage_1:
   #   - "lambda x: x[0].mean(0)" --> for SeqVec, this will return the mean pooled embedding of the first layer
   #   - "lambda x: x.max(0)" --> for ProtTrans-BERT-BFD, this will return the max pooled embedding, instead of mean pooled
   # embeddings_transformer_function:
+
+  ## Mandatory for esm1v: This defines which of the five models of the ensemble will be used
+  # ensemble_id: [1,2,3,4,5]
 
   #### Optional parameters to instantiate classes
 

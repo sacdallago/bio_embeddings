@@ -256,6 +256,7 @@ ALL_PROTOCOLS = [
     "cpcprot",
     "esm",
     "esm1b",
+    "esm1v",
     "fasttext",
     "glove",
     "one_hot_encoding",
@@ -278,6 +279,7 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "cpcprot": 10000,
     "esm": 10000,
     "esm1b": 10000,
+    "esm1v": 10000,
     "plus_rnn": 10000,
     "prottrans_albert_bfd": 3035,
     "prottrans_bert_bfd": 6024,
@@ -320,12 +322,17 @@ def prepare_kwargs(**kwargs):
 
     if kwargs["protocol"] == "unirep" and kwargs.get("use_cpu") is not None:
         raise InvalidParameterError("UniRep does not support configuring `use_cpu`")
+    if kwargs["protocol"] == "esm1v" and not kwargs.get("ensemble_id"):
+        raise InvalidParameterError(
+            "You must set `ensemble_id` to select which of the five models you want to use [1-5]"
+        )
     # See parameter_blueprints.yml
     global_options = {"sequences_file", "simple_remapping", "start_time"}
     embed_options = {
         "decoder",
         "device",
         "discard_per_amino_acid_embeddings",
+        "ensemble_id",
         "half_precision_model",
         "half_precision",
         "max_amino_acids",
@@ -388,19 +395,6 @@ def run(**kwargs):
     Dictionary with results of stage
     """
     embedder_class, result_kwargs = prepare_kwargs(**kwargs)
-
-    # Download necessary files if needed
-    # noinspection PyProtectedMember
-    for file in embedder_class.necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=embedder_class.name, file=file)
-
-    # noinspection PyProtectedMember
-    for directory in embedder_class.necessary_directories:
-        if not result_kwargs.get(directory):
-            result_kwargs[directory] = get_model_directories_from_zip(
-                model=embedder_class.name, directory=directory
-            )
 
     file_manager = get_file_manager(**kwargs)
     embedder: EmbedderInterface = embedder_class(**result_kwargs)
