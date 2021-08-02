@@ -42,6 +42,7 @@ cpcprot                                         0.007           1.1             
 deepblast                                       0.4             1.4             0.26
 esm                                             6.3             3.9             2.7
 esm1b                                           7.3             3.8             2.6
+esm1v                                           7.3             3.9             2.6
 fasttext                                        0.05            n/a             0.03
 glove                                           0.06            n/a             0.03
 one_hot_encoding                                n/a             n/a             n/a

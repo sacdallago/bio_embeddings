@@ -2,6 +2,8 @@
 
 python -m bio_embeddings.utilities.model_size_main cpu
 python -m bio_embeddings.utilities.model_size_main gpu
+
+Use this script to update the table in bio_embeddings/embed/__init__.py
 """
 
 from argparse import ArgumentParser
@@ -18,6 +20,7 @@ from bio_embeddings.utilities.model_size_impl import get_gpu_size, get_cpu_size
 def main():
     parser = ArgumentParser()
     parser.add_argument("device", choices=["cpu", "gpu"])
+    parser.add_argument("--model", help="Only run this model")
     args = parser.parse_args()
     device = args.device
 
@@ -36,6 +39,8 @@ def main():
     ]
     all_models = list(name_to_embedder) + other_models
     for name in tqdm(list(sorted(all_models))):
+        if args.model and name != args.model:
+            continue
         if name in ["unirep", "glove", "fasttext", "word2vec"] and device == "gpu":
             continue
         with ProcessPoolExecutor() as isolation:
