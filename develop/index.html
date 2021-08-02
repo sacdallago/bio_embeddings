@@ -2,13 +2,13 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Pipeline Reference" href="parameter_blueprints.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Pipeline Reference" href="parameter_blueprints.html" />
 
-    <meta name="generator" content="sphinx-3.5.3, furo 2021.06.18.beta36"/>
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
         <title>Home - bio_embeddings</title>
-      <link rel="stylesheet" href="_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
     
 
 
@@ -40,8 +40,7 @@
 </style><link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
-    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+    <link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -138,7 +137,7 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <section id="bio-embeddings">
+        <div class="section" id="bio-embeddings">
 <h1>Bio Embeddings<a class="headerlink" href="#bio-embeddings" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
@@ -176,10 +175,10 @@
 </li>
 <li><p>A webserver that wraps the pipeline into a distributed API for scalable and consistent workfolws</p></li>
 </ul>
-<section id="installation">
+<div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>You can install <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> via pip or use it via docker.</p>
-<section id="pip">
+<div class="section" id="pip">
 <h3>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
 <p>Install the pipeline like so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install bio-embeddings<span class="o">[</span>all<span class="o">]</span>
@@ -189,8 +188,8 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span>
 </pre></div>
 </div>
-</section>
-<section id="docker">
+</div>
+<div class="section" id="docker">
 <h3>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
 <p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings</span></code>. Simple usage example:</p>
 <div class="highlight-shell_script notranslate"><div class="highlight"><pre><span></span>docker run --rm --gpus all \
@@ -201,18 +200,18 @@
 </pre></div>
 </div>
 <p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. You can also use <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings:latest</span></code> which is built from the latest commit.</p>
-</section>
-<section id="installation-notes">
+</div>
+<div class="section" id="installation-notes">
 <h3>Installation notes<a class="headerlink" href="#installation-notes" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> was developed for unix machines with GPU capabilities and <a class="reference external" href="https://developer.nvidia.com/cuda-zone">CUDA</a> installed. If your setup diverges from this, you may encounter some inconsistencies (e.g. speed is significantly affected by the absence of a GPU and CUDA). For Windows users, we strongly recommend the use of <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>.</p>
-</section>
-</section>
-<section id="what-model-is-right-for-you">
+</div>
+</div>
+<div class="section" id="what-model-is-right-for-you">
 <h2>What model is right for you?<a class="headerlink" href="#what-model-is-right-for-you" title="Permalink to this headline">¶</a></h2>
 <p>Each models has its strengths and weaknesses (speed, specificity, memory footprint…). There isn’t a “one-fits-all” and we encourage you to at least try two different models when attempting a new exploratory project.</p>
 <p>The models <code class="docutils literal notranslate"><span class="pre">prottrans_bert_bfd</span></code>, <code class="docutils literal notranslate"><span class="pre">prottrans_albert_bfd</span></code>, <code class="docutils literal notranslate"><span class="pre">seqvec</span></code> and <code class="docutils literal notranslate"><span class="pre">prottrans_xlnet_uniref100</span></code> were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be <code class="docutils literal notranslate"><span class="pre">prottrans_bert_bfd</span></code>, followed by <code class="docutils literal notranslate"><span class="pre">seqvec</span></code>, which has been established for longer and uses a different principle (LSTM vs Transformer).</p>
-</section>
-<section id="usage-and-examples">
+</div>
+<div class="section" id="usage-and-examples">
 <h2>Usage and examples<a class="headerlink" href="#usage-and-examples" title="Permalink to this headline">¶</a></h2>
 <p>We highly recommend you to check out the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for pipeline examples, and the <a class="reference internal" href="notebooks.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">notebooks</span></code></span></a> folder for post-processing pipeline runs and general purpose use of the embedders.</p>
 <p>After having installed the package, you can:</p>
@@ -234,8 +233,8 @@
 <p>More examples can be found in the <a class="reference internal" href="notebooks.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">notebooks</span></code></span></a> folder of this repository.</p>
 </li>
 </ol>
-</section>
-<section id="cite">
+</div>
+<div class="section" id="cite">
 <h2>Cite<a class="headerlink" href="#cite" title="Permalink to this headline">¶</a></h2>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> for your research, we would appreciate it if you could cite the following paper:</p>
 <blockquote>
@@ -260,8 +259,8 @@ Additionally, we invite you to cite the work from others that was collected in `
 
 </pre></div>
 </div>
-</section>
-<section id="contributors">
+</div>
+<div class="section" id="contributors">
 <h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Christian Dallago (lead)</p></li>
@@ -269,8 +268,8 @@ Additionally, we invite you to cite the work from others that was collected in `
 <li><p>Tobias Olenyi</p></li>
 <li><p>Michael Heinzinger</p></li>
 </ul>
-</section>
-<section id="non-exhaustive-list-of-tools-available-see-following-section-for-more-details">
+</div>
+<div class="section" id="non-exhaustive-list-of-tools-available-see-following-section-for-more-details">
 <h2>Non-exhaustive list of tools available (see following section for more details):<a class="headerlink" href="#non-exhaustive-list-of-tools-available-see-following-section-for-more-details" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fastext</p></li>
@@ -294,15 +293,15 @@ Additionally, we invite you to cite the work from others that was collected in `
 <li><p>GoPredSim (https://www.nature.com/articles/s41598-020-80786-0)</p></li>
 <li><p>DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)</p></li>
 </ul>
-</section>
-<section id="datasets">
+</div>
+<div class="section" id="datasets">
 <h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">prottrans_t5_xl_u50</span></code> residue and sequence embeddings of the Human proteome at full precision + secondary structure predictions + sub-cellular localisation predictions: <a class="reference external" href="https://doi.org/10.5281/zenodo.5047020"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5047020.svg"/></a></p></li>
 </ul>
-</section>
+</div>
 <hr class="docutils"/>
-<section id="tools-by-category">
+<div class="section" id="tools-by-category">
 <h2>Tools by category<a class="headerlink" href="#tools-by-category" title="Permalink to this headline">¶</a></h2>
 <details>
 <summary>Pipeline</summary>
@@ -375,8 +374,8 @@ Additionally, we invite you to cite the work from others that was collected in `
 <li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
 </ul>
 </details>
-</section>
-</section>
+</div>
+</div>
 
       </article>
       <footer>

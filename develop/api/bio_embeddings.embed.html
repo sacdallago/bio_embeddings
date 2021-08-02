@@ -2,13 +2,13 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.extract" href="bio_embeddings.extract.html" /><link rel="prev" title="Python API" href="index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="bio_embeddings.extract" href="bio_embeddings.extract.html" /><link rel="prev" title="Python API" href="index.html" />
 
-    <meta name="generator" content="sphinx-3.5.3, furo 2021.06.18.beta36"/>
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
         <title>bio_embeddings.embed - bio_embeddings</title>
-      <link rel="stylesheet" href="../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
     
 
 
@@ -40,8 +40,7 @@
 </style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
-    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -138,7 +137,7 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <section id="module-bio_embeddings.embed">
+        <div class="section" id="module-bio_embeddings.embed">
 <span id="bio-embeddings-embed"></span><h1>bio_embeddings.embed<a class="headerlink" href="#module-bio_embeddings.embed" title="Permalink to this headline">¶</a></h1>
 <p>Language models to translate amino acid sequences into vector representations</p>
 <p>All language models implement the <a class="reference internal" href="#bio_embeddings.embed.EmbedderInterface" title="bio_embeddings.embed.EmbedderInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">EmbedderInterface</span></code></a>. You can embed a single
@@ -164,7 +163,7 @@ some embedders by selecting specific extras:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">cpcprot</span></code>: cpcprot</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plus</span></code>: plus_rnn</p></li>
 </ul>
-<section id="model-sizes">
+<div class="section" id="model-sizes">
 <h2>Model sizes<a class="headerlink" href="#model-sizes" title="Permalink to this headline">¶</a></h2>
 <p>The disk size represents the size of the unzipped models or the combination of all files necessary for a particular
 embeddder. The GPU and CPU sizes are only for loading the model into GPU memory (VRAM) or the main RAM without the
@@ -410,23 +409,44 @@ representations by mutual information maximization.” bioRxiv (2020).
 <dt id="bio_embeddings.embed.ESM1bEmbedder">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">ESM1bEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESM1bEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ESM1bEmbedder" title="Permalink to this definition">¶</a></dt>
 <dd><p>ESM-1b Embedder (Note: This is not the original ESM)</p>
-<p>Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</p>
-<p>Rives, Alexander, et al. “Biological structure and function emerge from
-scaling unsupervised learning to 250 million protein sequences.”
-bioRxiv (2019): 622803. <a class="reference external" href="https://doi.org/10.1101/622803">https://doi.org/10.1101/622803</a></p>
+<p>Rives, Alexander, et al. “Biological structure and function emerge from scaling unsupervised learning to 250 million
+protein sequences.” Proceedings of the National Academy of Sciences 118.15 (2021).
+<a class="reference external" href="https://doi.org/10.1073/pnas.2016239118">https://doi.org/10.1073/pnas.2016239118</a></p>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ESM1bEmbedder.name">
 <code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'esm1b'</span></em><a class="headerlink" href="#bio_embeddings.embed.ESM1bEmbedder.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 </dd></dl>
 <dl class="py class">
+<dt id="bio_embeddings.embed.ESM1vEmbedder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">ESM1vEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ensemble_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESM1vEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ESM1vEmbedder" title="Permalink to this definition">¶</a></dt>
+<dd><p>ESM-1v Embedder (one of five)</p>
+<p>ESM1v uses an ensemble of five models, called <cite>esm1v_t33_650M_UR90S_[1-5]</cite>. An instance of this class is one
+of the five, specified by <cite>ensemble_id</cite>.</p>
+<p>Meier, Joshua, et al. “Language models enable zero-shot prediction of the effects of mutations on protein function.”
+bioRxiv (2021). <a class="reference external" href="https://doi.org/10.1101/2021.07.09.450648">https://doi.org/10.1101/2021.07.09.450648</a></p>
+<dl class="py method">
+<dt id="bio_embeddings.embed.ESM1vEmbedder.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ensemble_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESM1vEmbedder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ESM1vEmbedder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>You must pass the number of the model (1-5) as first parameter, though you can override the weights file with
+model_file</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.ESM1vEmbedder.ensemble_id">
+<code class="sig-name descname"><span class="pre">ensemble_id</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></em><a class="headerlink" href="#bio_embeddings.embed.ESM1vEmbedder.ensemble_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="bio_embeddings.embed.ESM1vEmbedder.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'esm1v'</span></em><a class="headerlink" href="#bio_embeddings.embed.ESM1vEmbedder.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
 <dt id="bio_embeddings.embed.ESMEmbedder">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">bio_embeddings.embed.</span></code><code class="sig-name descname"><span class="pre">ESMEmbedder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bio_embeddings/embed/esm_embedder.html#ESMEmbedder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder" title="Permalink to this definition">¶</a></dt>
 <dd><p>ESM Embedder (Note: This is not ESM-1b)</p>
-<p>Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</p>
-<p>Rives, Alexander, et al. “Biological structure and function emerge from
-scaling unsupervised learning to 250 million protein sequences.”
-bioRxiv (2019): 622803. <a class="reference external" href="https://doi.org/10.1101/622803">https://doi.org/10.1101/622803</a></p>
+<p>Rives, Alexander, et al. “Biological structure and function emerge from scaling unsupervised learning to 250 million
+protein sequences.” Proceedings of the National Academy of Sciences 118.15 (2021).
+<a class="reference external" href="https://doi.org/10.1073/pnas.2016239118">https://doi.org/10.1073/pnas.2016239118</a></p>
 <dl class="py attribute">
 <dt id="bio_embeddings.embed.ESMEmbedder.name">
 <code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">'esm'</span></em><a class="headerlink" href="#bio_embeddings.embed.ESMEmbedder.name" title="Permalink to this definition">¶</a></dt>
@@ -1066,8 +1086,8 @@ engineering with sequence-based deep representation learning. Nat Methods
 </dl>
 </dd></dl>
 </dd></dl>
-</section>
-</section>
+</div>
+</div>
 
       </article>
       <footer>

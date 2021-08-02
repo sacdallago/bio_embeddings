@@ -4,10 +4,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <meta name="generator" content="sphinx-3.5.3, furo 2021.06.18.beta36"/>
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
         <title>bio_embeddings.embed.esm_embedder - bio_embeddings</title>
-      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
     <link rel="stylesheet" href="../../../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
     
 
 
@@ -39,8 +40,7 @@
 </style><link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
-    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -138,13 +138,28 @@
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
         <h1>Source code for bio_embeddings.embed.esm_embedder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">esm.pretrained</span> <span class="kn">import</span> <span class="n">load_model_and_alphabet_local</span>
+<span class="kn">from</span> <span class="nn">esm.pretrained</span> <span class="kn">import</span> <span class="n">load_model_and_alphabet_core</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
 
 <span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">EmbedderInterface</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">get_model_file</span>
+
+
+<span class="k">def</span> <span class="nf">load_model_and_alphabet_local</span><span class="p">(</span><span class="n">model_location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">"""Custom bio_embeddings versions because we change names and don't have regression weights"""</span>
+    <span class="c1"># We don't predict contacts</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+        <span class="s2">"ignore"</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+        <span class="n">message</span><span class="o">=</span><span class="s2">"Regression weights not found, predicting contacts will not produce correct results."</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">model_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_location</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">load_model_and_alphabet_core</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ESMEmbedderBase</span><span class="p">(</span><span class="n">EmbedderInterface</span><span class="p">):</span>
@@ -189,8 +204,13 @@
     <span class="k">def</span> <span class="nf">embed_many</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="c1"># We need to check for empty sequences and sequences, so a single iteration doesn't work</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+        <span class="c1"># ESM1v doesn't like empty batches</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sequences</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_max_len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">embed_many</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">embed_many</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_assert_max_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequences</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="n">max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">)</span>
@@ -208,11 +228,9 @@
 <div class="viewcode-block" id="ESMEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESMEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESMEmbedder</span><span class="p">(</span><span class="n">ESMEmbedderBase</span><span class="p">):</span>
     <span class="sd">"""ESM Embedder (Note: This is not ESM-1b)</span>
 
-<span class="sd">    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</span>
-
-<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from</span>
-<span class="sd">    scaling unsupervised learning to 250 million protein sequences."</span>
-<span class="sd">    bioRxiv (2019): 622803. https://doi.org/10.1101/622803</span>
+<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from scaling unsupervised learning to 250 million</span>
+<span class="sd">    protein sequences." Proceedings of the National Academy of Sciences 118.15 (2021).</span>
+<span class="sd">    https://doi.org/10.1073/pnas.2016239118</span>
 <span class="sd">    """</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm"</span>
@@ -222,15 +240,44 @@
 <div class="viewcode-block" id="ESM1bEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESM1bEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESM1bEmbedder</span><span class="p">(</span><span class="n">ESMEmbedderBase</span><span class="p">):</span>
     <span class="sd">"""ESM-1b Embedder (Note: This is not the original ESM)</span>
 
-<span class="sd">    Biological structure and function emerge from scaling unsupervised learning to 250 million protein sequences</span>
-
-<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from</span>
-<span class="sd">    scaling unsupervised learning to 250 million protein sequences."</span>
-<span class="sd">    bioRxiv (2019): 622803. https://doi.org/10.1101/622803</span>
+<span class="sd">    Rives, Alexander, et al. "Biological structure and function emerge from scaling unsupervised learning to 250 million</span>
+<span class="sd">    protein sequences." Proceedings of the National Academy of Sciences 118.15 (2021).</span>
+<span class="sd">    https://doi.org/10.1073/pnas.2016239118</span>
 <span class="sd">    """</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm1b"</span>
     <span class="n">_picked_layer</span> <span class="o">=</span> <span class="mi">33</span></div>
+
+
+<div class="viewcode-block" id="ESM1vEmbedder"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESM1vEmbedder">[docs]</a><span class="k">class</span> <span class="nc">ESM1vEmbedder</span><span class="p">(</span><span class="n">ESMEmbedderBase</span><span class="p">):</span>
+    <span class="sd">"""ESM-1v Embedder (one of five)</span>
+
+<span class="sd">    ESM1v uses an ensemble of five models, called `esm1v_t33_650M_UR90S_[1-5]`. An instance of this class is one</span>
+<span class="sd">    of the five, specified by `ensemble_id`.</span>
+
+<span class="sd">    Meier, Joshua, et al. "Language models enable zero-shot prediction of the effects of mutations on protein function."</span>
+<span class="sd">    bioRxiv (2021). https://doi.org/10.1101/2021.07.09.450648</span>
+<span class="sd">    """</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"esm1v"</span>
+    <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_picked_layer</span> <span class="o">=</span> <span class="mi">33</span>
+
+<div class="viewcode-block" id="ESM1vEmbedder.__init__"><a class="viewcode-back" href="../../../api/bio_embeddings.embed.html#bio_embeddings.embed.ESM1vEmbedder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="sd">"""You must pass the number of the model (1-5) as first parameter, though you can override the weights file with</span>
+<span class="sd">        model_file"""</span>
+        <span class="k">assert</span> <span class="n">ensemble_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="s2">"The model number must be in 1-5"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble_id</span> <span class="o">=</span> <span class="n">ensemble_id</span>
+
+        <span class="c1"># EmbedderInterface assumes static model files, but we need to dynamically select one of the five</span>
+        <span class="k">if</span> <span class="s2">"model_file"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"model_file"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_model_file</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="sa">f</span><span class="s2">"model_file_</span><span class="si">{</span><span class="n">ensemble_id</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
       </article>
       <footer>
