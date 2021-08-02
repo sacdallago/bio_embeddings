@@ -128,7 +128,7 @@ class ESM1vEmbedder(ESMEmbedderBase):
     ):
         """You must pass the number of the model (1-5) as first parameter, though you can override the weights file with
         model_file"""
-        assert ensemble_id in [1, 2, 3, 4, 5], "The model number must be in 1-5"
+        assert ensemble_id in range(1, 6), "The model number must be in 1-5"
         self.ensemble_id = ensemble_id
 
         # EmbedderInterface assumes static model files, but we need to dynamically select one of the five
