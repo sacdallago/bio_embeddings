@@ -80,3 +80,6 @@ deepblast:
 
 pb_tucker:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/pb_tucker/checkpoint.pt"
+
+prott5cons:
+  model_file: "SOME_PATH_TO_YOUR_FTP" # /mnt/home/mheinzinger/deepppi1tb/dms_experiments/consurf_corr/log/prottrans_t5_xl_u50_CNN/checkpoint.pt
