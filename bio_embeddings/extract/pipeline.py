@@ -10,7 +10,7 @@ from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
-from bio_embeddings.extract.conservation.ConservationAnnotationExtractor import ConservationAnnotationExtractor
+from bio_embeddings.extract.protT5cons.ConservationAnnotationExtractor import ProtT5consAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -206,10 +206,7 @@ def la_prott5(**kwargs) -> Dict[str, Any]:
 def la_protbert(**kwargs) -> Dict[str, Any]:
     return light_attention('la_protbert', **kwargs)
 
-def t5_xl_u50_conservation(**kwargs) -> Dict[str, Any]:
-    return predict_conservation("t5_xl_u50_conservation",**kwargs)
-
-def predict_conservation(model, **kwargs) -> Dict[str, Any]:
+def prott5cons(model, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts conservation from "embeddings_file".
     Embeddings can only be generated with ProtT5-XL-U50.
@@ -222,11 +219,11 @@ def predict_conservation(model, **kwargs) -> Dict[str, Any]:
     file_manager = get_file_manager(**kwargs)
 
     # Download necessary files if needed
-    for file in ConservationAnnotationExtractor.necessary_files:
+    for file in ProtT5consAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
             result_kwargs[file] = get_model_file(model=model, file=file)
 
-    annotation_extractor = ConservationAnnotationExtractor(**result_kwargs)
+    annotation_extractor = ProtT5consAnnotationExtractor(**result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_mapping_file(result_kwargs["mapping_file"])
@@ -386,7 +383,7 @@ PROTOCOLS = {
     "t5_xl_u50_from_publication": t5_xl_u50_from_publication,
     "la_prott5": la_prott5,
     "la_protbert": la_protbert,
-    "t5_xl_u50_conservation" : t5_xl_u50_conservation,
+    "prott5cons" : prott5cons,
     "unsupervised": unsupervised
 }
 

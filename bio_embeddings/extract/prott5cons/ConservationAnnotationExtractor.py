@@ -1,4 +1,3 @@
-
 import logging
 import numpy
 
@@ -10,7 +9,7 @@ from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import Conservation
-from bio_embeddings.extract.basic.annotation_inference_models import CONSERVATION_CNN
+from bio_embeddings.extract.prott5cons.annotation_inference_models import PROTT5CONS
 from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
@@ -31,8 +30,8 @@ _conservation_labels = {
 
 BasicConservationResult = collections.namedtuple('BasicConservationResult', 'Conservation')
 
-class ConservationAnnotationExtractor(object):
-    necessary_files = ["conservation_checkpoint_file"]
+class ProtT5consAnnotationExtractor(object):
+    necessary_files = ["protT5cons_checkpoint_file"]
 
     def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
@@ -51,7 +50,7 @@ class ConservationAnnotationExtractor(object):
         # Download the checkpoint files if needed
         for file in self.necessary_files:
             if not self._options.get(file):
-                self._options[file] = get_model_file(model=f"{self._model_type}_annotations_extractors", file=file)
+                self._options[file] = get_model_file(model=f"ProtT5cons", file=file)
 
         self._conservation_checkpoint_file = self._options['conservation_checkpoint_file']
 
@@ -64,6 +63,14 @@ class ConservationAnnotationExtractor(object):
         # ensure that model is in evaluation mode (important for batchnorm and dropout)
         self._conservation_model.eval()
 
+    # This will be useful if we want to stitch together conservation prediction with SAV effect prediction (we'll need raw output)
+    def get_raw_predictions(self, raw_embedding: ndarray) -> ndarray:
+        raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
+        embedding = torch.tensor(raw_embedding).to(self._device)
+        # Pass embeddings to model to produce predictions
+        yhat_conservation = self._conservation_model(embedding)
+        return yhat_conservation
+
     def get_conservation(self, raw_embedding: ndarray) -> BasicConservationResult:
         raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
         embedding = torch.tensor(raw_embedding).to(self._device)
@@ -74,10 +81,6 @@ class ConservationAnnotationExtractor(object):
 
         return BasicConservationResult(Conservation=pred_conservation)
 
-    def get_annotations(self, raw_embedding: ndarray) -> BasicExtractedAnnotations:
-        conservation = self.get_conservation(raw_embedding)
-
-        return BasicExtractedAnnotations(conservation=conservation.Conservation,)
 
     @staticmethod
     def _class2label(label_dict, yhat) -> List[Enum]:
