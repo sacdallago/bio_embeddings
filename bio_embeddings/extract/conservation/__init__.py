@@ -1,0 +1,1 @@
+from bio_embeddings.extract.conservation.ConservationAnnotationExtractor import ConservationAnnotationExtractor
