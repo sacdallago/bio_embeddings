@@ -10,7 +10,7 @@ from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
-from bio_embeddings.extract.protT5cons.ConservationAnnotationExtractor import ProtT5consAnnotationExtractor
+from bio_embeddings.extract.prott5cons.ConservationAnnotationExtractor import ProtT5consAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager

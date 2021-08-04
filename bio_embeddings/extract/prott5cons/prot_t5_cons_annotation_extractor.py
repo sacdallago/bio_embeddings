@@ -16,15 +16,15 @@ logger = logging.getLogger(__name__)
 
 # Label mappings
 _conservation_labels = {
-    0: Conservation.cons_1,
-    1: Conservation.cons_2,
-    2: Conservation.cons_3,
-    3: Conservation.cons_4,
-    4: Conservation.cons_5,
-    5: Conservation.cons_6,
-    6: Conservation.cons_7,
-    7: Conservation.cons_8,
-    8: Conservation.cons_9,
+    0: conservation.cons_1,
+    1: conservation.cons_2,
+    2: conservation.cons_3,
+    3: conservation.cons_4,
+    4: conservation.cons_5,
+    5: conservation.cons_6,
+    6: conservation.cons_7,
+    7: conservation.cons_8,
+    8: conservation.cons_9,
 }
 
 
@@ -45,7 +45,7 @@ class ProtT5consAnnotationExtractor():
         self._device = get_device(device)
 
         # Create un-trained (raw) model and ensure self._model_type is valid
-        self._conservation_model = CONSERVATION_CNN().to(self._device)
+        self._conservation_model = ConservationCNN().to(self._device)
 
         # Download the checkpoint files if needed
         for file in self.necessary_files:
