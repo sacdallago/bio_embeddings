@@ -28,7 +28,7 @@ _conservation_labels = {
 }
 
 
-BasicConservationResult = collections.namedtuple('BasicConservationResult', 'Conservation')
+BasicConservationResult = collections.namedtuple('BasicConservationResult', 'conservation')
 
 class ProtT5consAnnotationExtractor():
     necessary_files = ["model_file"]
@@ -79,7 +79,7 @@ class ProtT5consAnnotationExtractor():
         # Map raw class predictions (integers) to class labels (strings)
         pred_conservation = self._class2label(_conservation_labels, yhat_conservation)
 
-        return BasicConservationResult(Conservation=pred_conservation)
+        return BasicConservationResult(conservation=pred_conservation)
 
 
     @staticmethod
