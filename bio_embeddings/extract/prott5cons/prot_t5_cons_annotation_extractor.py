@@ -8,8 +8,8 @@ from typing import List, Union
 from numpy import ndarray
 from enum import Enum
 
-from bio_embeddings.extract.annotations import Conservation
-from bio_embeddings.extract.prott5cons.annotation_inference_models import PROTT5CONS
+from bio_embeddings.extract.annotations import conservation
+from bio_embeddings.extract.prott5cons.conservation_cnn import ConservationCNN
 from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
@@ -30,8 +30,8 @@ _conservation_labels = {
 
 BasicConservationResult = collections.namedtuple('BasicConservationResult', 'Conservation')
 
-class ProtT5consAnnotationExtractor(object):
-    necessary_files = ["protT5cons_checkpoint_file"]
+class ProtT5consAnnotationExtractor():
+    necessary_files = ["model_file"]
 
     def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
@@ -50,7 +50,7 @@ class ProtT5consAnnotationExtractor(object):
         # Download the checkpoint files if needed
         for file in self.necessary_files:
             if not self._options.get(file):
-                self._options[file] = get_model_file(model=f"ProtT5cons", file=file)
+                self._options[file] = get_model_file(model=f"prott5cons", file=file)
 
         self._conservation_checkpoint_file = self._options['conservation_checkpoint_file']
 
