@@ -2,7 +2,7 @@ import torch.nn as nn
 
 
 class ConservationCNN(nn.Module):
-    # Convolutional neural network for prediction of conservation scores from 0-8 (0=variable; 8=conserved)
+    """Convolutional neural network for prediction of conservation scores from 0-8 (0=variable; 8=conserved)"""
     n_features = 1024
     bottleneck_dim = 32
     n_classes = 9
@@ -29,8 +29,8 @@ class ConservationCNN(nn.Module):
             F = number of features (1024 for embeddings)
             N = number of classes (9 for conservation)
         """
-        # IN: X = (B x L x F); OUT: (B x F x L, 1)
-        x = x.permute(0, 2, 1).unsqueeze(dim=-1)
+        # IN: X = (L x F); OUT: (1 x F x L, 1)
+        x = x.unsqueeze(dim=0).permute(0, 2, 1).unsqueeze(dim=-1)
         Yhat_consurf = self.classifier(x)  # OUT: Yhat_consurf = (B x N x L x 1)
         # IN: (B x N x L x 1); OUT: ( B x L x N )
         Yhat_consurf = Yhat_consurf.squeeze(dim=-1)
