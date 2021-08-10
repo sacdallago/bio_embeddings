@@ -48,9 +48,8 @@ class ProtT5consAnnotationExtractor():
         self._conservation_model = ConservationCNN().to(self._device)
 
         # Download the checkpoint files if needed
-        for file in self.necessary_files:
-            if not self._options.get(file):
-                self._options[file] = get_model_file(model=f"prott5cons", file=file)
+        if not self._options.get('model_file'):
+            self._options['model_file'] = get_model_file(model=f"prott5cons", file=file)
 
         self._conservation_checkpoint_file = self._options['conservation_checkpoint_file']
 
