@@ -37,7 +37,7 @@ class ProtT5consAnnotationExtractor():
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
-        :param conservation_checkpoint_file: path of conservation inference model checkpoint file (only CNN-architecture from paper)
+        :param model_file: path of conservation inference model checkpoint file (only CNN-architecture from paper)
         """
 
         self._options = kwargs
@@ -51,10 +51,10 @@ class ProtT5consAnnotationExtractor():
         if not self._options.get('model_file'):
             self._options['model_file'] = get_model_file(model=f"prott5cons", file="model_file")
 
-        self._conservation_checkpoint_file = self._options['conservation_checkpoint_file']
+        self.model_file = self._options['model_file']
 
         # load pre-trained weights for annotation machines
-        conservation_state = torch.load(self._conservation_checkpoint_file, map_location=self._device)
+        conservation_state = torch.load(self.model_file, map_location=self._device)
 
         # load pre-trained weights into raw model
         self._conservation_model.load_state_dict(conservation_state['state_dict'])
