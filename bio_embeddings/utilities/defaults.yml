@@ -80,3 +80,6 @@ deepblast:
 
 pb_tucker:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/pb_tucker/checkpoint.pt"
+
+prott5cons:
+  model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/prott5cons/checkpoint.pt"
