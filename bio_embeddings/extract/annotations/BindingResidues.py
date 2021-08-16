@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Binding(Enum):
+class BindingResidues(Enum):
     metal = "M"
     nucleic_acid = "N"
     small_molecule = "S"
