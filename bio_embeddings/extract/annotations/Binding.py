@@ -1,12 +1,12 @@
 from enum import Enum
 
 
-class BindingType(Enum):
+class Binding(Enum):
     metal = "M"
     nucleic_acid = "N"
     small_molecule = "S"
     protein = "P"
-    non_binding = "0"
+    non_binding = "-"
 
     def __str__(self):
         return {
