@@ -36,7 +36,7 @@ BasicBindingResidueResult = collections.namedtuple('BasicBindingResidueResult',
 
 
 class BindPredictDL21AnnotationExtractor:
-    necessary_files = ["model_file_1", "model_file_2", "model_file_3", "model_file_4", "model_file_5"]
+    necessary_files = ["model_1_file", "model_2_file", "model_3_file", "model_4_file", "model_5_file"]
 
     def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
@@ -61,11 +61,11 @@ class BindPredictDL21AnnotationExtractor:
             if not self._options.get(file):
                 self._options[file] = get_model_file(model=f"bindPredictDL21", file=file)
 
-        self.model_file_1 = self._options['model_file_1']
-        self.model_file_2 = self._options['model_file_2']
-        self.model_file_3 = self._options['model_file_3']
-        self.model_file_4 = self._options['model_file_4']
-        self.model_file_5 = self._options['model_file_5']
+        self.model_file_1 = self._options['model_1_file']
+        self.model_file_2 = self._options['model_2_file']
+        self.model_file_3 = self._options['model_3_file']
+        self.model_file_4 = self._options['model_4_file']
+        self.model_file_5 = self._options['model_5_file']
 
         # load pre-trained weights for annotation machines
         binding_residue_state_1 = torch.load(self.model_file_1, map_location=self._device)
