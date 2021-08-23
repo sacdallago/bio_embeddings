@@ -11,7 +11,7 @@ from sklearn.metrics import pairwise_distances as _pairwise_distances
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
 from bio_embeddings.extract.prott5cons.prot_t5_cons_annotation_extractor import ProtT5consAnnotationExtractor
-from bio_embeddings.extract.bindPredictDL21.bindPredictDL21_annotation_extractor import BindPredictDL21AnnotationExtractor
+from bio_embeddings.extract.bindEmbed21DL.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -253,12 +253,12 @@ def prott5cons(model, **kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def bindpredict_dl_21(model, **kwargs) -> Dict[str, Any]:
+def bindembed_21_dl(model, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts binding residues from "embeddings_file".
     Embeddings can only be generated with ProtT5-XL-U50.
 
-    :param model: "bindPredictDL21" TODO
+    :param model: "bindEmbed21DL" TODO
     :return:
     """
 
@@ -267,11 +267,11 @@ def bindpredict_dl_21(model, **kwargs) -> Dict[str, Any]:
     file_manager = get_file_manager(**kwargs)
 
     # Download necessary files if needed
-    for file in BindPredictDL21AnnotationExtractor.necessary_files:
+    for file in BindEmbed21DLAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
             result_kwargs[file] = get_model_file(model=model, file=file)
 
-    annotation_extractor = BindPredictDL21AnnotationExtractor(**result_kwargs)
+    annotation_extractor = BindEmbed21DLAnnotationExtractor(**result_kwargs)
 
     # Try to create final files (if this fails, now is better than later
     metal_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
@@ -455,7 +455,7 @@ PROTOCOLS = {
     "la_prott5": la_prott5,
     "la_protbert": la_protbert,
     "prott5cons": prott5cons,
-    "bindpredict_dl_21": bindpredict_dl_21,
+    "bindembed_21_dl": bindembed_21_dl,
     "unsupervised": unsupervised
 }
 

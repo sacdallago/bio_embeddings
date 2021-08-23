@@ -8,9 +8,9 @@ from bio_embeddings.embed import (
     ProtTransT5XLU50Embedder,
 )
 
-from bio_embeddings.extract.bindPredictDL21 import BindPredictDL21AnnotationExtractor
+from bio_embeddings.extract.bindEmbed21DL import BindEmbed21DLAnnotationExtractor
 
-# >P58568  # TODO add correct example
+# >P58568
 FASTA = 'MADKADQSSYLIKFISTAPVAATIWLTITAGILIEFNRFFPDLLFHPLP'
 # groundtruth values for small molecule binding
 Y = list("0000000000000000001011111101111110111110011101010")
@@ -29,17 +29,17 @@ Y = list("0000000000000000001011111101111110111110011101010")
     [
         (
                 lambda: ProtTransT5XLU50Embedder(half_precision_model=True),
-                lambda: BindPredictDL21AnnotationExtractor("prott5cons"),
-                0.694,  # TODO set correct expected accuracy (maybe change parameter?)
+                lambda: BindEmbed21DLAnnotationExtractor("bindEmbed21DL"),
+                0.694,
         ),
     ],
 )
 def test_binding_residue_annotation_extractor(
         get_embedder: Callable[[], EmbedderInterface],
         get_extractor: Callable[
-            [], Union[BindPredictDL21AnnotationExtractor]
+            [], Union[BindEmbed21DLAnnotationExtractor]
         ],
-        expected_accuracy: float,  # TODO change used metric?
+        expected_accuracy: float,
 ):
     """Check that BasicAnnotationExtractor passes (without checking correctness)"""
     extractor = get_extractor()

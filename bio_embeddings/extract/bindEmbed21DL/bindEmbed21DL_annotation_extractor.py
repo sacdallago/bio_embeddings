@@ -9,7 +9,7 @@ from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import BindingResidues
-from bio_embeddings.extract.bindPredictDL21.binding_residues_cnn import BindingResiduesCNN
+from bio_embeddings.extract.bindEmbed21DL.binding_residues_cnn import BindingResiduesCNN
 from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
@@ -35,14 +35,14 @@ BasicBindingResidueResult = collections.namedtuple('BasicBindingResidueResult',
                                                    'metal_ion nucleic_acids small_molecules')
 
 
-class BindPredictDL21AnnotationExtractor:
+class BindEmbed21DLAnnotationExtractor:
     necessary_files = ["model_1_file", "model_2_file", "model_3_file", "model_4_file", "model_5_file"]
 
     def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
-        :param model_file: path of bindPredictDL21 inference model checkpoint file
+        :param model_file: path of bindEmbed21DL inference model checkpoint file
         """
 
         self._options = kwargs
@@ -59,7 +59,7 @@ class BindPredictDL21AnnotationExtractor:
         # Download the checkpoint files if needed
         for file in self.necessary_files:
             if not self._options.get(file):
-                self._options[file] = get_model_file(model=f"bindPredictDL21", file=file)
+                self._options[file] = get_model_file(model=f"bindEmbed21DL", file=file)
 
         self.model_file_1 = self._options['model_1_file']
         self.model_file_2 = self._options['model_2_file']

@@ -1,1 +1,0 @@
-from bio_embeddings.extract.bindPredictDL21.bindPredictDL21_annotation_extractor import BindPredictDL21AnnotationExtractor
