@@ -84,7 +84,7 @@ pb_tucker:
 prott5cons:
   model_file: "http://data.bioembeddings.com/public/embeddings/feature_models/prott5cons/checkpoint.pt"
 
-bindembed21:
+bindembed21dl:
   model_1_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/checkpoint1.pt"
   model_2_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/checkpoint2.pt"
   model_3_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/checkpoint3.pt"

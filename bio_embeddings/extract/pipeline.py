@@ -253,12 +253,11 @@ def prott5cons(model, **kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def bindembed21(model, **kwargs) -> Dict[str, Any]:
+def bindembed21dl(**kwargs) -> Dict[str, Any]:
     """
     Protocol extracts binding residues from "embeddings_file".
-    Embeddings can only be generated with ProtT5-XL-U50.
+    Results guaranteed only with ProtT5-XL-U50 embeddings.
 
-    :param model: "bindembed21"
     :return:
     """
 
@@ -269,7 +268,7 @@ def bindembed21(model, **kwargs) -> Dict[str, Any]:
     # Download necessary files if needed
     for file in BindEmbed21DLAnnotationExtractor.necessary_files:
         if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=model, file=file)
+            result_kwargs[file] = get_model_file(model="bindembed21dl", file=file)
 
     annotation_extractor = BindEmbed21DLAnnotationExtractor(**result_kwargs)
 
@@ -455,7 +454,7 @@ PROTOCOLS = {
     "la_prott5": la_prott5,
     "la_protbert": la_protbert,
     "prott5cons": prott5cons,
-    "bindembed_21_dl": bindembed21,
+    "bindembed21dl": bindembed21dl,
     "unsupervised": unsupervised
 }
 

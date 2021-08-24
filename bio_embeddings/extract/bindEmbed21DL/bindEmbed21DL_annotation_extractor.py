@@ -38,7 +38,7 @@ BasicBindingResidueResult = collections.namedtuple('BasicBindingResidueResult',
 class BindEmbed21DLAnnotationExtractor:
     necessary_files = ["model_1_file", "model_2_file", "model_3_file", "model_4_file", "model_5_file"]
 
-    def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
+    def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -46,10 +46,9 @@ class BindEmbed21DLAnnotationExtractor:
         """
 
         self._options = kwargs
-        self._model_type = model_type
         self._device = get_device(device)
 
-        # Create un-trained (raw) models and ensure self._model_type is valid
+        # Create un-trained (raw) models
         self._binding_residue_model_1 = BindingResiduesCNN().to(self._device)
         self._binding_residue_model_2 = BindingResiduesCNN().to(self._device)
         self._binding_residue_model_3 = BindingResiduesCNN().to(self._device)
@@ -59,7 +58,7 @@ class BindEmbed21DLAnnotationExtractor:
         # Download the checkpoint files if needed
         for file in self.necessary_files:
             if not self._options.get(file):
-                self._options[file] = get_model_file(model=f"bindEmbed21DL", file=file)
+                self._options[file] = get_model_file(model=f"bindembed21dl", file=file)
 
         self.model_file_1 = self._options['model_1_file']
         self.model_file_2 = self._options['model_2_file']
