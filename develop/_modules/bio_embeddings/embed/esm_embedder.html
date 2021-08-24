@@ -274,7 +274,7 @@
         <span class="c1"># EmbedderInterface assumes static model files, but we need to dynamically select one of the five</span>
         <span class="k">if</span> <span class="s2">"model_file"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">"model_file"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_model_file</span><span class="p">(</span>
-                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="sa">f</span><span class="s2">"model_file_</span><span class="si">{</span><span class="n">ensemble_id</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="sa">f</span><span class="s2">"model_</span><span class="si">{</span><span class="n">ensemble_id</span><span class="si">}</span><span class="s2">_file"</span>
             <span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
