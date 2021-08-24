@@ -29,7 +29,7 @@ Y = list("0000000000000000001011111101111110111110011101010")
     [
         (
                 lambda: ProtTransT5XLU50Embedder(half_precision_model=True),
-                lambda: BindEmbed21DLAnnotationExtractor("bindEmbed21DL"),
+                lambda: BindEmbed21DLAnnotationExtractor("bindembed21"),
                 0.694,
         ),
     ],
