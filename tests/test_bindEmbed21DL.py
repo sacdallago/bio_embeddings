@@ -13,7 +13,7 @@ from bio_embeddings.extract.bindEmbed21DL import BindEmbed21DLAnnotationExtracto
 # >P58568
 FASTA = 'MADKADQSSYLIKFISTAPVAATIWLTITAGILIEFNRFFPDLLFHPLP'
 # groundtruth values for small molecule binding
-Y = list("0000000000000000001011111101111110111110011101010")
+Y = list("------------------S-SSSSSS-SSSSSS-SSSSS--SSS-S-S-")
 
 
 @pytest.mark.skipif(
