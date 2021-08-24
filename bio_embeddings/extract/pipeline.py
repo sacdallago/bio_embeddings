@@ -258,7 +258,7 @@ def bindembed21(model, **kwargs) -> Dict[str, Any]:
     Protocol extracts binding residues from "embeddings_file".
     Embeddings can only be generated with ProtT5-XL-U50.
 
-    :param model: "bindembed21" TODO
+    :param model: "bindembed21"
     :return:
     """
 
