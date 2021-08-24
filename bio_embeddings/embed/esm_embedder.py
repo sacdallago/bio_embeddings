@@ -134,7 +134,7 @@ class ESM1vEmbedder(ESMEmbedderBase):
         # EmbedderInterface assumes static model files, but we need to dynamically select one of the five
         if "model_file" not in kwargs:
             kwargs["model_file"] = get_model_file(
-                model=self.name, file=f"model_file_{ensemble_id}"
+                model=self.name, file=f"model_{ensemble_id}_file"
             )
 
         super().__init__(device, **kwargs)
