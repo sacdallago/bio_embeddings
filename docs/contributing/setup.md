@@ -3,9 +3,9 @@
 bio_embeddings uses [poetry](https://github.com/python-poetry/poetry) to manage dependencies.
 
 * Install [poetry](https://github.com/python-poetry/poetry#installation).
-* Run `poetry config virtualenvs.in-project true`. This will make sure all python dependencies will be in a folder called `.venv`.
+* Run `poetry config virtualenvs.in-project true`. This will make sure all python dependencies will be in a folder called `.venv` (unless you're using conda).
 * Clone the repository (`git pull https://github.com/sacdallago/bio_embeddings`)
-* Run `poetry install -E all`. This will create a new virtualenv, which you can activate with `poetry shell` or `. .venv/bin/activate` (use `deactivate` to get back to your normal environment).
+* Run `poetry install -E all`. This will create a new virtualenv, which you can activate with `poetry shell` or `. .venv/bin/activate` (use `deactivate` to get back to your normal environment). If you're already in a conda environment, poetry will use that environment instead.
 * To check that the environment is active, open a python console and run `import bio_embeddings`
 
 ## Tests
