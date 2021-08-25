@@ -133,6 +133,8 @@ Additionally, we invite you to cite the work from others that was collected in `
 - Tobias Olenyi
 - Michael Heinzinger
 
+Want to add your own model? See [contributing](https://docs.bioembeddings.com/latest/contributing/index.html) for instructions.
+
 ## Non-exhaustive list of tools available (see following section for more details):
 
 - Fastext

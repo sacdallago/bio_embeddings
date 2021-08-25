@@ -7,6 +7,7 @@ Pipeline Examples <https://github.com/sacdallago/bio_embeddings/tree/develop/exa
 parameter_blueprints
 notebooks/README
 api/index
+contributing/index
 ```
 
 ```{include} ../README.md
