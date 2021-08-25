@@ -7,6 +7,7 @@ python -m test-data.test_notebooks
 """
 
 import json
+from argparse import ArgumentParser
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -27,16 +28,32 @@ def remove_pip_install_from_notebook(notebook):
     notebook["cells"] = cells
 
 
+def run_notebook(file: Path):
+    notebook = json.loads(file.read_text())
+    remove_pip_install_from_notebook(notebook)
+    nb = nbformat.reads(json.dumps(notebook), as_version=4)
+    ep = ExecutePreprocessor(timeout=600, kernel_name="python3")
+    with TemporaryDirectory() as temp_dir:
+        ep.preprocess(nb, {"metadata": {"path": temp_dir}})
+
+
 def main():
-    notebooks = list(Path("notebooks").glob("*.ipynb"))
+    parser = ArgumentParser()
+    parser.add_argument("file", nargs="*")
+    args = parser.parse_args()
+    if args.file:
+        notebooks = [Path(file) for file in args.file]
+    else:
+        notebooks = list(Path("notebooks").glob("*.ipynb"))
     for file in tqdm(notebooks):
         print(f"Running {file}")
-        notebook = json.loads(file.read_text())
-        remove_pip_install_from_notebook(notebook)
-        nb = nbformat.reads(json.dumps(notebook), as_version=4)
-        ep = ExecutePreprocessor(timeout=600, kernel_name="python3")
-        with TemporaryDirectory() as temp_dir:
-            ep.preprocess(nb, {"metadata": {"path": temp_dir}})
+        try:
+            run_notebook(file)
+        except Exception as e:
+            print(f"{file} failed: {e}")
+            continue
+        else:
+            print(f"{file} passed")
 
 
 if __name__ == "__main__":
