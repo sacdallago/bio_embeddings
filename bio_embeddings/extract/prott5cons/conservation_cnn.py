@@ -3,6 +3,7 @@ import torch.nn as nn
 
 class ConservationCNN(nn.Module):
     """Convolutional neural network for prediction of conservation scores from 0-8 (0=variable; 8=conserved)"""
+
     n_features = 1024
     bottleneck_dim = 32
     n_classes = 9
@@ -24,10 +25,10 @@ class ConservationCNN(nn.Module):
 
     def forward(self, x):
         """
-            L = protein length
-            B = batch-size
-            F = number of features (1024 for embeddings)
-            N = number of classes (9 for conservation)
+        L = protein length
+        B = batch-size
+        F = number of features (1024 for embeddings)
+        N = number of classes (9 for conservation)
         """
         # IN: X = (L x F); OUT: (1 x F x L, 1)
         x = x.unsqueeze(dim=0).permute(0, 2, 1).unsqueeze(dim=-1)

@@ -1,8 +1,8 @@
-
 from enum import Enum
 
 
 class Conservation(Enum):
+    # one-based to comply to ConSurfDB indexing
     cons_1 = "1"
     cons_2 = "2"
     cons_3 = "3"
@@ -15,7 +15,6 @@ class Conservation(Enum):
 
     def __str__(self):
         return {
-            # one-based to comply to ConSurfDB indexing
             self.cons_1: "Variable. Score=1 (1: variable, 9: conserved)",
             self.cons_2: "Variable. Score=2 (1: variable, 9: conserved)",
             self.cons_3: "Variable. Score=3 (1: variable, 9: conserved)",
@@ -28,5 +27,5 @@ class Conservation(Enum):
         }.get(self)
 
     @staticmethod
-    def isAAFeature():
+    def is_aa_feature():
         return True

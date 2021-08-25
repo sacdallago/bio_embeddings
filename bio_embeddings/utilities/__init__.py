@@ -20,6 +20,7 @@ __all__ = [
     "InvalidParameterError",
     "QueryEmbeddingsFile",
     "check_required",
+    "convert_list_of_enum_to_string",
     "get_device",
     "get_file_manager",
     "get_model_directories_from_zip",

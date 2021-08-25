@@ -24,9 +24,9 @@ class SecondaryStructure(Enum):
             self.TURN: "Hydrogen bonded turn",
             self.BEND: "Bend",
             self.IRREGULAR: "Loop/Irregular",
-            self.UNKNOWN: "Unknown"
+            self.UNKNOWN: "Unknown",
         }.get(self)
 
     @staticmethod
-    def isAAFeature():
+    def is_aa_feature():
         return True

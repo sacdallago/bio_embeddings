@@ -1,12 +1,10 @@
-import logging
-import numpy
-
-import torch
 import collections
+import logging
+from typing import List, Union, Dict, Any
 
-from typing import List, Union
+import numpy
+import torch
 from numpy import ndarray
-from enum import Enum
 
 from bio_embeddings.extract.annotations import Conservation
 from bio_embeddings.extract.prott5cons.conservation_cnn import ConservationCNN
@@ -27,13 +25,17 @@ _conservation_labels = {
     8: Conservation.cons_9,
 }
 
+BasicConservationResult = collections.namedtuple(
+    "BasicConservationResult", "conservation"
+)
 
-BasicConservationResult = collections.namedtuple('BasicConservationResult', 'conservation')
 
-class ProtT5consAnnotationExtractor():
+class ProtT5consAnnotationExtractor:
     necessary_files = ["model_file"]
 
-    def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
+    def __init__(
+        self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs
+    ):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -48,16 +50,18 @@ class ProtT5consAnnotationExtractor():
         self._conservation_model = ConservationCNN().to(self._device)
 
         # Download the checkpoint files if needed
-        if not self._options.get('model_file'):
-            self._options['model_file'] = get_model_file(model=f"prott5cons", file="model_file")
+        if not self._options.get("model_file"):
+            self._options["model_file"] = get_model_file(
+                model=f"prott5cons", file="model_file"
+            )
 
-        self.model_file = self._options['model_file']
+        self.model_file = self._options["model_file"]
 
         # load pre-trained weights for annotation machines
         conservation_state = torch.load(self.model_file, map_location=self._device)
 
         # load pre-trained weights into raw model
-        self._conservation_model.load_state_dict(conservation_state['state_dict'])
+        self._conservation_model.load_state_dict(conservation_state["state_dict"])
 
         # ensure that model is in evaluation mode (important for batchnorm and dropout)
         self._conservation_model.eval()
@@ -80,9 +84,8 @@ class ProtT5consAnnotationExtractor():
 
         return BasicConservationResult(conservation=pred_conservation)
 
-
     @staticmethod
-    def _class2label(label_dict, yhat) -> List[Enum]:
+    def _class2label(label_dict: Dict[int, Any], yhat: torch.tensor) -> List[Any]:
         # get index of output node with max. activation (=predicted class)
         class_indices = torch.max(yhat, dim=1)[1].squeeze()
         return [label_dict[class_idx.item()] for class_idx in class_indices]

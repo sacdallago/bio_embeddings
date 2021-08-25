@@ -18,5 +18,5 @@ class BindingResidues(Enum):
         }.get(self)
 
     @staticmethod
-    def isAAFeature():
+    def is_aa_feature():
         return True

@@ -1,24 +1,25 @@
 import logging
-import h5py
-import numpy as np
-
 from copy import deepcopy
 from typing import Dict, Any, List
+
+import h5py
+import numpy as np
 from Bio.Seq import Seq
 from pandas import read_csv, DataFrame, concat as concatenate_dataframe
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
-from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
-from bio_embeddings.extract.prott5cons.prot_t5_cons_annotation_extractor import ProtT5consAnnotationExtractor
+from bio_embeddings.extract.light_attention.light_attention_annotation_extractor import \
+    LightAttentionAnnotationExtractor
+from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
 from bio_embeddings.extract.bindEmbed21DL.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
-from bio_embeddings.utilities.remote_file_retriever import get_model_file
+from bio_embeddings.utilities import get_model_file
+from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
+    InvalidAnnotationFileError
 from bio_embeddings.utilities.filemanagers import get_file_manager
 from bio_embeddings.utilities.helpers import check_required, read_fasta, convert_list_of_enum_to_string, \
     write_fasta_file, read_mapping_file
-from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
-    InvalidAnnotationFileError
 
 logger = logging.getLogger(__name__)
 
@@ -210,7 +211,7 @@ def la_protbert(**kwargs) -> Dict[str, Any]:
     return light_attention('la_protbert', **kwargs)
 
 
-def prott5cons(model, **kwargs) -> Dict[str, Any]:
+def prott5cons(model: str, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts conservation from "embeddings_file".
     Embeddings can only be generated with ProtT5-XL-U50.
@@ -318,7 +319,7 @@ def bindembed21dl(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def light_attention(model, **kwargs) -> Dict[str, Any]:
+def light_attention(model: str, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts subcellular locationfrom "embeddings_file".
     Embeddings can be generated with ProtBert.
@@ -330,12 +331,7 @@ def light_attention(model, **kwargs) -> Dict[str, Any]:
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    # Download necessary files if needed
-    for file in LightAttentionAnnotationExtractor.necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=model, file=file)
-
-    annotation_extractor = LightAttentionAnnotationExtractor(**result_kwargs)
+    annotation_extractor = LightAttentionAnnotationExtractor(model, **result_kwargs)
 
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_mapping_file(result_kwargs["mapping_file"])
@@ -363,7 +359,7 @@ def light_attention(model, **kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
+def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts secondary structure (DSSP3 and DSSP8), disorder, subcellular location and membrane boundness
     from "embeddings_file". Embeddings can either be generated with SeqVec or ProtBert.
@@ -376,11 +372,6 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
     check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
-
-    # Download the checkpoint files if needed
-    for file in BasicAnnotationExtractor.necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model=f'{model}_annotations_extractors', file=file)
 
     annotation_extractor = BasicAnnotationExtractor(model, **result_kwargs)
 
