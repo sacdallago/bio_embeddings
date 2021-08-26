@@ -2,6 +2,7 @@ import os
 from typing import Callable, Union
 
 import pytest
+import torch
 
 from bio_embeddings.embed import (
     EmbedderInterface,
@@ -16,14 +17,8 @@ FASTA = 'MADKADQSSYLIKFISTAPVAATIWLTITAGILIEFNRFFPDLLFHPLP'
 Y = list("------------------S-SSSSSS-SSSSSS-SSSSS--SSS-S-S-")
 
 
-@pytest.mark.skipif(
-    os.environ.get("SKIP_SLOW_TESTS"),
-    reason="This test is very slow",
-)
-@pytest.mark.skipif(
-    not os.environ.get("RUN_VERY_SLOW_TESTS"),
-    reason="This checks the entire hard test set",
-)
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="Uses T5")
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="T5 fp16 needs a GPU")
 @pytest.mark.parametrize(
     "get_embedder,get_extractor,expected_accuracy",
     [

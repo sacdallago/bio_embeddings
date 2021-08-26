@@ -3,8 +3,10 @@ import torch.nn as nn
 
 
 class BindingResiduesCNN(nn.Module):
-    """Convolutional neural network for prediction of 3 different types of binding residues (metal, nucleic acids,
-    small molecules"""
+    """ Convolutional neural network for prediction of 3 different types of binding residues (metal, nucleic acids,
+    small molecules. Final output is determined by taking the average output probability from 5 different models from
+    5 cross-validation runs """
+
     n_features = 1024
     bottleneck_dim = 128
     n_classes = 3
@@ -23,5 +25,6 @@ class BindingResiduesCNN(nn.Module):
         )
 
     def forward(self, x):
+        # IN: 1024 x L --> 128 x L --> OUT: 3 x L
         x = self.conv1(x)
         return torch.squeeze(x)
