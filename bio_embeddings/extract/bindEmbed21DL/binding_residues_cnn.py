@@ -14,7 +14,7 @@ class BindingResiduesCNN(nn.Module):
 
     def __init__(self):
         super(BindingResiduesCNN, self).__init__()
-        self.classifier = nn.Sequential(
+        self.conv1 = nn.Sequential(
             nn.Conv1d(in_channels=self.n_features, out_channels=self.bottleneck_dim, kernel_size=5, stride=1,
                       padding=2),
             nn.ELU(),

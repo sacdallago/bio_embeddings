@@ -38,7 +38,7 @@ BasicBindingResidueResult = collections.namedtuple('BasicBindingResidueResult',
 class BindEmbed21DLAnnotationExtractor:
     """
     Extract binding predictions for 3 different ligand classes (metal ions, nucleic acids, small molecules).
-    Residues are considered as binding to a specific class if the output probability is >= 0.5 for this class. 
+    Residues are considered as binding to a specific class if the output probability is >= 0.5 for this class.
     """
     necessary_files = ["model_1_file", "model_2_file", "model_3_file", "model_4_file", "model_5_file"]
 
