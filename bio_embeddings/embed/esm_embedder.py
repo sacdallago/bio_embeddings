@@ -71,7 +71,7 @@ class ESMEmbedderBase(EmbedderInterface):
         yield from super().embed_many(sequences, batch_size)
 
     def _assert_max_len(self, sequences: Iterable[str]):
-        max_len = max(len(i) for i in sequences, default=0)
+        max_len = max((len(i) for i in sequences), default=0)
         if max_len > self.max_len:
             raise ValueError(
                 f"{self.name} only allows sequences up to {self.max_len} residues, "
