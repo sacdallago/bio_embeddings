@@ -1,5 +1,6 @@
 import warnings
 from typing import List, Generator, Union, Iterable, Optional, Any, Tuple
+from itertools import tee
 
 import torch
 from esm.pretrained import load_model_and_alphabet_core
@@ -46,7 +47,8 @@ class ESMEmbedderBase(EmbedderInterface):
 
     def embed_batch(self, batch: List[str]) -> Generator[ndarray, None, None]:
         """https://github.com/facebookresearch/esm/blob/dfa524df54f91ef45b3919a00aaa9c33f3356085/README.md#quick-start-"""
-        self._assert_max_len(batch)
+        batch, batch_copy = tee(batch)
+        self._assert_max_len(batch_copy)
         data = [(str(pos), sequence) for pos, sequence in enumerate(batch)]
         batch_labels, batch_strs, batch_tokens = self._batch_converter(data)
 
@@ -64,6 +66,8 @@ class ESMEmbedderBase(EmbedderInterface):
     def embed_many(
         self, sequences: Iterable[str], batch_size: Optional[int] = None
     ) -> Generator[ndarray, None, None]:
+        sequences, sequences_copy = tee(sequences)
+        self._assert_max_len(sequences_copy)
         self._assert_max_len(sequences)
         yield from super().embed_many(sequences, batch_size)
 
