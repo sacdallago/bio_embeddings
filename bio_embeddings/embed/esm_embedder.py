@@ -68,7 +68,6 @@ class ESMEmbedderBase(EmbedderInterface):
     ) -> Generator[ndarray, None, None]:
         sequences, sequences_copy = tee(sequences)
         self._assert_max_len(sequences_copy)
-        self._assert_max_len(sequences)
         yield from super().embed_many(sequences, batch_size)
 
     def _assert_max_len(self, sequences: Iterable[str]):
