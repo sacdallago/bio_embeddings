@@ -142,6 +142,8 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
@@ -209,10 +211,18 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">TqdmUpTo</span><span class="p">(</span>
-            <span class="n">unit</span><span class="o">=</span><span class="s2">"B"</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">reporthook</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">update_to</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">'User-Agent'</span> <span class="p">:</span> <span class="s1">'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'</span>
+        <span class="p">})</span>
+
+        <span class="k">with</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+        <span class="c1"># TODO: re-enable TqdmUpTo</span>
+        <span class="c1"># with TqdmUpTo(</span>
+        <span class="c1">#     unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]</span>
+        <span class="c1"># ) as t:</span>
+        <span class="c1">#     request.urlretrieve(url, filename=file_name, reporthook=t.update_to)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">"Unzipping </span><span class="si">{}</span><span class="s2"> for </span><span class="si">{}</span><span class="s2"> and storing in '</span><span class="si">{}</span><span class="s2">'."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -246,11 +256,19 @@
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Downloading </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> and storing it in '</span><span class="si">{</span><span class="n">cache_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">atomic_write</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">TqdmUpTo</span><span class="p">(</span>
-            <span class="n">unit</span><span class="o">=</span><span class="s2">"B"</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">reporthook</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">update_to</span><span class="p">)</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">'User-Agent'</span> <span class="p">:</span> <span class="s1">'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'</span>
+    <span class="p">})</span>
+
+    <span class="k">with</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="c1"># TODO: re-enable atomic_write and TqdmUpTo</span>
+    <span class="c1"># with atomic_write(cache_path, overwrite=True) as temp_file:</span>
+    <span class="c1">#     with TqdmUpTo(</span>
+    <span class="c1">#         unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]</span>
+    <span class="c1">#     ) as t:</span>
+    <span class="c1">#         request.urlretrieve(url, filename=temp_file.name, reporthook=t.update_to)</span>
 
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">cache_path</span><span class="p">)</span></div>
 </pre></div>
