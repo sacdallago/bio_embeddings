@@ -64,16 +64,11 @@ class ESMEmbedderBase(EmbedderInterface):
     def embed_many(
         self, sequences: Iterable[str], batch_size: Optional[int] = None
     ) -> Generator[ndarray, None, None]:
-        # We need to check for empty sequences and sequences, so a single iteration doesn't work
-        sequences = list(sequences)
-        # ESM1v doesn't like empty batches
-        if not sequences:
-            return
         self._assert_max_len(sequences)
         yield from super().embed_many(sequences, batch_size)
 
     def _assert_max_len(self, sequences: Iterable[str]):
-        max_len = max(len(i) for i in sequences)
+        max_len = max(len(i) for i in sequences, default=0)
         if max_len > self.max_len:
             raise ValueError(
                 f"{self.name} only allows sequences up to {self.max_len} residues, "
