@@ -3,10 +3,10 @@ import os
 import tempfile
 import zipfile
 import shutil
-import urllib
 
 from pathlib import Path
 from typing import Dict, Optional
+from urllib import request
 
 from appdirs import user_cache_dir
 from atomicwrites import atomic_write
@@ -75,7 +75,7 @@ def get_model_directories_from_zip(
             'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
         })
 
-        with urllib.request.urlopen(req) as response, open(file_name, 'wb') as outfile:
+        with request.urlopen(req) as response, open(file_name, 'wb') as outfile:
             shutil.copyfileobj(response, outfile)
 
         # TODO: re-enable TqdmUpTo
@@ -120,7 +120,7 @@ def get_model_file(
         'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
     })
 
-    with urllib.request.urlopen(req) as response, open(cache_path, 'wb') as outfile:
+    with request.urlopen(req) as response, open(cache_path, 'wb') as outfile:
         shutil.copyfileobj(response, outfile)
 
     # TODO: re-enable atomic_write and TqdmUpTo
