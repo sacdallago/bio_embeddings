@@ -86,26 +86,26 @@ all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio
 webserver = ["pymongo", "sentry-sdk", "flask"]
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.0.1"
-invoke = "^1.4.1"
-check-manifest = "^0.41"
-wheel = "^0.34.2"
-jupyter = "^1.0.0"
-tox = "^3.16.1"
 black = "21.8b0"
-toml = "^0.10.1"
-furo = "^2021.2.28b28"
-Sphinx = "^3.2.1" # Sphinx 4 is blocked on https://github.com/executablebooks/MyST-NB/issues/338
-myst-parser = "^0.13.5"
-myst-nb = "^0.12.0"
-sphinx-copybutton = "^0.4.0"
-mongomock = "^3.22.0"
-pytest-flask = "^1.1.0"
-pytest-celery = "^0.0.0-alpha.1"
+check-manifest = "^0.41"
 flask-restx = "^0.5.0"
-packaging = "^20.8"
+furo = "^2021.08.31"
 hypothesis = "^6.3.4"
 hypothesis-bio = { git = "https://github.com/IQTLabs/hypothesis-bio", rev = "393f080772ae7aa7ca0358ce1a6753c0b69546e2" }
+invoke = "^1.4.1"
+jupyter = "^1.0.0"
+mongomock = "^3.22.0"
+myst-nb = "^0.13.0"
+myst-parser = "^0.15.2"
+packaging = "^20.8"
+pytest = "^6.0.1"
+pytest-celery = "^0.0.0-alpha.1"
+pytest-flask = "^1.1.0"
+sphinx = "^4"
+sphinx-copybutton = "^0.4.0"
+toml = "^0.10.1"
+tox = "^3.16.1"
+wheel = "^0.34.2"
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"
