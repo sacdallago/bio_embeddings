@@ -25,7 +25,7 @@ Y = list("------------------S-SSSSSS-SSSSSS-SSSSS--SSS-S-S-")
         (
                 lambda: ProtTransT5XLU50Embedder(half_precision_model=True),
                 lambda: BindEmbed21DLAnnotationExtractor(),
-                0.694,
+                0.714,
         ),
     ],
 )
