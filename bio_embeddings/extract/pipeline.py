@@ -11,6 +11,7 @@ from sklearn.metrics import pairwise_distances as _pairwise_distances
 from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.light_attention.LightAttentionAnnotationExtractor import LightAttentionAnnotationExtractor
 from bio_embeddings.extract.prott5cons.prot_t5_cons_annotation_extractor import ProtT5consAnnotationExtractor
+from bio_embeddings.extract.bindEmbed21DL.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities.remote_file_retriever import get_model_file
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -196,8 +197,10 @@ def seqvec_from_publication(**kwargs) -> Dict[str, Any]:
 def bert_from_publication(**kwargs) -> Dict[str, Any]:
     return predict_annotations_using_basic_models("bert_from_publication", **kwargs)
 
+
 def t5_xl_u50_from_publication(**kwargs) -> Dict[str, Any]:
     return predict_annotations_using_basic_models("t5_xl_u50_from_publication", **kwargs)
+
 
 def la_prott5(**kwargs) -> Dict[str, Any]:
     return light_attention('la_prott5', **kwargs)
@@ -205,6 +208,7 @@ def la_prott5(**kwargs) -> Dict[str, Any]:
 
 def la_protbert(**kwargs) -> Dict[str, Any]:
     return light_attention('la_protbert', **kwargs)
+
 
 def prott5cons(model, **kwargs) -> Dict[str, Any]:
     """
@@ -247,6 +251,72 @@ def prott5cons(model, **kwargs) -> Dict[str, Any]:
     # Write files
     write_fasta_file(cons_sequences, conservation_predictions_file_path)
     return result_kwargs
+
+
+def bindembed21dl(**kwargs) -> Dict[str, Any]:
+    """
+    Protocol extracts binding residues from "embeddings_file".
+    Results guaranteed only with ProtT5-XL-U50 embeddings.
+
+    :return:
+    """
+
+    check_required(kwargs, ['embeddings_file', 'mapping_file', 'remapped_sequences_file'])
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Download necessary files if needed
+    for file in BindEmbed21DLAnnotationExtractor.necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model="bindembed21dl", file=file)
+
+    annotation_extractor = BindEmbed21DLAnnotationExtractor(**result_kwargs)
+
+    # Try to create final files (if this fails, now is better than later
+    metal_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'metal_binding_predictions_file',
+                                                                   extension='.fasta')
+    result_kwargs['metal_binding_predictions_file'] = metal_binding_predictions_file_path
+    nuc_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                 result_kwargs.get('stage_name'),
+                                                                 'nucleic_acid_binding_predictions_file',
+                                                                 extension='.fasta')
+    result_kwargs['binding_residue_predictions_file'] = nuc_binding_predictions_file_path
+    small_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'small_molecule_binding_predictions_file',
+                                                                   extension='.fasta')
+    result_kwargs['binding_residue_predictions_file'] = small_binding_predictions_file_path
+
+    metal_sequences = list()
+    nuc_sequences = list()
+    small_sequences = list()
+
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+            embedding = np.array(embedding_file[protein_sequence.id])
+
+            annotations = annotation_extractor.get_binding_residues(embedding)
+            metal_sequence = deepcopy(protein_sequence)
+            nuc_sequence = deepcopy(protein_sequence)
+            small_sequence = deepcopy(protein_sequence)
+
+            metal_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.metal_ion))
+            nuc_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.nucleic_acids))
+            small_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.small_molecules))
+
+            metal_sequences.append(metal_sequence)
+            nuc_sequences.append(nuc_sequence)
+            small_sequences.append(small_sequence)
+
+    # Write files
+    write_fasta_file(metal_sequences, metal_binding_predictions_file_path)
+    write_fasta_file(nuc_sequences, nuc_binding_predictions_file_path)
+    write_fasta_file(small_sequences, small_binding_predictions_file_path)
+
+    return result_kwargs
+
 
 def light_attention(model, **kwargs) -> Dict[str, Any]:
     """
@@ -383,7 +453,8 @@ PROTOCOLS = {
     "t5_xl_u50_from_publication": t5_xl_u50_from_publication,
     "la_prott5": la_prott5,
     "la_protbert": la_protbert,
-    "prott5cons" : prott5cons,
+    "prott5cons": prott5cons,
+    "bindembed21dl": bindembed21dl,
     "unsupervised": unsupervised
 }
 
