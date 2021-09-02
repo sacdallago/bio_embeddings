@@ -23,7 +23,7 @@ Y = list("------------------S-SSSSSS-SSSSSS-SSSSS--SSS-S-S-")
     "get_embedder,get_extractor,expected_accuracy",
     [
         (
-                lambda: ProtTransT5XLU50Embedder(half_precision_model=True),
+                lambda: ProtTransT5XLU50Embedder(half_precision_model=True, model_directory=os.environ.get('MODEL_DIR')),
                 lambda: BindEmbed21DLAnnotationExtractor(),
                 0.694,
         ),

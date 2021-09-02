@@ -92,15 +92,23 @@ class BindEmbed21DLAnnotationExtractor:
         self._binding_residue_model_5.eval()
 
     def get_binding_residues(self, raw_embedding: ndarray) -> BasicBindingResidueResult:
+        sigm = torch.nn.Sigmoid()
+
         raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
         embedding = torch.tensor(raw_embedding).to(self._device)
 
         # Pass embeddings to the 5 different models to produce predictions
-        pred_binding_1 = self._binding_residue_model_1(embedding)
-        pred_binding_2 = self._binding_residue_model_2(embedding)
-        pred_binding_3 = self._binding_residue_model_3(embedding)
-        pred_binding_4 = self._binding_residue_model_4(embedding)
-        pred_binding_5 = self._binding_residue_model_5(embedding)
+        pred_binding_1 = sigm(self._binding_residue_model_1(embedding))
+        pred_binding_2 = sigm(self._binding_residue_model_2(embedding))
+        pred_binding_3 = sigm(self._binding_residue_model_3(embedding))
+        pred_binding_4 = sigm(self._binding_residue_model_4(embedding))
+        pred_binding_5 = sigm(self._binding_residue_model_5(embedding))
+
+        pred_binding_1 = torch.round(pred_binding_1 * 10 ** 3) / 10 ** 3
+        pred_binding_2 = torch.round(pred_binding_2 * 10 ** 3) / 10 ** 3
+        pred_binding_3 = torch.round(pred_binding_3 * 10 ** 3) / 10 ** 3
+        pred_binding_4 = torch.round(pred_binding_4 * 10 ** 3) / 10 ** 3
+        pred_binding_5 = torch.round(pred_binding_5 * 10 ** 3) / 10 ** 3
 
         pred_binding = (pred_binding_1 + pred_binding_2 + pred_binding_3 + pred_binding_4 + pred_binding_5) / 5
 

@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 
@@ -25,6 +24,19 @@ class BindingResiduesCNN(nn.Module):
         )
 
     def forward(self, x):
-        # IN: 1024 x L --> 128 x L --> OUT: 3 x L
-        x = self.conv1(x)
-        return torch.squeeze(x)
+        """
+            L = protein length
+            B = batch-size
+            F = number of features (1024 for embeddings)
+            N = number of classes (3 for binding)
+        :param x:
+        :return:
+        """
+        # IN: X = (L x F); OUT: (1 x F x L)
+        y = x.unsqueeze(dim=0).permute(0, 2, 1)
+        # IN (1 x F x L) --> (1 x 128 x L) --> (1 x 3 x L)
+        y = self.conv1(y)
+        # IN: (1 x 3 x L); OUT: (3 x L)
+        y = y.squeeze(dim=0)
+
+        return y
