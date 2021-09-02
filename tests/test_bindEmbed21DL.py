@@ -45,5 +45,5 @@ def test_binding_residue_annotation_extractor(
 
     results = [actual.value == predicted for actual, predicted in zip(prediction.small_molecules, Y)]
 
-    actual_accuracy = sum(results) / len(results)
+    actual_accuracy = round(sum(results) / len(results), 3)
     assert actual_accuracy == pytest.approx(expected_accuracy)
