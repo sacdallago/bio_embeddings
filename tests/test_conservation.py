@@ -3,6 +3,7 @@ import os
 from typing import Callable, Union
 
 import pytest
+import torch
 
 from bio_embeddings.embed import (
     EmbedderInterface,
@@ -18,14 +19,9 @@ MVKVGGEAGPSVTLPCHYSGAVTSMCWNRGSCSLFTCQNGIVWTNGTHVTYRKDTRYKLLGDLSRRDVSLTIENTAVSDS
 # groundtruth scores from ConSurf-DB
 Y = list("65183814944769491851316369976516613393436647651173341728948172511877999915534296919899766491899371431937196")
 
-@pytest.mark.skipif(
-    os.environ.get("SKIP_SLOW_TESTS"), 
-    reason="This test is very slow",
-)
-@pytest.mark.skipif(
-    not os.environ.get("RUN_VERY_SLOW_TESTS"),
-    reason="This checks the entire hard test set",
-)
+
+@pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="Uses T5")
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="T5 fp16 needs a GPU")
 @pytest.mark.parametrize(
     "get_embedder,get_extractor,expected_accuracy",
     [
