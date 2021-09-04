@@ -13,11 +13,26 @@ logger = logging.getLogger(__name__)
 class MMseqsSearchOptionsEnum(Enum):
     sensitivity = "-s"
     num_iterations = "--num-iterations"
-    maximum_sequences = "--max-seqs"
     e_value_cutoff = "-e"
     minimum_sequence_identity = "--min-seq-id"
     alignment_output = "-a"
     maximum_number_of_return_sequences = "--max-seqs"
+
+    @staticmethod
+    def from_str(option_name: str) -> Enum:
+        option = {
+            "sensitivity": MMseqsSearchOptionsEnum.sensitivity,
+            "num_iterations": MMseqsSearchOptionsEnum.num_iterations,
+            "e_value_cutoff": MMseqsSearchOptionsEnum.e_value_cutoff,
+            "minimum_sequence_identity": MMseqsSearchOptionsEnum.minimum_sequence_identity,
+            "alignment_output": MMseqsSearchOptionsEnum.alignment_output,
+            "maximum_number_of_return_sequences": MMseqsSearchOptionsEnum.maximum_number_of_return_sequences,
+        }.get(option_name, None)
+
+        if not option:
+            raise Exception(f"Invalid option {option_name}")
+
+        return option
 
 
 class MMseqsSearchOptions:
@@ -30,7 +45,10 @@ class MMseqsSearchOptions:
         MMseqsSearchOptionsEnum.maximum_number_of_return_sequences: int
     }
 
-    _options: Dict[MMseqsSearchOptionsEnum, Any] = dict()
+    _options: Dict[MMseqsSearchOptionsEnum, Any]
+
+    def __init__(self):
+        self._options = dict()
 
     def add_option(self, option: MMseqsSearchOptionsEnum, value: Any):
         # Assert value type is what it needs to be
@@ -68,7 +86,7 @@ def check_mmseqs() -> bool:
         return False
 
 
-def create_db(fasta_file: Path, database_name: Path):
+def create_mmseqs_database(fasta_file: Path, database_name: Path):
     """
     Will raise:
      - CalledProcessError if non-0 exit
@@ -88,9 +106,10 @@ def mmseqs_search(
 
     logger.info("Searching with MMseqs2")
     start = time.time()
+    # TODO: the following
     # Otherwise MMseqs2 will complain that "result_mmseqs2.dbtype exists already"
-    for old_result_file in data.mmseqs_dir.glob("result_mmseqs2*"):
-        old_result_file.unlink()
+    # for old_result_file in data.mmseqs_dir.glob("result_mmseqs2*"):
+    #     old_result_file.unlink()
     # usage: mmseqs search <i:queryDB> <i:targetDB> <o:alignmentDB> <tmpDir> [options]
     with TemporaryDirectory() as temp_dir:
         check_call(
