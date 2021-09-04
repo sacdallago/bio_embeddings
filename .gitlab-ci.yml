@@ -23,6 +23,8 @@ stages:
     - .venv/bin/pip install --upgrade pip
     - poetry config virtualenvs.in-project true
     - poetry install -E all -E webserver
+    # Install mmseqs2 SSE2 (the slowest version, for compatibility)
+    - wget https://mmseqs.com/latest/mmseqs-linux-sse2.tar.gz; tar xvfz mmseqs-linux-sse2.tar.gz; export PATH=$(pwd)/mmseqs/bin/:$PATH
 
 .test-template: &test
   <<: *install-deps
