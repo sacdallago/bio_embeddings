@@ -9,7 +9,10 @@ from Bio import SeqIO
 from pandas import read_csv
 from slugify import slugify
 
-from bio_embeddings.align import deepblast_align
+from bio_embeddings.align import (
+    deepblast_align, check_mmseqs, create_mmseqs_database, MMseqsSearchOptions, MMseqsSearchOptionsEnum, mmseqs_search,
+    convert_mmseqs_result_to_profile
+)
 from bio_embeddings.utilities import (
     get_model_file,
     get_file_manager,
@@ -165,9 +168,72 @@ def deepblast(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
+def mmseqs_search(**kwargs) -> Dict[str, Any]:
+    # Check that mmseqs2 is installed
+    if not check_mmseqs():
+        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH.")
+
+    check_required(
+        kwargs,
+        [
+
+        ],
+    )
+
+    if not "reference_sequences_file" in kwargs or not "reference_sequences_directory" in kwargs or not "reference_profiles_directory":
+        raise MissingParameterError(
+            "You need to specify either 'reference_sequences_file' (in FASTA format), 'reference_sequences_directory'"
+            " (a mmseqs database created with `mmseqs createdb ...`) or 'reference_profiles_directory' "
+            "(a mmseqs profile database created) after an `mmseqs search` and am `mmseqs result2profile`)."
+        )
+
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    sequence_search_options = MMseqsSearchOptions()
+    sequence_search_options.add_option(MMseqsSearchOptionsEnum.alignment_output, True)
+    sequence_search_options.add_option(MMseqsSearchOptionsEnum.num_iterations, 3)
+
+    profile_search_options = MMseqsSearchOptions()
+    profile_search_options.add_option(MMseqsSearchOptionsEnum.minimum_sequence_identity, .2)
+    profile_search_options.add_option(MMseqsSearchOptionsEnum.sensitivity, 7.5)
+    profile_search_options.add_option(MMseqsSearchOptionsEnum.maximum_number_of_return_sequences, 1000)
+
+    # if not "query_sequences_directory" in kwargs:
+    #     create_mmseqs_database(, temp_dir/"query")
+    #
+    # if not "reference_sequences_directory" in kwargs:
+    #     create_mmseqs_database(Path("test-data/subcellular_location_new_hard_set.fasta"), temp_dir/"search")
+    #
+    # # Sequence to sequence search
+    # mmseqs_search(temp_dir/"query", temp_dir/"search", temp_dir/"result", sequence_search_options)
+    #
+    # # Convert sequence-to-sequence results to profile
+    # convert_mmseqs_result_to_profile(temp_dir/"query", temp_dir/"search", temp_dir/"result", temp_dir/"profile")
+    #
+    # # Sequence to profile search
+    # mmseqs_search(temp_dir / "query", temp_dir / "profile", temp_dir / "profile_result", profile_search_options)
+
+
+def mmseqs_convert(**kwargs) -> Dict[str, Any]:
+    # Check that mmseqs2 is installed
+    if not check_mmseqs():
+        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH.")
+
+    check_required(
+        kwargs,
+        [
+            "query_sequences_directory",
+            "reference_sequences_directory"
+        ],
+    )
+
+
 # list of available alignment protocols
 PROTOCOLS = {
     "deepblast": deepblast,
+    "mmseqs_search": mmseqs_search,
+    "mmseqs_convert": mmseqs_convert
 }
 
 
