@@ -70,5 +70,5 @@ def test_files(tmp_path):
 
 
 def simple_behavior_test(test_files):
-    """ Run the pipeline using a simple setup once """
+    """Run the pipeline using a simple setup once"""
     parse_config_file_and_execute_run(test_files, overwrite=True)

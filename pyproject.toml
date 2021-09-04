@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bio_embeddings"
-version = "0.2.1"
+version = "0.2.2"
 description = "A pipeline for protein embedding generation and visualization"
 authors = ["Christian Dallago <christian.dallago@tum.de>", "Michael Heinzinger <mheinzinger@rostlab.org>", "Tobias Olenyi <olenyi@rostlab.org>", "Konstantin Schuetze <schuetze@in.tum.de>"]
 maintainers = ["Rostlab <admin@rostlab.org>"]
@@ -60,7 +60,7 @@ jax-unirep = { version = "^1.0.0", optional = true }
 # "jaxlib wheels are now built to require AVX instructions on x86-64 machines by default"
 # However, our CI machine is too old for AVX
 # We then go even lower due to https://github.com/google/jax/issues/5374
-jaxlib = { version = "0.1.57", optional = true }
+jaxlib = { version = "^0.1.71", optional = true }
 appdirs = "^1.4.4"
 importlib_metadata = "^4.6.1"
 pymongo = { "version" = "^3.11.2", optional = true }
@@ -92,7 +92,7 @@ check-manifest = "^0.41"
 wheel = "^0.34.2"
 jupyter = "^1.0.0"
 tox = "^3.16.1"
-black = "21.7b0"
+black = "21.8b0"
 toml = "^0.10.1"
 furo = "^2021.2.28b28"
 Sphinx = "^3.2.1" # Sphinx 4 is blocked on https://github.com/executablebooks/MyST-NB/issues/338

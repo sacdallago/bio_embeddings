@@ -25,7 +25,7 @@ class FakeEmbedder(EmbedderInterface):
 
 
 def test_simple_remapping(pytestconfig, tmp_path: Path):
-    """ https://github.com/sacdallago/bio_embeddings/issues/50 """
+    """https://github.com/sacdallago/bio_embeddings/issues/50"""
     global_parameters = {
         "sequences_file": str(
             pytestconfig.rootpath.joinpath("test-data/seqwence-protein.fasta")
@@ -34,20 +34,13 @@ def test_simple_remapping(pytestconfig, tmp_path: Path):
         "simple_remapping": True,
     }
     global_parameters = _process_fasta_file(**global_parameters)
-    embed_and_write_batched(
-        FakeEmbedder(),
-        FileSystemFileManager(),
-        global_parameters,
-    )
+    embed_and_write_batched(FakeEmbedder(), FileSystemFileManager(), global_parameters)
 
 
 def test_illegal_amino_acids(caplog, pytestconfig, tmp_path: Path):
-    """ https://github.com/sacdallago/bio_embeddings/issues/54 """
+    """https://github.com/sacdallago/bio_embeddings/issues/54"""
     input_file = pytestconfig.rootpath.joinpath("test-data/illegal_amino_acids.fasta")
-    _process_fasta_file(
-        sequences_file=str(input_file),
-        prefix=str(tmp_path),
-    )
+    _process_fasta_file(sequences_file=str(input_file), prefix=str(tmp_path))
     assert caplog.messages == [
         f"The entry 'lowercase' in {input_file} contains lower "
         "case amino acids. Lower case letters are uninterpretable by most language "
@@ -65,10 +58,7 @@ def test_unparsable_fasta(caplog, pytestconfig, tmp_path: Path):
         ValueError,
         match=f"Could not parse '{input_file}'. Are you sure this is a valid fasta file?",
     ):
-        _process_fasta_file(
-            sequences_file=str(input_file),
-            prefix=str(tmp_path),
-        )
+        _process_fasta_file(sequences_file=str(input_file), prefix=str(tmp_path))
     assert caplog.messages == []
 
 
@@ -96,16 +86,10 @@ def test_broken_fasta(pytestconfig, tmp_path: Path):
     """
     input_file = pytestconfig.rootpath.joinpath("test-data/embeddings.npz")
     with pytest.raises(ValueError, match="Are you sure this is a valid fasta file?"):
-        _process_fasta_file(
-            sequences_file=input_file,
-            prefix=str(tmp_path),
-        )
+        _process_fasta_file(sequences_file=input_file, prefix=str(tmp_path))
 
 
 def test_missing_fasta(tmp_path: Path):
     input_file = tmp_path.joinpath("non_existant.fasta")
     with pytest.raises(FileNotFoundError, match="No such file or directory"):
-        _process_fasta_file(
-            sequences_file=input_file,
-            prefix=str(tmp_path),
-        )
+        _process_fasta_file(sequences_file=input_file, prefix=str(tmp_path))

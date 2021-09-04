@@ -8,8 +8,7 @@ from bio_embeddings.visualize.pipeline import run as run_visualize
 
 
 @pytest.mark.skipif(
-    not os.environ.get("RUN_VERY_SLOW_TESTS"),
-    reason="This is experimental",
+    not os.environ.get("RUN_VERY_SLOW_TESTS"), reason="This is experimental"
 )
 def test_protbert_bfd_mutagenesis(pytestconfig, tmp_path: Path):
     result_kwargs = run_mutagenesis(
