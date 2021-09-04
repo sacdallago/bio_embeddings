@@ -1,0 +1,127 @@
+import logging
+import time
+
+from typing import List, Any, Dict
+from tempfile import TemporaryDirectory
+from subprocess import check_call
+from pathlib import Path
+from enum import Enum
+
+logger = logging.getLogger(__name__)
+
+
+class MMseqsSearchOptionsEnum(Enum):
+    sensitivity = "-s"
+    num_iterations = "--num-iterations"
+    maximum_sequences = "--max-seqs"
+    e_value_cutoff = "-e"
+    minimum_sequence_identity = "--min-seq-id"
+    alignment_output = "-a"
+    maximum_number_of_return_sequences = "--max-seqs"
+
+
+class MMseqsSearchOptions:
+    _option_types = {
+        MMseqsSearchOptionsEnum.sensitivity: float,
+        MMseqsSearchOptionsEnum.num_iterations: int,
+        MMseqsSearchOptionsEnum.e_value_cutoff: float,
+        MMseqsSearchOptionsEnum.alignment_output: bool,
+        MMseqsSearchOptionsEnum.minimum_sequence_identity: float,
+        MMseqsSearchOptionsEnum.maximum_number_of_return_sequences: int
+    }
+
+    _options: Dict[MMseqsSearchOptionsEnum, Any] = dict()
+
+    def add_option(self, option: MMseqsSearchOptionsEnum, value: Any):
+        # Assert value type is what it needs to be
+        # Pycharm complains here but it's ok the way it is
+        if not isinstance(value, self._option_types[option]):
+            raise TypeError
+
+        self._options[option] = value
+
+    def get_options(self) -> List[str]:
+        result = []
+
+        for option in self._options.keys():
+            if option == MMseqsSearchOptionsEnum.alignment_output:
+                continue
+            else:
+                value = self._options[option]
+                result.append(option.value)
+                result.append(str(value))
+
+        produce_alignment = self._options.get(MMseqsSearchOptionsEnum.alignment_output, False)
+
+        if produce_alignment:
+            result.append(MMseqsSearchOptionsEnum.alignment_output.value)
+
+        return result
+
+
+def check_mmseqs() -> bool:
+    try:
+        mmseqs_path = check_call(["which", "mmseqs"])
+        logger.info(f"mmseqs binary identified at: {mmseqs_path}")
+        return True
+    except OSError:
+        return False
+
+
+def create_db(fasta_file: Path, database_name: Path):
+    """
+    Will raise:
+     - CalledProcessError if non-0 exit
+     - OSError if executable is not found
+    """
+    database_name.parent.mkdir(exist_ok=True)
+    check_call(["mmseqs", "createdb", str(fasta_file), str(database_name)])
+
+
+def mmseqs_search(
+        query_database: Path,
+        search_database: Path,
+        search_result_directory: Path,
+        search_options: MMseqsSearchOptions = MMseqsSearchOptions()
+) -> None:
+    """Calls `mmseqs search`"""
+
+    logger.info("Searching with MMseqs2")
+    start = time.time()
+    # Otherwise MMseqs2 will complain that "result_mmseqs2.dbtype exists already"
+    for old_result_file in data.mmseqs_dir.glob("result_mmseqs2*"):
+        old_result_file.unlink()
+    # usage: mmseqs search <i:queryDB> <i:targetDB> <o:alignmentDB> <tmpDir> [options]
+    with TemporaryDirectory() as temp_dir:
+        check_call(
+            [
+                "mmseqs",
+                "search",
+                str(query_database),
+                str(search_database),
+                str(search_result_directory),
+                temp_dir,
+                *search_options.get_options()
+            ]
+        )
+    total = time.time() - start
+    logger.info(f"`mmseqs search` took {total :f}s")
+
+
+def convert_mmseqs_result_to_profile(
+        query_database: Path,
+        search_database: Path,
+        search_result_directory: Path,
+        profile_directory: Path
+) -> None:
+    check_call(
+        [
+            "mmseqs",
+            "result2profile",
+            str(query_database),
+            str(search_database),
+            str(search_result_directory),
+            str(profile_directory)
+        ]
+    )
+
