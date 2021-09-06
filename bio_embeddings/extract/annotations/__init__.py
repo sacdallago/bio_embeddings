@@ -1,9 +1,15 @@
-from bio_embeddings.extract.annotations.Disorder import Disorder
-from bio_embeddings.extract.annotations.Location import Location
-from bio_embeddings.extract.annotations.Membrane import Membrane
-from bio_embeddings.extract.annotations.SecondaryStructure import SecondaryStructure
-from bio_embeddings.extract.annotations.Conservation import Conservation
-from bio_embeddings.extract.annotations.BindingResidues import BindingResidues
+from bio_embeddings.extract.annotations.binding_residues import BindingResidues
+from bio_embeddings.extract.annotations.conservation import Conservation
+from bio_embeddings.extract.annotations.disorder import Disorder
+from bio_embeddings.extract.annotations.location import Location
+from bio_embeddings.extract.annotations.membrane import Membrane
+from bio_embeddings.extract.annotations.secondary_structure import SecondaryStructure
 
-__all__ = ["Disorder", "Location", "Membrane", "SecondaryStructure", "Conservation", "BindingResidues"]
-
+__all__ = [
+    "BindingResidues",
+    "Disorder",
+    "Location",
+    "Membrane",
+    "SecondaryStructure",
+    "Conservation",
+]

@@ -2,7 +2,7 @@ import collections
 import h5py
 import numpy as np
 
-from typing import List
+from typing import List, Tuple
 from sklearn.metrics import pairwise_distances as _pairwise_distances
 
 
@@ -49,7 +49,7 @@ def pairwise_distance_matrix_from_embeddings_and_annotations(query_embeddings_pa
     return PairwiseDistanceMatrixResult(pairwise_matrix=pairwise_distances, queries=queries, references=references)
 
 
-def get_k_nearest_neighbours(pairwise_matrix: np.array, k: int = 1) -> (List[int], np.array):
+def get_k_nearest_neighbours(pairwise_matrix: np.array, k: int = 1) -> Tuple[List[int], np.ndarray]:
     """
 
     :param pairwise_matrix: an np.array with columns as queries and rows as targets

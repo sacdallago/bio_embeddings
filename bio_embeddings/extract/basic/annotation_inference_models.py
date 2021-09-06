@@ -1,10 +1,10 @@
 import torch.nn as nn
 
 
-class SUBCELL_FNN(nn.Module):
+class SubCellFNN(nn.Module):
     # in 10 states and a binary classification into membrane-bound vs. soluble
     def __init__(self, use_batch_norm=True):
-        super(SUBCELL_FNN, self).__init__()
+        super(SubCellFNN, self).__init__()
         # Linear layer, taking embedding dimension 1024 to make predictions:
         if use_batch_norm:
             self.layer = nn.Sequential(
@@ -12,13 +12,13 @@ class SUBCELL_FNN(nn.Module):
                 nn.Dropout(0.25),  # dropout
                 nn.ReLU(),
                 nn.BatchNorm1d(32)
-                )
+            )
         else:
             self.layer = nn.Sequential(
                 nn.Linear(1024, 32),  # in, out
                 nn.Dropout(0.25),  # dropout
                 nn.ReLU(),
-                )
+            )
         self.loc_classifier = nn.Linear(32, 10)
         self.mem_classifier = nn.Linear(32, 2)
 
@@ -31,10 +31,10 @@ class SUBCELL_FNN(nn.Module):
         return Yhat_loc, Yhat_mem
 
 
-class SECSTRUCT_CNN(nn.Module):
+class SecStructCNN(nn.Module):
     # Convolutional neural network for prediction of Sec.Struct. in 3- & 8-states and disorder
     def __init__(self):
-        super(SECSTRUCT_CNN, self).__init__()
+        super(SecStructCNN, self).__init__()
 
         self.elmo_feature_extractor = nn.Sequential(
             nn.Conv2d(1024, 32, kernel_size=(7, 1), padding=(3, 0)),

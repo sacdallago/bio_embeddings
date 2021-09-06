@@ -27,7 +27,7 @@ stages:
 .test-template: &test
   <<: *install-deps
   variables:
-    SKIP_EXPENSIVE_TESTS: 1
+    SKIP_NEGLECTED_EMBEDDER_TESTS: 1
     SKIP_AVX2_TESTS: 1
   stage: tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
@@ -85,7 +85,10 @@ docs:
     # We want to have separate documentation for every release while updating develop with every commit
     # https://unix.stackexchange.com/a/412262/77322
     - cp -r ../_build/html/. ${CI_COMMIT_TAG:-develop}
+    # Update the index page redirect to the latest tag
     - if [ -n "$CI_COMMIT_TAG" ]; then echo "<meta http-equiv=refresh content=0;url='$CI_COMMIT_TAG/'>" > index.html; fi
+    # Update the "latest" redirect to the latest tag
+    - if [ -n "$CI_COMMIT_TAG" ]; then rm latest && ln -s $CI_COMMIT_TAG latest; fi
     - git add .
     - git commit --allow-empty -m 'Upload docs'
     - git push

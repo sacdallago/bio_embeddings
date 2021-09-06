@@ -41,7 +41,6 @@ from bio_embeddings.embed import (
     OneHotEncodingEmbedder,
     ESM1vEmbedder,
 )
-from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.project.pb_tucker import PBTucker
 from bio_embeddings.utilities import get_model_file
 from tests.shared import check_embedding
@@ -75,7 +74,7 @@ all_embedders: List[Any] = common_embedders + [
     pytest.param(
         embedder_class,
         marks=pytest.mark.skipif(
-            os.environ.get("SKIP_EXPENSIVE_TESTS"), reason="Save CI resources"
+            os.environ.get("SKIP_NEGLECTED_EMBEDDER_TESTS"), reason="Save CI resources"
         ),
     )
     for embedder_class in neglected_embedders

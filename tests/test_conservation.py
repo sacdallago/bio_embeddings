@@ -5,15 +5,14 @@ import pytest
 import torch
 
 from bio_embeddings.embed import EmbedderInterface, ProtTransT5XLU50Embedder
-
 from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
 
 # >5dzo-A
 FASTA = """
 MVKVGGEAGPSVTLPCHYSGAVTSMCWNRGSCSLFTCQNGIVWTNGTHVTYRKDTRYKLLGDLSRRDVSLTIENTAVSDSGVYCCRVEHRGWFNDMKITVSLEIVPP
 """.strip()
-# groundtruth scores from ConSurf-DB
-Y = list(
+# ground truth scores from ConSurf-DB
+ground_truth = list(
     "65183814944769491851316369976516613393436647651173341728948172511877999915534296919899766491899371431937196"
 )
 
@@ -43,7 +42,7 @@ def test_conservation_annotation_extractor(
     prediction = extractor.get_conservation(embedding)
     results = [
         actual.value == predicted
-        for actual, predicted in zip(prediction.conservation, Y)
+        for actual, predicted in zip(prediction.conservation, ground_truth)
     ]
 
     actual_accuracy = sum(results) / len(results)
