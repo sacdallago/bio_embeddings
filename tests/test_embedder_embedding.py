@@ -74,7 +74,7 @@ all_embedders: List[Any] = common_embedders + [
     pytest.param(
         embedder_class,
         marks=pytest.mark.skipif(
-            os.environ.get("SKIP_NEGLEGTED_EMBEDDER_TESTS"), reason="Save CI resources"
+            os.environ.get("SKIP_NEGLECTED_EMBEDDER_TESTS"), reason="Save CI resources"
         ),
     )
     for embedder_class in neglected_embedders

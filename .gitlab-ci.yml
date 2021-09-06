@@ -27,7 +27,7 @@ stages:
 .test-template: &test
   <<: *install-deps
   variables:
-    SKIP_NEGLEGTED_EMBEDDER_TESTS: 1
+    SKIP_NEGLECTED_EMBEDDER_TESTS: 1
     SKIP_AVX2_TESTS: 1
   stage: tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
