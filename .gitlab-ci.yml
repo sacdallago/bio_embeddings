@@ -28,6 +28,7 @@ stages:
   <<: *install-deps
   variables:
     SKIP_EXPENSIVE_TESTS: 1
+    SKIP_AVX2_TESTS: 1
   stage: tests
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
   script: poetry run pytest -v

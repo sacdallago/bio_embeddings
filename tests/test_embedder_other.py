@@ -31,7 +31,7 @@ from bio_embeddings.utilities.config import read_config_file
     ],
 )
 def test_model_download(embedder_class):
-    """ We want to check that models are downloaded if the model_directory isn't given """
+    """We want to check that models are downloaded if the model_directory isn't given"""
     module_name = embedder_class.__module__
     model_class = typing.get_type_hints(embedder_class)["_model"].__name__
     model_name = f"{module_name}.{model_class}"
@@ -56,7 +56,7 @@ def test_model_download(embedder_class):
     ],
 )
 def test_model_no_download(embedder_class):
-    """ We want to check that models aren't downloaded if the model_directory is given """
+    """We want to check that models aren't downloaded if the model_directory is given"""
     with mock.patch(
         "bio_embeddings.embed.embedder_interfaces.get_model_directories_from_zip",
         return_value="/dev/null",
