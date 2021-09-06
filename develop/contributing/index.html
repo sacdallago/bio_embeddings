@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Development Setup" href="setup.html" /><link rel="prev" title="bio_embeddings.visualize" href="../api/bio_embeddings.visualize.html" />
 
     <meta name="generator" content="sphinx-4.1.2, furo 2021.08.31"/>
-        <title>Colab initialization - bio_embeddings</title>
+        <title>Contributing - bio_embeddings</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -156,10 +156,10 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parameter_blueprints.html">Pipeline Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/README.html">Notebooks</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
@@ -169,10 +169,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../contributing/index.html">Contributing</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/setup.html">Development Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/extract.html">Implement a new predictor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/embedder.html">Add a new language model/embedder</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Contributing</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html">Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract.html">Implement a new predictor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedder.html">Add a new language model/embedder</a></li>
 </ul>
 </li>
 </ul>
@@ -195,95 +195,65 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="tex2jax_ignore mathjax_ignore section" id="colab-initialization">
-<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p>install the pipeline in the colab runtime</p></li>
-<li><p>download files neccessary for this example</p></li>
+        <div class="tex2jax_ignore mathjax_ignore section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Development Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#tests">Tests</a></li>
 </ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip3 install -U pip &gt; /dev/null
-<span class="o">!</span>pip3 install -U bio_embeddings<span class="o">[</span>all<span class="o">]</span> &gt; /dev/null
-</pre></div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extract.html">Implement a new predictor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extract.html#step-1-class-to-label-mapping">Step 1: Class-to-label-mapping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-1-1-bridging-imports">Step 1.1.: Bridging imports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extract.html#step-2-embedding-to-featureextractor-predictor-bridge">Step 2: Embedding-to-FeatureExtractor/Predictor-bridge</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-2-1-file-creation">Step 2.1: File creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-2-2-the-meat-of-prediction">Step 2.2: The meat of prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-2-2-bridging-imports">Step 2.2: Bridging imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-3-make-your-predictor-part-of-the-pipeline">Step 3: Make your predictor part of the pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-4-add-model-weights">Step 4: Add model weights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extract.html#step-5-write-tests">Step 5: Write tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="embedder.html">Add a new language model/embedder</a></li>
+</ul>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/prottrans_bert_embeddings_file.h5 --output-document prottrans_bert_embeddings_file.h5
-<span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/seqvec_embeddings_file.h5 --output-document seqvec_embeddings_file.h5
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="visualize-the-raw-embeddings-as-images">
-<h1>Visualize the RAW embeddings as images<a class="headerlink" href="#visualize-the-raw-embeddings-as-images" title="Permalink to this headline">¶</a></h1>
-<p>This can be helpful to spot any patterns, visually</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">plotly</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">proteins</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'prottrans_bert_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">protein_id</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">proteins</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">protein_id</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">protein_id</span><span class="p">])))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">embedding</span><span class="p">)</span> <span class="ow">in</span> <span class="n">proteins</span><span class="p">:</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">embedding</span><span class="p">),</span> <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">'RdBu'</span><span class="p">,</span> <span class="n">zmin</span><span class="o">=-</span><span class="mf">.7</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
-    <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"figures/"</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="s2">"_prottrans_bert.html"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>For the next block of code to work, you should generate some seqvec embeddings and store them as <code class="docutils literal notranslate"><span class="pre">seqvec_embeddings_file.h5</span></code> in the <code class="docutils literal notranslate"><span class="pre">pipeline_output_example</span></code> folder.</p>
-<p>Note that we are picking the second embedding layer from the seqvec embeddings.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">proteins</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'seqvec_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">protein_id</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">proteins</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">protein_id</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">protein_id</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">embedding</span><span class="p">)</span> <span class="ow">in</span> <span class="n">proteins</span><span class="p">:</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">embedding</span><span class="p">),</span> <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">'RdBu'</span><span class="p">,</span> <span class="n">zmin</span><span class="o">=-</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
-    <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"figures/"</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="s2">"_seqvec.html"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>You want to add your models to bio_embeddings? These guides will show you how.</p>
 </div>
 
       </article>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="setup.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Development Setup</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../api/bio_embeddings.visualize.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">bio_embeddings.visualize</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
@@ -294,7 +264,7 @@
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="../_sources/notebooks/per_amino_acid_embedding_visualization.ipynb.txt"
+            <a class="muted-link" href="../_sources/contributing/index.md.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -302,25 +272,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Colab initialization</a></li>
-<li><a class="reference internal" href="#visualize-the-raw-embeddings-as-images">Visualize the RAW embeddings as images</a></li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Implement a new predictor" href="extract.html" /><link rel="prev" title="Contributing" href="index.html" />
 
     <meta name="generator" content="sphinx-4.1.2, furo 2021.08.31"/>
-        <title>Colab initialization - bio_embeddings</title>
+        <title>Development Setup - bio_embeddings</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -156,10 +156,10 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parameter_blueprints.html">Pipeline Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/README.html">Notebooks</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
@@ -169,10 +169,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../contributing/index.html">Contributing</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/setup.html">Development Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/extract.html">Implement a new predictor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing/embedder.html">Add a new language model/embedder</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Contributing</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract.html">Implement a new predictor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embedder.html">Add a new language model/embedder</a></li>
 </ul>
 </li>
 </ul>
@@ -200,81 +200,47 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="tex2jax_ignore mathjax_ignore section" id="colab-initialization">
-<h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
+        <div class="tex2jax_ignore mathjax_ignore section" id="development-setup">
+<h1>Development Setup<a class="headerlink" href="#development-setup" title="Permalink to this headline">¶</a></h1>
+<p>bio_embeddings uses <a class="reference external" href="https://github.com/python-poetry/poetry">poetry</a> to manage dependencies.</p>
 <ul class="simple">
-<li><p>install the pipeline in the colab runtime</p></li>
-<li><p>download files neccessary for this example</p></li>
+<li><p>Install <a class="reference external" href="https://github.com/python-poetry/poetry#installation">poetry</a>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">config</span> <span class="pre">virtualenvs.in-project</span> <span class="pre">true</span></code>. This will make sure all python dependencies will be in a folder called <code class="docutils literal notranslate"><span class="pre">.venv</span></code> (unless you’re using conda).</p></li>
+<li><p>Clone the repository (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span> <span class="pre">https://github.com/sacdallago/bio_embeddings</span></code>)</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span> <span class="pre">-E</span> <span class="pre">all</span></code>. This will create a new virtualenv, which you can activate with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">shell</span></code> or <code class="docutils literal notranslate"><span class="pre">.</span> <span class="pre">.venv/bin/activate</span></code> (use <code class="docutils literal notranslate"><span class="pre">deactivate</span></code> to get back to your normal environment). If you’re already in a conda environment, poetry will use that environment instead.</p></li>
+<li><p>To check that the environment is active, open a python console and run <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">bio_embeddings</span></code></p></li>
 </ul>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip3 install -U pip &gt; /dev/null
-<span class="o">!</span>pip3 install -U bio_embeddings<span class="o">[</span>all<span class="o">]</span> &gt; /dev/null
+<div class="section" id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<p>We use <a class="reference external" href="https://docs.pytest.org/">pytest</a> to check our code, so can run the tests with <code class="docutils literal notranslate"><span class="pre">pytest</span></code>. Running them all is slow however and takes a lot of disk space, so you can use <code class="docutils literal notranslate"><span class="pre">SKIP_SLOW_TESTS=1</span> <span class="pre">pytest</span></code> to only run a few fast tests.</p>
+<p>Some tests that need <code class="docutils literal notranslate"><span class="pre">RUN_VERY_SLOW_TESTS=1</span></code> to be run because they can take a couple of minutes each. FOr example you need <code class="docutils literal notranslate"><span class="pre">RUN_VERY_SLOW_TESTS=1</span> <span class="pre">pytest</span> <span class="pre">tests/conservation.py</span></code> to run the test of the conservation predictor because it uses the large T5 language model.</p>
+<p>To create a new test, either add a new function in an existing file under <code class="docutils literal notranslate"><span class="pre">tests/</span></code>, or create a new file starting with <code class="docutils literal notranslate"><span class="pre">test_</span></code> in that folder. All functions inside a <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> file starting with <code class="docutils literal notranslate"><span class="pre">test_</span></code> are run by pytest.</p>
+<p>To get the project root as <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#basic-use">pathlib.Path</a>, use <code class="docutils literal notranslate"><span class="pre">pytestconfig.rootpath</span></code>, where pytest will pass <code class="docutils literal notranslate"><span class="pre">pytestconfig</span></code> to your method. Here, we just check the number of entries in <code class="docutils literal notranslate"><span class="pre">test-data/mapping_file.csv</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.utilities</span> <span class="kn">import</span> <span class="n">read_mapping_file</span>
+
+
+<span class="k">def</span> <span class="nf">test_mapping_file_length</span><span class="p">(</span><span class="n">pytestconfig</span><span class="p">):</span>
+    <span class="n">mapping_file_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="n">pytestconfig</span><span class="o">.</span><span class="n">rootpath</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"test-data/mapping_file.csv"</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">read_mapping_file</span><span class="p">(</span><span class="n">mapping_file_path</span><span class="p">)</span>
+    <span class="c1"># Check that the mapping file actually has two rows with data</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/prottrans_bert_embeddings_file.h5 --output-document prottrans_bert_embeddings_file.h5
-<span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/pipeline_output_example/seqvec_embeddings_file.h5 --output-document seqvec_embeddings_file.h5
+<p>Note that our CI machine doesn’t have a GPU, so the tests still need to pass without a GPU. For tests that need a GPU you can use the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skipif</span><span class="p">(</span>
+    <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">(),</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"Can't test the GPU if there isn't any"</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_my_feature</span><span class="p">():</span>
+    <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="visualize-the-raw-embeddings-as-images">
-<h1>Visualize the RAW embeddings as images<a class="headerlink" href="#visualize-the-raw-embeddings-as-images" title="Permalink to this headline">¶</a></h1>
-<p>This can be helpful to spot any patterns, visually</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">plotly</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">proteins</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'prottrans_bert_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">protein_id</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">proteins</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">protein_id</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">protein_id</span><span class="p">])))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">embedding</span><span class="p">)</span> <span class="ow">in</span> <span class="n">proteins</span><span class="p">:</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">embedding</span><span class="p">),</span> <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">'RdBu'</span><span class="p">,</span> <span class="n">zmin</span><span class="o">=-</span><span class="mf">.7</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
-    <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"figures/"</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="s2">"_prottrans_bert.html"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>For the next block of code to work, you should generate some seqvec embeddings and store them as <code class="docutils literal notranslate"><span class="pre">seqvec_embeddings_file.h5</span></code> in the <code class="docutils literal notranslate"><span class="pre">pipeline_output_example</span></code> folder.</p>
-<p>Note that we are picking the second embedding layer from the seqvec embeddings.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">proteins</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">'seqvec_embeddings_file.h5'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">protein_id</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">proteins</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">protein_id</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">protein_id</span><span class="p">])[</span><span class="mi">1</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">embedding</span><span class="p">)</span> <span class="ow">in</span> <span class="n">proteins</span><span class="p">:</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">embedding</span><span class="p">),</span> <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">'RdBu'</span><span class="p">,</span> <span class="n">zmin</span><span class="o">=-</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
-    <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"figures/"</span><span class="o">+</span><span class="n">identifier</span><span class="o">+</span><span class="s2">"_seqvec.html"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<p>Note that in CI, we skip some embedder tests marked <code class="docutils literal notranslate"><span class="pre">SKIP_NEGLEGTED_EMBEDDER_TESTS</span></code> for stale and barely used embedder.</p>
 </div>
 </div>
 
@@ -282,8 +248,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="extract.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Implement a new predictor</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Contributing</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
@@ -294,7 +278,7 @@
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="../_sources/notebooks/per_amino_acid_embedding_visualization.ipynb.txt"
+            <a class="muted-link" href="../_sources/contributing/setup.md.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -314,8 +298,10 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Colab initialization</a></li>
-<li><a class="reference internal" href="#visualize-the-raw-embeddings-as-images">Visualize the RAW embeddings as images</a></li>
+<li><a class="reference internal" href="#">Development Setup</a><ul>
+<li><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
