@@ -1,0 +1,291 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
+        <title>Implement new predictor into bio_embeddings - bio_embeddings</title>
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+    <link rel="stylesheet" href="../_static/pygments.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameter_blueprints.html">Pipeline Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="implement-new-predictor-into-bio-embeddings">
+<h1>Implement new predictor into <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code><a class="headerlink" href="#implement-new-predictor-into-bio-embeddings" title="Permalink to this headline">¶</a></h1>
+<p>If you have a predictor that predicts a certain feature from some embeddings, you can add it to the <code class="docutils literal notranslate"><span class="pre">extract</span></code> module of <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code>. In the following is a short guide where “project_name.” refers to the abbreviation of your predictor, e.g. “ProtT5cons”, which refers to a CNN that predicts conservation from ProtT5-XL-U50 embeddings.</p>
+<div class="section" id="step-1-class-to-label-mapping">
+<h2>Step 1: Class-to-label-mapping<a class="headerlink" href="#step-1-class-to-label-mapping" title="Permalink to this headline">¶</a></h2>
+<p>You create a new file that defines the labels (e.g. {“H”,”E”,”L”} for helix, sheet, and other) that are mapped from your raw network output (e.g. three secondary structures classes in [0,2]).</p>
+<p>This is done by creating a new “annotations” file that defines the mapping here: <code class="docutils literal notranslate"><span class="pre">bio_embeddings/extract/annotations/</span></code>.</p>
+<p>Use an expressive name that describes the feature you are mapping, for example <code class="docutils literal notranslate"><span class="pre">conservation.py</span></code>.</p>
+<p>Use existing files in this folder as template (this will hold true for all further steps). Watch out for templates that define tasks on at per-residue level (e.g. secondary structure or conservation) versus tasks on the per-protein level, i.e., modalities/features that define an entire protein (e.g. subcellular localization), and choose your template according to your task.</p>
+<p>Additional things to look out for:</p>
+<ul>
+<li><p>When creating annotations at the per-residue, use single letters/numbers as value to the enum key:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Disorder</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">DISORDER</span> <span class="o">=</span> <span class="s1">'X'</span>
+  <span class="n">ORDER</span> <span class="o">=</span> <span class="s1">'-'</span>
+  <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s1">'?'</span>
+</pre></div>
+</div>
+<p>this as opposed to longer values for per-protein features, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">CELL_MEMBRANE</span> <span class="o">=</span> <span class="s1">'Cell-Membrane'</span>
+  <span class="n">CYTOPLASM</span> <span class="o">=</span> <span class="s1">'Cytoplasm'</span>
+  <span class="n">ENDOPLASMATIC_RETICULUM</span> <span class="o">=</span> <span class="s1">'Endoplasmic reticulum'</span>
+  <span class="n">GOLGI_APPARATUS</span> <span class="o">=</span> <span class="s1">'Golgi - Apparatus'</span>
+</pre></div>
+</div>
+<p>the reason you want to do this is that when the predictions are exported in the pipeline, they are exported as a FASTA file. As such, if you have more than 1 character per residue, it will be impossible to map back and forth between the sequence and the predictions.</p>
+</li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">__str__(self):</span></code> method to define as complete as possible description of a particular predicted feature means, so that users wondering what a particular key value means can interpret it by simply printing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">IN</span><span class="p">]</span>  <span class="nb">print</span><span class="p">(</span><span class="n">Conservation</span><span class="o">.</span><span class="n">cons_7</span><span class="p">)</span>
+<span class="p">[</span><span class="n">OUT</span><span class="p">]</span> <span class="n">Conserved</span><span class="o">.</span> <span class="n">Score</span><span class="o">=</span><span class="mi">7</span> <span class="p">(</span><span class="mi">1</span><span class="p">:</span> <span class="n">variable</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="n">conserved</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="section" id="step-1-1-bridging-imports">
+<h3>Step 1.1.: Bridging imports<a class="headerlink" href="#step-1-1-bridging-imports" title="Permalink to this headline">¶</a></h3>
+<p>Add the new annotation class that you’ve defined in the step before to the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> of <code class="docutils literal notranslate"><span class="pre">bio_embeddings/extract/annotations/</span></code> (see file for examples)</p>
+</div>
+</div>
+<div class="section" id="step-2-embedding-to-featureextractor-predictor-bridge">
+<h2>Step 2: Embedding-to-FeatureExtractor/Predictor-bridge<a class="headerlink" href="#step-2-embedding-to-featureextractor-predictor-bridge" title="Permalink to this headline">¶</a></h2>
+<p>In this step, you create a new directory that holds all files that are necessary to
+a) embed a protein sequence using the correct embedding,
+b) run your pre-trained predictor on top of embeddings to derive predictions, and
+c) use the mapping you defined in step 1 to map from raw class output (e.g. integer in [0,2]) to actual class labels (e.g. string in {“H”,”E”,”L”}).</p>
+<div class="section" id="step-2-1-file-creation">
+<h3>Step 2.1: File creation<a class="headerlink" href="#step-2-1-file-creation" title="Permalink to this headline">¶</a></h3>
+<p>Within the new directory, create a new file for your NN-architecture; use a combination of the feature you are predicting (conservation) and the architecture (CNN) as file name; for example, <code class="docutils literal notranslate"><span class="pre">conservation_cnn.py</span></code> holds the definition of the CNN-architecture.</p>
+<p>Add the definition of your architecture to this new file. Use again code from other projects as template.</p>
+</div>
+<div class="section" id="step-2-2-the-meat-of-prediction">
+<h3>Step 2.2: The meat of prediction<a class="headerlink" href="#step-2-2-the-meat-of-prediction" title="Permalink to this headline">¶</a></h3>
+<p>In the same directory, create a new file that defines how Embedders/LMs and Feature-extractors (predictors) should be stitched together to produce predictions.</p>
+<p>For this, create a new file similar to <code class="docutils literal notranslate"><span class="pre">basic/BasicAnnotationExtractor.py</span></code> but adjust it to your labels/task. Name the new file  <code class="docutils literal notranslate"><span class="pre">{project_name}_annotation_extractor.py</span></code> (for example, <code class="docutils literal notranslate"><span class="pre">prot_t5_cons_annotation_extractor.py</span></code>).</p>
+<p>This file will hold a class (e.g. <code class="docutils literal notranslate"><span class="pre">ProtT5consAnnotationExtractor</span></code>; you can use this one as template for residue-level predictions) that in turn will hold the logic to transform embeddings into predictions. In a simple way, the class loads the weights of your predictor architecture, receives embeddings via a certain function which are fed to the predictor to produce raw class predictions (e.g. in [0,2]), finally maps those to labels defined in the <code class="docutils literal notranslate"><span class="pre">annotations</span></code> file from Step 1 and returns the predictions in some structured form.</p>
+<p>Note: use <code class="docutils literal notranslate"><span class="pre">neccessary_files</span></code> to define any files that you need to load to make the predictions. These files will also be made public (See Step 4). The name of the files must be the same as in <code class="docutils literal notranslate"><span class="pre">defaults.yaml</span></code>. The files <strong>must</strong> end in <code class="docutils literal notranslate"><span class="pre">_file</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">weights_file</span></code>, <code class="docutils literal notranslate"><span class="pre">blosum_scores_file</span></code>).</p>
+</div>
+<div class="section" id="step-2-2-bridging-imports">
+<h3>Step 2.2: Bridging imports<a class="headerlink" href="#step-2-2-bridging-imports" title="Permalink to this headline">¶</a></h3>
+<p>Create in the same directory an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file that imports the class that you wrote in Step 2.2 (for example, for conservation prediction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.extract.prott5cons.prot_t5_cons_annotation_extractor</span> <span class="kn">import</span> <span class="n">ProtT5consAnnotationExtractor</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3-make-your-predictor-part-of-the-pipeline">
+<h3>Step 3: Make your predictor part of the pipeline<a class="headerlink" href="#step-3-make-your-predictor-part-of-the-pipeline" title="Permalink to this headline">¶</a></h3>
+<p>Expand the <code class="docutils literal notranslate"><span class="pre">pipeline.py</span></code> file in <code class="docutils literal notranslate"><span class="pre">bio_embeddings/extract</span></code> to automate the function-call of the code you’ve defined in Step 2. Watch out for differences in per-residue and per-protein predictions and use existing functions as templates. The output of your predictions should either be a FASTA file (per-residue predictions) or a CSV file (per-protein predictions).</p>
+</div>
+<div class="section" id="step-4-add-model-weights">
+<h3>Step 4: Add model weights<a class="headerlink" href="#step-4-add-model-weights" title="Permalink to this headline">¶</a></h3>
+<p>Last but not least, you need to upload the weights of your predictor to an FTP (http://data.bioembeddings.com/public/embeddings/feature_models/). This you do by pinging Chris/Konstantin through support [A!T] bioembeddings.com (if external) or Mattermost. Once the weights are online, add “project_name” to the <code class="docutils literal notranslate"><span class="pre">defaults.yaml</span></code> in <code class="docutils literal notranslate"><span class="pre">bio_embeddings/utilities</span></code>. This will enable automatic download of the weights through functionality already in <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code>.</p>
+</div>
+<div class="section" id="step-5-write-tests">
+<h3>Step 5: Write tests<a class="headerlink" href="#step-5-write-tests" title="Permalink to this headline">¶</a></h3>
+<p>In order to ensure that everything runs as expected you should also add a some simple sanity check to <code class="docutils literal notranslate"><span class="pre">bio_embeddings/tests</span></code>. There you can define, for example, the expected accuracy for a few proteins (or a single protein for per-residue task as every residue is a sample). Important is to pick proteins where you know ground truth labels. After defining the expected accuracy (the accuracy you got for this protein using your own code, not the bio_embeddings implementation), you can write an automated test (again, check other tests as template) that runs the new predictor that you’ve defined in the steps above on the test-protein of your choice. Those predictions can be used to compute an accuracy (bio_embeddings_accuracy) which in turn can be compared the expected accuracy. Alternatively, you can also directly compare predictions from your own code and predictions from your bio_embeddings implementation.</p>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/user_guides/contribute_extract.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Implement new predictor into <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code></a><ul>
+<li><a class="reference internal" href="#step-1-class-to-label-mapping">Step 1: Class-to-label-mapping</a><ul>
+<li><a class="reference internal" href="#step-1-1-bridging-imports">Step 1.1.: Bridging imports</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-2-embedding-to-featureextractor-predictor-bridge">Step 2: Embedding-to-FeatureExtractor/Predictor-bridge</a><ul>
+<li><a class="reference internal" href="#step-2-1-file-creation">Step 2.1: File creation</a></li>
+<li><a class="reference internal" href="#step-2-2-the-meat-of-prediction">Step 2.2: The meat of prediction</a></li>
+<li><a class="reference internal" href="#step-2-2-bridging-imports">Step 2.2: Bridging imports</a></li>
+<li><a class="reference internal" href="#step-3-make-your-predictor-part-of-the-pipeline">Step 3: Make your predictor part of the pipeline</a></li>
+<li><a class="reference internal" href="#step-4-add-model-weights">Step 4: Add model weights</a></li>
+<li><a class="reference internal" href="#step-5-write-tests">Step 5: Write tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
