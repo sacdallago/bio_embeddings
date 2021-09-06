@@ -18,8 +18,8 @@ RUN python3 -m venv .venv && \
     mkdir bio_embeddings && \
     touch bio_embeddings/__init__.py && \
     touch README.md && \
-    python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
-    python3 $HOME/.poetry/bin/poetry install --no-dev -E all
+    python3 $HOME/.local/bin/poetry config virtualenvs.in-project true && \
+    python3 $HOME/.local/bin/poetry install --no-dev -E all
 
 FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 

@@ -25,8 +25,8 @@ RUN mkdir bio_embeddings && \
     touch README.md && \
     python3 -m venv .venv && \
     .venv/bin/pip install -U pip && \
-    python3 $HOME/.poetry/bin/poetry config virtualenvs.in-project true && \
-    python3 $HOME/.poetry/bin/poetry install --no-dev -E seqvec -E transformers && \
+    python3 $HOME/.local/bin/poetry config virtualenvs.in-project true && \
+    python3 $HOME/.local/bin/poetry install --no-dev -E seqvec -E transformers && \
     .venv/bin/pip install -r webserver/requirements.txt
 
 FROM nvidia/cuda:11.1-runtime-ubuntu20.04
