@@ -4,8 +4,8 @@ FROM ubuntu:20.04 as venv-build
 
 # build-essential is for jsonnet
 RUN apt-get update && \
-    apt-get install -y curl build-essential python3 python3-distutils python3-venv python3-dev git && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - --version 1.1.3
+    apt-get install -y curl build-essential python3 python3-pip python3-distutils python3-venv python3-dev python3-virtualenv git && \
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 - --version 1.1.7
 
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
@@ -18,8 +18,8 @@ RUN python3 -m venv .venv && \
     mkdir bio_embeddings && \
     touch bio_embeddings/__init__.py && \
     touch README.md && \
-    python3 $HOME/.local/bin/poetry config virtualenvs.in-project true && \
-    python3 $HOME/.local/bin/poetry install --no-dev -E all
+    $HOME/.local/bin/poetry config virtualenvs.in-project true && \
+    $HOME/.local/bin/poetry install --no-dev -E all
 
 FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 
