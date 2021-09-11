@@ -21,7 +21,7 @@ mmseqs_profile_search:
   mmseqs_search_options:
     minimum_sequence_identity: 0.2
     sensitivity: 7.5
-    maximum_number_of_return_sequences: 10000
+    maximum_number_of_prefilter_sequences: 10000
   # Overwrite from depends_on
   convert_to_profiles: False
 

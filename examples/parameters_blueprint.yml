@@ -42,7 +42,7 @@ stage_0:
   #   num_iterations: 5
   #   sensitivity: 7.5
   #   minimum_sequence_identity: 0.2
-  #   maximum_number_of_return_sequences: 100
+  #   maximum_number_of_prefilter_sequences: 100
   #   alignment_output: True
 
 stage_1:

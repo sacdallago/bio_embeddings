@@ -25,7 +25,7 @@ def test_basic_mmseqs2():
     profile_search_options = MMseqsSearchOptions()
     profile_search_options.add_option(MMseqsSearchOptionsEnum.minimum_sequence_identity, .2)
     profile_search_options.add_option(MMseqsSearchOptionsEnum.sensitivity, 7.5)
-    profile_search_options.add_option(MMseqsSearchOptionsEnum.maximum_number_of_return_sequences, 1000)
+    profile_search_options.add_option(MMseqsSearchOptionsEnum.maximum_number_of_prefilter_sequences, 1000)
 
     with TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)

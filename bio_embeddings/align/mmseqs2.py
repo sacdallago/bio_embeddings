@@ -16,7 +16,7 @@ class MMseqsSearchOptionsEnum(Enum):
     e_value_cutoff = "-e"
     alignment_output = "-a"
     minimum_sequence_identity = "--min-seq-id"
-    maximum_number_of_return_sequences = "--max-seqs"
+    maximum_number_of_prefilter_sequences = "--max-seqs"
 
     @staticmethod
     def from_str(option_name: str) -> Enum:
@@ -26,7 +26,7 @@ class MMseqsSearchOptionsEnum(Enum):
             "e_value_cutoff": MMseqsSearchOptionsEnum.e_value_cutoff,
             "alignment_output": MMseqsSearchOptionsEnum.alignment_output,
             "minimum_sequence_identity": MMseqsSearchOptionsEnum.minimum_sequence_identity,
-            "maximum_number_of_return_sequences": MMseqsSearchOptionsEnum.maximum_number_of_return_sequences,
+            "maximum_number_of_prefilter_sequences": MMseqsSearchOptionsEnum.maximum_number_of_prefilter_sequences,
         }.get(option_name, None)
 
         if not option:
@@ -42,7 +42,7 @@ class MMseqsSearchOptions:
         MMseqsSearchOptionsEnum.e_value_cutoff: float,
         MMseqsSearchOptionsEnum.alignment_output: bool,
         MMseqsSearchOptionsEnum.minimum_sequence_identity: float,
-        MMseqsSearchOptionsEnum.maximum_number_of_return_sequences: int
+        MMseqsSearchOptionsEnum.maximum_number_of_prefilter_sequences: int
     }
 
     _options: Dict[MMseqsSearchOptionsEnum, Any]
