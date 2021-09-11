@@ -136,10 +136,10 @@ def convert_mmseqs_result_to_profile(
         [
             "mmseqs",
             "result2profile",
-            str(query_database),
-            str(search_database),
-            str(search_result_directory),
-            str(profile_directory)
+            str(query_database / "sequence_database"),
+            str(search_database / "sequence_database"),
+            str(search_result_directory / "search_results"),
+            str(profile_directory / "sequence_database")
         ]
     )
 

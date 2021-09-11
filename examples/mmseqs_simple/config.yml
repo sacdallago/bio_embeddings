@@ -1,10 +1,7 @@
 global:
   sequences_file: sequences.fasta
   prefix: mmseqs_simple
-mmseqs2_alignment:
+mmseqs_search:
   type: align
   protocol: mmseqs_search
   search_sequences_file: deeploc_data.fasta
-  mmseqs_search_options:
-    num_iterations: 5
-    alignment_output: True

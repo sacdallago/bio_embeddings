@@ -1,0 +1,27 @@
+global:
+  sequences_file: sequences.fasta
+  prefix: mmseqs_profile
+mmseqs_search:
+  type: align
+  protocol: mmseqs_search
+  search_sequences_file: deeploc_data.fasta
+  convert_to_profiles: True
+  mmseqs_search_options:
+    num_iterations: 3
+    alignment_output: True
+mmseqs_profile_search:
+  type: align
+  protocol: mmseqs_search
+  # By depending on mmseqs_search (the previous stage) we will:
+  # 1. Re-use the search database created previously
+  # 2. Re-use the profiles created as a result from the previous search (or the query db if `convert_to_profiles` is False)
+  depends_on: mmseqs_search
+  # Important! You MUST redefine `mmseqs_search_options` if you "depends_on" a stage which defines them.
+  # Otherwise the previous mmseqs_search_options will be used (in this case from the "mmseqs_search" stage)
+  mmseqs_search_options:
+    minimum_sequence_identity: 0.2
+    sensitivity: 7.5
+    maximum_number_of_return_sequences: 10000
+  # Overwrite from depends_on
+  convert_to_profiles: False
+

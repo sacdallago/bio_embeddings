@@ -143,6 +143,7 @@ examples/docker/output
 examples/tucker/cath-domain-list-v4_3_0.txt
 examples/tucker/tucker_cath
 examples/mmseqs_simple/mmseqs_simple
+examples/mmseqs_profile/mmseqs_profile
 models/
 notebooks/*.csv
 notebooks/*.h5
