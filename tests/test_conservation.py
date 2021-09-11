@@ -1,23 +1,20 @@
-
 import os
 from typing import Callable, Union
 
 import pytest
 import torch
 
-from bio_embeddings.embed import (
-    EmbedderInterface,
-    ProtTransT5XLU50Embedder,
-)
-
+from bio_embeddings.embed import EmbedderInterface, ProtTransT5XLU50Embedder
 from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
 
 # >5dzo-A
 FASTA = """
 MVKVGGEAGPSVTLPCHYSGAVTSMCWNRGSCSLFTCQNGIVWTNGTHVTYRKDTRYKLLGDLSRRDVSLTIENTAVSDSGVYCCRVEHRGWFNDMKITVSLEIVPP
 """.strip()
-# groundtruth scores from ConSurf-DB
-Y = list("65183814944769491851316369976516613393436647651173341728948172511877999915534296919899766491899371431937196")
+# ground truth scores from ConSurf-DB
+ground_truth = list(
+    "65183814944769491851316369976516613393436647651173341728948172511877999915534296919899766491899371431937196"
+)
 
 
 @pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="Uses T5")
@@ -29,14 +26,12 @@ Y = list("6518381494476949185131636997651661339343664765117334172894817251187799
             lambda: ProtTransT5XLU50Embedder(half_precision_model=True),
             lambda: ProtT5consAnnotationExtractor("prott5cons"),
             0.262,
-        ),
+        )
     ],
 )
 def test_conservation_annotation_extractor(
     get_embedder: Callable[[], EmbedderInterface],
-    get_extractor: Callable[
-        [], Union[ProtT5consAnnotationExtractor]
-    ],
+    get_extractor: Callable[[], Union[ProtT5consAnnotationExtractor]],
     expected_accuracy: float,
 ):
     """Check that BasicAnnotationExtractor passes (without checking correctness)"""
@@ -45,7 +40,10 @@ def test_conservation_annotation_extractor(
 
     embedding = embedder.embed(FASTA)
     prediction = extractor.get_conservation(embedding)
-    results = [actual.value == predicted for actual, predicted in zip(prediction.conservation, Y)]
-    
-    actual_accuracy = sum(results)/len(results)
+    results = [
+        actual.value == predicted
+        for actual, predicted in zip(prediction.conservation, ground_truth)
+    ]
+
+    actual_accuracy = sum(results) / len(results)
     assert actual_accuracy == pytest.approx(expected_accuracy)

@@ -41,7 +41,6 @@ from bio_embeddings.embed import (
     OneHotEncodingEmbedder,
     ESM1vEmbedder,
 )
-from bio_embeddings.embed.prottrans_t5_embedder import ProtTransT5Embedder
 from bio_embeddings.project.pb_tucker import PBTucker
 from bio_embeddings.utilities import get_model_file
 from tests.shared import check_embedding
@@ -60,6 +59,7 @@ common_embedders: List[Any] = [
     Word2VecEmbedder,
 ]
 
+
 # Those embedder aren't ran by default on CI
 neglected_embedders: List[Any] = [
     ESMEmbedder,
@@ -74,7 +74,7 @@ all_embedders: List[Any] = common_embedders + [
     pytest.param(
         embedder_class,
         marks=pytest.mark.skipif(
-            os.environ.get("SKIP_EXPENSIVE_TESTS"), reason="Save CI resources"
+            os.environ.get("SKIP_NEGLECTED_EMBEDDER_TESTS"), reason="Save CI resources"
         ),
     )
     for embedder_class in neglected_embedders
@@ -84,7 +84,7 @@ all_embedders: List[Any] = common_embedders + [
 def embedder_test_impl(
     embedder_class: Type[EmbedderInterface], device: Optional[str] = None
 ):
-    """ Compute embeddings and check them against a stored reference file """
+    """Compute embeddings and check them against a stored reference file"""
     if embedder_class == SeqVecEmbedder:
         embedder = embedder_class(warmup_rounds=0, device=device)
     elif embedder_class == ESM1vEmbedder:
@@ -129,6 +129,7 @@ def test_embedder_cpu(embedder_class: Type[EmbedderInterface]):
 
 
 @pytest.mark.skipif(os.environ.get("SKIP_SLOW_TESTS"), reason="This test is very slow")
+@pytest.mark.skipif(os.environ.get("SKIP_AVX2_TESTS"), reason="This test needs AVX2")
 @pytest.mark.parametrize("embedder_class", [UniRepEmbedder])
 def test_embedder_other(embedder_class: Type[EmbedderInterface]):
     """UniRep does not allow configuring the device"""

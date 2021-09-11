@@ -18,7 +18,7 @@ metric = "euclidean"
 k = 25
 
 if "seqvec_annotations" in configuration['celery']['celery_worker_type']:
-    from bio_embeddings.extract.basic.BasicAnnotationExtractor import BasicAnnotationExtractor
+    from bio_embeddings.extract.basic import BasicAnnotationExtractor
     from bio_embeddings.utilities import convert_list_of_enum_to_string
 
     logger.info("Loading the feature extraction models...")

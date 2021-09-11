@@ -3,11 +3,11 @@ per-protein level, including supervised (pre-trained) and unsupervised (nearest
 neighbour search) methods
 """
 
+from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import (
     pairwise_distance_matrix_from_embeddings_and_annotations,
     get_k_nearest_neighbours,
 )
-from bio_embeddings.extract.basic import BasicAnnotationExtractor
 
 __all__ = [
     "BasicAnnotationExtractor",

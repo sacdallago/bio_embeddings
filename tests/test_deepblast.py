@@ -15,4 +15,6 @@ def test_pairwise_alignments_to_msa():
         "HQDIRQRTAKS-LA-DHYNIDRE-QARRVLE-TT-E-QL--Y-----T--Q-WL-A-QNTKLV-Q--P--QLEALLKWAAXLHEVG-LSINH-SGXHRH-S-AYILQN-TNLPG-F-N-Q----E-Q-QTLL--ATLV-RXHRKAIKLDELPRL-NL-F-KK--K-YYLPLIQLL-----R-L-S-T-LL-NNQRQSTTTP--E-S-L-R-LITD-DS-HWTL-RFPHGYLTQNSLVQLDFER--EQAYWDDV-VGW-KLV-IEE-EEP-D-EAAKVAPEE",
         "AKEINLTGEEVVALAAK-Y----M-N-E-TDAAFVKK--A-LD-Y-ATAA-HF-Y-QVR-K--SGEPYIVHPIQVAG---------I-LADL-HLDAVTV-ACGFLH----D-V-VE-D-TDITLDNI-E--F---D-F----G----KDV-RDI--V-DGVTK-LGKVEYKSHEEQLAE-N-H--RKMLM-AMS--KDI-RV---I-L-VKLADRLHNMRTLKHLRKD---KQE-RISRETMEI-YAPLAH-R-L-G-I-SR-IKWE-L-E-DLAFRYLN",
     ]
-    assert expected_query, expected_targets == pairwise_alignments_to_msa(queries, targets)
+    assert expected_query, expected_targets == pairwise_alignments_to_msa(
+        queries, targets
+    )
