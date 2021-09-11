@@ -29,20 +29,33 @@ def test_basic_mmseqs2():
 
     with TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)
-        create_mmseqs_database(Path("test-data/remapped_sequences_file.fasta"), temp_dir_path/"query")
-        create_mmseqs_database(Path("test-data/subcellular_location_new_hard_set.fasta"), temp_dir_path/"search")
+
+        query_dir = temp_dir_path/"query"
+        query_dir.mkdir()
+        serch_dir = temp_dir_path/"search"
+        serch_dir.mkdir()
+        result_dir = temp_dir_path/"result"
+        result_dir.mkdir()
+
+        create_mmseqs_database(Path("test-data/remapped_sequences_file.fasta"), query_dir)
+        create_mmseqs_database(Path("test-data/subcellular_location_new_hard_set.fasta"), serch_dir)
 
         # Sequence to sequence search
-        mmseqs_search(temp_dir_path/"query", temp_dir_path/"search", temp_dir_path/"result", sequence_search_options)
+        mmseqs_search(query_dir, serch_dir, result_dir, sequence_search_options)
+
+        profile_dir = temp_dir_path/"profile"
+        profile_dir.mkdir()
+        profile_result_dir = temp_dir_path/"result_profile"
+        profile_result_dir.mkdir()
 
         # Convert sequence-to-sequence results to profile
         convert_mmseqs_result_to_profile(
-            temp_dir_path/"query", temp_dir_path/"search", temp_dir_path/"result", temp_dir_path/"profile"
+            query_dir, serch_dir, result_dir, profile_dir
         )
 
         # Sequence to profile search
         mmseqs_search(
-            temp_dir_path / "query", temp_dir_path / "profile", temp_dir_path / "profile_result",
+            query_dir, profile_dir, profile_result_dir,
             profile_search_options
         )
 
