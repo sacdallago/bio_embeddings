@@ -14,8 +14,8 @@ class MMseqsSearchOptionsEnum(Enum):
     sensitivity = "-s"
     num_iterations = "--num-iterations"
     e_value_cutoff = "-e"
-    minimum_sequence_identity = "--min-seq-id"
     alignment_output = "-a"
+    minimum_sequence_identity = "--min-seq-id"
     maximum_number_of_return_sequences = "--max-seqs"
 
     @staticmethod
@@ -24,13 +24,13 @@ class MMseqsSearchOptionsEnum(Enum):
             "sensitivity": MMseqsSearchOptionsEnum.sensitivity,
             "num_iterations": MMseqsSearchOptionsEnum.num_iterations,
             "e_value_cutoff": MMseqsSearchOptionsEnum.e_value_cutoff,
-            "minimum_sequence_identity": MMseqsSearchOptionsEnum.minimum_sequence_identity,
             "alignment_output": MMseqsSearchOptionsEnum.alignment_output,
+            "minimum_sequence_identity": MMseqsSearchOptionsEnum.minimum_sequence_identity,
             "maximum_number_of_return_sequences": MMseqsSearchOptionsEnum.maximum_number_of_return_sequences,
         }.get(option_name, None)
 
         if not option:
-            raise Exception(f"Invalid option {option_name}")
+            raise Exception(f"Invalid option {option_name}.")
 
         return option
 
@@ -54,7 +54,7 @@ class MMseqsSearchOptions:
         # Assert value type is what it needs to be
         # Pycharm complains here but it's ok the way it is
         if not isinstance(value, self._option_types[option]):
-            raise TypeError
+            raise TypeError(f"Option {option.name} is of type {self._option_types[option]}, but you passed {value}.")
 
         self._options[option] = value
 
@@ -106,10 +106,9 @@ def mmseqs_search(
 
     logger.info("Searching with MMseqs2")
     start = time.time()
-    # TODO: the following
     # Otherwise MMseqs2 will complain that "result_mmseqs2.dbtype exists already"
-    # for old_result_file in data.mmseqs_dir.glob("result_mmseqs2*"):
-    #     old_result_file.unlink()
+    for old_result_file in search_result_directory.glob("*"):
+        old_result_file.unlink()
     # usage: mmseqs search <i:queryDB> <i:targetDB> <o:alignmentDB> <tmpDir> [options]
     with TemporaryDirectory() as temp_dir:
         check_call(
