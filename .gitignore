@@ -142,6 +142,7 @@ examples/*/simpledocs/_build
 examples/docker/output
 examples/tucker/cath-domain-list-v4_3_0.txt
 examples/tucker/tucker_cath
+examples/mmseqs_simple/mmseqs_simple
 models/
 notebooks/*.csv
 notebooks/*.h5

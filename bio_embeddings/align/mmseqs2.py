@@ -93,7 +93,7 @@ def create_mmseqs_database(fasta_file: Path, database_name: Path):
      - OSError if executable is not found
     """
     database_name.parent.mkdir(exist_ok=True)
-    check_call(["mmseqs", "createdb", str(fasta_file), str(database_name)])
+    check_call(["mmseqs", "createdb", str(fasta_file), str(database_name / "sequence_database")])
 
 
 def mmseqs_search(
@@ -115,9 +115,9 @@ def mmseqs_search(
             [
                 "mmseqs",
                 "search",
-                str(query_database),
-                str(search_database),
-                str(search_result_directory),
+                str(query_database / "sequence_database"),
+                str(search_database / "sequence_database"),
+                str(search_result_directory / "search_results"),
                 temp_dir,
                 *search_options.get_options()
             ]

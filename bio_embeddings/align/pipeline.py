@@ -251,9 +251,9 @@ def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
     )
 
     mmseqs_search(
-        query_sequences_path,
-        search_sequences_path,
-        mmseqs_search_results_directory,
+        Path(query_sequences_path),
+        Path(search_sequences_path),
+        Path(mmseqs_search_results_directory),
         search_options
     )
 
@@ -267,10 +267,10 @@ def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
         )
 
         convert_mmseqs_result_to_profile(
-            query_sequences_path,
-            search_sequences_path,
-            mmseqs_search_results_directory,
-            query_profiles_directory
+            Path(query_sequences_path),
+            Path(search_sequences_path),
+            Path(mmseqs_search_results_directory),
+            Path(query_profiles_directory)
         )
 
         result_kwargs['query_profiles_directory'] = query_profiles_directory
