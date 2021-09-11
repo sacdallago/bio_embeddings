@@ -14,7 +14,7 @@ from slugify import slugify
 
 from bio_embeddings.align import (
     deepblast_align, check_mmseqs, create_mmseqs_database, MMseqsSearchOptions, MMseqsSearchOptionsEnum, mmseqs_search,
-    convert_mmseqs_result_to_profile
+    convert_mmseqs_result_to_profile, convert_result_to_alignment_file
 )
 from bio_embeddings.utilities import (
     get_model_file,
@@ -23,7 +23,7 @@ from bio_embeddings.utilities import (
     read_fasta,
 )
 from bio_embeddings.utilities.exceptions import InvalidParameterError
-from bio_embeddings.utilities.helpers import check_required, read_mapping_file
+from bio_embeddings.utilities.helpers import check_required, read_mapping_file, temporary_copy
 
 
 def pairwise_alignments_to_msa(
@@ -258,6 +258,35 @@ def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
     )
 
     result_kwargs['mmseqs_search_results_directory'] = mmseqs_search_results_directory
+
+    if search_options.has_option(MMseqsSearchOptionsEnum.alignment_output):
+        mmseqs_search_results_file = file_manager.create_file(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "alignment_results_file",
+            extension=".tsv"
+        )
+
+        convert_result_to_alignment_file(
+            Path(query_sequences_path),
+            Path(search_sequences_path),
+            Path(mmseqs_search_results_directory),
+            Path(mmseqs_search_results_file)
+        )
+
+        # Append header to TSV -- a stupid OP that requires reading each line of the file...
+        header = "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits," +\
+                 "pident,tlen,qcov,tcov"
+
+        with temporary_copy(mmseqs_search_results_file) as original,\
+                open(mmseqs_search_results_file, 'w') as out:
+            out.write(header.replace(",", "\t") + "\n")
+            line = original.readline()
+            while line:
+                out.write(line.decode('utf-8'))
+                line = original.readline()
+
+        result_kwargs['alignment_results_file'] = mmseqs_search_results_file
 
     if result_kwargs["convert_to_profiles"]:
         query_profiles_directory = file_manager.create_directory(

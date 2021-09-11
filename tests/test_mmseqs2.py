@@ -7,7 +7,7 @@ import pytest
 from bio_embeddings.align import (
     check_mmseqs, convert_mmseqs_result_to_profile,
     create_mmseqs_database, mmseqs_search, MMseqsSearchOptions,
-    MMseqsSearchOptionsEnum
+    MMseqsSearchOptionsEnum, convert_result_to_alignment_file
 )
 
 
@@ -26,6 +26,7 @@ def test_basic_mmseqs2():
     profile_search_options.add_option(MMseqsSearchOptionsEnum.minimum_sequence_identity, .2)
     profile_search_options.add_option(MMseqsSearchOptionsEnum.sensitivity, 7.5)
     profile_search_options.add_option(MMseqsSearchOptionsEnum.maximum_number_of_prefilter_sequences, 1000)
+    profile_search_options.add_option(MMseqsSearchOptionsEnum.alignment_output, True)
 
     with TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)
@@ -57,6 +58,13 @@ def test_basic_mmseqs2():
         mmseqs_search(
             query_dir, profile_dir, profile_result_dir,
             profile_search_options
+        )
+
+        convert_result_to_alignment_file(
+            query_dir,
+            profile_dir,
+            profile_result_dir,
+            temp_dir_path / "alignment.tsv"
         )
 
 

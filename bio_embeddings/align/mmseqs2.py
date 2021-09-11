@@ -58,6 +58,9 @@ class MMseqsSearchOptions:
 
         self._options[option] = value
 
+    def has_option(self, option: MMseqsSearchOptionsEnum) -> bool:
+        return option in self._options.keys()
+
     def get_options(self) -> List[str]:
         result = []
 
@@ -143,3 +146,28 @@ def convert_mmseqs_result_to_profile(
         ]
     )
 
+
+def convert_result_to_alignment_file(
+        query_database: Path,
+        search_database: Path,
+        search_result_directory: Path,
+        search_result_file: Path
+) -> None:
+    """
+    Output format: TSV
+    Columns: query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits,pident,nident,qlen,
+             tlen,qcov,tcov,qaln,taln
+    """
+    check_call(
+        [
+            "mmseqs",
+            "convertalis",
+            str(query_database / "sequence_database"),
+            str(search_database / "sequence_database"),
+            str(search_result_directory / "search_results"),
+            str(search_result_file),
+            "--format-output",
+            "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits,pident,nident,qlen,"
+            "tlen,qcov,tcov"
+        ]
+    )
