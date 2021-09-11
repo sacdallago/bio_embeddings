@@ -23,6 +23,28 @@ global:
   ## *: denotes the default option
   ## @: denotes that the file or directory will be downloaded and stored locally if not provided
 
+stage_0:
+  type: align
+  # Required: which protocol to use.
+  # Options: mmseqs_search, deepblast
+  protocol: mmseqs_search
+
+  # Required for mmseqs_search: search sequence to search against (can be FASTA, mmseqs db or mmseqs profile)
+  search_sequences_file: /path/to/a/sequence/db.fasta
+  # search_sequences_directory: /path/to/a/sequence/db/
+  # search_profiles_directory: /path/to/a/profiles/db/
+
+  # Optional for mmseqs_search: convert alignment to profile
+  # convert_to_profiles: [True,*False]
+
+  # Optional for mmseqs_search: alignment parameters (check bio_embeddings/align/mmseqs2.py#13 for available options)
+  # mmseqs_search_options:
+  #   num_iterations: 5
+  #   sensitivity: 7.5
+  #   minimum_sequence_identity: 0.2
+  #   maximum_number_of_return_sequences: 100
+  #   alignment_output: True
+
 stage_1:
   type: embed
   # Required: which embedder to use

@@ -1,10 +1,13 @@
 import itertools
 import re
+
 from copy import deepcopy
+from pathlib import Path
 from itertools import zip_longest
 from typing import Dict, Any, List, Tuple
 
 import torch
+
 from Bio import SeqIO
 from pandas import read_csv
 from slugify import slugify
@@ -24,7 +27,7 @@ from bio_embeddings.utilities.helpers import check_required, read_mapping_file
 
 
 def pairwise_alignments_to_msa(
-    queries_aligned: List[str], targets_aligned: List[str]
+        queries_aligned: List[str], targets_aligned: List[str]
 ) -> Tuple[str, List[str]]:
     """Combines multiple alignments with a query into an MSA by padding with gaps"""
 
@@ -47,7 +50,7 @@ def pairwise_alignments_to_msa(
             # Get the residues aligned to the query residue or following gaps
             target_aligned = target[match.span()[0] : match.span()[1]]
             padded_targets[index] += target_aligned + (
-                "-" * (total_len - len(target_aligned))
+                    "-" * (total_len - len(target_aligned))
             )
 
     # Ensure the MSA is valid length wise
@@ -168,72 +171,117 @@ def deepblast(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
-def mmseqs_search(**kwargs) -> Dict[str, Any]:
+def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
     # Check that mmseqs2 is installed
     if not check_mmseqs():
         raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH.")
-
-    check_required(
-        kwargs,
-        [
-
-        ],
-    )
-
-    if not "reference_sequences_file" in kwargs or not "reference_sequences_directory" in kwargs or not "reference_profiles_directory":
-        raise MissingParameterError(
-            "You need to specify either 'reference_sequences_file' (in FASTA format), 'reference_sequences_directory'"
-            " (a mmseqs database created with `mmseqs createdb ...`) or 'reference_profiles_directory' "
-            "(a mmseqs profile database created) after an `mmseqs search` and am `mmseqs result2profile`)."
-        )
 
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
 
-    sequence_search_options = MMseqsSearchOptions()
-    sequence_search_options.add_option(MMseqsSearchOptionsEnum.alignment_output, True)
-    sequence_search_options.add_option(MMseqsSearchOptionsEnum.num_iterations, 3)
+    # Set defaults
+    result_kwargs.setdefault("convert_to_profiles", False)
+    result_kwargs.setdefault("mmseqs_search_options", {})
 
-    profile_search_options = MMseqsSearchOptions()
-    profile_search_options.add_option(MMseqsSearchOptionsEnum.minimum_sequence_identity, .2)
-    profile_search_options.add_option(MMseqsSearchOptionsEnum.sensitivity, 7.5)
-    profile_search_options.add_option(MMseqsSearchOptionsEnum.maximum_number_of_return_sequences, 1000)
+    # Build options (if this fails: no point in creating dbs!)
+    mmseqs_search_options = result_kwargs.get('mmseqs_search_options')
+    search_options = MMseqsSearchOptions()
 
-    # if not "query_sequences_directory" in kwargs:
-    #     create_mmseqs_database(, temp_dir/"query")
-    #
-    # if not "reference_sequences_directory" in kwargs:
-    #     create_mmseqs_database(Path("test-data/subcellular_location_new_hard_set.fasta"), temp_dir/"search")
-    #
-    # # Sequence to sequence search
-    # mmseqs_search(temp_dir/"query", temp_dir/"search", temp_dir/"result", sequence_search_options)
-    #
-    # # Convert sequence-to-sequence results to profile
-    # convert_mmseqs_result_to_profile(temp_dir/"query", temp_dir/"search", temp_dir/"result", temp_dir/"profile")
-    #
-    # # Sequence to profile search
-    # mmseqs_search(temp_dir / "query", temp_dir / "profile", temp_dir / "profile_result", profile_search_options)
+    for search_option in mmseqs_search_options:
+        option_enum = MMseqsSearchOptionsEnum.from_str(search_option)
+        search_options.add_option(option_enum, mmseqs_search_options[search_option])
 
+    # Check that either search_sequences_file,
+    # or search_sequence_directory (a mmseqs db),
+    # or search_profiles_directory (a mmseqs db of a profile) is in kwargs.
+    # Priority: search_profiles_directory > search_sequence_directory > search_sequences_file
+    if not (
+        "search_sequences_file" in kwargs or
+        "search_sequences_directory" in kwargs or
+        "search_profiles_directory" in kwargs
+    ):
+        raise MissingParameterError(
+            "You need to specify either 'search_sequences_file' (in FASTA format), 'search_sequences_directory'"
+            " (a mmseqs database created with `mmseqs createdb ...`) or 'search_profiles_directory' "
+            "(a mmseqs profile database created) after an `mmseqs search` and am `mmseqs result2profile`)."
+        )
 
-def mmseqs_convert(**kwargs) -> Dict[str, Any]:
-    # Check that mmseqs2 is installed
-    if not check_mmseqs():
-        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH.")
+    search_sequences_path = None
 
-    check_required(
-        kwargs,
-        [
+    if "search_profiles_directory" in kwargs:
+        search_sequences_path = kwargs['search_profiles_directory']
+
+    if search_sequences_path is None and "search_sequences_directory" in kwargs:
+        search_sequences_path = kwargs['search_sequences_directory']
+
+    if search_sequences_path is None and "search_sequences_file" in kwargs:
+        search_sequences_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "search_sequences_directory",
+        )
+
+        create_mmseqs_database(kwargs['search_sequences_file'], Path(search_sequences_directory))
+        result_kwargs['search_sequences_directory'] = search_sequences_directory
+        search_sequences_path = search_sequences_directory
+
+    query_sequences_path = None
+
+    if "query_profiles_directory" in kwargs:
+        query_sequences_path = kwargs['query_profiles_directory']
+
+    if query_sequences_path is None and "query_sequences_directory" in kwargs:
+        query_sequences_path = kwargs['query_sequences_directory']
+
+    if query_sequences_path is None:
+        query_sequences_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
             "query_sequences_directory",
-            "reference_sequences_directory"
-        ],
+        )
+
+        create_mmseqs_database(kwargs['remapped_sequences_file'], Path(query_sequences_directory))
+        result_kwargs['query_sequences_directory'] = query_sequences_directory
+        query_sequences_path = query_sequences_directory
+
+    mmseqs_search_results_directory = file_manager.create_directory(
+        result_kwargs.get("prefix"),
+        result_kwargs.get("stage_name"),
+        "mmseqs_search_results_directory",
     )
+
+    mmseqs_search(
+        query_sequences_path,
+        search_sequences_path,
+        mmseqs_search_results_directory,
+        search_options
+    )
+
+    result_kwargs['mmseqs_search_results_directory'] = mmseqs_search_results_directory
+
+    if result_kwargs["convert_to_profiles"]:
+        query_profiles_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "query_profiles_directory",
+        )
+
+        convert_mmseqs_result_to_profile(
+            query_sequences_path,
+            search_sequences_path,
+            mmseqs_search_results_directory,
+            query_profiles_directory
+        )
+
+        result_kwargs['query_profiles_directory'] = query_profiles_directory
+
+    return result_kwargs
 
 
 # list of available alignment protocols
 PROTOCOLS = {
     "deepblast": deepblast,
-    "mmseqs_search": mmseqs_search,
-    "mmseqs_convert": mmseqs_convert
+    "mmseqs_search": mmseqs_search_protocol,
 }
 
 
