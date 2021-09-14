@@ -275,45 +275,47 @@ def predict_annotations_using_basic_models(model, **kwargs) -> Dict[str, Any]:
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
-    # Try to create final files (if this fails, now is better than later
+    # Try to create final files (if this fails, now is better than later)
     DSSP3_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
                                                            'DSSP3_predictions_file',
                                                            extension='.fasta')
     result_kwargs['DSSP3_predictions_file'] = DSSP3_predictions_file_path
-    DSSP3_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                               result_kwargs.get('stage_name'),
-                                                               'DSSP3_raw_predictions_file',
-                                                               extension='.csv')
-    result_kwargs['DSSP3_raw_predictions_file'] = DSSP3_raw_predictions_file_path
 
     DSSP8_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
                                                            'DSSP8_predictions_file',
                                                            extension='.fasta')
     result_kwargs['DSSP8_predictions_file'] = DSSP8_predictions_file_path
-    DSSP8_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                               result_kwargs.get('stage_name'),
-                                                               'DSSP8_raw_predictions_file',
-                                                               extension='.csv')
-    result_kwargs['DSSP8_raw_predictions_file'] = DSSP8_raw_predictions_file_path
 
     disorder_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                               result_kwargs.get('stage_name'),
                                                               'disorder_predictions_file',
                                                               extension='.fasta')
     result_kwargs['disorder_predictions_file'] = disorder_predictions_file_path
-    disorder_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
-                                                                  result_kwargs.get('stage_name'),
-                                                                  'disorder_raw_predictions_file',
-                                                                  extension='.csv')
-    result_kwargs['disorder_raw_predictions_file'] = disorder_raw_predictions_file_path
 
     per_sequence_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                   result_kwargs.get('stage_name'),
                                                                   'per_sequence_predictions_file',
                                                                   extension='.csv')
     result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
+
+    if 'get_activations' in kwargs and kwargs['get_activations']:
+        DSSP3_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'DSSP3_raw_predictions_file',
+                                                                   extension='.csv')
+        result_kwargs['DSSP3_raw_predictions_file'] = DSSP3_raw_predictions_file_path
+        DSSP8_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'DSSP8_raw_predictions_file',
+                                                                   extension='.csv')
+        result_kwargs['DSSP8_raw_predictions_file'] = DSSP8_raw_predictions_file_path
+        disorder_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                      result_kwargs.get('stage_name'),
+                                                                      'disorder_raw_predictions_file',
+                                                                      extension='.csv')
+        result_kwargs['disorder_raw_predictions_file'] = disorder_raw_predictions_file_path
 
     # Create sequence containers
     DSSP3_sequences = list()
