@@ -55,9 +55,9 @@ _disor_labels = {
     1: Disorder.DISORDER
 }
 
-BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder')
+BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder DSSP3_raw DSSP8_raw disorder_raw')
 SubcellularLocalizationAndMembraneBoundness = collections.namedtuple('SubcellularLocalizationAndMembraneBoundness', 'localization membrane')
-BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder localization membrane')
+BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder DSSP3_raw DSSP8_raw disorder_raw localization membrane')
 
 
 class BasicAnnotationExtractor(object):
@@ -150,11 +150,18 @@ class BasicAnnotationExtractor(object):
 
         yhat_dssp3, yhat_dssp8, yhat_disor = self._secondary_structure_model(embedding)
 
+        pred_dssp3_raw = torch.softmax(yhat_dssp3, dim=1)[0]
         pred_dssp3 = self._class2label(_dssp3_labels, yhat_dssp3)
+
+        pred_dssp8_raw = torch.softmax(yhat_dssp8, dim=1)[0]
         pred_dssp8 = self._class2label(_dssp8_labels, yhat_dssp8)
+
+        pred_disor_raw = torch.softmax(yhat_disor, dim=1)[0]
         pred_disor = self._class2label(_disor_labels, yhat_disor)
 
-        return BasicSecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor)
+        return BasicSecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor,
+                                             DSSP3_raw=pred_dssp3_raw, DSSP8_raw=pred_dssp8_raw,
+                                             disorder_raw=pred_disor_raw)
 
     def get_annotations(self, raw_embedding: ndarray) -> BasicExtractedAnnotations:
         secstruct = self.get_secondary_structure(raw_embedding)
@@ -162,7 +169,8 @@ class BasicAnnotationExtractor(object):
 
         return BasicExtractedAnnotations(disorder=secstruct.disorder, DSSP8=secstruct.DSSP8,
                                          DSSP3=secstruct.DSSP3, localization=subcell.localization,
-                                         membrane=subcell.membrane)
+                                         membrane=subcell.membrane, disorder_raw=secstruct.disorder_raw,
+                                         DSSP3_raw=secstruct.DSSP3_raw, DSSP8_raw=secstruct.DSSP8_raw)
 
     @staticmethod
     def _class2label(label_dict, yhat) -> List[Enum]:
