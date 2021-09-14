@@ -2,7 +2,7 @@ import abc
 import logging
 import re
 from itertools import zip_longest
-from typing import List, Generator, Iterable, Optional, Union
+from typing import List, Generator, Union
 
 import torch
 import transformers

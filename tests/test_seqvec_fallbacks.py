@@ -53,17 +53,9 @@ def test_fallbacks(caplog):
             cuda_device, elmo_log
         ),
     ), mock.patch(
-        "bio_embeddings.utilities.helpers.torch.cuda.is_available",
-        lambda: True,
+        "bio_embeddings.utilities.helpers.torch.cuda.is_available", lambda: True
     ):
-        sequences = [
-            "M" * 20,
-            "M" * 8,
-            "M" * 8,
-            "M" * 7,
-            "M" * 7,
-            "M" * 7,
-        ]
+        sequences = ["M" * 20, "M" * 8, "M" * 8, "M" * 7, "M" * 7, "M" * 7]
         embeddings_generator = SeqVecEmbedder(
             weights_file="/invalid/path", options_file="/invalid/path", warmup_rounds=0
         ).embed_many(sequences, given_limit)

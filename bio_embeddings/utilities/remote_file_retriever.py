@@ -2,6 +2,8 @@ import logging
 import os
 import tempfile
 import zipfile
+import shutil
+
 from pathlib import Path
 from typing import Dict, Optional
 from urllib import request
@@ -69,10 +71,18 @@ def get_model_directories_from_zip(
             )
         )
 
-        with TqdmUpTo(
-            unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
-        ) as t:
-            request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
+        req = request.Request(url, headers={
+            'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+        })
+
+        with request.urlopen(req) as response, open(file_name, 'wb') as outfile:
+            shutil.copyfileobj(response, outfile)
+
+        # TODO: re-enable TqdmUpTo
+        # with TqdmUpTo(
+        #     unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+        # ) as t:
+        #     request.urlretrieve(url, filename=file_name, reporthook=t.update_to)
 
         logger.info(
             "Unzipping {} for {} and storing in '{}'.".format(
@@ -106,10 +116,18 @@ def get_model_file(
 
     logger.info(f"Downloading {file} for {model} and storing it in '{cache_path}'")
 
-    with atomic_write(cache_path, overwrite=True) as temp_file:
-        with TqdmUpTo(
-            unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
-        ) as t:
-            request.urlretrieve(url, filename=temp_file.name, reporthook=t.update_to)
+    req = request.Request(url, headers={
+        'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+    })
+
+    with request.urlopen(req) as response, open(cache_path, 'wb') as outfile:
+        shutil.copyfileobj(response, outfile)
+
+    # TODO: re-enable atomic_write and TqdmUpTo
+    # with atomic_write(cache_path, overwrite=True) as temp_file:
+    #     with TqdmUpTo(
+    #         unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+    #     ) as t:
+    #         request.urlretrieve(url, filename=temp_file.name, reporthook=t.update_to)
 
     return str(cache_path)

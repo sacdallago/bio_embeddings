@@ -1,21 +1,19 @@
-import logging
-import numpy
-
-import torch
 import collections
+import logging
+from typing import List, Union, Dict, Any
 
-from typing import List, Union
+import numpy
+import torch
 from numpy import ndarray
-from enum import Enum
 
 from bio_embeddings.extract.annotations import Location, Membrane, Disorder, SecondaryStructure
-from bio_embeddings.extract.basic.annotation_inference_models import SUBCELL_FNN, SECSTRUCT_CNN
+from bio_embeddings.extract.basic.annotation_inference_models import SubCellFNN, SecStructCNN
 from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)
 
 # Label mappings
-_loc_labels = {
+_location_labels = {
     0: Location.CELL_MEMBRANE,
     1: Location.CYTOPLASM,
     2: Location.ENDOPLASMATIC_RETICULUM,
@@ -28,7 +26,7 @@ _loc_labels = {
     9: Location.EXTRACELLULAR
 }
 
-_mem_labels = {
+_membrane_labels = {
     0: Membrane.SOLUBLE,
     1: Membrane.MEMBRANE
 }
@@ -50,17 +48,20 @@ _dssp3_labels = {
     2: SecondaryStructure.IRREGULAR
 }
 
-_disor_labels = {
+_disorder_labels = {
     0: Disorder.ORDER,
     1: Disorder.DISORDER
 }
 
-BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder DSSP3_raw DSSP8_raw disorder_raw')
-SubcellularLocalizationAndMembraneBoundness = collections.namedtuple('SubcellularLocalizationAndMembraneBoundness', 'localization membrane')
-BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder DSSP3_raw DSSP8_raw disorder_raw localization membrane')
+BasicSecondaryStructureResult = collections.namedtuple('BasicSecondaryStructureResult', 'DSSP3 DSSP8 disorder '
+                                                                                        'DSSP3_raw DSSP8_raw disorder_raw')
+SubcellularLocalizationAndMembraneBoundness = collections.namedtuple('SubcellularLocalizationAndMembraneBoundness',
+                                                                     'localization membrane')
+BasicExtractedAnnotations = collections.namedtuple('BasicExtractedAnnotations', 'DSSP3 DSSP8 disorder DSSP3_raw '
+                                                                                'DSSP8_raw disorder_raw localization membrane')
 
 
-class BasicAnnotationExtractor(object):
+class BasicAnnotationExtractor:
     necessary_files = ["secondary_structure_checkpoint_file", "subcellular_location_checkpoint_file"]
 
     def __init__(self, model_type: str, device: Union[None, str, torch.device] = None, **kwargs):
@@ -77,12 +78,11 @@ class BasicAnnotationExtractor(object):
 
         # Create un-trained (raw) model and ensure self._model_type is valid
         if self._model_type == "seqvec_from_publication":
-            self._subcellular_location_model = SUBCELL_FNN().to(self._device)
-        elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication": # Drop batchNorm for ProtTrans models
-            self._subcellular_location_model = SUBCELL_FNN(use_batch_norm=False).to(self._device)
+            self._subcellular_location_model = SubCellFNN().to(self._device)
+        elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication":  # Drop batchNorm for ProtTrans models
+            self._subcellular_location_model = SubCellFNN(use_batch_norm=False).to(self._device)
         else:
-            print("You first need to define your custom model architecture.")
-            raise NotImplementedError
+            raise NotImplementedError(f"You first need to define your custom model architecture {self._model_type}")
 
         # Download the checkpoint files if needed
         for file in self.necessary_files:
@@ -93,7 +93,7 @@ class BasicAnnotationExtractor(object):
         self._subcellular_location_checkpoint_file = self._options['subcellular_location_checkpoint_file']
 
         # Read in pre-trained model
-        self._secondary_structure_model = SECSTRUCT_CNN().to(self._device)
+        self._secondary_structure_model = SecStructCNN().to(self._device)
 
         # load pre-trained weights for annotation machines
         subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)
@@ -130,8 +130,9 @@ class BasicAnnotationExtractor(object):
 
         yhat_loc, yhat_mem = self._subcellular_location_model(embedding)
 
-        pred_loc = _loc_labels[torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
-        pred_mem = _mem_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
+        pred_loc = _location_labels[
+            torch.max(yhat_loc, dim=1)[1].item()]  # get index of output node with max. activation,
+        pred_mem = _membrane_labels[torch.max(yhat_mem, dim=1)[1].item()]  # this corresponds to the predicted class
 
         return SubcellularLocalizationAndMembraneBoundness(localization=pred_loc, membrane=pred_mem)
 
@@ -140,7 +141,9 @@ class BasicAnnotationExtractor(object):
         # same as for subcell loc.: SeqVec requires summing over layers while ProtTrans models only extract last layers
         if self._model_type == "seqvec_from_publication":
             # SeqVec case
-            embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2, 1).unsqueeze(dim=-1)
+            embedding = torch.tensor(raw_embedding).to(self._device).sum(dim=0, keepdim=True).permute(0, 2,
+                                                                                                      1).unsqueeze(
+                dim=-1)
         elif self._model_type == "bert_from_publication" or self._model_type == "t5_xl_u50_from_publication":
             # Bert/T5 case
             # Flip dimensions for ProtTrans models in order to make feature dimension the first dimension
@@ -157,7 +160,7 @@ class BasicAnnotationExtractor(object):
         pred_dssp8 = self._class2label(_dssp8_labels, yhat_dssp8)
 
         pred_disor_raw = torch.softmax(yhat_disor, dim=1)[0]
-        pred_disor = self._class2label(_disor_labels, yhat_disor)
+        pred_disor = self._class2label(_disorder_labels, yhat_disor)
 
         return BasicSecondaryStructureResult(DSSP3=pred_dssp3, DSSP8=pred_dssp8, disorder=pred_disor,
                                              DSSP3_raw=pred_dssp3_raw, DSSP8_raw=pred_dssp8_raw,
@@ -173,7 +176,7 @@ class BasicAnnotationExtractor(object):
                                          DSSP3_raw=secstruct.DSSP3_raw, DSSP8_raw=secstruct.DSSP8_raw)
 
     @staticmethod
-    def _class2label(label_dict, yhat) -> List[Enum]:
+    def _class2label(label_dict: Dict[int, Any], yhat: torch.tensor) -> List[Any]:
         # get index of output node with max. activation (=predicted class)
         class_indices = torch.max(yhat, dim=1)[1].squeeze()
         return [label_dict[class_idx.item()] for class_idx in class_indices]

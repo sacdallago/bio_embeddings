@@ -20,13 +20,10 @@ def cached_embedder(request) -> EmbedderInterface:
 
 
 @pytest.mark.skipif(
-    not os.environ.get("RUN_VERY_SLOW_TESTS"), reason="Hypothesis is the slowest of them all"
+    not os.environ.get("RUN_VERY_SLOW_TESTS"),
+    reason="Hypothesis is the slowest of them all",
 )
-@pytest.mark.parametrize(
-    "cached_embedder",
-    name_to_embedder.values(),
-    indirect=True,
-)
+@pytest.mark.parametrize("cached_embedder", name_to_embedder.values(), indirect=True)
 @settings(deadline=timedelta(seconds=10))
 @given(sequence=protein(uppercase_only=True))
 def test_foo(sequence, cached_embedder: EmbedderInterface):

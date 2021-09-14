@@ -1,8 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.2.2
 
  * Added the `esm1v` embedder from [Meier et al. 2021](https://www.biorxiv.org/content/10.1101/2021.07.09.450648v1), which is part of facebook's [esm](https://github.com/facebookresearch/esm). Note that this is an ensemble model, so you need to pass `ensemble_id` with a value from 1 to 5 to select which weights to use.
+ * Added the `bindEmbed21DL` extract protocol which is an ensemble of 5 convolutional neural network that predicts of 3 different types of binding residues (metal, nucleic acids, small molecules).
+ * Fix model download
+ * Update jaxlib to fix pip installation
 
 ## v0.2.1
 

@@ -10,7 +10,7 @@ import pytest
 from numpy import ndarray
 
 from bio_embeddings.embed import name_to_embedder, ESM1bEmbedder
-from bio_embeddings.embed.pipeline import run, DEFAULT_MAX_AMINO_ACIDS, ALL_PROTOCOLS
+from bio_embeddings.embed.pipeline import run, DEFAULT_MAX_AMINO_ACIDS
 from bio_embeddings.utilities import InvalidParameterError
 from bio_embeddings.utilities.config import read_config_file
 from bio_embeddings.utilities.pipeline import execute_pipeline_from_config
@@ -51,7 +51,6 @@ def test_missing_extras():
     """https://github.com/sacdallago/bio_embeddings/issues/105"""
     # Make sure those are in sync
     assert set(name_to_embedder) == set(DEFAULT_MAX_AMINO_ACIDS)
-    assert set(name_to_embedder) == set(ALL_PROTOCOLS)
     with mock.patch("bio_embeddings.embed.pipeline.name_to_embedder", {}):
         with pytest.raises(
             InvalidParameterError,

@@ -16,8 +16,6 @@ from bio_embeddings.utilities import (
     InvalidParameterError,
     check_required,
     get_file_manager,
-    get_model_directories_from_zip,
-    get_model_file,
     read_mapping_file,
 )
 from bio_embeddings.utilities.backports import nullcontext
@@ -251,29 +249,7 @@ def embed_and_write_batched(
 
 
 # Some of this might not be available when installed without the `all` extra
-ALL_PROTOCOLS = [
-    "bepler",
-    "cpcprot",
-    "esm",
-    "esm1b",
-    "esm1v",
-    "fasttext",
-    "glove",
-    "one_hot_encoding",
-    "plus_rnn",
-    "prottrans_albert_bfd",
-    "prottrans_bert_bfd",
-    "prottrans_t5_bfd",
-    "prottrans_t5_uniref50",
-    "prottrans_xlnet_uniref100",
-    "prottrans_t5_xl_u50",
-    "seqvec",
-    "unirep",
-    "word2vec",
-]
-
-# TODO: 10000 is a random guess
-# There remainder was measured for a GTX 1080 with 8GB memory
+# NB: 10000 is a random guess
 DEFAULT_MAX_AMINO_ACIDS = {
     "bepler": 10000,
     "cpcprot": 10000,
@@ -283,9 +259,9 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "plus_rnn": 10000,
     "prottrans_albert_bfd": 3035,
     "prottrans_bert_bfd": 6024,
-    "prottrans_t5_bfd": 5000,
-    "prottrans_t5_uniref50": 5000,
-    "prottrans_t5_xl_u50": 5000,
+    "prottrans_t5_bfd": 3000,
+    "prottrans_t5_uniref50": 3000,
+    "prottrans_t5_xl_u50": 3000,
     "prottrans_xlnet_uniref100": 4000,
     "seqvec": 15000,
     "unirep": 10000,
@@ -293,6 +269,18 @@ DEFAULT_MAX_AMINO_ACIDS = {
     "glove": None,
     "one_hot_encoding": None,
     "word2vec": None,
+}
+
+KNOWN_EMBED_OPTIONS = {
+    "decoder",
+    "device",
+    "discard_per_amino_acid_embeddings",
+    "ensemble_id",
+    "half_precision_model",
+    "half_precision",
+    "max_amino_acids",
+    "reduce",
+    "type",
 }
 
 
@@ -307,7 +295,7 @@ def prepare_kwargs(**kwargs):
     check_required(kwargs, required_kwargs)
 
     if kwargs["protocol"] not in name_to_embedder:
-        if kwargs["protocol"] in ALL_PROTOCOLS:
+        if kwargs["protocol"] in DEFAULT_MAX_AMINO_ACIDS:
             raise InvalidParameterError(
                 f"The extra for the protocol {kwargs['protocol']} is missing. "
                 "See https://docs.bioembeddings.com/#installation on how to install all extras"
@@ -328,21 +316,10 @@ def prepare_kwargs(**kwargs):
         )
     # See parameter_blueprints.yml
     global_options = {"sequences_file", "simple_remapping", "start_time"}
-    embed_options = {
-        "decoder",
-        "device",
-        "discard_per_amino_acid_embeddings",
-        "ensemble_id",
-        "half_precision_model",
-        "half_precision",
-        "max_amino_acids",
-        "reduce",
-        "type",
-    }
     known_parameters = (
         set(required_kwargs)
         | global_options
-        | embed_options
+        | KNOWN_EMBED_OPTIONS
         | set(embedder_class.necessary_files)
         | set(embedder_class.necessary_directories)
     )

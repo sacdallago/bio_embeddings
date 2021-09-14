@@ -1,5 +1,5 @@
-import torch.nn as nn
 import torch
+import torch.nn as nn
 
 
 class LightAttention(nn.Module):
@@ -26,9 +26,9 @@ class LightAttention(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-            :param x: torch.Tensor [batch_size, embeddings_dim, sequence_length] embedding tensor that should be classified
+        :param x: torch.Tensor [batch_size, embeddings_dim, sequence_length] embedding tensor that should be classified
 
-            :return: [batch_size,output_dim] tensor with logits
+        :return: [batch_size,output_dim] tensor with logits
         """
 
         intermediate_state = self.feature_convolution(x)  # [batch_size, embeddings_dim, sequence_length]

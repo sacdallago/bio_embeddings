@@ -1,15 +1,14 @@
 import logging
+from typing import Union
 
 import numpy
 import torch
-
-from typing import Union
 from numpy import ndarray
 
 from bio_embeddings.extract.annotations import Location, Membrane
 from bio_embeddings.extract.basic import SubcellularLocalizationAndMembraneBoundness
 from bio_embeddings.extract.light_attention.light_attention_model import LightAttention
-from bio_embeddings.utilities import get_device, MissingParameterError
+from bio_embeddings.utilities import get_device, MissingParameterError, get_model_file
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,7 @@ _mem_labels = {
 class LightAttentionAnnotationExtractor:
     necessary_files = ["subcellular_location_checkpoint_file", 'membrane_checkpoint_file']
 
-    def __init__(self, device: Union[None, str, torch.device] = None, **kwargs):
+    def __init__(self, model: str, device: Union[None, str, torch.device] = None, **kwargs):
         """
         Initialize annotation extractor. Must define non-positional arguments for paths of files.
 
@@ -56,14 +55,10 @@ class LightAttentionAnnotationExtractor:
         self._membrane_checkpoint_file = self._options.get('membrane_checkpoint_file')
         self._device = get_device(device)
 
-        # check that file paths are passed
+        # Download files if needed
         for file in self.necessary_files:
-            if file not in self._options:
-                raise MissingParameterError(
-                    'Please provide subcellular_location_checkpoint_file and membrane_checkpoint_file paths as named '
-                    'parameters to the constructor. Mind that these should match the embeddings used, '
-                    'e.g.: prottrans_bert_bfd should use la_protbert weights'
-                )
+            if not self._options.get(file):
+                self._options[file] = get_model_file(model=model, file=file)
 
         # load pre-trained weights for annotation machines
         subcellular_state = torch.load(self._subcellular_location_checkpoint_file, map_location=self._device)
@@ -78,11 +73,11 @@ class LightAttentionAnnotationExtractor:
         self._membrane_model.eval()
 
     def get_subcellular_location(self, raw_embedding: ndarray) -> SubcellularLocalizationAndMembraneBoundness:
-        '''
+        """
         :param raw_embedding: np array of [sequence_length, 1024]
 
         :returns: SubcellularLocalizationAndMembraneBoundness with predictions for localization and membrane boundness
-        '''
+        """
         raw_embedding = raw_embedding.astype(numpy.float32)  # For T5 fp16
         # turn to tensor and add singleton batch dimension
         embedding = torch.tensor(raw_embedding).to(self._device)[None, ...].permute(0, 2,
