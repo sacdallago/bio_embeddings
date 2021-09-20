@@ -1,10 +1,19 @@
+# In this example we execute two searchers:
+# - the first search against a "bigger" sequence database gives us rich profiles for our query sequences
+# - the second search uses the rich query profiles to sensitively search against a smaller database
 global:
+  # sequences in this file are the "query" sequences
   sequences_file: sequences.fasta
   prefix: mmseqs_profile
+# The first search builds an mmseqs database and searches against it
 mmseqs_search:
   type: align
   protocol: mmseqs_search
-  search_sequences_file: deeploc_data.fasta
+  # If a database (generated with bio_embeddings) already exists, this can be changed to:
+  #      search_sequences_directory: /path/to/sequences/database/
+  # alternatively, a profile database can be passed by:
+  #      search_profiles_directory: /path/to/profile/database/
+  search_sequences_file: large.fasta
   convert_to_profiles: True
   mmseqs_search_options:
     num_iterations: 3
@@ -12,16 +21,15 @@ mmseqs_search:
 mmseqs_profile_search:
   type: align
   protocol: mmseqs_search
-  # By depending on mmseqs_search (the previous stage) we will:
-  # 1. Re-use the search database created previously
-  # 2. Re-use the profiles created as a result from the previous search (or the query db if `convert_to_profiles` is False)
-  depends_on: mmseqs_search
-  # Important! You MUST redefine `mmseqs_search_options` if you "depends_on" a stage which defines them.
-  # Otherwise the previous mmseqs_search_options will be used (in this case from the "mmseqs_search" stage)
+  # We can selectively chose which parameters to carry over from the "depends_on" stage.
+  depends_on:
+    # Here, we are interested in the "query_profiles_directory" from the previous search.
+    # This parameter stores the path to the directory where the profiles of the query sequences are stored.
+    mmseqs_search:
+      - query_profiles_directory
+  search_sequences_file: tiny.fasta
   mmseqs_search_options:
     minimum_sequence_identity: 0.2
     sensitivity: 7.5
     maximum_number_of_prefilter_sequences: 10000
-  # Overwrite from depends_on
-  convert_to_profiles: False
-
+    alignment_output: True
