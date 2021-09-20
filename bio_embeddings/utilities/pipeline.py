@@ -13,6 +13,7 @@ import importlib_metadata
 import torch
 from atomicwrites import atomic_write
 from importlib_metadata import PackageNotFoundError
+from ruamel.yaml.compat import ordereddict
 
 from bio_embeddings.embed.pipeline import run as run_embed
 from bio_embeddings.extract.pipeline import run as run_extract
@@ -168,10 +169,10 @@ def _null_function(config: Dict) -> None:
 
 
 def download_files_for_stage(
-    stage_parameters: Dict[str, Any],
-    file_manager: FileManagerInterface,
-    prefix: str,
-    stage_name: Optional[str] = None,
+        stage_parameters: Dict[str, Any],
+        file_manager: FileManagerInterface,
+        prefix: str,
+        stage_name: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Download files given as url
 
@@ -182,9 +183,9 @@ def download_files_for_stage(
     """
     for key in stage_parameters:
         if isinstance(stage_parameters[key], str) and (
-            stage_parameters[key].startswith("http://")
-            or stage_parameters[key].startswith("https://")
-            or stage_parameters[key].startswith("ftp://")
+                stage_parameters[key].startswith("http://")
+                or stage_parameters[key].startswith("https://")
+                or stage_parameters[key].startswith("ftp://")
         ):
             filename = file_manager.create_file(prefix, stage_name, key)
             logger.info(f"Downloading {stage_parameters[key]} to {filename}")
@@ -262,13 +263,50 @@ def execute_pipeline_from_config(config: Dict,
         stage_parameters = download_files_for_stage(stage_parameters, file_manager, prefix, stage_name)
 
         stage_dependency = stage_parameters.get('depends_on')
+        stage_dependency_parameters = dict()
 
         if stage_dependency:
-            if stage_dependency not in config:
-                raise Exception("Stage {} depends on {}, but dependency not found in config.".format(stage_name,
-                                                                                                     stage_dependency))
+            if isinstance(stage_dependency, ordereddict):
+                for stage_dependency_name in stage_dependency.keys():
+                    if stage_dependency_name not in config:
+                        raise Exception(
+                            f"Stage {stage_name} depends on "
+                            f"{stage_dependency_name}, but dependency not found in config."
+                        )
 
-            stage_dependency_parameters = config.get(stage_dependency)
+                    previous_stage_parameters = config.get(stage_dependency_name)
+                    carryover_parameters = stage_dependency[stage_dependency_name]
+
+                    stage_dependency_parameters = {
+                        **stage_dependency_parameters,
+                        **{parameter: previous_stage_parameters[parameter] for parameter in carryover_parameters
+                           if parameter in previous_stage_parameters.keys()
+                           }
+                    }
+            elif isinstance(stage_dependency, list):
+                for stage_dependency_name in stage_dependency:
+                    if stage_dependency_name not in config:
+                        raise Exception(
+                            f"Stage {stage_name} depends on "
+                            f"{stage_dependency_name}, but dependency not found in config."
+                        )
+                    stage_dependency_parameters = {
+                        **stage_dependency_parameters,
+                        **config.get(stage_dependency_name)
+                    }
+            elif isinstance(stage_dependency, str):
+                if stage_dependency not in config:
+                    raise Exception(
+                        f"Stage {stage_name} depends on "
+                        f"{stage_dependency}, but dependency not found in config."
+                    )
+
+                stage_dependency_parameters = config.get(stage_dependency)
+            else:
+                raise Exception(
+                    f"Stage {stage_name} depends on unknown strategy: {stage_dependency}."
+                )
+
             stage_parameters = {**global_parameters, **stage_dependency_parameters, **stage_parameters}
         else:
             stage_parameters = {**global_parameters, **stage_parameters}
