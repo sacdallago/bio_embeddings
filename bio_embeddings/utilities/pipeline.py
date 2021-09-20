@@ -55,7 +55,7 @@ except ImportError as e:
         _STAGES["align"] = error
 
 _IN_CONFIG_NAME = "input_parameters_file"
-_OUT_CONFIG_NAME = "ouput_parameters_file"
+_OUT_CONFIG_NAME = "output_parameters_file"
 
 _ISSUE_URL = "https://github.com/sacdallago/bio_embeddings/issues/new"
 _ERROR_REPORTING_TEMPLATE = """## Metadata
