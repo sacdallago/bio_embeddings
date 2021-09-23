@@ -99,11 +99,14 @@ def create_mmseqs_database(fasta_file: Path, database_name: Path):
     check_call(["mmseqs", "createdb", str(fasta_file), str(database_name / "sequence_database")])
 
 
+_DEFAULT_MMSEQS_OPTIONS = MMseqsSearchOptions()
+
+
 def mmseqs_search(
         query_database: Path,
         search_database: Path,
         search_result_directory: Path,
-        search_options: MMseqsSearchOptions = MMseqsSearchOptions()
+        search_options: MMseqsSearchOptions = _DEFAULT_MMSEQS_OPTIONS
 ) -> None:
     """Calls `mmseqs search`"""
 
