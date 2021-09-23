@@ -174,7 +174,8 @@ def deepblast(**kwargs) -> Dict[str, Any]:
 def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
     # Check that mmseqs2 is installed
     if not check_mmseqs():
-        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH.")
+        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH. "
+                      "You can download mmseqs2 from: https://github.com/soedinglab/MMseqs2/releases/latest")
 
     result_kwargs = deepcopy(kwargs)
     file_manager = get_file_manager(**kwargs)
