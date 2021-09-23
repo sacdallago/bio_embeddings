@@ -282,10 +282,8 @@ def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
         with temporary_copy(mmseqs_search_results_file) as original,\
                 open(mmseqs_search_results_file, 'w') as out:
             out.write(header.replace(",", "\t") + "\n")
-            line = original.readline()
-            while line:
+            for line in original:
                 out.write(line.decode('utf-8'))
-                line = original.readline()
 
         result_kwargs['alignment_results_file'] = mmseqs_search_results_file
 
