@@ -95,7 +95,7 @@ def create_mmseqs_database(fasta_file: Path, database_name: Path):
      - CalledProcessError if non-0 exit
      - OSError if executable is not found
     """
-    database_name.parent.mkdir(exist_ok=True)
+    database_name.parent.mkdir(exist_ok=True, parents=True)
     check_call(["mmseqs", "createdb", str(fasta_file), str(database_name / "sequence_database")])
 
 
