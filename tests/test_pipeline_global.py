@@ -39,7 +39,7 @@ def test_pipeline_global(tmp_path):
     expected_files = [
         "input_parameters_file.yml",
         "mapping_file.csv",
-        "ouput_parameters_file.yml",
+        "output_parameters_file.yml",
         "remapped_sequences_file.fasta",
         "sequences_file.fasta",
     ]

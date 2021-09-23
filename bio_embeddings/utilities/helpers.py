@@ -1,8 +1,10 @@
-import numpy as np
 import h5py
 import logging
 import torch
+import shutil
+import numpy as np
 
+from tempfile import NamedTemporaryFile
 from enum import Enum
 from hashlib import md5
 from typing import List, Union
@@ -230,3 +232,9 @@ def read_mapping_file(mapping_file: str) -> DataFrame:
     mapping_file = read_csv(mapping_file, index_col=0)
     mapping_file.index = mapping_file.index.astype("str")
     return mapping_file
+
+
+def temporary_copy(path: str) -> NamedTemporaryFile:
+    tempfile = NamedTemporaryFile()
+    shutil.copy2(path, tempfile.name)
+    return tempfile

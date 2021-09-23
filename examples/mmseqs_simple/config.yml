@@ -1,0 +1,7 @@
+global:
+  sequences_file: sequences.fasta
+  prefix: mmseqs_simple
+mmseqs_search:
+  type: align
+  protocol: mmseqs_search
+  search_sequences_file: deeploc_data.fasta

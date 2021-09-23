@@ -32,7 +32,7 @@ The project includes:
 
 ## Installation
 
-You can install `bio_embeddings` via pip or use it via docker.
+You can install `bio_embeddings` via pip or use it via docker. Mind the additional dependencies for `align`.
 
 ### Pip
 
@@ -61,6 +61,10 @@ docker run --rm --gpus all \
 ```
 
 See the [`docker`](examples/docker) example in the [`examples`](examples) folder for instructions. You can also use `ghcr.io/bioembeddings/bio_embeddings:latest` which is built from the latest commit.
+
+### Dependencies
+
+To use the `mmseqs_search` protocol, or the `mmsesq2` functions in `align`, you additionally need to have [mmseqs2](https://mmseqs.com) in your path.
 
 ### Installation notes
 

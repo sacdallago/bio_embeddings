@@ -1,15 +1,21 @@
 import itertools
 import re
+
 from copy import deepcopy
+from pathlib import Path
 from itertools import zip_longest
 from typing import Dict, Any, List, Tuple
 
 import torch
+
 from Bio import SeqIO
 from pandas import read_csv
 from slugify import slugify
 
-from bio_embeddings.align import deepblast_align
+from bio_embeddings.align import (
+    deepblast_align, check_mmseqs, create_mmseqs_database, MMseqsSearchOptions, MMseqsSearchOptionsEnum, mmseqs_search,
+    convert_mmseqs_result_to_profile, convert_result_to_alignment_file
+)
 from bio_embeddings.utilities import (
     get_model_file,
     get_file_manager,
@@ -17,11 +23,11 @@ from bio_embeddings.utilities import (
     read_fasta,
 )
 from bio_embeddings.utilities.exceptions import InvalidParameterError
-from bio_embeddings.utilities.helpers import check_required, read_mapping_file
+from bio_embeddings.utilities.helpers import check_required, read_mapping_file, temporary_copy
 
 
 def pairwise_alignments_to_msa(
-    queries_aligned: List[str], targets_aligned: List[str]
+        queries_aligned: List[str], targets_aligned: List[str]
 ) -> Tuple[str, List[str]]:
     """Combines multiple alignments with a query into an MSA by padding with gaps"""
 
@@ -44,7 +50,7 @@ def pairwise_alignments_to_msa(
             # Get the residues aligned to the query residue or following gaps
             target_aligned = target[match.span()[0] : match.span()[1]]
             padded_targets[index] += target_aligned + (
-                "-" * (total_len - len(target_aligned))
+                    "-" * (total_len - len(target_aligned))
             )
 
     # Ensure the MSA is valid length wise
@@ -165,9 +171,145 @@ def deepblast(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
+def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
+    # Check that mmseqs2 is installed
+    if not check_mmseqs():
+        raise OSError("mmseqs binary could not be found. Please make sure it's in your PATH. "
+                      "You can download mmseqs2 from: https://github.com/soedinglab/MMseqs2/releases/latest")
+
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Set defaults
+    result_kwargs.setdefault("convert_to_profiles", False)
+    result_kwargs.setdefault("mmseqs_search_options", {})
+
+    # Build options (if this fails: no point in creating dbs!)
+    mmseqs_search_options = result_kwargs.get('mmseqs_search_options')
+    search_options = MMseqsSearchOptions()
+
+    for search_option in mmseqs_search_options:
+        option_enum = MMseqsSearchOptionsEnum.from_str(search_option)
+        search_options.add_option(option_enum, mmseqs_search_options[search_option])
+
+    # Check that either search_sequences_file,
+    # or search_sequence_directory (a mmseqs db),
+    # or search_profiles_directory (a mmseqs db of a profile) is in kwargs.
+    # Priority: search_profiles_directory > search_sequence_directory > search_sequences_file
+    if not (
+        "search_sequences_file" in kwargs or
+        "search_sequences_directory" in kwargs or
+        "search_profiles_directory" in kwargs
+    ):
+        raise MissingParameterError(
+            "You need to specify either 'search_sequences_file' (in FASTA format), 'search_sequences_directory'"
+            " (a mmseqs database created with `mmseqs createdb ...`) or 'search_profiles_directory' "
+            "(a mmseqs profile database created) after an `mmseqs search` and am `mmseqs result2profile`)."
+        )
+
+    search_sequences_path = None
+
+    if "search_profiles_directory" in kwargs:
+        search_sequences_path = kwargs['search_profiles_directory']
+
+    if search_sequences_path is None and "search_sequences_directory" in kwargs:
+        search_sequences_path = kwargs['search_sequences_directory']
+
+    if search_sequences_path is None and "search_sequences_file" in kwargs:
+        search_sequences_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "search_sequences_directory",
+        )
+
+        create_mmseqs_database(kwargs['search_sequences_file'], Path(search_sequences_directory))
+        result_kwargs['search_sequences_directory'] = search_sequences_directory
+        search_sequences_path = search_sequences_directory
+
+    query_sequences_path = None
+
+    if "query_profiles_directory" in kwargs:
+        query_sequences_path = kwargs['query_profiles_directory']
+
+    if query_sequences_path is None and "query_sequences_directory" in kwargs:
+        query_sequences_path = kwargs['query_sequences_directory']
+
+    if query_sequences_path is None:
+        query_sequences_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "query_sequences_directory",
+        )
+
+        create_mmseqs_database(kwargs['remapped_sequences_file'], Path(query_sequences_directory))
+        result_kwargs['query_sequences_directory'] = query_sequences_directory
+        query_sequences_path = query_sequences_directory
+
+    mmseqs_search_results_directory = file_manager.create_directory(
+        result_kwargs.get("prefix"),
+        result_kwargs.get("stage_name"),
+        "mmseqs_search_results_directory",
+    )
+
+    mmseqs_search(
+        Path(query_sequences_path),
+        Path(search_sequences_path),
+        Path(mmseqs_search_results_directory),
+        search_options
+    )
+
+    result_kwargs['mmseqs_search_results_directory'] = mmseqs_search_results_directory
+
+    if search_options.has_option(MMseqsSearchOptionsEnum.alignment_output):
+        mmseqs_search_results_file = file_manager.create_file(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "alignment_results_file",
+            extension=".tsv"
+        )
+
+        convert_result_to_alignment_file(
+            Path(query_sequences_path),
+            Path(search_sequences_path),
+            Path(mmseqs_search_results_directory),
+            Path(mmseqs_search_results_file)
+        )
+
+        # Append header to TSV -- a stupid OP that requires reading each line of the file...
+        header = "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits," +\
+                 "pident,tlen,qcov,tcov"
+
+        with temporary_copy(mmseqs_search_results_file) as original,\
+                open(mmseqs_search_results_file, 'w') as out:
+            out.write(header.replace(",", "\t") + "\n")
+            for line in original:
+                out.write(line.decode('utf-8'))
+
+        result_kwargs['alignment_results_file'] = mmseqs_search_results_file
+
+    if result_kwargs["convert_to_profiles"]:
+        query_profiles_directory = file_manager.create_directory(
+            result_kwargs.get("prefix"),
+            result_kwargs.get("stage_name"),
+            "query_profiles_directory",
+        )
+
+        convert_mmseqs_result_to_profile(
+            Path(query_sequences_path),
+            Path(search_sequences_path),
+            Path(mmseqs_search_results_directory),
+            Path(query_profiles_directory)
+        )
+
+        result_kwargs['query_profiles_directory'] = query_profiles_directory
+
+    return result_kwargs
+
+
 # list of available alignment protocols
 PROTOCOLS = {
     "deepblast": deepblast,
+    "mmseqs_search": mmseqs_search_protocol,
 }
 
 

@@ -1,0 +1,35 @@
+# In this example we execute two searchers:
+# - the first search against a "bigger" sequence database gives us rich profiles for our query sequences
+# - the second search uses the rich query profiles to sensitively search against a smaller database
+global:
+  # sequences in this file are the "query" sequences
+  sequences_file: sequences.fasta
+  prefix: mmseqs_profile
+# The first search builds an mmseqs database and searches against it
+mmseqs_search:
+  type: align
+  protocol: mmseqs_search
+  # If a database (generated with bio_embeddings) already exists, this can be changed to:
+  #      search_sequences_directory: /path/to/sequences/database/
+  # alternatively, a profile database can be passed by:
+  #      search_profiles_directory: /path/to/profile/database/
+  search_sequences_file: large.fasta
+  convert_to_profiles: True
+  mmseqs_search_options:
+    num_iterations: 3
+    alignment_output: True
+mmseqs_profile_search:
+  type: align
+  protocol: mmseqs_search
+  # We can selectively chose which parameters to carry over from the "depends_on" stage.
+  depends_on:
+    # Here, we are interested in the "query_profiles_directory" from the previous search.
+    # This parameter stores the path to the directory where the profiles of the query sequences are stored.
+    mmseqs_search:
+      - query_profiles_directory
+  search_sequences_file: tiny.fasta
+  mmseqs_search_options:
+    minimum_sequence_identity: 0.2
+    sensitivity: 7.5
+    maximum_number_of_prefilter_sequences: 10000
+    alignment_output: True
