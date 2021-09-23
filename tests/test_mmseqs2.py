@@ -11,7 +11,7 @@ from bio_embeddings.align import (
 )
 
 
-@pytest.mark.skipif(os.environ.get("SKIP_MMSEQS_TESTS"), reason="Skip MMseqs2 tests.")
+@pytest.mark.skipif(not check_mmseqs(), reason="mmseqs2 binary not found")
 def test_mmseqs_installed():
     assert check_mmseqs(), True
 
