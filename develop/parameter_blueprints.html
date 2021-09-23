@@ -228,6 +228,28 @@
   <span class="c1">## *: denotes the default option</span>
   <span class="c1">## @: denotes that the file or directory will be downloaded and stored locally if not provided</span>
 
+<span class="n">stage_0</span><span class="p">:</span>
+  <span class="nb">type</span><span class="p">:</span> <span class="n">align</span>
+  <span class="c1"># Required: which protocol to use.</span>
+  <span class="c1"># Options: mmseqs_search, deepblast</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">mmseqs_search</span>
+
+  <span class="c1"># Required for mmseqs_search: search sequence to search against (can be FASTA, mmseqs db or mmseqs profile)</span>
+  <span class="n">search_sequences_file</span><span class="p">:</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">sequence</span><span class="o">/</span><span class="n">db</span><span class="o">.</span><span class="n">fasta</span>
+  <span class="c1"># search_sequences_directory: /path/to/a/sequence/db/</span>
+  <span class="c1"># search_profiles_directory: /path/to/a/profiles/db/</span>
+
+  <span class="c1"># Optional for mmseqs_search: convert alignment to profile</span>
+  <span class="c1"># convert_to_profiles: [True,*False]</span>
+
+  <span class="c1"># Optional for mmseqs_search: alignment parameters (check bio_embeddings/align/mmseqs2.py#13 for available options)</span>
+  <span class="c1"># mmseqs_search_options:</span>
+  <span class="c1">#   num_iterations: 5</span>
+  <span class="c1">#   sensitivity: 7.5</span>
+  <span class="c1">#   minimum_sequence_identity: 0.2</span>
+  <span class="c1">#   maximum_number_of_prefilter_sequences: 100</span>
+  <span class="c1">#   alignment_output: True</span>
+
 <span class="n">stage_1</span><span class="p">:</span>
   <span class="nb">type</span><span class="p">:</span> <span class="n">embed</span>
   <span class="c1"># Required: which embedder to use</span>

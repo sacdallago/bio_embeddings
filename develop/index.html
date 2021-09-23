@@ -241,7 +241,7 @@
 </ul>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>You can install <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> via pip or use it via docker.</p>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> via pip or use it via docker. Mind the additional dependencies for <code class="docutils literal notranslate"><span class="pre">align</span></code>.</p>
 <div class="section" id="pip">
 <h3>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
 <p>Install the pipeline like so:</p>
@@ -264,6 +264,10 @@
 </pre></div>
 </div>
 <p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. You can also use <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings:latest</span></code> which is built from the latest commit.</p>
+</div>
+<div class="section" id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>To use the <code class="docutils literal notranslate"><span class="pre">mmseqs_search</span></code> protocol, or the <code class="docutils literal notranslate"><span class="pre">mmsesq2</span></code> functions in <code class="docutils literal notranslate"><span class="pre">align</span></code>, you additionally need to have <a class="reference external" href="https://mmseqs.com">mmseqs2</a> in your path.</p>
 </div>
 <div class="section" id="installation-notes">
 <h3>Installation notes<a class="headerlink" href="#installation-notes" title="Permalink to this headline">¶</a></h3>
@@ -490,6 +494,7 @@ Additionally, we invite you to cite the work from others that was collected in `
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#pip">Pip</a></li>
 <li><a class="reference internal" href="#docker">Docker</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#installation-notes">Installation notes</a></li>
 </ul>
 </li>
