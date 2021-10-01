@@ -7,11 +7,11 @@ from bio_embeddings.extract.bindEmbed21 import BindEmbed21HBIAnnotationExtractor
 
 # >Q9RN60
 # groundtruth values for small molecule binding
-Y = list("000000000000------------------------------------------------"
+Y = list("0000000000000-----------------------------------------------"
          "------------------------------------------------------------"
          "M-M---------------------------------------------------------"
-         "-----------------------------M-------------------------00000"
-         "000000000000000000000000000")
+         "-----------------------------M------------------------------"
+         "----------------------00000")
 
 
 @pytest.mark.parametrize(
@@ -31,8 +31,6 @@ def test_binding_residue_annotation_extractor(
     extractor = get_extractor()
 
     hit = read_csv('test-data/bindEmbed21HBI/Q9RN60_hit.tsv', sep="\t")
-
-    print(hit.keys())
 
     prediction = extractor.get_binding_residues(hit)
 
