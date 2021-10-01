@@ -10,6 +10,7 @@ annotations_from_seqvec:
   type: extract
   protocol: seqvec_from_publication
   depends_on: seqvec_embeddings
+  get_activations: true
 bert_embeddings:
   type: embed
   protocol: prottrans_bert_bfd
@@ -18,3 +19,4 @@ annotations_from_bert:
   type: extract
   protocol: bert_from_publication
   depends_on: bert_embeddings
+  get_activations: true

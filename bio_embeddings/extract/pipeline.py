@@ -378,32 +378,56 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
     # mapping file will be needed for protein-wide annotations
     mapping_file = read_mapping_file(result_kwargs["mapping_file"])
 
-    # Try to create final files (if this fails, now is better than later
+    # Try to create final files (if this fails, now is better than later)
     DSSP3_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
                                                            'DSSP3_predictions_file',
                                                            extension='.fasta')
     result_kwargs['DSSP3_predictions_file'] = DSSP3_predictions_file_path
+
     DSSP8_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                            result_kwargs.get('stage_name'),
                                                            'DSSP8_predictions_file',
                                                            extension='.fasta')
     result_kwargs['DSSP8_predictions_file'] = DSSP8_predictions_file_path
+
     disorder_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                               result_kwargs.get('stage_name'),
                                                               'disorder_predictions_file',
                                                               extension='.fasta')
     result_kwargs['disorder_predictions_file'] = disorder_predictions_file_path
+
     per_sequence_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
                                                                   result_kwargs.get('stage_name'),
                                                                   'per_sequence_predictions_file',
                                                                   extension='.csv')
     result_kwargs['per_sequence_predictions_file'] = per_sequence_predictions_file_path
 
+    if 'get_activations' in kwargs and kwargs['get_activations']:
+        DSSP3_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'DSSP3_raw_predictions_file',
+                                                                   extension='.csv')
+        result_kwargs['DSSP3_raw_predictions_file'] = DSSP3_raw_predictions_file_path
+        DSSP8_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'DSSP8_raw_predictions_file',
+                                                                   extension='.csv')
+        result_kwargs['DSSP8_raw_predictions_file'] = DSSP8_raw_predictions_file_path
+        disorder_raw_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                      result_kwargs.get('stage_name'),
+                                                                      'disorder_raw_predictions_file',
+                                                                      extension='.csv')
+        result_kwargs['disorder_raw_predictions_file'] = disorder_raw_predictions_file_path
+
     # Create sequence containers
     DSSP3_sequences = list()
     DSSP8_sequences = list()
     disorder_sequences = list()
+
+    DSSP3_raw = []
+    DSSP8_raw = []
+    disorder_raw = []
 
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
         for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
@@ -415,14 +439,29 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
             DSSP3_sequence = deepcopy(protein_sequence)
             DSSP3_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP3))
             DSSP3_sequences.append(DSSP3_sequence)
+            DSSP3_raw_df = DataFrame(annotations.DSSP3_raw[:, :, 0].detach().cpu().numpy().transpose(),
+                                     columns=['H', 'E', 'C'])
+            DSSP3_raw_df.insert(0, 'residue', range(1, 1 + len(DSSP3_raw_df)))
+            DSSP3_raw_df.insert(0, 'seqID', DSSP3_sequence.id)
+            DSSP3_raw.append(DSSP3_raw_df)
 
             DSSP8_sequence = deepcopy(protein_sequence)
             DSSP8_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP8))
             DSSP8_sequences.append(DSSP8_sequence)
+            DSSP8_raw_df = DataFrame(annotations.DSSP8_raw[:, :, 0].detach().cpu().numpy().transpose(),
+                                     columns=['G', 'H', 'I', 'B', 'E', 'S', 'T', 'C'])
+            DSSP8_raw_df.insert(0, 'residue', range(1, 1 + len(DSSP8_raw_df)))
+            DSSP8_raw_df.insert(0, 'seqID', DSSP8_sequence.id)
+            DSSP8_raw.append(DSSP8_raw_df)
 
             disorder_sequence = deepcopy(protein_sequence)
             disorder_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.disorder))
             disorder_sequences.append(disorder_sequence)
+            disorder_raw_df = DataFrame(annotations.disorder_raw[:, :, 0].detach().cpu().numpy().transpose(),
+                                        columns=['Order', 'Disorder'])
+            disorder_raw_df.insert(0, 'residue', range(1, 1 + len(disorder_raw_df)))
+            disorder_raw_df.insert(0, 'seqID', disorder_sequence.id)
+            disorder_raw.append(disorder_raw_df)
 
             # Per-sequence annotations, e.g. subcell loc & membrane boundness
             mapping_file.at[protein_sequence.id, 'subcellular_location'] = annotations.localization.value
@@ -433,6 +472,13 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
     write_fasta_file(DSSP3_sequences, DSSP3_predictions_file_path)
     write_fasta_file(DSSP8_sequences, DSSP8_predictions_file_path)
     write_fasta_file(disorder_sequences, disorder_predictions_file_path)
+
+    if 'get_activations' in kwargs and kwargs['get_activations']:
+        # create files with activations for each multiclass prediction
+        concatenate_dataframe(DSSP3_raw).set_index('seqID').rename_axis(None).to_csv(DSSP3_raw_predictions_file_path)
+        concatenate_dataframe(DSSP8_raw).set_index('seqID').rename_axis(None).to_csv(DSSP8_raw_predictions_file_path)
+        concatenate_dataframe(disorder_raw).set_index('seqID').rename_axis(None).to_csv(
+            disorder_raw_predictions_file_path)
 
     return result_kwargs
 
