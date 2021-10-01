@@ -277,7 +277,7 @@ def mmseqs_search_protocol(**kwargs) -> Dict[str, Any]:
 
         # Append header to TSV -- a stupid OP that requires reading each line of the file...
         header = "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits," +\
-                 "pident,tlen,qcov,tcov"
+                 "pident,nident,qlen,tlen,qcov,tcov,qaln,taln"
 
         with temporary_copy(mmseqs_search_results_file) as original,\
                 open(mmseqs_search_results_file, 'w') as out:
