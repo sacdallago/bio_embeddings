@@ -15,7 +15,7 @@ from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
 from bio_embeddings.extract.bindEmbed21.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
 from bio_embeddings.extract.bindEmbed21.bindEmbed21HBI_annotation_extractor import BindEmbed21HBIAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
-from bio_embeddings.utilities import get_model_file
+from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
 from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
     InvalidAnnotationFileError
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -332,9 +332,9 @@ def bindembed21hbi(**kwargs) -> Dict[str, Any]:
     file_manager = get_file_manager(**kwargs)
 
     # Download necessary files if needed
-    for file in BindEmbed21HBIAnnotationExtractor.necessary_files:
-        if not result_kwargs.get(file):
-            result_kwargs[file] = get_model_file(model="bindembed21hbi", file=file)
+    for directory in BindEmbed21HBIAnnotationExtractor.necessary_directories:
+        if not result_kwargs.get(directory):
+            result_kwargs[directory] = get_model_directories_from_zip(model="bindembed21hbi", directory=directory)
 
     annotation_extractor = BindEmbed21HBIAnnotationExtractor(**result_kwargs)
 
