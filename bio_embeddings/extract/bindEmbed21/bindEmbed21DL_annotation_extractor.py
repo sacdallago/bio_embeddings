@@ -9,7 +9,7 @@ from numpy import ndarray
 from enum import Enum
 
 from bio_embeddings.extract.annotations import BindingResidues
-from bio_embeddings.extract.bindEmbed21DL.binding_residues_cnn import BindingResiduesCNN
+from bio_embeddings.extract.bindEmbed21.binding_residues_cnn import BindingResiduesCNN
 from bio_embeddings.utilities import get_device, get_model_file
 
 logger = logging.getLogger(__name__)

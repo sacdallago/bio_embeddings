@@ -5,7 +5,7 @@ import pytest
 import torch
 
 from bio_embeddings.embed import EmbedderInterface, ProtTransT5XLU50Embedder
-from bio_embeddings.extract.bindEmbed21DL import BindEmbed21DLAnnotationExtractor
+from bio_embeddings.extract.bindEmbed21 import BindEmbed21DLAnnotationExtractor
 
 # >P58568
 FASTA = "MADKADQSSYLIKFISTAPVAATIWLTITAGILIEFNRFFPDLLFHPLP"
