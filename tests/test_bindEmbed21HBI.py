@@ -30,7 +30,10 @@ def test_binding_residue_annotation_extractor(
     """Check that BasicAnnotationExtractor passes (without checking correctness)"""
     extractor = get_extractor()
 
-    hit = read_csv('test-data/bindEmbed21HBI.tsv')
+    hit = read_csv('test-data/bindEmbed21HBI/Q9RN60_hit.tsv', sep="\t")
+
+    print(hit.keys())
+
     prediction = extractor.get_binding_residues(hit)
 
     results = [

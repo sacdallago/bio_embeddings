@@ -88,6 +88,8 @@ class BindEmbed21HBIAnnotationExtractor:
         return annotations
 
     def get_binding_residues(self, hit: pandas.DataFrame) -> BasicBindingResidueResult:
+        print(hit)
+        print(hit.keys())
         indices_query = self._get_indices_seq(hit['qstart'], hit['qaln'])
         indices_target = self._get_indices_seq(hit['tstart'], hit['taln'])
 

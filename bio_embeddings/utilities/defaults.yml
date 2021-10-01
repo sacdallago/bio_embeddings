@@ -92,4 +92,4 @@ bindembed21dl:
   model_5_file: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/checkpoint5.pt"
 
 bindembed21hbi:
-  annotation_directory: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/annotation_files.zip"
+  annotations_directory: "http://data.bioembeddings.com/public/embeddings/feature_models/bindembed21/annotation_files.zip"
