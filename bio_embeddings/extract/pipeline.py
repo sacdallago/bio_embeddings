@@ -439,7 +439,7 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
             DSSP3_sequence = deepcopy(protein_sequence)
             DSSP3_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP3))
             DSSP3_sequences.append(DSSP3_sequence)
-            DSSP3_raw_df = DataFrame(annotations.DSSP3_raw[:, :, 0].detach().numpy().transpose(),
+            DSSP3_raw_df = DataFrame(annotations.DSSP3_raw[:, :, 0].detach().cpu().numpy().transpose(),
                                      columns=['H', 'E', 'C'])
             DSSP3_raw_df.insert(0, 'residue', range(1, 1 + len(DSSP3_raw_df)))
             DSSP3_raw_df.insert(0, 'seqID', DSSP3_sequence.id)
@@ -448,7 +448,7 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
             DSSP8_sequence = deepcopy(protein_sequence)
             DSSP8_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.DSSP8))
             DSSP8_sequences.append(DSSP8_sequence)
-            DSSP8_raw_df = DataFrame(annotations.DSSP8_raw[:, :, 0].detach().numpy().transpose(),
+            DSSP8_raw_df = DataFrame(annotations.DSSP8_raw[:, :, 0].detach().cpu().numpy().transpose(),
                                      columns=['G', 'H', 'I', 'B', 'E', 'S', 'T', 'C'])
             DSSP8_raw_df.insert(0, 'residue', range(1, 1 + len(DSSP8_raw_df)))
             DSSP8_raw_df.insert(0, 'seqID', DSSP8_sequence.id)
@@ -457,7 +457,7 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
             disorder_sequence = deepcopy(protein_sequence)
             disorder_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.disorder))
             disorder_sequences.append(disorder_sequence)
-            disorder_raw_df = DataFrame(annotations.disorder_raw[:, :, 0].detach().numpy().transpose(),
+            disorder_raw_df = DataFrame(annotations.disorder_raw[:, :, 0].detach().cpu().numpy().transpose(),
                                         columns=['Order', 'Disorder'])
             disorder_raw_df.insert(0, 'residue', range(1, 1 + len(disorder_raw_df)))
             disorder_raw_df.insert(0, 'seqID', disorder_sequence.id)
@@ -475,9 +475,10 @@ def predict_annotations_using_basic_models(model: str, **kwargs) -> Dict[str, An
 
     if 'get_activations' in kwargs and kwargs['get_activations']:
         # create files with activations for each multiclass prediction
-        concatenate_dataframe(DSSP3_raw).to_csv(DSSP3_raw_predictions_file_path, index=False)
-        concatenate_dataframe(DSSP8_raw).to_csv(DSSP8_raw_predictions_file_path, index=False)
-        concatenate_dataframe(disorder_raw).to_csv(disorder_raw_predictions_file_path, index=False)
+        concatenate_dataframe(DSSP3_raw).set_index('seqID').rename_axis(None).to_csv(DSSP3_raw_predictions_file_path)
+        concatenate_dataframe(DSSP8_raw).set_index('seqID').rename_axis(None).to_csv(DSSP8_raw_predictions_file_path)
+        concatenate_dataframe(disorder_raw).set_index('seqID').rename_axis(None).to_csv(
+            disorder_raw_predictions_file_path)
 
     return result_kwargs
 
