@@ -1,6 +1,5 @@
 import logging
 import numpy
-import pandas
 
 from Bio import SeqIO
 from pathlib import Path

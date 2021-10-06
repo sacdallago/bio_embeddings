@@ -32,7 +32,7 @@ def test_binding_residue_annotation_extractor(
 
     hit = read_csv('test-data/bindEmbed21HBI/Q9RN60_hit.tsv', sep="\t")
 
-    prediction = extractor.get_binding_residues(hit)
+    prediction = extractor.get_binding_residues(hit.iloc[0].to_dict())
 
     results = [
         actual.value == predicted
