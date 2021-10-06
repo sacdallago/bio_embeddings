@@ -359,12 +359,13 @@ def bindembed21hbi(**kwargs) -> Dict[str, Any]:
     nuc_sequences = list()
     small_sequences = list()
 
-    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t')
+    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t',
+                                 dtype={'query': 'str', 'target': 'str'})
     alignment_results = alignment_results[alignment_results['eval'] < 1E-3].copy()
 
     for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
         # get hits for this query
-        hits = alignment_results[alignment_results['query'] == protein_sequence.id].copy()
+        hits = alignment_results[alignment_results['query'].str.match(str(protein_sequence.id))].copy()
         # get hits with minimal E-value
         hits_min_eval = hits[hits['eval'] == min(hits['eval'])]
         # get hit with maximal PIDE
@@ -436,21 +437,22 @@ def bindembed21(**kwargs) -> Dict[str, Any]:
     nuc_sequences = list()
     small_sequences = list()
 
-    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t')
-    hits = alignment_results[alignment_results['eval'] < 1E-3].copy()
+    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t',
+                                 dtype={'query': 'str', 'target': 'str'})
+    alignment_results = alignment_results[alignment_results['eval'] < 1E-3].copy()
 
     with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
         for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
             # get HBI hit for this query
-            hits_id = hits[hits['query'] == protein_sequence.id].copy()
-            hits_min_eval = hits_id[hits_id['eval'] == min(hits_id['eval'])].copy()
-            hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])].copy()
+            hits = alignment_results[alignment_results['query'].str.match(str(protein_sequence.id))].copy()
+            hits_min_eval = hits[hits['eval'] == min(hits['eval'])]
+            hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])]
 
             metal_sequence = deepcopy(protein_sequence)
             nuc_sequence = deepcopy(protein_sequence)
             small_sequence = deepcopy(protein_sequence)
 
-            hbi_annotations = hbi_extractor.get_binding_residues(hit_max_pide)
+            hbi_annotations = hbi_extractor.get_binding_residues(hit_max_pide.iloc[0].to_dict())
             metal_inference = convert_list_of_enum_to_string(hbi_annotations.metal_ion)
             nuc_inference = convert_list_of_enum_to_string(hbi_annotations.nucleic_acids)
             small_inference = convert_list_of_enum_to_string(hbi_annotations.small_molecules)
