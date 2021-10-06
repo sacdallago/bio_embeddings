@@ -3,6 +3,7 @@ import numpy
 import pandas
 
 from Bio import SeqIO
+from pathlib import Path
 import collections
 
 from typing import List
@@ -56,20 +57,20 @@ class BindEmbed21HBIAnnotationExtractor:
             if not self._options.get(directory):
                 self._options[directory] = get_model_directories_from_zip(model=f"bindembed21hbi", directory=directory)
 
-        metal_annotations_file = '{}/annotations_metal.fasta'.format(self._options['annotations_directory'])
-        nuc_annotations_file = '{}/annotations_nuc.fasta'.format(self._options['annotations_directory'])
-        small_annotations_file = '{}/annotations_small.fasta'.format(self._options['annotations_directory'])
+        metal_annotations_file_path = Path(self._options['annotations_directory']) / 'annotations_metal.fasta'
+        nuc_annotations_file_path = Path(self._options['annotations_directory']) / 'annotations_nuc.fasta'
+        small_annotations_file_path = Path(self._options['annotations_directory']) / 'annotations_small.fasta'
 
-        metal_annotations_fasta = SeqIO.to_dict(SeqIO.parse(metal_annotations_file, 'fasta'))
-        nuc_annotations_fasta = SeqIO.to_dict(SeqIO.parse(nuc_annotations_file, 'fasta'))
-        small_annotations_fasta = SeqIO.to_dict(SeqIO.parse(small_annotations_file, 'fasta'))
+        metal_annotations_fasta = SeqIO.to_dict(SeqIO.parse(str(metal_annotations_file_path), 'fasta'))
+        nuc_annotations_fasta = SeqIO.to_dict(SeqIO.parse(str(nuc_annotations_file_path), 'fasta'))
+        small_annotations_fasta = SeqIO.to_dict(SeqIO.parse(str(small_annotations_file_path), 'fasta'))
 
-        self.metal_annotations = self._convert_annotations_to_list(metal_annotations_fasta)
-        self.nuc_annotations = self._convert_annotations_to_list(nuc_annotations_fasta)
-        self.small_annotations = self._convert_annotations_to_list(small_annotations_fasta)
+        self.metal_annotations = self.convert_annotations_to_list(metal_annotations_fasta)
+        self.nuc_annotations = self.convert_annotations_to_list(nuc_annotations_fasta)
+        self.small_annotations = self.convert_annotations_to_list(small_annotations_fasta)
 
     @staticmethod
-    def _convert_annotations_to_list(fasta_annotations):
+    def convert_annotations_to_list(fasta_annotations):
         annotations = collections.defaultdict(list)
 
         for k in fasta_annotations.keys():
@@ -87,17 +88,12 @@ class BindEmbed21HBIAnnotationExtractor:
 
         return annotations
 
-    def get_binding_residues(self, hit: pandas.DataFrame) -> BasicBindingResidueResult:
-        indices_query = self._get_indices_seq(hit.iloc[0]['qstart'], hit.iloc[0]['qaln'])
-        indices_target = self._get_indices_seq(hit.iloc[0]['tstart'], hit.iloc[0]['taln'])
+    def get_binding_residues(self, hit: dict) -> BasicBindingResidueResult:
+        indices_query = self._get_indices_seq(hit['qstart'], hit['qaln'])
+        indices_target = self._get_indices_seq(hit['tstart'], hit['taln'])
 
-        print(indices_query)
-        print(indices_target)
-
-        print(hit.iloc[0]['qlen'])
-
-        target_id = hit.iloc[0]['target']
-        inferred_binding = numpy.zeros([hit.iloc[0]['qlen'], 3], dtype=numpy.float32) - 1
+        target_id = hit['target']
+        inferred_binding = numpy.zeros([hit['qlen'], 3], dtype=numpy.float32) - 1
 
         for idx, pos2 in enumerate(indices_target):
             pos1 = indices_query[idx]

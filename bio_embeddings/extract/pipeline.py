@@ -360,17 +360,17 @@ def bindembed21hbi(**kwargs) -> Dict[str, Any]:
     small_sequences = list()
 
     alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t')
-    hits = alignment_results[alignment_results['eval'] < 1E-3].copy()
+    alignment_results = alignment_results[alignment_results['eval'] < 1E-3].copy()
 
     for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
         # get hits for this query
-        hits_id = hits[hits['query'] == protein_sequence.id].copy()
+        hits = alignment_results[alignment_results['query'] == protein_sequence.id].copy()
         # get hits with minimal E-value
-        hits_min_eval = hits_id[hits_id['eval'] == min(hits_id['eval'])].copy()
+        hits_min_eval = hits[hits['eval'] == min(hits['eval'])]
         # get hit with maximal PIDE
-        hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])].copy()
+        hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])]
 
-        annotations = annotation_extractor.get_binding_residues(hit_max_pide)
+        annotations = annotation_extractor.get_binding_residues(hit_max_pide.iloc[0].to_dict())
         metal_sequence = deepcopy(protein_sequence)
         nuc_sequence = deepcopy(protein_sequence)
         small_sequence = deepcopy(protein_sequence)
