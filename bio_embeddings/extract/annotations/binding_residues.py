@@ -7,6 +7,7 @@ class BindingResidues(Enum):
     small_molecule = "S"
     protein = "P"
     non_binding = "-"
+    not_inferred = "0"
 
     def __str__(self):
         return {
@@ -15,6 +16,7 @@ class BindingResidues(Enum):
             self.small_molecule: "Binding to small (regular) molecule",
             self.protein: "Binding to protein",
             self.non_binding: "Not binding",
+            self.not_inferred: "Not inferred"
         }.get(self)
 
     @staticmethod

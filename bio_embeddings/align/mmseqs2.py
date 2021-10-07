@@ -171,6 +171,6 @@ def convert_result_to_alignment_file(
             str(search_result_file),
             "--format-output",
             "query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits,pident,nident,qlen,"
-            "tlen,qcov,tcov"
+            "tlen,qcov,tcov,qaln,taln"
         ]
     )

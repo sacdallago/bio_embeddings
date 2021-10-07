@@ -12,9 +12,10 @@ from bio_embeddings.extract.basic import BasicAnnotationExtractor
 from bio_embeddings.extract.light_attention.light_attention_annotation_extractor import \
     LightAttentionAnnotationExtractor
 from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
-from bio_embeddings.extract.bindEmbed21DL.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
+from bio_embeddings.extract.bindEmbed21.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
+from bio_embeddings.extract.bindEmbed21.bindEmbed21HBI_annotation_extractor import BindEmbed21HBIAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
-from bio_embeddings.utilities import get_model_file
+from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
 from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
     InvalidAnnotationFileError
 from bio_embeddings.utilities.filemanagers import get_file_manager
@@ -319,6 +320,172 @@ def bindembed21dl(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
+def bindembed21hbi(**kwargs) -> Dict[str, Any]:
+    """
+    Protocol extracts binding residues from "alignment_results_file".
+
+    :return:
+    """
+
+    check_required(kwargs, ['alignment_results_file', 'mapping_file', 'remapped_sequences_file'])
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Download necessary files if needed
+    for directory in BindEmbed21HBIAnnotationExtractor.necessary_directories:
+        if not result_kwargs.get(directory):
+            result_kwargs[directory] = get_model_directories_from_zip(model="bindembed21hbi", directory=directory)
+
+    annotation_extractor = BindEmbed21HBIAnnotationExtractor(**result_kwargs)
+
+    # Try to create final files (if this fails, now is better than later
+    metal_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'metal_binding_inference_file',
+                                                                   extension='.fasta')
+    result_kwargs['metal_binding_inference_file'] = metal_binding_predictions_file_path
+    nuc_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                 result_kwargs.get('stage_name'),
+                                                                 'nucleic_acid_binding_inference_file',
+                                                                 extension='.fasta')
+    result_kwargs['binding_residue_inference_file'] = nuc_binding_predictions_file_path
+    small_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'small_molecule_binding_inference_file',
+                                                                   extension='.fasta')
+    result_kwargs['binding_residue_inference_file'] = small_binding_predictions_file_path
+
+    metal_sequences = list()
+    nuc_sequences = list()
+    small_sequences = list()
+
+    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t',
+                                 dtype={'query': 'str', 'target': 'str'})
+    alignment_results = alignment_results[alignment_results['eval'] < 1E-3].copy()
+
+    for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+        # get hits for this query
+        hits = alignment_results[alignment_results['query'].str.match(str(protein_sequence.id))].copy()
+        # get hits with minimal E-value
+        hits_min_eval = hits[hits['eval'] == min(hits['eval'])]
+        # get hit with maximal PIDE
+        hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])]
+
+        annotations = annotation_extractor.get_binding_residues(hit_max_pide.iloc[0].to_dict())
+        metal_sequence = deepcopy(protein_sequence)
+        nuc_sequence = deepcopy(protein_sequence)
+        small_sequence = deepcopy(protein_sequence)
+
+        metal_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.metal_ion))
+        nuc_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.nucleic_acids))
+        small_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.small_molecules))
+
+        metal_sequences.append(metal_sequence)
+        nuc_sequences.append(nuc_sequence)
+        small_sequences.append(small_sequence)
+
+    # Write files
+    write_fasta_file(metal_sequences, metal_binding_predictions_file_path)
+    write_fasta_file(nuc_sequences, nuc_binding_predictions_file_path)
+    write_fasta_file(small_sequences, small_binding_predictions_file_path)
+
+    return result_kwargs
+
+
+def bindembed21(**kwargs) -> Dict[str, Any]:
+    """
+    Protocol extracts binding residues from "alignment_result_file" if possible, and from "embeddings_file", otherwise.
+    :param kwargs:
+    :return:
+    """
+
+    check_required(kwargs, ['alignment_results_file', 'embeddings_file', 'mapping_file', 'remapped_sequences_file'])
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Download necessary files if needed
+    # for HBI
+    for directory in BindEmbed21HBIAnnotationExtractor.necessary_directories:
+        if not result_kwargs.get(directory):
+            result_kwargs[directory] = get_model_directories_from_zip(model="bindembed21hbi", directory=directory)
+    # for DL
+    for file in BindEmbed21DLAnnotationExtractor.necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model="bindembed21dl", file=file)
+
+    hbi_extractor = BindEmbed21HBIAnnotationExtractor(**result_kwargs)
+    dl_extractor = BindEmbed21DLAnnotationExtractor(**result_kwargs)
+
+    # Try to create final files (if this fails, now is better than later
+    metal_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'metal_binding_predictions_file',
+                                                                   extension='.fasta')
+    result_kwargs['metal_binding_predictions_file'] = metal_binding_predictions_file_path
+    nuc_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                 result_kwargs.get('stage_name'),
+                                                                 'nucleic_acid_binding_predictions_file',
+                                                                 extension='.fasta')
+    result_kwargs['binding_residue_predictions_file'] = nuc_binding_predictions_file_path
+    small_binding_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                   result_kwargs.get('stage_name'),
+                                                                   'small_molecule_binding_predictions_file',
+                                                                   extension='.fasta')
+    result_kwargs['binding_residue_predictions_file'] = small_binding_predictions_file_path
+
+    metal_sequences = list()
+    nuc_sequences = list()
+    small_sequences = list()
+
+    alignment_results = read_csv(result_kwargs['alignment_results_file'], sep='\t',
+                                 dtype={'query': 'str', 'target': 'str'})
+    alignment_results = alignment_results[alignment_results['eval'] < 1E-3].copy()
+
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+            # get HBI hit for this query
+            hits = alignment_results[alignment_results['query'].str.match(str(protein_sequence.id))].copy()
+            hits_min_eval = hits[hits['eval'] == min(hits['eval'])]
+            hit_max_pide = hits_min_eval[hits_min_eval['fident'] == max(hits_min_eval['fident'])]
+
+            metal_sequence = deepcopy(protein_sequence)
+            nuc_sequence = deepcopy(protein_sequence)
+            small_sequence = deepcopy(protein_sequence)
+
+            hbi_annotations = hbi_extractor.get_binding_residues(hit_max_pide.iloc[0].to_dict())
+            metal_inference = convert_list_of_enum_to_string(hbi_annotations.metal_ion)
+            nuc_inference = convert_list_of_enum_to_string(hbi_annotations.nucleic_acids)
+            small_inference = convert_list_of_enum_to_string(hbi_annotations.small_molecules)
+
+            # some part of the sequence was predicted using HBI --> save output and don't run DL method
+            if 'M' in metal_inference or 'N' in nuc_inference or 'S' in small_inference:
+                metal_sequence.seq = Seq(metal_inference)
+                nuc_sequence.seq = Seq(nuc_inference)
+                small_sequence.seq = Seq(small_inference)
+            # no inference containing binding annotations was made --> run bindEmbed21DL
+            else:
+                embedding = np.array(embedding_file[protein_sequence.id])
+                annotations = dl_extractor.get_binding_residues(embedding)
+                metal_sequence = deepcopy(protein_sequence)
+                nuc_sequence = deepcopy(protein_sequence)
+                small_sequence = deepcopy(protein_sequence)
+
+                metal_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.metal_ion))
+                nuc_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.nucleic_acids))
+                small_sequence.seq = Seq(convert_list_of_enum_to_string(annotations.small_molecules))
+
+            metal_sequences.append(metal_sequence)
+            nuc_sequences.append(nuc_sequence)
+            small_sequences.append(small_sequence)
+
+    # Write files
+    write_fasta_file(metal_sequences, metal_binding_predictions_file_path)
+    write_fasta_file(nuc_sequences, nuc_binding_predictions_file_path)
+    write_fasta_file(small_sequences, small_binding_predictions_file_path)
+
+    return result_kwargs
+
+
 def light_attention(model: str, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts subcellular locationfrom "embeddings_file".
@@ -492,6 +659,8 @@ PROTOCOLS = {
     "la_protbert": la_protbert,
     "prott5cons": prott5cons,
     "bindembed21dl": bindembed21dl,
+    "bindembed21hbi": bindembed21hbi,
+    "bindembed21": bindembed21,
     "unsupervised": unsupervised
 }
 
