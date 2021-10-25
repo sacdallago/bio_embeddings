@@ -75,7 +75,7 @@ To use the `mmseqs_search` protocol, or the `mmsesq2` functions in `align`, you 
 
 Each models has its strengths and weaknesses (speed, specificity, memory footprint...). There isn't a "one-fits-all" and we encourage you to at least try two different models when attempting a new exploratory project.
 
-The models `prottrans_bert_bfd`, `prottrans_albert_bfd`, `seqvec` and `prottrans_xlnet_uniref100` were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be `prottrans_bert_bfd`, followed by `seqvec`, which has been established for longer and uses a different principle (LSTM vs Transformer).
+The models `prottrans_t5_xl_u50`, `esm1b`, `esm`, `prottrans_bert_bfd`, `prottrans_albert_bfd`, `seqvec` and `prottrans_xlnet_uniref100` were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be `prottrans_t5_xl_u50`, followed by `esm1b`.
 
 ## Usage and examples
 
