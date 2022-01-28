@@ -15,6 +15,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
+    "import os\n",
     "!pip3 install -U pip > /dev/null\n",
     "!pip3 install -U bio_embeddings[all] > /dev/null"
    ]
@@ -68,9 +69,14 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
    "outputs": [],
    "source": [
+    "os.mkdir(\"figures\")\n",
     "for (identifier, embedding) in proteins:\n",
     "    fig = px.imshow(np.rot90(embedding), color_continuous_scale='RdBu', zmin=-.7, zmax=.7)\n",
     "    plotly.offline.plot(fig, filename=\"figures/\"+identifier+\"_prottrans_bert.html\")"

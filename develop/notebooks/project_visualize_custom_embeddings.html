@@ -204,7 +204,6 @@
 <h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>install the pipeline in the colab runtime</p></li>
-<li><p>download files neccessary for this example</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -214,94 +213,92 @@
 </div>
 </div>
 </div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="extract-secondary-structure-and-subcellular-localization-predictions-from-seqvec">
-<h1>Extract secondary structure and subcellular localization predictions from SeqVec<a class="headerlink" href="#extract-secondary-structure-and-subcellular-localization-predictions-from-seqvec" title="Permalink to this headline">¶</a></h1>
-<p>In this notebook we will extract annotations from SeqVec embeddings via trained models that can predict secondary structure and subcellular localization</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">SeqVecEmbedder</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wget http://data.bioembeddings.com/public/embeddings/notebooks/custom_data/antibodies_dummy.xlsx --output-document antibodies_dummy.xlsx
 </pre></div>
 </div>
 </div>
 </div>
-<p>We initialize the SeqVec embedder.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="visualize-sequence-space-for-custom-embeddings">
+<h1>Visualize sequence space for custom embeddings<a class="headerlink" href="#visualize-sequence-space-for-custom-embeddings" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook we dig deeper into an analytical application of protein LM embeddings. For this example, a private set of antibodies was used. This notebook is for illustrative purposes only.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedder</span> <span class="o">=</span> <span class="n">SeqVecEmbedder</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We select an AA sequence. In this case, the sequence is that of <a class="reference external" href="https://www.uniprot.org/uniprot/P12345">Aspartate aminotransferase, mitochondrial</a></p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_sequence</span> <span class="o">=</span> <span class="s2">"MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK"</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>We produce the embeddings of the above sequence. Since we only have one sequence, we use the simple <code class="docutils literal notranslate"><span class="pre">embed</span></code> function, rather than the <code class="docutils literal notranslate"><span class="pre">embed_many</span></code> or <code class="docutils literal notranslate"><span class="pre">embed_batch</span></code>, which we would instead use if we had multiple sequences to embed.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">target_sequence</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> pipeline includes some models trained on embeddings for the prediction of Secondary Structure and Subcellular Localization. In the following we make use of these models.</p>
-<p>To speed up processing, we have downloaded the model weights of the supervised subcellular localization and secondary structure prediction models from <a class="reference external" href="http://maintenance.dallago.us/public/embeddings/feature_models/seqvec/">here</a>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.extract.basic</span> <span class="kn">import</span> <span class="n">BasicAnnotationExtractor</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">annotations_extractor</span> <span class="o">=</span> <span class="n">BasicAnnotationExtractor</span><span class="p">(</span><span class="s2">"seqvec_from_publication"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">annotations</span> <span class="o">=</span> <span class="n">annotations_extractor</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s see what annotations are available from SeqVec</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">annotations</span><span class="o">.</span><span class="n">_fields</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s print the subcellular localization predicted via the SeqVec embeddings</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The subcellular localization predicted from the embedding is: </span><span class="si">{</span><span class="n">annotations</span><span class="o">.</span><span class="n">localization</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>For AA-annotations, e.g. secondary structure, we can use a helper function to format the extracted annotations as a single string:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.utilities.helpers</span> <span class="kn">import</span> <span class="n">convert_list_of_enum_to_string</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"The predicted secondary structure (red) of the sequence is:"</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">SeqVecEmbedder</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.project</span> <span class="kn">import</span> <span class="n">tsne_reduce</span>
+<span class="kn">from</span> <span class="nn">bio_embeddings.visualize</span> <span class="kn">import</span> <span class="n">render_3D_scatter_plotly</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_excel</span><span class="p">,</span> <span class="n">DataFrame</span>
 
-<span class="k">for</span> <span class="p">(</span><span class="n">AA</span><span class="p">,</span> <span class="n">DSSP3</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_sequence</span><span class="p">,</span> <span class="n">convert_list_of_enum_to_string</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">DSSP3</span><span class="p">)):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\x1B</span><span class="s2">[30m</span><span class="si">{</span><span class="n">AA</span><span class="si">}</span><span class="se">\x1b</span><span class="s2">[31m</span><span class="si">{</span><span class="n">DSSP3</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct the embedder class.</span>
+
+<span class="n">embedder</span> <span class="o">=</span> <span class="n">SeqVecEmbedder</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read excel sheet and display first two entries</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="s1">'antibodies_dummy.xlsx'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate embeddings for heay and light CDR3 AA sequences</span>
+
+<span class="n">heavy_embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">embedder</span><span class="o">.</span><span class="n">reduce_per_protein</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span> <span class="k">for</span> <span class="n">embedding</span> <span class="ow">in</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed_many</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'HEAVY CDR3 (aa)'</span><span class="p">])]</span>
+<span class="n">ligth_embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">embedder</span><span class="o">.</span><span class="n">reduce_per_protein</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span> <span class="k">for</span> <span class="n">embedding</span> <span class="ow">in</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed_many</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'LIGHT CDR3 (aa)'</span><span class="p">])]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If merge is set to True, embeddings will be summed and the resulting vector will be of size 1024</span>
+<span class="c1"># If merge is set to False, embeddings will be concatenated, and the resulting vector will be of size 2048</span>
+<span class="n">merge</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">heavy_part</span><span class="p">,</span> <span class="n">light_part</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">heavy_embeddings</span><span class="p">,</span> <span class="n">ligth_embeddings</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">merge</span><span class="p">:</span>
+        <span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heavy_part</span><span class="o">+</span><span class="n">light_part</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">heavy_part</span><span class="p">,</span> <span class="n">light_part</span><span class="p">]))</span>
+
+<span class="n">transformed_embeddings</span> <span class="o">=</span> <span class="n">tsne_reduce</span><span class="p">(</span><span class="n">_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">embeddings_dataframe</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">transformed_embeddings</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"component_0"</span><span class="p">,</span> <span class="s2">"component_1"</span><span class="p">,</span> <span class="s2">"component_2"</span><span class="p">])</span>
+<span class="n">embeddings_dataframe</span><span class="p">[</span><span class="s1">'label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'Poly'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">embeddings_dataframe</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">render_3D_scatter_plotly</span><span class="p">(</span><span class="n">embeddings_dataframe</span><span class="o">=</span><span class="n">embeddings_dataframe</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -324,7 +321,7 @@
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="../_sources/notebooks/extract_supervised_from_seqvec.ipynb.txt"
+            <a class="muted-link" href="../_sources/notebooks/project_visualize_custom_embeddings.ipynb.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -345,7 +342,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Colab initialization</a></li>
-<li><a class="reference internal" href="#extract-secondary-structure-and-subcellular-localization-predictions-from-seqvec">Extract secondary structure and subcellular localization predictions from SeqVec</a></li>
+<li><a class="reference internal" href="#visualize-sequence-space-for-custom-embeddings">Visualize sequence space for custom embeddings</a></li>
 </ul>
 
           </div>

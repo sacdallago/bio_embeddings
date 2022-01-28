@@ -26,7 +26,7 @@ From experience within our lab and with collaborators we have created a set of N
 
 | Purpose                                                      | Colab                                                        | Notebook                                               |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------- |
-| Embed a few sequences and try out different ideas to see if the embeddings are able to cluster different sequences | [Click here](https://colab.research.google.com/github/sacdallago/bio_embeddings/blob/develop/notebooks/project_visualize_custom_embedings.ipynb) | [Click here](project_visualize_custom_embedings.ipynb) |
+| Embed a few sequences and try out different ideas to see if the embeddings are able to cluster different sequences | [Click here](https://colab.research.google.com/github/sacdallago/bio_embeddings/blob/develop/notebooks/project_visualize_custom_embedings.ipynb) | [Click here](project_visualize_custom_embeddings.ipynb) |
 
 ## Exploring pipeline output files
 
