@@ -71,6 +71,7 @@ humanize = "^3.2.0"
 fair-esm = { version = "0.4.0", optional = true }
 flask = { version = "^2.0.0", optional = true }
 atomicwrites = "^1.4.0"
+pyyaml = "5.4.1"
 
 [tool.poetry.extras]
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
