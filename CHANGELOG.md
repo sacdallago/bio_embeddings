@@ -5,7 +5,6 @@
  * Fix missing docker images
  * Added a contributing guide
 
-
 ## 0.2.2
 
  * Added the `esm1v` embedder from [Meier et al. 2021](https://www.biorxiv.org/content/10.1101/2021.07.09.450648v1), which is part of facebook's [esm](https://github.com/facebookresearch/esm). Note that this is an ensemble model, so you need to pass `ensemble_id` with a value from 1 to 5 to select which weights to use.
