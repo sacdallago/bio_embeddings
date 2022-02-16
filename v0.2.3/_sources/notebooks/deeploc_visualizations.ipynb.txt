@@ -1,0 +1,319 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Colab initialization\n",
+    "- install the pipeline in the colab runtime\n",
+    "- download files neccessary for this example"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Protocol -- Step 2 — Install bio_embeddings\n",
+    "\n",
+    "!pip3 install -U pip > /dev/null\n",
+    "!pip3 install -U bio_embeddings[all] > /dev/null"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 3 — Download files\n",
+    "\n",
+    "!wget http://data.bioembeddings.com/deeploc/reduced_embeddings_file.h5 --output-document reduced_embeddings_file.h5\n",
+    "!wget http://data.bioembeddings.com/deeploc/annotations.csv --output-document annotations.csv\n",
+    "!wget http://data.bioembeddings.com/deeploc/solubility_annotations.csv --output-document solubility_annotations.csv"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "pycharm": {
+     "name": "#%% md\n"
+    }
+   },
+   "source": [
+    "# Visualize sequence spaces drawn by DeepLoc embeddings\n",
+    "In this notebook, we use the output of the _embed_ stage to draw custom UMAP sequence space plots. We will first use the annotations of subcellular localization from [DeepLoc](http://www.cbs.dtu.dk/services/DeepLoc/). These come in 10 subcellular localization classes.\n",
+    "\n",
+    "Following that, we will use a different anntoations file that describes the solubility of the proteins in the DeepLoc set. We will keep the same representations as drawn by UMAP before, so we can \"side-by-side\" see how embeddings separate the 10 subcellular localization classes, as well as the difference between soluble and membrane bound proteins."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 4 — Import dependencies\n",
+    "\n",
+    "import h5py\n",
+    "import numpy as np\n",
+    "from pandas import read_csv, DataFrame\n",
+    "from bio_embeddings.project import umap_reduce\n",
+    "from bio_embeddings.visualize import render_scatter_plotly\n",
+    "from bio_embeddings.utilities import QueryEmbeddingsFile"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 5 — Read annotations file\n",
+    "\n",
+    "annotations = read_csv('annotations.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 6 — Read the embeddings file\n",
+    "\n",
+    "identifiers = annotations.identifier.values\n",
+    "embeddings = list()\n",
+    "\n",
+    "with h5py.File('reduced_embeddings_file.h5', 'r') as embeddings_file:\n",
+    "    \n",
+    "    # Create a lookup table for the old ids\n",
+    "    embedding_querier = QueryEmbeddingsFile(embeddings_file)\n",
+    "\n",
+    "    # For every identifiery in the annotations file,\n",
+    "    # look for the correct internal identifier\n",
+    "    # and add the embedding for that protein to the embeddings list\n",
+    "    for identifier in identifiers:\n",
+    "        embeddings.append(embedding_querier.query_original_id(identifier))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 7 — Project the embeddings in lower dimensions using UMAP\n",
+    "\n",
+    "options = {\n",
+    "    'min_dist': .1,\n",
+    "    'spread': 8,\n",
+    "    'n_neighbors': 160,\n",
+    "    'metric': 'euclidean',\n",
+    "    'n_components': 2,\n",
+    "    'random_state': 10\n",
+    "}\n",
+    "\n",
+    "projected_embeddings = umap_reduce(embeddings, **options)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 8 — Merge projected embeddings and annotations\n",
+    "\n",
+    "projected_embeddings_dataframe = DataFrame(\n",
+    "    projected_embeddings,\n",
+    "    columns=[\"component_0\", \"component_1\"],\n",
+    "    index=identifiers\n",
+    ")\n",
+    "\n",
+    "merged_annotations_and_projected_embeddings = annotations.join(\n",
+    "    projected_embeddings_dataframe, on=\"identifier\", how=\"left\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "pycharm": {
+     "name": "#%%\n"
+    },
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Basic Protocol 2 — Step 9 — Plot the protein space spanned by the projected embeddings\n",
+    "\n",
+    "figure = render_scatter_plotly(merged_annotations_and_projected_embeddings)\n",
+    "figure.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Visualize soluble vs. membrane vs. unknown sequences\n",
+    "We can use the UMAP projections from before to re-color the visualization using a new annotation: solubility vs. membrane boundness. The annotations are again taken from DeepLoc. This highlights the versatility of the visualizations, e.g. if you have a protein sequence set with different properties you would like to study, you can do so by visualizing the different properties in different graphs."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Alternate protocol 2 - Step 2\n",
+    "solubility_annotations = read_csv('solubility_annotations.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "merged_solubility_annotations_and_projected_embeddings = solubility_annotations.join(\n",
+    "    projected_embeddings_dataframe, on=\"identifier\", how=\"left\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "figure = render_scatter_plotly(merged_solubility_annotations_and_projected_embeddings)\n",
+    "figure.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Visualize in 3D\n",
+    "The bio_embeddings pipeline allows you to also plot 3D protein spaces, which might be better suited for overarching annotations. Additionally, we will only look at definite solubility (aka, drop the \"unknown\" annotations)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from copy import deepcopy\n",
+    "\n",
+    "# Alternate protocol 1 - Step 2\n",
+    "from bio_embeddings.visualize import render_3D_scatter_plotly"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Alternate protocol 1 - Step 1\n",
+    "three_dimensional_options = deepcopy(options)\n",
+    "\n",
+    "# We use three components, as we now want three-dimensional data points.\n",
+    "three_dimensional_options['n_components'] = 3\n",
+    "\n",
+    "three_dimensional_projected_embeddings = umap_reduce(embeddings, **three_dimensional_options)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "three_dimensional_projected_embeddings_dataframe = DataFrame(\n",
+    "    three_dimensional_projected_embeddings,\n",
+    "    # Alternate protocol 1 - Step 2\n",
+    "    columns=[\"component_0\", \"component_1\", \"component_2\"],\n",
+    "    index=identifiers\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "only_known = solubility_annotations[solubility_annotations['label'] != \"Unknown\"]\n",
+    "\n",
+    "merged_solubility_annotations_and_3D_projected_embeddings = only_known.join(\n",
+    "    three_dimensional_projected_embeddings_dataframe, on=\"identifier\", how=\"left\"\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Alternate protocol 1 - Step 2\n",
+    "figure = render_3D_scatter_plotly(merged_solubility_annotations_and_3D_projected_embeddings)\n",
+    "figure.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}

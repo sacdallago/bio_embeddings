@@ -1,0 +1,529 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Pipeline Reference" href="parameter_blueprints.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.31"/>
+        <title>bio_embeddings</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">bio_embeddings</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  
+  <span class="sidebar-brand-text">bio_embeddings</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_blueprints.html">Pipeline Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.embed.html">bio_embeddings.embed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.extract.html">bio_embeddings.extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.mutagenesis.html">bio_embeddings.mutagenesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.project.html">bio_embeddings.project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.utilities.html">bio_embeddings.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bio_embeddings.visualize.html">bio_embeddings.visualize</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="contributing/index.html">Contributing</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing/setup.html">Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/extract.html">Implement a new predictor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing/embedder.html">Add a new language model/embedder</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <div class="tex2jax_ignore mathjax_ignore section" id="bio-embeddings">
+<h1>Bio Embeddings<a class="headerlink" href="#bio-embeddings" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sacdallago/bio_embeddings/tree/develop/examples">Pipeline Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_blueprints.html">Pipeline Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/README.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing/index.html">Contributing</a></li>
+</ul>
+</div>
+<p>Resources to learn about bio_embeddings:</p>
+<ul class="simple">
+<li><p>Quickly predict protein structure and function from sequence via embeddings: <a class="reference external" href="https://embed.protein.properties">embed.protein.properties</a>.</p></li>
+<li><p>Read the current documentation: <a class="reference external" href="https://docs.bioembeddings.com">docs.bioembeddings.com</a>.</p></li>
+<li><p>Chat with us: <a class="reference external" href="https://chat.bioembeddings.com">chat.bioembeddings.com</a>.</p></li>
+<li><p>We presented the bio_embeddings pipeline as a talk at ISMB 2020 &amp; LMRL 2020. You can <a class="reference external" href="https://www.youtube.com/watch?v=NucUA0QiOe0&amp;feature=youtu.be">find the talk on YouTube</a>, <a class="reference external" href="https://f1000research.com/posters/9-876">the poster on F1000</a>, and our <a class="reference external" href="https://doi.org/10.1002/cpz1.113">Current Protocol Manuscript</a>.</p></li>
+<li><p>Check out the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> of pipeline configurations a and <a class="reference internal" href="notebooks.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">notebooks</span></code></span></a>.</p></li>
+</ul>
+<p>Project aims:</p>
+<ul class="simple">
+<li><p>Facilitate the use of language model based biological sequence representations for transfer-learning by providing a single, consistent interface and close-to-zero-friction</p></li>
+<li><p>Reproducible workflows</p></li>
+<li><p>Depth of representation (different models from different labs trained on different dataset for different purposes)</p></li>
+<li><p>Extensive examples, handle complexity for users (e.g. CUDA OOM abstraction) and well documented warnings and error messages.</p></li>
+</ul>
+<p>The project includes:</p>
+<ul class="simple">
+<li><p>General purpose python embedders based on open models trained on biological sequence representations (SeqVec, ProtTrans, UniRep,…)</p></li>
+<li><p>A pipeline which:</p>
+<ul>
+<li><p>embeds sequences into matrix-representations (per-amino-acid) or vector-representations (per-sequence) that can be used to train learning models or for analytical purposes</p></li>
+<li><p>projects per-sequence embedidngs into lower dimensional representations using UMAP or t-SNE (for lightwieght data handling and visualizations)</p></li>
+<li><p>visualizes low dimensional sets of per-sequence embeddings onto 2D and 3D interactive plots (with and without annotations)</p></li>
+<li><p>extracts annotations from per-sequence and per-amino-acid embeddings using supervised (when available) and unsupervised approaches (e.g. by network analysis)</p></li>
+</ul>
+</li>
+<li><p>A webserver that wraps the pipeline into a distributed API for scalable and consistent workfolws</p></li>
+</ul>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> via pip or use it via docker. Mind the additional dependencies for <code class="docutils literal notranslate"><span class="pre">align</span></code>.</p>
+<div class="section" id="pip">
+<h3>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
+<p>Install the pipeline like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install bio-embeddings<span class="o">[</span>all<span class="o">]</span>
+</pre></div>
+</div>
+<p>To install the unstable version, please install the pipeline like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="docker">
+<h3>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
+<p>We provide a docker image at <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings</span></code>. Simple usage example:</p>
+<div class="highlight-shell_script notranslate"><div class="highlight"><pre><span></span>docker run --rm --gpus all \
+    -v "$(pwd)/examples/docker":/mnt \
+    -v bio_embeddings_weights_cache:/root/.cache/bio_embeddings \
+    -u $(id -u ${USER}):$(id -g ${USER}) \
+    ghcr.io/bioembeddings/bio_embeddings:v0.1.6 /mnt/config.yml
+</pre></div>
+</div>
+<p>See the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">docker</span></code></span> example in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for instructions. You can also use <code class="docutils literal notranslate"><span class="pre">ghcr.io/bioembeddings/bio_embeddings:latest</span></code> which is built from the latest commit.</p>
+</div>
+<div class="section" id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>To use the <code class="docutils literal notranslate"><span class="pre">mmseqs_search</span></code> protocol, or the <code class="docutils literal notranslate"><span class="pre">mmsesq2</span></code> functions in <code class="docutils literal notranslate"><span class="pre">align</span></code>, you additionally need to have <a class="reference external" href="https://mmseqs.com">mmseqs2</a> in your path.</p>
+</div>
+<div class="section" id="installation-notes">
+<h3>Installation notes<a class="headerlink" href="#installation-notes" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> was developed for unix machines with GPU capabilities and <a class="reference external" href="https://developer.nvidia.com/cuda-zone">CUDA</a> installed. If your setup diverges from this, you may encounter some inconsistencies (e.g. speed is significantly affected by the absence of a GPU and CUDA). For Windows users, we strongly recommend the use of <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>.</p>
+</div>
+</div>
+<div class="section" id="what-model-is-right-for-you">
+<h2>What model is right for you?<a class="headerlink" href="#what-model-is-right-for-you" title="Permalink to this headline">¶</a></h2>
+<p>Each models has its strengths and weaknesses (speed, specificity, memory footprint…). There isn’t a “one-fits-all” and we encourage you to at least try two different models when attempting a new exploratory project.</p>
+<p>The models <code class="docutils literal notranslate"><span class="pre">prottrans_t5_xl_u50</span></code>, <code class="docutils literal notranslate"><span class="pre">esm1b</span></code>, <code class="docutils literal notranslate"><span class="pre">esm</span></code>, <code class="docutils literal notranslate"><span class="pre">prottrans_bert_bfd</span></code>, <code class="docutils literal notranslate"><span class="pre">prottrans_albert_bfd</span></code>, <code class="docutils literal notranslate"><span class="pre">seqvec</span></code> and <code class="docutils literal notranslate"><span class="pre">prottrans_xlnet_uniref100</span></code> were all trained with the goal of systematic predictions. From this pool, we believe the optimal model to be <code class="docutils literal notranslate"><span class="pre">prottrans_t5_xl_u50</span></code>, followed by <code class="docutils literal notranslate"><span class="pre">esm1b</span></code>.</p>
+</div>
+<div class="section" id="usage-and-examples">
+<h2>Usage and examples<a class="headerlink" href="#usage-and-examples" title="Permalink to this headline">¶</a></h2>
+<p>We highly recommend you to check out the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> folder for pipeline examples, and the <a class="reference internal" href="notebooks.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">notebooks</span></code></span></a> folder for post-processing pipeline runs and general purpose use of the embedders.</p>
+<p>After having installed the package, you can:</p>
+<ol>
+<li><p>Use the pipeline like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bio_embeddings config.yml
+</pre></div>
+</div>
+<p><span class="xref myst">A blueprint of the configuration file</span>, and an example setup can be found in the <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">examples</span></code></span> directory of this repository.</p>
+</li>
+<li><p>Use the general purpose embedder objects via python, e.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bio_embeddings.embed</span> <span class="kn">import</span> <span class="n">SeqVecEmbedder</span>
+
+<span class="n">embedder</span> <span class="o">=</span> <span class="n">SeqVecEmbedder</span><span class="p">()</span>
+
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="s2">"SEQVENCE"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More examples can be found in the <a class="reference internal" href="notebooks.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">notebooks</span></code></span></a> folder of this repository.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="cite">
+<h2>Cite<a class="headerlink" href="#cite" title="Permalink to this headline">¶</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> for your research, we would appreciate it if you could cite the following paper:</p>
+<blockquote>
+<div><p>Dallago, C., Schütze, K., Heinzinger, M., Olenyi, T., Littmann, M., Lu, A. X., Yang, K. K., Min, S., Yoon, S., Morton, J. T., &amp; Rost, B. (2021). Learned embeddings from deep learning to visualize and predict protein sets. Current Protocols, 1, e113. doi: <a class="reference external" href="https://doi.org/10.1002/cpz1.113">10.1002/cpz1.113</a></p>
+</div></blockquote>
+<p>The corresponding bibtex:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@article{https://doi.org/10.1002/cpz1.113,
+author = {Dallago, Christian and Schütze, Konstantin and Heinzinger, Michael and Olenyi, Tobias and Littmann, Maria and Lu, Amy X. and Yang, Kevin K. and Min, Seonwoo and Yoon, Sungroh and Morton, James T. and Rost, Burkhard},
+title = {Learned Embeddings from Deep Learning to Visualize and Predict Protein Sets},
+journal = {Current Protocols},
+volume = {1},
+number = {5},
+pages = {e113},
+keywords = {deep learning embeddings, machine learning, protein annotation pipeline, protein representations, protein visualization},
+doi = {https://doi.org/10.1002/cpz1.113},
+url = {https://currentprotocols.onlinelibrary.wiley.com/doi/abs/10.1002/cpz1.113},
+eprint = {https://currentprotocols.onlinelibrary.wiley.com/doi/pdf/10.1002/cpz1.113},
+year = {2021}
+}
+
+Additionally, we invite you to cite the work from others that was collected in `bio_embeddings` (see section _"Tools by category"_ below). We are working on an enhanced user guide which will include proper references to all citable work collected in `bio_embeddings`.
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Christian Dallago (lead)</p></li>
+<li><p>Konstantin Schütze</p></li>
+<li><p>Tobias Olenyi</p></li>
+<li><p>Michael Heinzinger</p></li>
+</ul>
+<p>Want to add your own model? See <a class="reference external" href="https://docs.bioembeddings.com/latest/contributing/index.html">contributing</a> for instructions.</p>
+</div>
+<div class="section" id="non-exhaustive-list-of-tools-available-see-following-section-for-more-details">
+<h2>Non-exhaustive list of tools available (see following section for more details):<a class="headerlink" href="#non-exhaustive-list-of-tools-available-see-following-section-for-more-details" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fastext</p></li>
+<li><p>Glove</p></li>
+<li><p>Word2Vec</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p>
+<ul>
+<li><p>SeqVecSec and SeqVecLoc for secondary structure and subcellularlocalization prediction</p></li>
+</ul>
+</li>
+<li><p>ProtTrans (ProtBert, ProtAlbert, ProtT5) (https://doi.org/10.1101/2020.07.12.199554)</p>
+<ul>
+<li><p>ProtBertSec and ProtBertLoc for secondary structure and subcellular localization prediction</p></li>
+</ul>
+</li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+<li><p>PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)</p></li>
+<li><p>GoPredSim (https://www.nature.com/articles/s41598-020-80786-0)</p></li>
+<li><p>DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)</p></li>
+</ul>
+</div>
+<div class="section" id="datasets">
+<h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">prottrans_t5_xl_u50</span></code> residue and sequence embeddings of the Human proteome at full precision + secondary structure predictions + sub-cellular localisation predictions: <a class="reference external" href="https://doi.org/10.5281/zenodo.5047020"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.5047020.svg"/></a></p></li>
+</ul>
+</div>
+<hr class="docutils"/>
+<div class="section" id="tools-by-category">
+<h2>Tools by category<a class="headerlink" href="#tools-by-category" title="Permalink to this headline">¶</a></h2>
+<details>
+<summary>Pipeline</summary>
+<br/>
+<ul class="simple">
+<li><p>align:</p>
+<ul>
+<li><p>DeepBlast (https://www.biorxiv.org/content/10.1101/2020.11.03.365932v1)</p></li>
+</ul>
+</li>
+<li><p>embed:</p>
+<ul>
+<li><p>ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
+<li><p>ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD and fine-tuned on UniRef50 (in-house)</p></li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+</ul>
+</li>
+<li><p>project:</p>
+<ul>
+<li><p>t-SNE</p></li>
+<li><p>UMAP</p></li>
+<li><p>PB-Tucker (https://www.biorxiv.org/content/10.1101/2021.01.21.427551v1)</p></li>
+</ul>
+</li>
+<li><p>visualize:</p>
+<ul>
+<li><p>2D/3D sequence embedding space</p></li>
+</ul>
+</li>
+<li><p>extract:</p>
+<ul>
+<li><p>supervised:</p>
+<ul>
+<li><p>SeqVec: DSSP3, DSSP8, disorder, subcellular location and membrane boundness as in https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8</p></li>
+<li><p>ProtBertSec and ProtBertLoc as reported in https://doi.org/10.1101/2020.07.12.199554</p></li>
+</ul>
+</li>
+<li><p>unsupervised:</p>
+<ul>
+<li><p>via sequence-level (reduced_embeddings), pairwise distance (euclidean like <a class="reference external" href="https://github.com/Rostlab/goPredSim">goPredSim</a>, more options available, e.g. cosine)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+<details>
+<summary>General purpose embedders</summary>
+<br/>
+<ul class="simple">
+<li><p>ProtTrans BERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>SeqVec (https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3220-8)</p></li>
+<li><p>ProtTrans ALBERT trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans XLNet trained on UniRef100 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>ProtTrans T5 trained on BFD + fine-tuned on UniRef50 (https://doi.org/10.1101/2020.07.12.199554)</p></li>
+<li><p>Fastext</p></li>
+<li><p>Glove</p></li>
+<li><p>Word2Vec</p></li>
+<li><p>UniRep (https://www.nature.com/articles/s41592-019-0598-1)</p></li>
+<li><p>ESM/ESM1b (https://www.biorxiv.org/content/10.1101/622803v3)</p></li>
+<li><p>PLUS (https://github.com/mswzeus/PLUS/)</p></li>
+<li><p>CPCProt (https://www.biorxiv.org/content/10.1101/2020.09.04.283929v1.full.pdf)</p></li>
+</ul>
+</details>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="parameter_blueprints.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Pipeline Reference</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/index.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Bio Embeddings</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#pip">Pip</a></li>
+<li><a class="reference internal" href="#docker">Docker</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#installation-notes">Installation notes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#what-model-is-right-for-you">What model is right for you?</a></li>
+<li><a class="reference internal" href="#usage-and-examples">Usage and examples</a></li>
+<li><a class="reference internal" href="#cite">Cite</a></li>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+<li><a class="reference internal" href="#non-exhaustive-list-of-tools-available-see-following-section-for-more-details">Non-exhaustive list of tools available (see following section for more details):</a></li>
+<li><a class="reference internal" href="#datasets">Datasets</a></li>
+<li><a class="reference internal" href="#tools-by-category">Tools by category</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    </body>
+</html>
