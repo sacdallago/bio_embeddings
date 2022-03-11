@@ -158,7 +158,8 @@ Want to add your own model? See [contributing](https://docs.bioembeddings.com/la
 
 ## Datasets 
 
-- `prottrans_t5_xl_u50` residue and sequence embeddings of the Human proteome at full precision + secondary structure predictions + sub-cellular localisation predictions: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5047020.svg)](https://doi.org/10.5281/zenodo.5047020)
+- `prottrans_t5_xl_u50` residue and sequence embeddings of the **Human proteome** at full precision + secondary structure predictions + sub-cellular localisation predictions: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5047020.svg)](https://doi.org/10.5281/zenodo.5047020)
+- `prottrans_t5_xl_u50` residue and sequence embeddings of the **Fly proteome** at full precision + secondary structure predictions + sub-cellular localisation predictions + conservation prediction + variation prediction: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6322184.svg)](https://doi.org/10.5281/zenodo.6322184)
 
 ----
 
