@@ -1,6 +1,9 @@
 import abc
 import logging
 import re
+import psutil
+import subprocess
+import warnings
 from itertools import zip_longest
 from typing import List, Generator, Union
 
@@ -69,12 +72,18 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
     def get_model(self) -> Union[T5Model, T5EncoderModel]:
         if not self._decoder:
-            model = T5EncoderModel.from_pretrained(self._model_directory)
+
+            if self._half_precision_model:
+                model = T5EncoderModel.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
+            else:
+                model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
-            model = T5Model.from_pretrained(self._model_directory)
+            if self._half_precision_model:
+                model = T5Model.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
+            else:
+                 model = T5Model.from_pretrained(self._model_directory)
         # Compute in half precision, which is a lot faster and saves us half the memory
-        if self._half_precision_model:
-            model = model.half()
+
         return model
 
     def _get_fallback_model(self) -> Union[T5Model, T5EncoderModel]:
