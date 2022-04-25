@@ -1,9 +1,7 @@
 import abc
 import logging
+import os.path
 import re
-import psutil
-import subprocess
-import warnings
 from itertools import zip_longest
 from typing import List, Generator, Union
 
@@ -71,15 +69,21 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         )
 
     def get_model(self) -> Union[T5Model, T5EncoderModel]:
-        if not self._decoder:
 
-            if self._half_precision_model:
+        if not self._decoder:
+            if self._half_precision_model and os.path.exists(self._model_directory+'_half'):
                 model = T5EncoderModel.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
+            elif self._half_precision_model:
+                model = T5EncoderModel.from_pretrained(self._model_directory)
+                model = model.half()
             else:
                 model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
-            if self._half_precision_model:
+            if self._half_precision_model and os.path.exists(self._model_directory+'_half'):
                 model = T5Model.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
+            elif self._half_precision_model:
+                model = T5Model.from_pretrained(self._model_directory)
+                model = model.half()
             else:
                  model = T5Model.from_pretrained(self._model_directory)
         # Compute in half precision, which is a lot faster and saves us half the memory
