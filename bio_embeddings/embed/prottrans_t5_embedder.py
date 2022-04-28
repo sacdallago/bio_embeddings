@@ -59,6 +59,10 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         if self._half_precision_model:
             name = 'half' + name
             necessary_directories = ["half_precision_model_directory"]
+            # only if a model directory is given it may be overwirtten
+            # not necessary because if the model is there its there and will be found
+            # if kwargs.get('model_directory'):
+            #     kwargs['half_precision_model_directory'] =
 
         super().__init__(**kwargs)
 
@@ -78,9 +82,15 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
     def get_model(self) -> Union[T5Model, T5EncoderModel]:
 
         if not self._decoder:
-            model = T5EncoderModel.from_pretrained(self._model_directory)
+            if self._half_precision_model:
+                model = T5EncoderModel.from_pretrained(self._model_directory,torch_dtype=torch.float16)
+            else:
+                model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
-            model = T5Model.from_pretrained(self._model_directory)
+            if self._half_precision_model:
+                model = T5Model.from_pretrained(self._model_directory,torch_dtype=torch.float16)
+            else:
+                model = T5Model.from_pretrained(self._model_directory)
 
         return model
 
