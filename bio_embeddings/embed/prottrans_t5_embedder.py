@@ -58,8 +58,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         # to change modeldir I'd have to change kwargs
         if self._half_precision_model:
             name = 'half' + name
-            model_directory = os.environ["MODEL_DIRECTORY"]
-            kwargs["model_directory"] = os.path.join(model_directory, name, "model_directory")
+            necessary_directories = ["half_precision_model_directory"]
 
         super().__init__(**kwargs)
 

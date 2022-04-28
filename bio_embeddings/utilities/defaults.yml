@@ -52,9 +52,7 @@ prottrans_t5_uniref50:
 
 prottrans_t5_xl_u50:
   model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/prottrans_t5_xl_u50.zip"
-
-half_prottrans_t5_xl_u50:
-  model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/half_prottrans_t5_xl_u50.zip"
+  half_prottrans_model_directory: "http://data.bioembeddings.com/public/embeddings/embedding_models/t5/half_prottrans_t5_xl_u50.zip"
 
 esm:
   model_file: "http://data.bioembeddings.com/public/embeddings/embedding_models/esm/esm1_t34_670M_UR50S.pt"
