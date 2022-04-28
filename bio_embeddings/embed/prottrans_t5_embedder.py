@@ -21,8 +21,8 @@ class FilterT5DecoderWeightsWarning(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         return (
-            "were not used when initializing T5EncoderModel: ['decoder."
-            not in record.getMessage()
+                "were not used when initializing T5EncoderModel: ['decoder."
+                not in record.getMessage()
         )
 
 
@@ -53,6 +53,14 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         :param bool decoder: Whether to use also the decoder (default: False)
         :param bool half_precision_model: Use the model in half precision (float16) mode (default: False)
         """
+        # HIWI Benajmin Insert check for half presicion model here so that it get downloaded if needed
+        # chagne the name and modeldir
+        # to change modeldir I'd have to change kwargs
+        if self._half_precision_model:
+            name = 'half' + name
+            model_directory = os.environ["MODEL_DIRECTORY"]
+            kwargs["model_directory"] = os.path.join(model_directory, name, "model_directory")
+
         super().__init__(**kwargs)
 
         self._model_directory = self._options["model_directory"]
@@ -71,22 +79,9 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
     def get_model(self) -> Union[T5Model, T5EncoderModel]:
 
         if not self._decoder:
-            if self._half_precision_model and os.path.exists(self._model_directory+'_half'):
-                model = T5EncoderModel.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
-            elif self._half_precision_model:
-                model = T5EncoderModel.from_pretrained(self._model_directory)
-                model = model.half()
-            else:
-                model = T5EncoderModel.from_pretrained(self._model_directory)
+            model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
-            if self._half_precision_model and os.path.exists(self._model_directory+'_half'):
-                model = T5Model.from_pretrained(self._model_directory+'_half',torch_dtype=torch.float16)
-            elif self._half_precision_model:
-                model = T5Model.from_pretrained(self._model_directory)
-                model = model.half()
-            else:
-                 model = T5Model.from_pretrained(self._model_directory)
-        # Compute in half precision, which is a lot faster and saves us half the memory
+            model = T5Model.from_pretrained(self._model_directory)
 
         return model
 
@@ -103,7 +98,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         return self._model_fallback
 
     def _embed_batch_impl(
-        self, batch: List[str], model: T5Model
+            self, batch: List[str], model: T5Model
     ) -> Generator[ndarray, None, None]:
         seq_lens = [len(seq) for seq in batch]
         # Remove rare amino acids
@@ -139,7 +134,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
             # slice off last position (special token)
             embedding = embeddings[seq_num][:seq_len]
             assert (
-                seq_len == embedding.shape[0]
+                    seq_len == embedding.shape[0]
             ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
 
             yield embedding
