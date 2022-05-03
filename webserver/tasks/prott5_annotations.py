@@ -31,7 +31,7 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
         subcellular_location_checkpoint_file=configuration['prottrans_t5_xl_u50']['la_subcellular_location_checkpoint_file']
     )
 
-		be = BindEmbed21DLAnnotationExtractor(
+    be = BindEmbed21DLAnnotationExtractor(
         model_1_file=configuration['bindembed21']['model_1_file'],
         model_2_file=configuration['bindembed21']['model_2_file'],
         model_3_file=configuration['bindembed21']['model_3_file'],
@@ -51,9 +51,9 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
     be_annotations = be.get_binding_residues(embedding)
 
     return {
-				"predictedBindingMetal": be_annotations.metal_ion,
-				"predictedBindingNucleicAcids": be_annotations.nucleic_acids,
-				"predictedBindingSmallMolecules": be_annotations.small_molecules,
+        "predictedBindingMetal": be_annotations.metal_ion,
+        "predictedBindingNucleicAcids": be_annotations.nucleic_acids,
+        "predictedBindingSmallMolecules": be_annotations.small_molecules,
         "predictedMembrane": la_annotations.membrane.value,
         "predictedSubcellularLocalizations": la_annotations.localization.value,
         "predictedDSSP3": convert_list_of_enum_to_string(annotations.DSSP3),
@@ -71,8 +71,8 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
             "predictedMFO": "unavailable",
             "predictedMembrane": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
             "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-						"predictedBindingMetal": "", # TODO
-						"predictedBindingNucleicAcids": "",
-						"predictedBindingSmallMolecules": ""
+            "predictedBindingMetal": "", # TODO
+            "predictedBindingNucleicAcids": "",
+            "predictedBindingSmallMolecules": ""
         }
     }
