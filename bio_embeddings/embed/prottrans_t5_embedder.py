@@ -57,7 +57,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         # The user can use the half precision model either by specifiing the path or setting the flag
         # The half precision model with be used if either the flag is set or a path providied
         # This is performed before calling super so that the paths can be fetched if not provided
-        if 'half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys():
+        if ('half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys()) and 'model_directory' not in kwargs.keys():
             # the necessary directories are changed since now 'model_directory' isn't needed but 'half_precision_model_dir' is
             self.necessary_directories = ["half_precision_model_directory"]
             # if the path was provided and the flag wasn't this sets the flag for later use
@@ -66,7 +66,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         super().__init__(**kwargs)
 
         # set the model directory depending on whether to use half precision
-        if 'half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys():
+        if 'half_precision_model' in kwargs.keys() and 'model_directory' not in kwargs.keys():
             self._model_directory = self._options["half_precision_model_directory"]
         else:
             self._model_directory = self._options["model_directory"]
