@@ -53,20 +53,25 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         :param bool decoder: Whether to use also the decoder (default: False)
         :param bool half_precision_model: Use the model in half precision (float16) mode (default: False)
         """
-        # HIWI Benajmin Insert check for half presicion model here so that it get downloaded if needed
-        # chagne the name and modeldir
-        # to change modeldir I'd have to change kwargs
-        if self._half_precision_model:
-            name = 'half' + name
-            necessary_directories = ["half_precision_model_directory"]
-            # only if a model directory is given it may be overwirtten
-            # not necessary because if the model is there its there and will be found
-            # if kwargs.get('model_directory'):
-            #     kwargs['half_precision_model_directory'] =
+        # HIWI Benjamin
+        # The user can use the half precision model either by specifiing the path or setting the flag
+        # The half precision model with be used if either the flag is set or a path providied
+        # This is performed before calling super so that the paths can be fetched if not provided
+        if 'half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys():
+            # the necessary directories are changed since now 'model_directory' isn't needed but 'half_precision_model_dir' is
+            self.necessary_directories = ["half_precision_model_directory"]
+            # if the path was provided and the flag wasn't this sets the flag for later use
+            kwargs['half_precision_model'] = True
 
         super().__init__(**kwargs)
 
-        self._model_directory = self._options["model_directory"]
+        # set the model directory depending on whether to use half precision
+        if 'half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys():
+            self._model_directory = self._options["half_precision_model_directory"]
+        else:
+            self._model_directory = self._options["model_directory"]
+
+
         # Until we know whether we need the decoder, let's keep it here as an undocumented option.
         # Should the need arise we can just split this class in to an encoder and a decoder subclass
         # by setting one subclass to _decoder=True and the other to _decoder=False
@@ -83,12 +88,12 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
 
         if not self._decoder:
             if self._half_precision_model:
-                model = T5EncoderModel.from_pretrained(self._model_directory,torch_dtype=torch.float16)
+                model = T5EncoderModel.from_pretrained(self._model_directory, torch_dtype=torch.float16)
             else:
                 model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
             if self._half_precision_model:
-                model = T5Model.from_pretrained(self._model_directory,torch_dtype=torch.float16)
+                model = T5Model.from_pretrained(self._model_directory, torch_dtype=torch.float16)
             else:
                 model = T5Model.from_pretrained(self._model_directory)
 
