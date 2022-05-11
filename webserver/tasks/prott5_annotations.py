@@ -74,8 +74,8 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
             "predictedMFO": "unavailable",
             "predictedMembrane": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
             "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-            "predictedBindingMetal": "", # TODO
-            "predictedBindingNucleicAcids": "",
-            "predictedBindingSmallMolecules": ""
+            "predictedBindingMetal": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingNucleicAcids": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingSmallMolecules": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4"
         }
     }
