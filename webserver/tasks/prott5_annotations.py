@@ -66,6 +66,9 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
         "predictedBPO": [],
         "predictedMFO": [],
         "meta": {
+            "predictedBindingMetal": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingNucleicAcids": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingSmallMolecules": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
             "predictedDSSP3": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
             "predictedDSSP8": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
             "predictedDisorder": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
@@ -73,9 +76,6 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
             "predictedBPO": "unavailable",
             "predictedMFO": "unavailable",
             "predictedMembrane": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-            "predictedBindingMetal": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
-            "predictedBindingNucleicAcids": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
-            "predictedBindingSmallMolecules": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4"
+            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1"
         }
     }
