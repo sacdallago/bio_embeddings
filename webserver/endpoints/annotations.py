@@ -71,7 +71,7 @@ def _get_annotations_from_params(params):
                     feature_enum=SecondaryStructure
                 )
             )
-        if annotations.get('predictedDSSP3'):
+        if annotations.get('predictedDisorder'):
             protvista_features['features'].extend(
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDisorder'],
