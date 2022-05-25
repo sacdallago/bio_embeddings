@@ -255,7 +255,7 @@
   <span class="c1"># Required: which embedder to use</span>
   <span class="c1"># Options: seqvec, prottrans_albert_bfd, prottrans_bert_bfd, prottrans_t5_bfd, prottrans_t5_uniref50,</span>
   <span class="c1"># prottrans_t5_xl_u50, prottrans_xlnet_uniref100, cpcprot, esm, esm1b, esm1v, plus_rnn, unirep, bepler</span>
-  <span class="n">protocol</span><span class="p">:</span> <span class="n">seqvec</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">prottrans_t5_xl_u50</span>
 
   <span class="c1"># Optional: reduce embeddings to fixed size, per-protein. Comment out if not needed.</span>
   <span class="c1"># Note that you can always compute the reduced embeddings from the full embeddings</span>
@@ -402,8 +402,9 @@
   <span class="c1">## Current options:</span>
   <span class="c1">##   - seqvec_from_publication (Uses models evaluated in https://doi.org/10.1186/s12859-019-3220-8 )</span>
   <span class="c1">##   - bert_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )</span>
+  <span class="c1">##   - t5_xl_u50_from_publication (Uses models evaluated in https://doi.org/10.1101/2020.07.12.199554 )</span>
   <span class="c1">##   - unsupervised (Uses concepts presented in https://github.com/Rostlab/goPredSim )</span>
-  <span class="n">protocol</span><span class="p">:</span> <span class="n">seqvec_from_publication</span>
+  <span class="n">protocol</span><span class="p">:</span> <span class="n">t5_xl_u50_from_publication</span>
 
   <span class="c1">## The supervised extract (bert_from_publication and seqvec_from_publication) needs</span>
   <span class="c1">## the full embeddings, i.e. `discard_per_amino_acid_embeddings` must be false in the</span>
