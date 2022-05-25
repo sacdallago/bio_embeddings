@@ -1,22 +1,12 @@
 global:
   sequences_file: fasta.fa
   prefix: simple
-seqvec_embeddings:
+prott5_embeddings:
   type: embed
-  protocol: seqvec
-  weights_file: /mnt/nfs/models/seqvec/weights_file
-  options_file: /mnt/nfs/models/seqvec/options_file
+  protocol: prottrans_t5_xl_u50
+  half_precision_model: True
 annotations_from_seqvec:
   type: extract
-  protocol: seqvec_from_publication
-  depends_on: seqvec_embeddings
-  get_activations: true
-bert_embeddings:
-  type: embed
-  protocol: prottrans_bert_bfd
-  model_directory: /mnt/nfs/models/bert
-annotations_from_bert:
-  type: extract
-  protocol: bert_from_publication
-  depends_on: bert_embeddings
+  protocol: t5_xl_u50_from_publication
+  depends_on: prott5_embeddings
   get_activations: true

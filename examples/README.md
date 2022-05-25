@@ -71,7 +71,7 @@ We include a notebook (`project_visualize_pipeline_embeddings`) covering the sam
 
 ### Trained supervised models: get protein structure and function annotations, `supervised_annotation_extraction`
 
-**Use case**: you have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec and Bert (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
+**Use case**: you have a set of proteins (in FASTA format) and want to extract features using the supervised models published during evaluation of SeqVec and ProtBert (aka: DSSP3, DSSP8, disorder, localization and membrane vs. soluble).
   
 **Noteworthy files produced**:
   - The `extract` stages produce
