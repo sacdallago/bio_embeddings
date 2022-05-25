@@ -203,6 +203,7 @@
         <h1>Source code for bio_embeddings.embed.prottrans_t5_embedder</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Union</span>
@@ -223,8 +224,8 @@
 
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">"were not used when initializing T5EncoderModel: ['decoder."</span>
-            <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span>
+                <span class="s2">"were not used when initializing T5EncoderModel: ['decoder."</span>
+                <span class="ow">not</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span>
         <span class="p">)</span>
 
 
@@ -255,9 +256,25 @@
 <span class="sd">        :param bool decoder: Whether to use also the decoder (default: False)</span>
 <span class="sd">        :param bool half_precision_model: Use the model in half precision (float16) mode (default: False)</span>
 <span class="sd">        """</span>
+        <span class="c1"># HIWI Benjamin</span>
+        <span class="c1"># The user can use the half precision model either by specifiing the path or setting the flag</span>
+        <span class="c1"># The half precision model with be used if either the flag is set or a path providied</span>
+        <span class="c1"># This is performed before calling super so that the paths can be fetched if not provided</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">'half_precision_model'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="s1">'half_precision_model_directory'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="ow">and</span> <span class="s1">'model_directory'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># the necessary directories are changed since now 'model_directory' isn't needed but 'half_precision_model_dir' is</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">necessary_directories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"half_precision_model_directory"</span><span class="p">]</span>
+            <span class="c1"># if the path was provided and the flag wasn't this sets the flag for later use</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">'half_precision_model'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="s2">"model_directory"</span><span class="p">]</span>
+        <span class="c1"># set the model directory depending on whether to use half precision</span>
+        <span class="k">if</span> <span class="s1">'half_precision_model'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">'model_directory'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="s2">"half_precision_model_directory"</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">[</span><span class="s2">"model_directory"</span><span class="p">]</span>
+
+
         <span class="c1"># Until we know whether we need the decoder, let's keep it here as an undocumented option.</span>
         <span class="c1"># Should the need arise we can just split this class in to an encoder and a decoder subclass</span>
         <span class="c1"># by setting one subclass to _decoder=True and the other to _decoder=False</span>
@@ -271,13 +288,18 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]:</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoder</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">T5EncoderModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
-        <span class="c1"># Compute in half precision, which is a lot faster and saves us half the memory</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">half</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_half_precision_model</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">,</span> <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">T5Model</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_directory</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">model</span>
 
     <span class="k">def</span> <span class="nf">_get_fallback_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T5Model</span><span class="p">,</span> <span class="n">T5EncoderModel</span><span class="p">]:</span>
@@ -293,7 +315,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_fallback</span>
 
     <span class="k">def</span> <span class="nf">_embed_batch_impl</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">T5Model</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">T5Model</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="n">seq_lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
         <span class="c1"># Remove rare amino acids</span>
@@ -329,7 +351,7 @@
             <span class="c1"># slice off last position (special token)</span>
             <span class="n">embedding</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="n">seq_num</span><span class="p">][:</span><span class="n">seq_len</span><span class="p">]</span>
             <span class="k">assert</span> <span class="p">(</span>
-                <span class="n">seq_len</span> <span class="o">==</span> <span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">seq_len</span> <span class="o">==</span> <span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">),</span> <span class="sa">f</span><span class="s2">"Sequence length mismatch: </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
 
             <span class="k">yield</span> <span class="n">embedding</span>
