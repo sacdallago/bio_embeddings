@@ -40,9 +40,6 @@ configuration = {
         "la_solubility_checkpoint_file": os.path.join(
             model_directory, "light_attention", "la_prott5_solubility"
         ),
-        "go_reference_embeddings": os.path.join(
-            model_directory, "goa", "prott5_reference_embeddings.h5"
-        ),
     },
     "goa": {
         "bpo": os.path.join(
@@ -53,6 +50,9 @@ configuration = {
         ),
         "mfo": os.path.join(
             model_directory, "goa", "goa_annotations_2022_mfo.txt",
+        ),
+        "go_reference_embeddings": os.path.join(
+            model_directory, "goa", "prott5_reference_embeddings.h5"
         ),
     },
     # Celery worker type
