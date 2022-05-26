@@ -13,35 +13,21 @@ You need to provide the worker with a model directory, either by mounting it to 
 ├── t5_xl_u50_from_publication_annotations_extractors
 │   ├── secondary_structure_checkpoint_file
 │   └── subcellular_location_checkpoint_file
-├── bert_from_publication_annotations_extractors
-│   ├── secondary_structure_checkpoint_file
-│   └── subcellular_location_checkpoint_file
 ├── goa
-│   ├── goa_annotations_2020_bpo.txt
-│   ├── goa_annotations_2020_cco.txt
-│   ├── goa_annotations_2020_mfo.txt
-│   └── seqvec_l1_embeddings.h5
+│   ├── goa_annotations_2022_bpo.txt
+│   ├── goa_annotations_2022_cco.txt
+│   ├── goa_annotations_2022_mfo.txt
+│   └── prott5_reference_embeddings.h5
 ├── light_attention
 │   ├── la_protbert_solubility
 │   ├── la_protbert_subcellular_location
 │   ├── la_prott5_solubility
 │   └── la_prott5_subcellular_location
-├── prottrans_bert_bfd
-│   └── model_directory
-│       ├── config.json
-│       ├── pytorch_model.bin
-│       └── vocab.txt
 ├── prottrans_t5_xl_u50
-│   └── model_directory
+│   └── half_model_directory
 │       ├── config.json
 │       ├── pytorch_model.bin
 │       └── spiece.model
-├── seqvec
-│   ├── options_file
-│   └── weights_file
-└── seqvec_from_publication_annotations_extractors
-    ├── secondary_structure_checkpoint_file
-    └── subcellular_location_checkpoint_file
 ```
 
 If you run without docker-compose, you need to configure `CELERY_BROKER_URL`, `MONGO_URL` and `MODEL_DIRECTORY` for the worker and the webserver.

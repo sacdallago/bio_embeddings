@@ -9,12 +9,6 @@ from webserver.database import get_embedding_cache, get_features_cache
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
-# ProtBert
-from webserver.tasks.protbert_annotations import get_protbert_annotations_sync
-from webserver.tasks.protbert_embeddings import get_protbert_embeddings_sync
-# SeqVec
-from webserver.tasks.seqvec_annotations import get_seqvec_annotations_sync
-from webserver.tasks.seqvec_embeddings import get_seqvec_embeddings_sync
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -32,8 +26,6 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
         )
 
     model = {
-        "seqvec": get_seqvec_embeddings_sync,
-        "prottrans_bert_bfd": get_protbert_embeddings_sync,
         "prottrans_t5_xl_u50": get_prott5_embeddings_sync
     }.get(model_name)
 
@@ -78,8 +70,6 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     embeddings = get_embedding(model_name, sequence)
 
     annotation_model = {
-        "seqvec": get_seqvec_annotations_sync,
-        "prottrans_bert_bfd": get_protbert_annotations_sync,
         "prottrans_t5_xl_u50": get_prott5_annotations_sync,
     }.get(model_name)
 

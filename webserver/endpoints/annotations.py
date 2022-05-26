@@ -25,7 +25,7 @@ def _get_annotations_from_params(params):
     if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
         return abort(400, "Sequence is too long or contains invalid characters.")
 
-    model_name = params.get('model', 'seqvec')
+    model_name = params.get('model', 'prottrans_t5_xl_u50')
 
     annotations = get_features(model_name, sequence)
     annotations['sequence'] = sequence

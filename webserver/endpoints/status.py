@@ -7,10 +7,6 @@ from webserver.tasks import task_keeper
 ns = api.namespace("status", description="Get the status of the workers.")
 
 _workers = [
-    'seqvec',
-    'seqvec_annotations',
-    'protbert',
-    'protbert_annotations',
     'prott5',
     'prott5_annotations',
     'pipeline',
