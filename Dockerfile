@@ -21,7 +21,7 @@ RUN python3 -m venv .venv && \
     $HOME/.local/bin/poetry config virtualenvs.in-project true && \
     $HOME/.local/bin/poetry install --no-dev -E all
 
-FROM nvidia/cuda:11.1-runtime-ubuntu20.04
+FROM nvidia/cuda:11.4.3-runtime-ubuntu20.04
 
 ENV PYTHONUNBUFFERED=1
 

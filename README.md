@@ -36,7 +36,7 @@ You can install `bio_embeddings` via pip or use it via docker. Mind the addition
 
 ### Pip
 
-Install the pipeline like so:
+Install the pipeline **and all extras** like so:
 
 ```bash
 pip install bio-embeddings[all]
@@ -47,6 +47,31 @@ To install the unstable version, please install the pipeline like so:
 ```bash
 pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"
 ```
+
+If you only need to run a specific model (e.g. an ESM or ProtTrans model) you can install bio-embeddings without dependencies and then install the model-specific dependency, e.g.:
+```bash
+pip install bio-embeddings
+pip install bio-embeddings[prottrans]
+```
+
+The extras are:
+- seqvec
+- prottrans
+  - prottrans_albert_bfd
+  - prottrans_bert_bfd
+  - prottrans_t5_bfd
+  - prottrans_t5_uniref50
+  - prottrans_t5_xl_u50
+  - prottrans_xlnet_uniref100
+- esm
+  - esm
+  - esm1b
+  - esm1v
+- unirep
+- cpcprot
+- plus
+- bepler
+- deepblast
 
 ### Docker
 

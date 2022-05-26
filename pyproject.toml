@@ -74,14 +74,19 @@ atomicwrites = "^1.4.0"
 pyyaml = "5.4.1"
 
 [tool.poetry.extras]
+# Extras by paper/model name
 seqvec = ["bio-embeddings-allennlp", "boto3", "botocore"]
-transformers = ["transformers"]
+prottrans = ["transformers"]
 unirep = ["jax-unirep", "jaxlib"]
 esm = ["fair-esm"]
 cpcprot = ["bio-embeddings-cpcprot", "bio-embeddings-tape-proteins"]
 plus = ["bio-embeddings-plus"]
 bepler = ["bio-embeddings-bepler"]
 deepblast = ["bio-embeddings-deepblast", "fsspec"]
+
+# General
+transformers = ["transformers"]
+
 all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
 webserver = ["pymongo", "sentry-sdk", "flask"]
