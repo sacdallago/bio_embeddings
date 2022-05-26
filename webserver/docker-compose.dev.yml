@@ -10,13 +10,13 @@ services:
         - ghcr.io/bioembeddings/worker
     container_name: bio_embeddings_worker
     volumes:
-      - ../models:/mnt/models
+      - ${HOME}/.cache/bio_embeddings:/mnt/models
       - ../bio_embeddings:/app/bio_embeddings
       - ../webserver:/app/webserver
     environment:
       CELERY_BROKER_URL: amqp://rabbitmq
       MONGO_URL: mongodb://root:example@mongo:27017
-      CELERY_WORKER_TYPE: prott5,prott5_annotations
+      CELERY_WORKER_TYPE: pipeline,seqvec,seqvec_annotations,protbert,seqvec_annotations,protbert_annotations
     networks:
       - bio_embeddings
 
@@ -38,16 +38,16 @@ services:
     networks:
       - bio_embeddings
 
-#   nginx:
-#     image: nginx:1-alpine
-#     container_name: nginx
-#     ports:
-#       - 443:443
-#     volumes:
-#       - .:/mnt
-#       - ./dev/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
-#     networks:
-#       - bio_embeddings
+  nginx:
+    image: nginx:1-alpine
+    container_name: nginx
+    ports:
+      - 443:443
+    volumes:
+      - .:/mnt
+      - ./dev/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    networks:
+      - bio_embeddings
 
   mongo:
     image: mongo:4
