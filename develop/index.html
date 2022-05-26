@@ -244,7 +244,7 @@
 <p>You can install <code class="docutils literal notranslate"><span class="pre">bio_embeddings</span></code> via pip or use it via docker. Mind the additional dependencies for <code class="docutils literal notranslate"><span class="pre">align</span></code>.</p>
 <div class="section" id="pip">
 <h3>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
-<p>Install the pipeline like so:</p>
+<p>Install the pipeline <strong>and all extras</strong> like so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install bio-embeddings<span class="o">[</span>all<span class="o">]</span>
 </pre></div>
 </div>
@@ -252,6 +252,37 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -U <span class="s2">"bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"</span>
 </pre></div>
 </div>
+<p>If you only need to run a specific model (e.g. an ESM or ProtTrans model) you can install bio-embeddings without dependencies and then install the model-specific dependency, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install bio-embeddings
+pip install bio-embeddings<span class="o">[</span>prottrans<span class="o">]</span>
+</pre></div>
+</div>
+<p>The extras are:</p>
+<ul class="simple">
+<li><p>seqvec</p></li>
+<li><p>prottrans</p>
+<ul>
+<li><p>prottrans_albert_bfd</p></li>
+<li><p>prottrans_bert_bfd</p></li>
+<li><p>prottrans_t5_bfd</p></li>
+<li><p>prottrans_t5_uniref50</p></li>
+<li><p>prottrans_t5_xl_u50</p></li>
+<li><p>prottrans_xlnet_uniref100</p></li>
+</ul>
+</li>
+<li><p>esm</p>
+<ul>
+<li><p>esm</p></li>
+<li><p>esm1b</p></li>
+<li><p>esm1v</p></li>
+</ul>
+</li>
+<li><p>unirep</p></li>
+<li><p>cpcprot</p></li>
+<li><p>plus</p></li>
+<li><p>bepler</p></li>
+<li><p>deepblast</p></li>
+</ul>
 </div>
 <div class="section" id="docker">
 <h3>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
