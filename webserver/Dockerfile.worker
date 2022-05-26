@@ -29,7 +29,7 @@ RUN mkdir bio_embeddings && \
     $HOME/.local/bin/poetry install --no-dev -E transformers && \
     .venv/bin/pip install -r webserver/requirements.txt
 
-FROM nvidia/cuda:11.1-runtime-ubuntu20.04
+FROM nvidia/cuda:11.4.3-runtime-ubuntu20.04
 
 ENV PYTHONUNBUFFERED=1
 
