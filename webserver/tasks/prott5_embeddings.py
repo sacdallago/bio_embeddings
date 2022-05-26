@@ -17,7 +17,7 @@ if "prott5" in configuration['celery']['celery_worker_type']:
 
     if torch.cuda.is_available():
         model = ProtTransT5XLU50Embedder(
-            half_model_directory=configuration['prottrans_t5_xl_u50']['half_model_directory'],
+            half_precision_model_directory=configuration['prottrans_t5_xl_u50']['half_model_directory'],
             half_precision_model=True,
             decoder=False
         )
