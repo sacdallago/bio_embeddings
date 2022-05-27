@@ -58,8 +58,7 @@ def _get_annotations_from_params(params):
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDSSP8'],
                     evidences=[evidence],
-                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})",
-                    feature_enum=SecondaryStructure
+                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})", feature_enum=SecondaryStructure
                 )
             )
         if annotations.get('predictedDSSP3'):
