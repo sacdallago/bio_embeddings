@@ -1,5 +1,6 @@
 import abc
 import logging
+import os.path
 import re
 from itertools import zip_longest
 from typing import List, Generator, Union
@@ -20,8 +21,8 @@ class FilterT5DecoderWeightsWarning(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         return (
-            "were not used when initializing T5EncoderModel: ['decoder."
-            not in record.getMessage()
+                "were not used when initializing T5EncoderModel: ['decoder."
+                not in record.getMessage()
         )
 
 
@@ -52,9 +53,25 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         :param bool decoder: Whether to use also the decoder (default: False)
         :param bool half_precision_model: Use the model in half precision (float16) mode (default: False)
         """
+        # HIWI Benjamin
+        # The user can use the half precision model either by specifiing the path or setting the flag
+        # The half precision model with be used if either the flag is set or a path providied
+        # This is performed before calling super so that the paths can be fetched if not provided
+        if ('half_precision_model' in kwargs.keys() or 'half_precision_model_directory' in kwargs.keys()) and 'model_directory' not in kwargs.keys():
+            # the necessary directories are changed since now 'model_directory' isn't needed but 'half_precision_model_dir' is
+            self.necessary_directories = ["half_precision_model_directory"]
+            # if the path was provided and the flag wasn't this sets the flag for later use
+            kwargs['half_precision_model'] = True
+
         super().__init__(**kwargs)
 
-        self._model_directory = self._options["model_directory"]
+        # set the model directory depending on whether to use half precision
+        if 'half_precision_model' in kwargs.keys() and 'model_directory' not in kwargs.keys():
+            self._model_directory = self._options["half_precision_model_directory"]
+        else:
+            self._model_directory = self._options["model_directory"]
+
+
         # Until we know whether we need the decoder, let's keep it here as an undocumented option.
         # Should the need arise we can just split this class in to an encoder and a decoder subclass
         # by setting one subclass to _decoder=True and the other to _decoder=False
@@ -68,13 +85,18 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         )
 
     def get_model(self) -> Union[T5Model, T5EncoderModel]:
+
         if not self._decoder:
-            model = T5EncoderModel.from_pretrained(self._model_directory)
+            if self._half_precision_model:
+                model = T5EncoderModel.from_pretrained(self._model_directory, torch_dtype=torch.float16)
+            else:
+                model = T5EncoderModel.from_pretrained(self._model_directory)
         else:
-            model = T5Model.from_pretrained(self._model_directory)
-        # Compute in half precision, which is a lot faster and saves us half the memory
-        if self._half_precision_model:
-            model = model.half()
+            if self._half_precision_model:
+                model = T5Model.from_pretrained(self._model_directory, torch_dtype=torch.float16)
+            else:
+                model = T5Model.from_pretrained(self._model_directory)
+
         return model
 
     def _get_fallback_model(self) -> Union[T5Model, T5EncoderModel]:
@@ -90,7 +112,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
         return self._model_fallback
 
     def _embed_batch_impl(
-        self, batch: List[str], model: T5Model
+            self, batch: List[str], model: T5Model
     ) -> Generator[ndarray, None, None]:
         seq_lens = [len(seq) for seq in batch]
         # Remove rare amino acids
@@ -126,7 +148,7 @@ class ProtTransT5Embedder(EmbedderWithFallback, abc.ABC):
             # slice off last position (special token)
             embedding = embeddings[seq_num][:seq_len]
             assert (
-                seq_len == embedding.shape[0]
+                    seq_len == embedding.shape[0]
             ), f"Sequence length mismatch: {seq_len} vs {embedding.shape[0]}"
 
             yield embedding

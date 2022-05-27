@@ -35,12 +35,11 @@
                             <div class="field">
                                 <label>Embed via</label>
                                 <div class="ui selection dropdown">
-                                    <input value="annotations_from_bert" type="hidden" name="pipeline_type">
-                                    <div class="default text">ProtBert: embed, extract (supervised)</div>
+                                    <input value="annotations_from_prott5" type="hidden" name="pipeline_type">
+                                    <div class="default text">ProtT5: embed, extract (supervised)</div>
                                     <i class="dropdown icon"></i>
                                     <div class="menu">
-                                        <div class="item" data-value="annotations_from_seqvec">SeqVec: embed, extract (supervised)</div>
-                                        <div class="item" data-value="annotations_from_bert">ProtBert: embed, extract (supervised)</div>
+                                        <div class="item" data-value="annotations_from_prott5">ProtT5: embed, extract (supervised)</div>
                                     </div>
                                 </div>
                             </div>
@@ -166,19 +165,11 @@
     <div class="ui row">
         <div class="sixteen wide column">
             <h2>Direct jobs</h2>
-            <p>Direct jobs (e.g., getting secondary structure prediction from ProtBert on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
+            <p>Direct jobs (e.g., getting secondary structure prediction from ProtT5 on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
             <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
             <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> ProtT5
             <br />
             <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> ProtT5 Annotations
-            <br />
-            <label class="ui circular orange {{ "blue" if "protbert" in workers }} label"></label> ProtBert
-            <br />
-            <label class="ui circular orange {{ "blue" if "protbert_annotations" in workers }} label"></label> ProtBert Annotations
-            <br />
-            <label class="ui circular orange {{ "blue" if "seqvec" in workers }} label"></label> SeqVec
-            <br />
-            <label class="ui circular orange {{ "blue" if "seqvec_annotations" in workers }} label"></label> SeqVec Annotations
         </div>
     </div>
     <div class="ui row">

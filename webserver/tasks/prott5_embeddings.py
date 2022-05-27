@@ -10,15 +10,22 @@ logger = logging.getLogger(__name__)
 model = None
 
 if "prott5" in configuration['celery']['celery_worker_type']:
+    import torch
     from bio_embeddings.embed import ProtTransT5XLU50Embedder
 
     logger.info("Loading the language model...")
 
-    model = ProtTransT5XLU50Embedder(
-        model_directory=configuration['prottrans_t5_xl_u50']['model_directory'],
-        decoder=False,
-        half_precision_model=True
-    )
+    if torch.cuda.is_available():
+        model = ProtTransT5XLU50Embedder(
+            half_precision_model_directory=configuration['prottrans_t5_xl_u50']['half_model_directory'],
+            half_precision_model=True,
+            decoder=False
+        )
+    else:
+        model = ProtTransT5XLU50Embedder(
+            model_directory=configuration['prottrans_t5_xl_u50']['half_model_directory'],
+            decoder=False,
+        )
 
     logger.info("Finished initializing.")
 
