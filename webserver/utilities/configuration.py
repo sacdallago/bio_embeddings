@@ -49,21 +49,6 @@ configuration = {
         "model_4_file": os.path.join(model_directory, "bindembed21", "checkpoint4.pt"),
         "model_5_file": os.path.join(model_directory, "bindembed21", "checkpoint5.pt")
     },
-    # SeqVec stuff
-    "seqvec": {
-        "weights_file": os.path.join(model_directory, "seqvec", "weights_file"),
-        "options_file": os.path.join(model_directory, "seqvec", "options_file"),
-        "max_amino_acids": int(environ.get("SEQVEC_MAX_AMINO_ACIDS", 20000)),
-        "secondary_structure_checkpoint_file": os.path.join(
-            model_directory, "seqvec_from_publication_annotations_extractors", "secondary_structure_checkpoint_file"
-        ),
-        "subcellular_location_checkpoint_file": os.path.join(
-            model_directory, "seqvec_from_publication_annotations_extractors", "subcellular_location_checkpoint_file"
-        ),
-        "go_reference_embeddings": os.path.join(
-            model_directory, "goa", "seqvec_l1_embeddings.h5"
-        ),
-    },
     "goa": {
         "bpo": os.path.join(
             model_directory, "goa", "goa_annotations_2022_bpo.txt",
