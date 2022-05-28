@@ -7,7 +7,7 @@ from webserver.endpoints.request_models import sequence_post_parameters_annotati
 from webserver.endpoints.task_interface import get_features
 from webserver.endpoints.utils import check_valid_sequence
 from webserver.utilities.parsers import (
-    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder
+    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder, BindingResidues
 )
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
@@ -71,13 +71,40 @@ def _get_annotations_from_params(params):
                     feature_enum=SecondaryStructure
                 )
             )
-        if annotations.get('predictedDSSP3'):
+        if annotations.get('predictedDisorder'):
             protvista_features['features'].extend(
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDisorder'],
                     evidences=[evidence],
                     type=f"DISORDER_({model_name})",
                     feature_enum=Disorder
+                )
+            )
+        if annotations.get('predictedBindingMetal'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingMetal'],
+                    evidences=[evidence],
+                    type=f"BINDING_METAL_({model_name})",
+                    feature_enum=BindingResidues
+                )
+            )
+        if annotations.get('predictedBindingNucleicAcids'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingNucleicAcids'],
+                    evidences=[evidence],
+                    type=f"BINDING_NUCLEIC_ACIDS_({model_name})",
+                    feature_enum=BindingResidues
+                )
+            )
+        if annotations.get('predictedBindingSmallMolecules'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingSmallMolecules'],
+                    evidences=[evidence],
+                    type=f"BINDING_SMALL_MOLECULES_({model_name})",
+                    feature_enum=BindingResidues
                 )
             )
 
