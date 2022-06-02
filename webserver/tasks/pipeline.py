@@ -23,29 +23,19 @@ def read_config_file(config_path: Path) -> Dict[str, Any]:
 _module_dir: Path = Path(path.dirname(path.abspath(__file__)))
 
 # Template configs: these will be the "job types" available
-_annotations_from_bert: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "template_configs" / 'annotations_from_bert.yml')
-_annotations_from_seqvec: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "template_configs" / 'annotations_from_seqvec.yml')
+_annotations_from_prott5: Dict[str, Dict[str, str]] = read_config_file(_module_dir / "template_configs" / 'annotations_from_prott5.yml')
 
 # Enrich templates with execution specific parameters: location of weights & optionable max_aa
 
-# BERT
-_annotations_from_bert['bert_embeddings']['model_directory'] = configuration['prottrans_bert_bfd']['model_directory']
-_annotations_from_bert['bert_embeddings']['max_amino_acids'] = configuration['prottrans_bert_bfd']['max_amino_acids']
-_annotations_from_bert['annotations_from_bert']['secondary_structure_checkpoint_file'] = configuration['prottrans_bert_bfd']['secondary_structure_checkpoint_file']
-_annotations_from_bert['annotations_from_bert']['subcellular_location_checkpoint_file'] = configuration['prottrans_bert_bfd']['subcellular_location_checkpoint_file']
-
-
-# SEQVEC
-_annotations_from_seqvec['seqvec_embeddings']['weights_file'] = configuration['seqvec']['weights_file']
-_annotations_from_seqvec['seqvec_embeddings']['options_file'] = configuration['seqvec']['options_file']
-_annotations_from_seqvec['seqvec_embeddings']['max_amino_acids'] = configuration['seqvec']['max_amino_acids']
-_annotations_from_seqvec['annotations_from_seqvec']['secondary_structure_checkpoint_file'] = configuration['seqvec']['secondary_structure_checkpoint_file']
-_annotations_from_seqvec['annotations_from_seqvec']['subcellular_location_checkpoint_file'] = configuration['seqvec']['subcellular_location_checkpoint_file']
+# Prott5
+_annotations_from_prott5['prott5_embeddings']['model_directory'] = configuration['prottrans_t5_xl_u50']['half_model_directory']
+_annotations_from_prott5['prott5_embeddings']['max_amino_acids'] = configuration['prottrans_t5_xl_u50']['max_amino_acids']
+_annotations_from_prott5['annotations_from_prott5']['secondary_structure_checkpoint_file'] = configuration['prottrans_t5_xl_u50']['secondary_structure_checkpoint_file']
+_annotations_from_prott5['annotations_from_prott5']['subcellular_location_checkpoint_file'] = configuration['prottrans_t5_xl_u50']['subcellular_location_checkpoint_file']
 
 
 _CONFIGS = {
-    'annotations_from_seqvec': _annotations_from_seqvec,
-    'annotations_from_bert': _annotations_from_bert,
+    'annotations_from_prott5': _annotations_from_prott5,
 }
 
 _FILES_TO_STORE = [

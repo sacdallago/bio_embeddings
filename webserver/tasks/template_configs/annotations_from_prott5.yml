@@ -1,23 +1,22 @@
 global:
   sequences_file:
   prefix:
-seqvec_embeddings:
+prott5_embeddings:
   type: embed
-  protocol: seqvec
+  protocol: prottrans_t5_xl_u50
   reduce: True
-  weights_file:
-  options_file:
+  half_model_directory:
   max_amino_acids:
-annotations_from_seqvec:
+annotations_from_prott5:
   type: extract
-  protocol: seqvec_from_publication
-  depends_on: seqvec_embeddings
+  protocol: t5_xl_u5_from_publication
+  depends_on: prott5_embeddings
   secondary_structure_checkpoint_file:
   subcellular_location_checkpoint_file:
 umap_projections:
   type: project
   protocol: umap
-  depends_on: seqvec_embeddings
+  depends_on: prott5_embeddings
   n_components: 2
 plotly_visualization:
   type: visualize
