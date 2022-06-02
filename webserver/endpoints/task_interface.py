@@ -1,20 +1,17 @@
+import io
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy
 import numpy as np
 from werkzeug.exceptions import abort
 
-from webserver.database import get_embedding_cache, get_features_cache
+from webserver.database import get_embedding_cache, get_features_cache, get_vespa_cache
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
-# ProtBert
-from webserver.tasks.protbert_annotations import get_protbert_annotations_sync
-from webserver.tasks.protbert_embeddings import get_protbert_embeddings_sync
-# SeqVec
-from webserver.tasks.seqvec_annotations import get_seqvec_annotations_sync
-from webserver.tasks.seqvec_embeddings import get_seqvec_embeddings_sync
+# VESPA
+from webserver.tasks.vespa_pred import get_vespa_output_sync
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -32,8 +29,6 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
         )
 
     model = {
-        "seqvec": get_seqvec_embeddings_sync,
-        "prottrans_bert_bfd": get_protbert_embeddings_sync,
         "prottrans_t5_xl_u50": get_prott5_embeddings_sync
     }.get(model_name)
 
@@ -78,8 +73,6 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     embeddings = get_embedding(model_name, sequence)
 
     annotation_model = {
-        "seqvec": get_seqvec_annotations_sync,
-        "prottrans_bert_bfd": get_protbert_annotations_sync,
         "prottrans_t5_xl_u50": get_prott5_annotations_sync,
     }.get(model_name)
 
@@ -100,3 +93,43 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
         }
     )
     return features
+
+
+def get_vespa(sequence: str, embedding_as_list) -> Tuple[list,dict]:
+    cached = get_vespa_cache.find_one(
+        {"model_name": "prottrans_t5_xl_u50", "sequence": sequence}
+    )
+    if cached:
+
+        con_probs_arr = numpy.frombuffer(cached['conspred'], dtype=numpy.int8).reshape(cached['conspred_shape'])
+        vespa_values = numpy.frombuffer(cached['vespa_values'], dtype=numpy.int8).reshape(cached['vespa_shape']).tolist()
+        vespa_return_dict = {'x_axis':cached['x_axis'],'y_axis':cached['y_axis'],'values': vespa_values}
+
+        return con_probs_arr,vespa_return_dict
+
+    job = get_vespa_output_sync.apply_async(
+        args=[sequence, embedding_as_list], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
+    )
+
+    cons_probs_arr, vespa_return_dict = job.get()
+
+    cons_probs_arr = np.array(cons_probs_arr,dtype=np.int8)
+    values_arr = np.array(vespa_return_dict['values'],dtype=np.int8)
+
+
+    if len(sequence) < 500:
+        get_vespa_cache.insert_one(
+            {
+                "uploadDate": datetime.utcnow(),
+                "model_name": "prottrans_t5_xl_u50",
+                "sequence": sequence,
+                "conspred_shape": cons_probs_arr.shape,
+                "conspred": cons_probs_arr.tobytes(),
+                "vespa_values":values_arr.tobytes(),
+                "vespa_shape":values_arr.shape,
+                "x_axis": vespa_return_dict['x_axis'],
+                "y_axis": vespa_return_dict['y_axis']
+            }
+        )
+
+    return cons_probs_arr, vespa_return_dict

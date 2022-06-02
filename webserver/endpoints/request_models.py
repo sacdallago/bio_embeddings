@@ -2,6 +2,8 @@ from webserver.endpoints import api
 from werkzeug.datastructures import FileStorage
 from flask_restx import fields
 
+
+
 file_post_parser = api.parser()
 file_post_parser.add_argument(
     'sequences',
@@ -54,10 +56,10 @@ sequence_post_parameters.add_argument(
 
 lm_field = fields.String(
     location='json',
-    description='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_xl_u50.',
+    description='Which LM to use; options: prottrans_t5_xl_u50.',
     required=False,
-    default='seqvec',
-    example='seqvec'
+    default='prottrans_t5_xl_u50',
+    example='prottrans_t5_xl_u50'
 )
 
 sequence_field = fields.String(
@@ -108,7 +110,7 @@ sequence_get_parameters_annotations.add_argument(
     location='args',
     type=str,
     required=False,
-    help='Which LM to use; options: seqvec, prottrans_bert_bfd, prottrans_t5_xl_u50.'
+    help='Which LM to use; options: prottrans_t5_xl_u50.'
 )
 sequence_get_parameters_annotations.add_argument(
     'format',
@@ -117,3 +119,7 @@ sequence_get_parameters_annotations.add_argument(
     required=False,
     help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
 )
+
+vespa_post_parameters = api.model('VESPA_post_sequence',{
+    'sequence' :sequence_field
+})
