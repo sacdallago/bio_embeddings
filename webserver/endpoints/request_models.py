@@ -2,8 +2,6 @@ from webserver.endpoints import api
 from werkzeug.datastructures import FileStorage
 from flask_restx import fields
 
-
-
 file_post_parser = api.parser()
 file_post_parser.add_argument(
     'sequences',
@@ -120,6 +118,6 @@ sequence_get_parameters_annotations.add_argument(
     help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
 )
 
-vespa_post_parameters = api.model('VESPA_post_sequence',{
-    'sequence' :sequence_field
+vespa_post_parameters = api.model('VESPA_post_sequence', {
+    'sequence': sequence_field
 })

@@ -95,27 +95,29 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def get_vespa(sequence: str, embedding_as_list) -> Tuple[list,dict]:
+def get_vespa(sequence: str, embedding_as_list) -> dict:
     cached = get_vespa_cache.find_one(
         {"model_name": "prottrans_t5_xl_u50", "sequence": sequence}
     )
     if cached:
+        cons_probs_arr = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(cached['conservation_prediction_shape'])
+        vespa_values = numpy.frombuffer(cached['variation_prediction'], dtype=numpy.int8).reshape(cached['variation_prediction_shape']).tolist()
+        vespa_return_dict = {'variation_prediction_x_axis': cached['variation_prediction_x_axis'], 'y_axis': cached['variation_prediction_y_axis'],
+                             'values': vespa_values}
 
-        con_probs_arr = numpy.frombuffer(cached['conspred'], dtype=numpy.int8).reshape(cached['conspred_shape'])
-        vespa_values = numpy.frombuffer(cached['vespa_values'], dtype=numpy.int8).reshape(cached['vespa_shape']).tolist()
-        vespa_return_dict = {'x_axis':cached['x_axis'],'y_axis':cached['y_axis'],'values': vespa_values}
-
-        return con_probs_arr,vespa_return_dict
+        return {'conservation': cons_probs_arr,
+                'vespa': vespa_return_dict}
 
     job = get_vespa_output_sync.apply_async(
         args=[sequence, embedding_as_list], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
     )
 
-    cons_probs_arr, vespa_return_dict = job.get()
+    vespa_worker_out = job.get()
 
-    cons_probs_arr = np.array(cons_probs_arr,dtype=np.int8)
-    values_arr = np.array(vespa_return_dict['values'],dtype=np.int8)
+    vespa_return_dict = vespa_worker_out['vespa']
 
+    cons_probs_arr = np.array(vespa_worker_out['conservation'], dtype=np.int8)
+    values_arr = np.array(vespa_return_dict['values'], dtype=np.int8)
 
     if len(sequence) < 500:
         get_vespa_cache.insert_one(
@@ -123,13 +125,14 @@ def get_vespa(sequence: str, embedding_as_list) -> Tuple[list,dict]:
                 "uploadDate": datetime.utcnow(),
                 "model_name": "prottrans_t5_xl_u50",
                 "sequence": sequence,
-                "conspred_shape": cons_probs_arr.shape,
-                "conspred": cons_probs_arr.tobytes(),
-                "vespa_values":values_arr.tobytes(),
-                "vespa_shape":values_arr.shape,
-                "x_axis": vespa_return_dict['x_axis'],
-                "y_axis": vespa_return_dict['y_axis']
+                "conservation_prediction_shape": cons_probs_arr.shape,
+                "conservation_prediction": cons_probs_arr.tobytes(),
+                "variation_prediction": values_arr.tobytes(),
+                "variation_prediction_shape": values_arr.shape,
+                "variation_prediction_x_axis": vespa_return_dict['x_axis'],
+                "variation_prediction_y_axis": vespa_return_dict['y_axis']
             }
         )
 
-    return cons_probs_arr, vespa_return_dict
+    return {'conservation': cons_probs_arr,
+            'vespa': vespa_return_dict}

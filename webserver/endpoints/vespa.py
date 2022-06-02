@@ -33,7 +33,9 @@ class vespa(Resource):
         embedding = get_embedding(model_name, sequence)
         embedding = embedding.tolist()
 
-        cons_pred, vespa_out = get_vespa(sequence=sequence,embedding_as_list=embedding)
+        vespa_out_dict = get_vespa(sequence=sequence, embedding_as_list=embedding)
+        cons_pred = vespa_out_dict['conservation']
+        vespa_out = vespa_out_dict['vespa']
 
         return {'vespa':vespa_out,
                 'conservation':cons_pred.tolist()}
