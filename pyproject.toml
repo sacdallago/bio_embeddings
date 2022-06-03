@@ -64,7 +64,7 @@ jaxlib = { version = "^0.3.10", optional = true }
 appdirs = "^1.4.4"
 importlib_metadata = "^4.11.4"
 pymongo = { "version" = "^4.1.1", optional = true }
-sentry-sdk = { "version" = "^1.5.12", extras = ["flask"], optional = true }
+sentry-sdk = { extras = ["flask"],"version" = "^1.5.12", optional = true }
 python-slugify = "^6.1.2"
 fsspec = { version = "0.8.5", optional = true }
 humanize = "^4.1.0"
@@ -73,11 +73,12 @@ flask = { version = "^2.1.2", optional = true }
 atomicwrites = "^1.4.0"
 pyyaml = "6.0"
 # Hiwi addons
-sentencepiece="^0.1.96"
+sentencepiece="0.1.96"
 celery="^5.2.7"
 flask-cors="^3.0.10"
 gunicorn="^20.1.0"
 vespa-effect= {version = "^1.0.0", python="^3.9"}
+werkzeug="2.0.3"
 
 
 [tool.poetry.extras]
@@ -93,7 +94,6 @@ deepblast = ["bio-embeddings-deepblast", "fsspec"]
 
 # General
 transformers = ["transformers"]
-
 all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
 webserver = ["pymongo", "sentry-sdk", "flask"]

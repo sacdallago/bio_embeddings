@@ -14,7 +14,7 @@ RUN apt-get update && \
 
 COPY pyproject.toml /app/pyproject.toml
 COPY poetry.lock /app/poetry.lock
-COPY webserver/requirements.txt /app/webserver/requirements.txt
+
 
 WORKDIR /app
 
@@ -26,7 +26,7 @@ RUN mkdir bio_embeddings && \
     python3 -m venv .venv && \
     .venv/bin/pip install -U pip && \
     $HOME/.local/bin/poetry config virtualenvs.in-project true && \
-    $HOME/.local/bin/poetry install --no-dev -E transformers
+    $HOME/.local/bin/poetry install --no-dev -E transformers -E webserver
 
 
 FROM nvidia/cuda:11.4.3-runtime-ubuntu20.04
