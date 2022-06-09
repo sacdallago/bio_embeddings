@@ -18,7 +18,7 @@ if 'vespa' in configuration['celery']['celery_worker_type']:
 
 
 @task_keeper.task()
-def get_vespa_output_sync(sequence: str, embedding_as_list: list) -> dict:
+def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) -> dict:
     # method takes the embeddings as input and returns the conspred and vespa
 
     ################################################conspred################################################
@@ -136,9 +136,20 @@ def get_vespa_output_sync(sequence: str, embedding_as_list: list) -> dict:
     matrix_transposed = np.array(matrix).T
     matrix_transposed = matrix_transposed.astype(np.int8).tolist()
 
-    vespa_return_dict = {'x_axis': [res for res in sequence],
-                         'y_axis': [aa for aa in MUTANT_ORDER],
-                         'values': matrix_transposed}
+    x_axis_seq = [res for res in sequence]
+    y_axis_Mutant = [aa for aa in MUTANT_ORDER]
 
-    return {'conservation': cons_probs_arr.tolist(),
-            'vespa': vespa_return_dict}
+    vespa_return_dict = {'x_axis': x_axis_seq,
+                         'y_axis': y_axis_Mutant,
+                         'values': matrix_transposed}
+    conservation_return_dict = {'x_axis': x_axis_seq,
+                                'y_axis': y_axis_Mutant,
+                                'values': cons_probs_arr.tolist()}
+
+    return {'predictedConservation': conservation_return_dict,
+            'predictedVariation': vespa_return_dict,
+            'meta': {
+                'predictedConservation': 'https://github.com/Rostlab/VESPA',
+                'predictedVariation': 'https://github.com/Rostlab/VESPA'
+            }
+            }

@@ -9,5 +9,5 @@ task_keeper.conf.task_routes = {
     'webserver.tasks.prott5_embeddings.get_prott5_embeddings_sync': {'queue': 'prott5'},
     'webserver.tasks.prott5_annotations.get_prott5_annotations_sync': {'queue': 'prott5_annotations'},
     'webserver.tasks.pipeline.run_pipeline': {'queue': 'pipeline'},
-    'webserver.tasks.vespa_pred.get_vespa_output_sync':{'queue':'vespa'}
+    'webserver.tasks.vespa_pred.get_residue_landscape_output_sync':{'queue':'vespa'}
 }

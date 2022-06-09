@@ -6,7 +6,7 @@ from flask_restx import Resource
 
 from webserver.endpoints import api
 from webserver.endpoints.request_models import vespa_post_parameters
-from webserver.endpoints.task_interface import get_vespa
+from webserver.endpoints.task_interface import get_residue_landscape
 from webserver.endpoints.task_interface import get_embedding
 from webserver.endpoints.utils import check_valid_sequence
 
@@ -33,9 +33,9 @@ class vespa(Resource):
         embedding = get_embedding(model_name, sequence)
         embedding = embedding.tolist()
 
-        vespa_out_dict = get_vespa(sequence=sequence, embedding_as_list=embedding)
-        cons_pred = vespa_out_dict['conservation']
-        vespa_out = vespa_out_dict['vespa']
+        residue_landscape_output = get_residue_landscape(sequence=sequence,model_name='prottrans_t5_xl_u50', embedding_as_list=embedding)
+        cons_pred = residue_landscape_output['predictedConservation']
+        vespa_out = residue_landscape_output['predictedVariation']
 
-        return {'vespa':vespa_out,
-                'conservation':cons_pred.tolist()}
+        return {'predictedVariation':vespa_out,
+                'predictedConservation':cons_pred}
