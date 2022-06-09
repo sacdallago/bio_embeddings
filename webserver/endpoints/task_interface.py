@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime
 from typing import Dict
 
@@ -12,8 +11,6 @@ from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 # Colabfold
 from webserver.tasks.colabfold import get_structure_colabfold
-
-logger = logging.getLogger()
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -98,13 +95,11 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
 
 
 def get_structure(sequence: str):
-    logger.info('Submitting job')
     job = get_structure_colabfold.apply_async(
         args=[sequence],
-        time_limit=60 * 5,
-        soft_time_limit=60 * 5,
+        time_limit=60 * 15,
+        soft_time_limit=60 * 15,
         expires=60 * 60,
     )
-    logger.info('Submitted job')
     return job.get()
 

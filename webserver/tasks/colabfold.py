@@ -1,14 +1,20 @@
+import os
+
 from colabfold.batch import get_queries, set_model_type, run
-from colabfold.colabfold import plot_protein
 from colabfold.download import download_alphafold_params
-import matplotlib.pyplot as plt
+from hashlib import md5
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Dict
 
 import logging
 from webserver.tasks import task_keeper
+from webserver.utilities.configuration import configuration
 
-logger = logging.getLogger()
+if "colabfold" in configuration['celery']['celery_worker_type']:
+    logger = logging.getLogger()
+
+    predictions_dir = TemporaryDirectory(prefix='colabfold-predictions')
 
 
 @task_keeper.task()
@@ -26,12 +32,23 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
      The parameters here are almost exactly set to the values of the ColabFold Default parameters.
     """
 
-    job_id = 0
     # Sequence input and setup
     query_sequence = "".join(query_sequence.split())
-    queries_path = "test.csv"
+    sequence_hash = md5(query_sequence.encode())
+    job_id = sequence_hash.hexdigest()
+
+    queries_path = f"query{sequence_hash.hexdigest()}.csv"
     with open(queries_path, 'w') as queries_file:
         queries_file.write(f"id,sequence\njob{job_id},{query_sequence}")
+
+    result_dir = f"{predictions_dir.name}/{job_id}"
+    try:
+        os.mkdir(result_dir)
+    except FileExistsError:
+        return {
+            'sequence': query_sequence,
+            'result': 'Query already in progress'
+        }
 
     use_amber = False
     custom_template_path = None
@@ -47,11 +64,8 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
 
     # Preparation for run
     def prediction_callback(unrelaxed_protein, length, prediction_result, input_features, type):
-        fig = plot_protein(unrelaxed_protein, Ls=length, dpi=100)
-        plt.show()
-        plt.close()
+        logger.info("Finished prediction")
 
-    result_dir = "."
     queries, is_complex = get_queries(queries_path)
     model_type = set_model_type(is_complex, model_type)
     download_alphafold_params(model_type, Path("."))
@@ -67,7 +81,7 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
         model_type=model_type,
         num_models=1,
         num_recycles=num_recycles,
-        model_order=[1],
+        model_order=[3],
         is_complex=is_complex,
         data_dir=Path("."),
         keep_existing_results=False,
@@ -80,5 +94,6 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
 
     return {
         'sequence': query_sequence,
-        'result_path': '.'
+        'result_path': result_dir,
+        'result': 'success'
     }
