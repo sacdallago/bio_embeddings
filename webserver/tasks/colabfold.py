@@ -1,15 +1,17 @@
-import os
-
 from colabfold.batch import get_queries, set_model_type, run
 from colabfold.download import download_alphafold_params
 from hashlib import md5
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Dict
+import os.path
 
 import logging
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
+
+
+MAX_SEQUENCE_LENGTH = 500
 
 if "colabfold" in configuration['celery']['celery_worker_type']:
     logger = logging.getLogger()
@@ -33,15 +35,20 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
     """
 
     # Sequence input and setup
-    query_sequence = "".join(query_sequence.split())
+    if len(query_sequence) > MAX_SEQUENCE_LENGTH:
+        return {
+            'sequence': query_sequence,
+            'result': f'Query sequence too long. Must not exceed {MAX_SEQUENCE_LENGTH}'
+        }
+
     sequence_hash = md5(query_sequence.encode())
     job_id = sequence_hash.hexdigest()
 
     queries_path = f"query{sequence_hash.hexdigest()}.csv"
     with open(queries_path, 'w') as queries_file:
-        queries_file.write(f"id,sequence\njob{job_id},{query_sequence}")
+        queries_file.write(f"id,sequence\n{job_id},{query_sequence}")
 
-    result_dir = f"{predictions_dir.name}/{job_id}"
+    result_dir = os.path.join(predictions_dir.name, job_id)
     try:
         os.mkdir(result_dir)
     except FileExistsError:
@@ -93,7 +100,10 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
     )
 
     return {
+        'result': "success",
         'sequence': query_sequence,
-        'result_path': result_dir,
-        'result': 'success'
+        'result_dir': result_dir,
+        'msa_file': os.path.join(result_dir, f"{job_id}.a3m"),
+        'pdb_file': os.path.join(result_dir, f"{job_id}_unrelaxed_rank_1_model_3.pdb"),
+        'json_file': os.path.join(result_dir, f"{job_id}_unrelaxed_rank_1_model_3_scores.json"),
     }

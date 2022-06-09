@@ -35,6 +35,7 @@ def get_or_create_cache(name: str) -> Collection:
 # Caches for the direct feature extractors
 get_embedding_cache = get_or_create_cache("get_embedding_cache")
 get_features_cache = get_or_create_cache("get_features_cache")
+get_structure_cache = get_or_create_cache("get_structure_cache")
 
 # Indexes, otherwise it gets really slow with some GB of data
 if "model_name_sequence" not in get_features_cache.index_information():
@@ -46,6 +47,11 @@ if "model_name_sequence" not in get_embedding_cache.index_information():
     get_embedding_cache.create_index(
         ([("model_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
         name="model_name_sequence",
+    )
+if "structure_sequence" not in get_structure_cache.index_information():
+    get_structure_cache.create_index(
+        ([("sequence", pymongo.HASHED)]),
+        name="structure_sequence",
     )
 
 

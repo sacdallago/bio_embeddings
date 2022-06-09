@@ -1,3 +1,4 @@
+import os.path
 from datetime import datetime
 from typing import Dict
 
@@ -5,7 +6,7 @@ import numpy
 import numpy as np
 from werkzeug.exceptions import abort
 
-from webserver.database import get_embedding_cache, get_features_cache
+from webserver.database import get_embedding_cache, get_features_cache, get_structure_cache
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
@@ -94,12 +95,48 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def get_structure(sequence: str):
+def _insert_structure_to_db(sequence: str, structure: Dict[str, str]) -> Dict[str, str]:
+    with open(structure['msa_file'], 'r') as msa_file:
+        msa = msa_file.read()
+    with open(structure['pdb_file'], 'r') as pdb_file:
+        pdb = pdb_file.read()
+    with open(structure['json_file'], 'r') as json_file:
+        json = json_file.read()
+
+    result = {
+        'uploadDate': datetime.utcnow(),
+        'sequence': sequence,
+        'structure': {
+            'msa': msa,
+            'pdb': pdb,
+            'json': json
+        }
+    }
+    get_structure_cache.insert_one(result)
+    return result['structure']
+
+
+def get_structure(sequence: str) -> Dict[str, str]:
+    "".join(sequence.split())
+    sequence = sequence.upper()
+    cached = get_structure_cache.find_one(
+        {'sequence': sequence}
+    )
+
+    if cached:
+        return cached['structure']
+
     job = get_structure_colabfold.apply_async(
         args=[sequence],
         time_limit=60 * 15,
         soft_time_limit=60 * 15,
         expires=60 * 60,
     )
-    return job.get()
+
+    structure = job.get()
+    if structure['result'] == "success":
+        structure = _insert_structure_to_db(sequence, structure)
+
+    return structure
+
 
