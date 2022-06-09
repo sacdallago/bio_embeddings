@@ -11,7 +11,7 @@ from webserver.database import get_embedding_cache, get_features_cache, get_vesp
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 # VESPA
-from webserver.tasks.vespa_pred import get_vespa_output_sync
+from webserver.tasks.prott5_SAV_effect import get_residue_landscape_output_sync
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -84,6 +84,37 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     )
 
     features = job.get()
+
+
+
+    # run the residue landscape worker to obtain conservation predictions and variation predictions
+    # when running vespa it has to be asserted that the embeddings were generated with prottrans_t5_xl_u50
+    if model_name != 'prottrans_t5_xl_u50':
+        embeddings = get_embedding('prottrans_t5_xl_u50',sequence)
+
+
+    # run the worker
+
+    job_residue_landscape = get_residue_landscape_output_sync.apply_async(
+        args=[sequence, embeddings.tolist()], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
+    )
+
+    residue_landscape_worker_out = job_residue_landscape.get()
+
+    # merge the output of the residue landscape into the feature dict
+    # add the meta information
+    for key in residue_landscape_worker_out['meta']:
+        features['meta'][key] = residue_landscape_worker_out['meta'][key]
+
+    residue_landscape_worker_out.pop('meta',None)
+
+    # add all the remaining information
+    for key in residue_landscape_worker_out:
+        features[key] = residue_landscape_worker_out[key]
+
+
+    # value matrices will be stored as lists which might be suboptimal for storage
+    # this could be optimized in the future
     get_features_cache.insert_one(
         {
             "uploadDate": datetime.utcnow(),
@@ -95,44 +126,55 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def get_vespa(sequence: str, embedding_as_list) -> dict:
+def get_residue_landscape(model_name: str, sequence: str, embedding_as_list) -> dict:
     cached = get_vespa_cache.find_one(
         {"model_name": "prottrans_t5_xl_u50", "sequence": sequence}
     )
     if cached:
-        cons_probs_arr = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(cached['conservation_prediction_shape'])
-        vespa_values = numpy.frombuffer(cached['variation_prediction'], dtype=numpy.int8).reshape(cached['variation_prediction_shape']).tolist()
-        vespa_return_dict = {'variation_prediction_x_axis': cached['variation_prediction_x_axis'], 'y_axis': cached['variation_prediction_y_axis'],
-                             'values': vespa_values}
+        predicted_conservation_values = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(
+            cached['conservation_prediction_shape']).tolist()
+        predicted_variation_values = numpy.frombuffer(cached['variation_prediction'], dtype=numpy.int8).reshape(
+            cached['variation_prediction_shape']).tolist()
 
-        return {'conservation': cons_probs_arr,
-                'vespa': vespa_return_dict}
+        predictedVariation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
+                              'values': predicted_variation_values}
 
-    job = get_vespa_output_sync.apply_async(
+        predictedConservation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
+                                 'values': predicted_conservation_values}
+
+        return {'predictedConservation': predictedConservation,
+                'predictedVariation': predictedVariation}
+
+    job = get_residue_landscape_output_sync.apply_async(
         args=[sequence, embedding_as_list], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
     )
 
-    vespa_worker_out = job.get()
+    residue_landscape_worker_out = job.get()
 
-    vespa_return_dict = vespa_worker_out['vespa']
+    predictedVariation = residue_landscape_worker_out['predictedVariation']
 
-    cons_probs_arr = np.array(vespa_worker_out['conservation'], dtype=np.int8)
-    values_arr = np.array(vespa_return_dict['values'], dtype=np.int8)
+    predictedConservation = residue_landscape_worker_out['predictedVariation']
 
-    if len(sequence) < 500:
-        get_vespa_cache.insert_one(
-            {
-                "uploadDate": datetime.utcnow(),
-                "model_name": "prottrans_t5_xl_u50",
-                "sequence": sequence,
-                "conservation_prediction_shape": cons_probs_arr.shape,
-                "conservation_prediction": cons_probs_arr.tobytes(),
-                "variation_prediction": values_arr.tobytes(),
-                "variation_prediction_shape": values_arr.shape,
-                "variation_prediction_x_axis": vespa_return_dict['x_axis'],
-                "variation_prediction_y_axis": vespa_return_dict['y_axis']
-            }
-        )
+    predicted_conservation_values = np.array(predictedVariation['values'], dtype=np.int8)
 
-    return {'conservation': cons_probs_arr,
-            'vespa': vespa_return_dict}
+    predicted_variation_values = np.array(predictedVariation['values'], dtype=np.int8)
+
+    assert predictedVariation['x_axis'] == predictedConservation['x_axis']
+    assert predictedVariation['y_axis'] == predictedConservation['y_axis']
+
+    get_vespa_cache.insert_one(
+        {
+            "uploadDate": datetime.utcnow(),
+            "model_name": "prottrans_t5_xl_u50",
+            "sequence": sequence,
+            "conservation_prediction_shape": predicted_conservation_values.shape,
+            "conservation_prediction": predicted_conservation_values.tobytes(),
+            "variation_prediction": predicted_variation_values.tobytes(),
+            "variation_prediction_shape": predicted_variation_values.shape,
+            "x_axis": predictedVariation['x_axis'],
+            "y_axis": predictedVariation['y_axis']
+        }
+    )
+
+    return {'predictedConservation': predictedConservation,
+            'predictedVariation': predictedVariation}
