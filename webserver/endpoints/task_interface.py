@@ -6,7 +6,7 @@ import numpy
 import numpy as np
 from werkzeug.exceptions import abort
 
-from webserver.database import get_embedding_cache, get_features_cache, get_vespa_cache
+from webserver.database import get_embedding_cache, get_features_cache, get_residue_landscape_cache
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
@@ -86,35 +86,6 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     features = job.get()
 
 
-
-    # run the residue landscape worker to obtain conservation predictions and variation predictions
-    # when running vespa it has to be asserted that the embeddings were generated with prottrans_t5_xl_u50
-    if model_name != 'prottrans_t5_xl_u50':
-        embeddings = get_embedding('prottrans_t5_xl_u50',sequence)
-
-
-    # run the worker
-
-    job_residue_landscape = get_residue_landscape_output_sync.apply_async(
-        args=[sequence, embeddings.tolist()], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
-    )
-
-    residue_landscape_worker_out = job_residue_landscape.get()
-
-    # merge the output of the residue landscape into the feature dict
-    # add the meta information
-    for key in residue_landscape_worker_out['meta']:
-        features['meta'][key] = residue_landscape_worker_out['meta'][key]
-
-    residue_landscape_worker_out.pop('meta',None)
-
-    # add all the remaining information
-    for key in residue_landscape_worker_out:
-        features[key] = residue_landscape_worker_out[key]
-
-
-    # value matrices will be stored as lists which might be suboptimal for storage
-    # this could be optimized in the future
     get_features_cache.insert_one(
         {
             "uploadDate": datetime.utcnow(),
@@ -126,9 +97,9 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def get_residue_landscape(model_name: str, sequence: str, embedding_as_list) -> dict:
-    cached = get_vespa_cache.find_one(
-        {"model_name": "prottrans_t5_xl_u50", "sequence": sequence}
+def get_residue_landscape(model_name: str, sequence: str) -> dict:
+    cached = get_residue_landscape_cache.find_one(
+        {"model_name": model_name, "sequence": sequence}
     )
     if cached:
         predicted_conservation_values = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(
@@ -142,14 +113,23 @@ def get_residue_landscape(model_name: str, sequence: str, embedding_as_list) -> 
         predictedConservation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
                                  'values': predicted_conservation_values}
 
-        return {'predictedConservation': predictedConservation,
-                'predictedVariation': predictedVariation}
+        meta_data = cached['meta']
 
+        return {'predictedConservation': predictedConservation,
+                'predictedVariation': predictedVariation,
+                'meta':meta_data}
+
+    print('getting embeddings')
+    embedding_as_list = get_embedding(model_name,sequence).tolist()
+
+    print('starting job')
     job = get_residue_landscape_output_sync.apply_async(
         args=[sequence, embedding_as_list], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
     )
 
     residue_landscape_worker_out = job.get()
+
+    meta_data = residue_landscape_worker_out['meta']
 
     predictedVariation = residue_landscape_worker_out['predictedVariation']
 
@@ -162,7 +142,7 @@ def get_residue_landscape(model_name: str, sequence: str, embedding_as_list) -> 
     assert predictedVariation['x_axis'] == predictedConservation['x_axis']
     assert predictedVariation['y_axis'] == predictedConservation['y_axis']
 
-    get_vespa_cache.insert_one(
+    get_residue_landscape_cache.insert_one(
         {
             "uploadDate": datetime.utcnow(),
             "model_name": "prottrans_t5_xl_u50",
@@ -172,9 +152,11 @@ def get_residue_landscape(model_name: str, sequence: str, embedding_as_list) -> 
             "variation_prediction": predicted_variation_values.tobytes(),
             "variation_prediction_shape": predicted_variation_values.shape,
             "x_axis": predictedVariation['x_axis'],
-            "y_axis": predictedVariation['y_axis']
+            "y_axis": predictedVariation['y_axis'],
+            "meta":meta_data
         }
     )
 
     return {'predictedConservation': predictedConservation,
-            'predictedVariation': predictedVariation}
+            'predictedVariation': predictedVariation,
+            'meta':meta_data}
