@@ -95,7 +95,8 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, str]:
         recompile_padding=1.0,
         rank_by="auto",
         pair_mode=pair_mode,
-        stop_at_score=float(100),
+        stop_at_score=float(85),
+        stop_at_score_below=float(40),
         prediction_callback=prediction_callback,
     )
 
