@@ -5,6 +5,7 @@ from flask_restx import Resource
 from webserver.endpoints import api
 from webserver.endpoints.request_models import sequence_post_parameters_annotations, sequence_get_parameters_annotations
 from webserver.endpoints.task_interface import get_features
+from webserver.endpoints.task_interface import get_residue_landscape
 from webserver.endpoints.utils import check_valid_sequence
 from webserver.utilities.parsers import (
     Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder, BindingResidues
@@ -128,7 +129,6 @@ def _get_annotations_from_params(params):
         annotations['predictedMFO'] = predictedMFO
 
         return annotations
-
     elif format == "go-predictprotein":
         mapping_function = lambda x: {
             "gotermid": x['GO_Term'],
@@ -151,6 +151,20 @@ def _get_annotations_from_params(params):
 
         return [predictedBPO, predictedCCO, predictedMFO]
     elif format == "full":
+
+        residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50', sequence=sequence)
+
+        # merge the output of the residue landscape into the feature dict
+        # add the meta information
+        for key in residue_landscape_output['meta']:
+            annotations['meta'][key] = residue_landscape_output['meta'][key]
+
+        residue_landscape_output.pop('meta', None)
+
+        # add all the remaining information
+        for key in residue_landscape_output:
+            annotations[key] = residue_landscape_output[key]
+
         return annotations
     else:
         abort(400, f"Wrong format passed: {format}")
