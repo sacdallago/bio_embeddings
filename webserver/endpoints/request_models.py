@@ -118,8 +118,8 @@ sequence_get_parameters_annotations.add_argument(
     help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
 )
 
-sequence_get_parameters_colabfold = api.parser()
-sequence_get_parameters_colabfold.add_argument(
+sequence_get_parameters_structure = api.parser()
+sequence_get_parameters_structure.add_argument(
     'sequence',
     location='args',
     type=str,
@@ -127,6 +127,6 @@ sequence_get_parameters_colabfold.add_argument(
     help='Protein sequence in AA format.'
 )
 
-sequence_post_parameters_colabfold = api.model('sequence_post_structure', {
+sequence_post_parameters_structure = api.model('sequence_post_structure', {
     'sequence': sequence_field
 })

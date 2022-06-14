@@ -11,7 +11,7 @@ from webserver.database import get_embedding_cache, get_features_cache, get_stru
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 # Colabfold
-from webserver.tasks.colabfold import get_structure_colabfold
+from webserver.tasks.structure import get_structure_colabfold
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:

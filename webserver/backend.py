@@ -3,7 +3,7 @@ from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from webserver.endpoints import api
-from webserver.endpoints.colabfold import ns as colabfold_namespace
+from webserver.endpoints.structure import ns as structure_namespace
 from webserver.endpoints.annotations import ns as annotations_namespace
 from webserver.endpoints.embeddings import ns as embeddings_namespace
 from webserver.endpoints.pipeline import ns as pipeline_namespace
@@ -37,7 +37,7 @@ def create_app():
     api.add_namespace(pipeline_namespace)
     api.add_namespace(embeddings_namespace)
     api.add_namespace(annotations_namespace)
-    api.add_namespace(colabfold_namespace)
+    api.add_namespace(structure_namespace)
     api.add_namespace(status_namespace)
 
     app.register_blueprint(blueprint)

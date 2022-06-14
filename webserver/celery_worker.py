@@ -9,7 +9,7 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 if "colabfold" in configuration['celery']['celery_worker_type']:
-    from webserver.tasks.colabfold import get_structure_colabfold
+    from webserver.tasks.structure import get_structure_colabfold
 if "pipeline" in configuration['celery']['celery_worker_type']:
     # noinspection PyUnresolvedReferences
     from webserver.tasks.pipeline import run_pipeline
