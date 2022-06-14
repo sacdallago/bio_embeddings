@@ -50,8 +50,8 @@ if "model_name_sequence" not in get_embedding_cache.index_information():
     )
 if "structure_sequence" not in get_structure_cache.index_information():
     get_structure_cache.create_index(
-        ([("predictor_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
-        name="predictor_name_sequence",
+        ([("sequence", pymongo.HASHED)]),
+        name="structure_sequence",
     )
 
 
