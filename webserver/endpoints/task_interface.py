@@ -95,28 +95,17 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def _insert_structure_to_db(sequence: str, structure: Dict[str, str]) -> Dict[str, str]:
-    with open(structure['msa_file'], 'r') as msa_file:
-        msa = msa_file.read()
-    with open(structure['pdb_file'], 'r') as pdb_file:
-        pdb = pdb_file.read()
-    with open(structure['json_file'], 'r') as json_file:
-        json = json_file.read()
-
+def _insert_structure_to_db(sequence: str, structure: Dict[str, object]) -> Dict[str, object]:
     result = {
         'uploadDate': datetime.utcnow(),
         'sequence': sequence,
-        'structure': {
-            'msa': msa,
-            'pdb': pdb,
-            'json': json
-        }
+        'structure': structure,
     }
     get_structure_cache.insert_one(result)
     return result['structure']
 
 
-def get_structure(sequence: str) -> Dict[str, str]:
+def get_structure(sequence: str) -> Dict[str, object]:
     "".join(sequence.split())
     sequence = sequence.upper()
     cached = get_structure_cache.find_one(
@@ -133,10 +122,7 @@ def get_structure(sequence: str) -> Dict[str, str]:
         expires=60 * 60,
     )
 
-    structure = job.get()
-    if structure['result'] == "success":
-        structure = _insert_structure_to_db(sequence, structure)
+    return _insert_structure_to_db(sequence, job.get())
 
-    return structure
 
 
