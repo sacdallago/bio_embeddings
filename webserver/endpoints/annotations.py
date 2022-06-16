@@ -27,8 +27,12 @@ def _get_annotations_from_params(params):
         return abort(400, "Sequence is too long or contains invalid characters.")
 
     model_name = params.get('model', 'prottrans_t5_xl_u50')
-
     annotations = get_features(model_name, sequence)
+
+    if model_name == 'prottrans_t5_xl_u50':
+        print('test')
+        residue_landscape_output = get_residue_landscape(model_name=model_name, sequence=sequence)
+
     annotations['sequence'] = sequence
 
     format = params.get('format', 'legacy')
@@ -152,18 +156,17 @@ def _get_annotations_from_params(params):
         return [predictedBPO, predictedCCO, predictedMFO]
     elif format == "full":
 
-        residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50', sequence=sequence)
+        if model_name == 'prottrans_t5_xl_u50':
+            # merge the output of the residue landscape into the feature dict
+            # add the meta information
+            for key in residue_landscape_output['meta']:
+                annotations['meta'][key] = residue_landscape_output['meta'][key]
 
-        # merge the output of the residue landscape into the feature dict
-        # add the meta information
-        for key in residue_landscape_output['meta']:
-            annotations['meta'][key] = residue_landscape_output['meta'][key]
+            residue_landscape_output.pop('meta', None)
 
-        residue_landscape_output.pop('meta', None)
-
-        # add all the remaining information
-        for key in residue_landscape_output:
-            annotations[key] = residue_landscape_output[key]
+            # add all the remaining information
+            for key in residue_landscape_output:
+                annotations[key] = residue_landscape_output[key]
 
         return annotations
     else:
