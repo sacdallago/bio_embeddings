@@ -4,7 +4,7 @@ import logging
 from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
 
-if 'vespa' in configuration['celery']['celery_worker_type']:
+if 'prott5_residue_landscape_annotations' in configuration['celery']['celery_worker_type']:
     from pathlib import Path
 
     import h5py
@@ -19,7 +19,7 @@ if 'vespa' in configuration['celery']['celery_worker_type']:
 
 @task_keeper.task()
 def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) -> dict:
-    # method takes the embeddings as input and returns the conspred and vespa
+    # method takes the embeddings as input and returns the conspred and residue_landscape
 
     ################################################conspred################################################
     checkpoint_path = Path(MODEL_PATH_DICT["CONSCNN"])
@@ -74,7 +74,7 @@ def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) ->
     cons_probs_arr = np.array(cons_probs['sequence']) * 100
     cons_probs_arr = cons_probs_arr.astype(np.int8)
 
-    # build vespa return dict from dictionary
+    # build residue_landscape return dict from dictionary
     # initialize the matrix that will be build column wise
     # counts how many amino acids are inserted into the column already
     counter_aa = 0
@@ -139,17 +139,21 @@ def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) ->
     x_axis_seq = [res for res in sequence]
     y_axis_Mutant = [aa for aa in MUTANT_ORDER]
 
-    vespa_return_dict = {'x_axis': x_axis_seq,
-                         'y_axis': y_axis_Mutant,
-                         'values': matrix_transposed}
-    conservation_return_dict = {'x_axis': x_axis_seq,
-                                'y_axis': y_axis_Mutant,
-                                'values': cons_probs_arr.tolist()}
+    vespa_return_dict = {
+        'x_axis': x_axis_seq,
+        'y_axis': y_axis_Mutant,
+        'values': matrix_transposed
+    }
+    conservation_return_dict = {
+        'x_axis': x_axis_seq,
+        'y_axis': y_axis_Mutant,
+        'values': cons_probs_arr.tolist()
+    }
 
     return {'predictedConservation': conservation_return_dict,
             'predictedVariation': vespa_return_dict,
             'meta': {
-                'predictedConservation': 'https://github.com/Rostlab/VESPA',
-                'predictedVariation': 'https://github.com/Rostlab/VESPA'
+                'predictedConservation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y',
+                'predictedVariation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y'
             }
             }
