@@ -96,6 +96,16 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
+def _get_structure_response(status: str, structure=None):
+    if status == "done":
+        return {
+            'status': status,
+            'structure': structure,
+        }
+    else:
+        return {'status': status}
+
+
 def get_structure(sequence: str) -> Dict[str, object]:
     """
     Checks if a structure for the sequence is already in the cache database. If that is the case, returns the cached
@@ -112,10 +122,7 @@ def get_structure(sequence: str) -> Dict[str, object]:
         {'sequence': sequence}
     )
     if cached:
-        return {
-            'status': "done",
-            'structure': cached['structure'],
-        }
+        return _get_structure_response("done", cached['structure'])
 
     # Check if there are any prediction jobs for our structure that are in progress or finished:
     in_progress = get_structure_jobs.find_one(
@@ -123,20 +130,13 @@ def get_structure(sequence: str) -> Dict[str, object]:
     )
     if in_progress:
         if in_progress['status'] == JOB_PENDING:
-            return {
-                'status': "pending",
-            }
+            return _get_structure_response("pending")
         elif in_progress['status'] == JOB_DONE:
             # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
             # there is always a structure entry in the database if the job is marked 'done'
-            return {
-                'status': "done",
-                'structure': get_structure_cache.find_one({'sequence': sequence})['structure']
-            }
+            return _get_structure_response("done", get_structure_cache.find_one({'sequence': sequence})['structure'])
         else:
-            return {
-                'status': "failed"
-            }
+            return _get_structure_response("failed")
 
     # If there is neither a structure nor a pending/finished/failed job in the database, we start an asynchronous worker
     # job and tell the client that the job is pending
@@ -147,4 +147,4 @@ def get_structure(sequence: str) -> Dict[str, object]:
         expires=60 * 60,
     )
 
-    return {'status': "pending"}
+    return _get_structure_response("pending")
