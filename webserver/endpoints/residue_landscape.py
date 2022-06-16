@@ -5,16 +5,17 @@ from flask import request, send_file, abort
 from flask_restx import Resource
 
 from webserver.endpoints import api
-from webserver.endpoints.request_models import vespa_post_parameters
+from webserver.endpoints.annotations import ns
+from webserver.endpoints.request_models import residue_landscape_post_parameters
 from webserver.endpoints.task_interface import get_residue_landscape
 from webserver.endpoints.utils import check_valid_sequence
 
-ns = api.namespace("VESPA", description="Calculate SAV effect")
+#ns = api.namespace("Residue_landscape", description="Compute conservation and variation")
 
 
-@ns.route('')
-class vespa(Resource):
-    @api.expect(vespa_post_parameters, validate=True)
+@ns.route('/residue/landscape')
+class residue_landscape(Resource):
+    @api.expect(residue_landscape_post_parameters, validate=True)
     @api.response(200, "Returns an hdf5 file with one dataset called `sequence` "
                        "containing the embedding_buffer of the supplied sequence.")
     @api.response(400, "Invalid input. See return message for details.")
@@ -29,7 +30,7 @@ class vespa(Resource):
 
         residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50',sequence=sequence)
         cons_pred = residue_landscape_output['predictedConservation']
-        vespa_out = residue_landscape_output['predictedVariation']
+        variation = residue_landscape_output['predictedVariation']
 
-        return {'predictedVariation': vespa_out,
+        return {'predictedVariation': variation,
                 'predictedConservation': cons_pred}
