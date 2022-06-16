@@ -118,6 +118,6 @@ sequence_get_parameters_annotations.add_argument(
     help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
 )
 
-vespa_post_parameters = api.model('VESPA_post_sequence', {
+residue_landscape_post_parameters = api.model('residue_landscape_post_sequence', {
     'sequence': sequence_field
 })
