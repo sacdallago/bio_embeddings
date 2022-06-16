@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 from typing import Dict
 import os.path
 
-from webserver.database import get_structure_jobs, JOB_PENDING, JOB_DONE
+from webserver.database import get_structure_cache, get_structure_jobs, JOB_PENDING, JOB_DONE, JOB_FAILED
 from webserver.tasks import task_keeper
 
 
@@ -22,7 +22,6 @@ def _get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
             'sequence': query_sequence,
         }
 
-    # TODO: Check if job is in progress
     sequence_hash = md5(query_sequence.encode())
     job_id = sequence_hash.hexdigest()
 
@@ -89,13 +88,10 @@ def _get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
 
 
 @task_keeper.task()
-def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
+def get_structure_colabfold(query_sequence: str):
     """
     Args:
         query_sequence: Sequence to predict structure for
-
-    Returns:
-        TODO
 
      Predicts the structure of a protein sequence by calling the colabfold batch processing method.
      Based on the colabfold notebook at:
@@ -103,13 +99,10 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
      The parameters here are almost exactly set to the values of the ColabFold Default parameters.
     """
 
+    # In case that there is already a job for this structure, we don't need to do anything
     in_progress = get_structure_jobs.find_one({'sequence': query_sequence})
-    # In case the start times don't match, this is not our job
-    if in_progress and \
-            (in_progress['status'] == JOB_PENDING or in_progress['status'] == JOB_DONE):
-        return {
-            'status': in_progress['status']
-        }
+    if in_progress:
+        return
 
     get_structure_jobs.insert_one({
         'timestamp': datetime.utcnow(),
@@ -118,16 +111,41 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
     })
 
     try:
-        result = _get_structure_colabfold(query_sequence)
-    # If the job fails, no matter the reason, we want to make sure that the job database stays consistent
-    except Exception as e:
-        get_structure_jobs.delete_one(
+        structure = _get_structure_colabfold(query_sequence)
+
+        # Insert the structure into the structure cache and then update job database
+        get_structure_cache.insert_one({
+            'uploadDate': datetime.utcnow(),
+            'sequence': query_sequence,
+            'structure': structure,
+        })
+        get_structure_jobs.update_one(
             {
                 'sequence': query_sequence,
                 'status': JOB_PENDING,
+            },
+            {
+                '$set':
+                    {
+                        'timestamp': datetime.utcnow(),
+                        'status': JOB_DONE,
+                    }
+            }
+        )
+
+    # If the job fails, no matter the reason, we want to make sure that the job database stays consistent
+    except Exception as e:
+        get_structure_jobs.update_one(
+            {
+                'sequence': query_sequence,
+                'status': JOB_PENDING,
+            },
+            {
+                '$set':
+                    {
+                        'timestamp': datetime.utcnow(),
+                        'status': JOB_FAILED,
+                    }
             }
         )
         raise e
-
-    return result
-

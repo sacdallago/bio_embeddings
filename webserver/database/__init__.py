@@ -17,6 +17,7 @@ ten_days = 10 * 24 * 60 * 60
 # That's why we define these constants to be used as attributes in the database:
 JOB_PENDING = "pend"
 JOB_DONE = "done"
+JOB_FAILED = "fail"
 
 
 _client = MongoClient(configuration["web"]["mongo_url"])

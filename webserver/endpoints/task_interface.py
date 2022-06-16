@@ -97,16 +97,6 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def _insert_structure_to_db(sequence: str, structure: Dict[str, object]) -> Dict[str, object]:
-    result = {
-        'uploadDate': datetime.utcnow(),
-        'sequence': sequence,
-        'structure': structure,
-    }
-    get_structure_cache.insert_one(result)
-    return result['structure']
-
-
 def get_structure(sequence: str) -> Dict[str, object]:
     "".join(sequence.split())
     sequence = sequence.upper()
@@ -114,17 +104,27 @@ def get_structure(sequence: str) -> Dict[str, object]:
         {'sequence': sequence}
     )
     if cached:
-        return cached['structure']
+        return {
+            'status': "done",
+            'structure': cached['structure'],
+        }
 
     in_progress = get_structure_jobs.find_one(
         {'sequence': sequence}
     )
     if in_progress:
         if in_progress['status'] == JOB_PENDING:
-            sleep(2.0)
-            return get_structure(sequence)
+            return {
+                'status': "pending",
+            }
         elif in_progress['status'] == JOB_DONE:
-            return get_structure(sequence)
+            # In the (very unlikely) case that we get here, there must be an entry in the database
+            return {
+                'status': "done",
+                'structure': get_structure_cache.find_one({'sequence': sequence})['structure']
+            }
+        else:
+            return in_progress
 
     job = get_structure_colabfold.apply_async(
         args=[sequence],
@@ -132,45 +132,5 @@ def get_structure(sequence: str) -> Dict[str, object]:
         soft_time_limit=60 * 15,
         expires=60 * 60,
     )
-    result_dict = job.get()
 
-    # If the worker detects that there is a pending or finished job, he only returns the status of the job in the DB
-    if 'status' in result_dict:
-        if result_dict['status'] == JOB_PENDING:
-            sleep(2.0)
-        return get_structure(sequence)
-    else:
-        try:
-            ret = _insert_structure_to_db(sequence, job.get())
-        # We can not mark the job as done before the results are in the database.
-        # If there is any exception while inserting the structure to the database, we must mark the job as failed
-        except Exception as e:
-            get_structure_jobs.delete_one(
-                {
-                    'sequence': sequence,
-                    'status': JOB_PENDING,
-                }
-            )
-            raise e
-        else:
-            get_structure_jobs.find_one({
-                'sequence': sequence,
-                'status': JOB_PENDING,
-            }
-
-            )
-            get_structure_jobs.update_one(
-                {
-                    'sequence': sequence,
-                    'status': JOB_PENDING,
-                },
-                {
-                    '$set':
-                        {
-                            'timestamp': datetime.utcnow(),
-                            'status': JOB_DONE,
-                        }
-                }
-            )
-            return ret
-
+    return {'status': "pending"}
