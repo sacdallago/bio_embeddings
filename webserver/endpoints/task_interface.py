@@ -1,5 +1,4 @@
 from datetime import datetime
-from time import sleep
 from typing import Dict
 
 import numpy
@@ -98,8 +97,17 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
 
 
 def get_structure(sequence: str) -> Dict[str, object]:
+    """
+    Checks if a structure for the sequence is already in the cache database. If that is the case, returns the cached
+    structure.
+    If that is not the case, checks whether there is a job in the job database for the prediction of the structure.
+    If a job is found, returns information about the job.
+    Otherwise, asynchronously initiates a prediction job on a worker and returns that the job is pending.
+    """
     "".join(sequence.split())
     sequence = sequence.upper()
+
+    # Check if there are already prediction results in the cache collection:
     cached = get_structure_cache.find_one(
         {'sequence': sequence}
     )
@@ -109,6 +117,7 @@ def get_structure(sequence: str) -> Dict[str, object]:
             'structure': cached['structure'],
         }
 
+    # Check if there are any prediction jobs for our structure that are in progress or finished:
     in_progress = get_structure_jobs.find_one(
         {'sequence': sequence}
     )
@@ -118,15 +127,20 @@ def get_structure(sequence: str) -> Dict[str, object]:
                 'status': "pending",
             }
         elif in_progress['status'] == JOB_DONE:
-            # In the (very unlikely) case that we get here, there must be an entry in the database
+            # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
+            # there is always a structure entry in the database if the job is marked 'done'
             return {
                 'status': "done",
                 'structure': get_structure_cache.find_one({'sequence': sequence})['structure']
             }
         else:
-            return in_progress
+            return {
+                'status': "failed"
+            }
 
-    job = get_structure_colabfold.apply_async(
+    # If there is neither a structure nor a pending/finished/failed job in the database, we start an asynchronous worker
+    # job and tell the client that the job is pending
+    get_structure_colabfold.apply_async(
         args=[sequence],
         time_limit=60 * 15,
         soft_time_limit=60 * 15,

@@ -55,6 +55,10 @@ configuration = {
             model_directory, "goa", "prott5_reference_embeddings.h5"
         ),
     },
+    # Colabfold stuff
+    "colabfold": {
+        "data_dir": os.path.join(model_directory, "colabfold")
+    },
     # Celery worker type
     "celery": {
         # Types can be, separated by comma:

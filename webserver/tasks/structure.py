@@ -1,14 +1,16 @@
-from colabfold.batch import get_queries, set_model_type, run
-from colabfold.download import download_alphafold_params
-from datetime import datetime
-from hashlib import md5
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Dict
-import os.path
 
-from webserver.database import get_structure_cache, get_structure_jobs, JOB_PENDING, JOB_DONE, JOB_FAILED
 from webserver.tasks import task_keeper
+from webserver.utilities.configuration import configuration
+
+if "colabfold" in configuration['celery']['celery_worker_type']:
+    import os.path
+    from colabfold.batch import get_queries, set_model_type, run
+    from datetime import datetime
+    from hashlib import md5
+    from tempfile import TemporaryDirectory
+
+    from webserver.database import get_structure_cache, get_structure_jobs, JOB_PENDING, JOB_DONE, JOB_FAILED
 
 
 MAX_SEQUENCE_LENGTH = 500
@@ -25,45 +27,33 @@ def _get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
     sequence_hash = md5(query_sequence.encode())
     job_id = sequence_hash.hexdigest()
 
-    queries_path = f"query{sequence_hash.hexdigest()}.csv"
-    with open(queries_path, 'w') as queries_file:
-        queries_file.write(f"id,sequence\n{job_id},{query_sequence}")
-
-    use_amber = False
-    custom_template_path = None
-    use_templates = False
-
-    # MSA Options
-    msa_mode = "MMseqs2 (UniRef+Environmental)"
-    pair_mode = "unpaired+paired"
-
-    # Advanced Settings
-    model_type = "auto"
-    num_recycles = 3
-
-    queries, is_complex = get_queries(queries_path)
-    model_type = set_model_type(is_complex, model_type)
-    download_alphafold_params(model_type, Path("."))
-
     with TemporaryDirectory(prefix='colabfold', suffix=job_id) as result_dir:
+        queries_path = os.path.join(result_dir, "query.csv")
+        with open(queries_path, 'w') as queries_file:
+            queries_file.write(f"id,sequence\n{job_id},{query_sequence}")
+
+        # Advanced Settings
+        queries, is_complex = get_queries(queries_path)
+        model_type = set_model_type(is_complex, "auto")
+
         # Run structure prediction
         run(
             queries=queries,
             result_dir=result_dir,
-            use_templates=use_templates,
-            custom_template_path=custom_template_path,
-            use_amber=use_amber,
-            msa_mode=msa_mode,
+            use_templates=False,
+            custom_template_path=None,
+            use_amber=False,
+            msa_mode="MMseqs2 (UniRef+Environmental)",
             model_type=model_type,
             num_models=1,
-            num_recycles=num_recycles,
+            num_recycles=3,
             model_order=[3],
             is_complex=is_complex,
-            data_dir=Path("."),
+            data_dir=os.path.join(configuration['colabfold']['data_dir']),
             keep_existing_results=False,
             recompile_padding=1.0,
             rank_by="auto",
-            pair_mode=pair_mode,
+            pair_mode="unpaired+paired",
             stop_at_score=float(85),
             stop_at_score_below=float(40),
         )
@@ -104,6 +94,7 @@ def get_structure_colabfold(query_sequence: str):
     if in_progress:
         return
 
+    # Otherwise, we start a job and insert a corresponding entry in the database
     get_structure_jobs.insert_one({
         'timestamp': datetime.utcnow(),
         'sequence': query_sequence,
@@ -114,6 +105,7 @@ def get_structure_colabfold(query_sequence: str):
         structure = _get_structure_colabfold(query_sequence)
 
         # Insert the structure into the structure cache and then update job database
+        # The job should only be marked as done if there is a structure in the database
         get_structure_cache.insert_one({
             'uploadDate': datetime.utcnow(),
             'sequence': query_sequence,
