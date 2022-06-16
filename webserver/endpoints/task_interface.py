@@ -10,8 +10,7 @@ from webserver.database import get_embedding_cache, get_features_cache, get_resi
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
-# VESPA
-from webserver.tasks.prott5_SAV_effect import get_residue_landscape_output_sync
+from webserver.tasks.prott5_residue_landscape_annotations import get_residue_landscape_output_sync
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -119,11 +118,14 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
                 'predictedVariation': predictedVariation,
                 'meta':meta_data}
 
-    print('getting embeddings')
+
     embedding_as_list = get_embedding(model_name,sequence).tolist()
 
-    print('starting job')
-    job = get_residue_landscape_output_sync.apply_async(
+    residue_landscape_model = {
+        "prottrans_t5_xl_u50": get_residue_landscape_output_sync,
+    }.get(model_name)
+
+    job = residue_landscape_model.apply_async(
         args=[sequence, embedding_as_list], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
     )
 
@@ -133,7 +135,7 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
 
     predictedVariation = residue_landscape_worker_out['predictedVariation']
 
-    predictedConservation = residue_landscape_worker_out['predictedVariation']
+    predictedConservation = residue_landscape_worker_out['predictedConservation']
 
     predicted_conservation_values = np.array(predictedVariation['values'], dtype=np.int8)
 
