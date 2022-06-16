@@ -1,35 +1,20 @@
 from colabfold.batch import get_queries, set_model_type, run
 from colabfold.download import download_alphafold_params
+from datetime import datetime
 from hashlib import md5
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Dict
 import os.path
 
-import logging
+from webserver.database import get_structure_jobs, JOB_PENDING, JOB_DONE
 from webserver.tasks import task_keeper
 
 
 MAX_SEQUENCE_LENGTH = 500
 
-logger = logging.getLogger()
 
-
-@task_keeper.task()
-def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
-    """
-    Args:
-        query_sequence: Sequence to predict structure for
-
-    Returns:
-        TODO
-
-     Predicts the structure of a protein sequence by calling the colabfold batch processing method.
-     Based on the colabfold notebook at:
-     https://colab.research.google.com/github/sokrypton/ColabFold/blob/main/AlphaFold2.ipynb#scrollTo=kOblAo-xetgx
-     The parameters here are almost exactly set to the values of the ColabFold Default parameters.
-    """
-
+def _get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
     # Sequence input and setup
     if len(query_sequence) > MAX_SEQUENCE_LENGTH:
         return {
@@ -91,13 +76,58 @@ def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
         with open(os.path.join(result_dir, f"{job_id}_unrelaxed_rank_1_model_3_scores.json"), 'r') as json_file:
             json = json_file.read()
 
-        return {
-            'msa': msa,
-            'pdb': pdb,
-            'json': json,
-            'meta': {
-                'msa': "ColabFold, https://www.nature.com/articles/s41592-022-01488-1",
-                'pdb': "ColabFold, https://www.nature.com/articles/s41592-022-01488-1",
-                'json': "ColabFold:, https://www.nature.com/articles/s41592-022-01488-1",
-            }
+    return {
+        'msa': msa,
+        'pdb': pdb,
+        'json': json,
+        'meta': {
+            'msa': "ColabFold, https://www.nature.com/articles/s41592-022-01488-1",
+            'pdb': "ColabFold, https://www.nature.com/articles/s41592-022-01488-1",
+            'json': "ColabFold:, https://www.nature.com/articles/s41592-022-01488-1",
         }
+    }
+
+
+@task_keeper.task()
+def get_structure_colabfold(query_sequence: str) -> Dict[str, object]:
+    """
+    Args:
+        query_sequence: Sequence to predict structure for
+
+    Returns:
+        TODO
+
+     Predicts the structure of a protein sequence by calling the colabfold batch processing method.
+     Based on the colabfold notebook at:
+     https://colab.research.google.com/github/sokrypton/ColabFold/blob/main/AlphaFold2.ipynb#scrollTo=kOblAo-xetgx
+     The parameters here are almost exactly set to the values of the ColabFold Default parameters.
+    """
+
+    in_progress = get_structure_jobs.find_one({'sequence': query_sequence})
+    # In case the start times don't match, this is not our job
+    if in_progress and \
+            (in_progress['status'] == JOB_PENDING or in_progress['status'] == JOB_DONE):
+        return {
+            'status': in_progress['status']
+        }
+
+    get_structure_jobs.insert_one({
+        'timestamp': datetime.utcnow(),
+        'sequence': query_sequence,
+        'status': JOB_PENDING,
+    })
+
+    try:
+        result = _get_structure_colabfold(query_sequence)
+    # If the job fails, no matter the reason, we want to make sure that the job database stays consistent
+    except Exception as e:
+        get_structure_jobs.delete_one(
+            {
+                'sequence': query_sequence,
+                'status': JOB_PENDING,
+            }
+        )
+        raise e
+
+    return result
+

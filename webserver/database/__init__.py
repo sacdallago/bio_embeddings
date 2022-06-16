@@ -13,6 +13,12 @@ logger = logging.getLogger(__name__)
 
 ten_days = 10 * 24 * 60 * 60
 
+# Because entries in capped collections in mongodb cannot be resized, all status names need to have the same size.
+# That's why we define these constants to be used as attributes in the database:
+JOB_PENDING = "pend"
+JOB_DONE = "done"
+
+
 _client = MongoClient(configuration["web"]["mongo_url"])
 _response_cache_db: Database = _client.response_cache
 _collection: Database = _client.file_storage
@@ -36,6 +42,7 @@ def get_or_create_cache(name: str) -> Collection:
 get_embedding_cache = get_or_create_cache("get_embedding_cache")
 get_features_cache = get_or_create_cache("get_features_cache")
 get_structure_cache = get_or_create_cache("get_structure_cache")
+get_structure_jobs = get_or_create_cache("get_structure_jobs")
 
 # Indexes, otherwise it gets really slow with some GB of data
 if "model_name_sequence" not in get_features_cache.index_information():
@@ -52,6 +59,11 @@ if "structure_sequence" not in get_structure_cache.index_information():
     get_structure_cache.create_index(
         ([("sequence", pymongo.HASHED)]),
         name="structure_sequence",
+    )
+if "structure_sequence_jobs" not in get_structure_jobs.index_information():
+    get_structure_jobs.create_index(
+        ([("sequence", pymongo.HASHED)]),
+        name="structure_sequence_jobs",
     )
 
 
