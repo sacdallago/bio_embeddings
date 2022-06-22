@@ -4,6 +4,7 @@ from bio_embeddings.extract.annotations.disorder import Disorder
 from bio_embeddings.extract.annotations.location import Location
 from bio_embeddings.extract.annotations.membrane import Membrane
 from bio_embeddings.extract.annotations.secondary_structure import SecondaryStructure
+from bio_embeddings.extract.annotations.membrane_residues import MembraneResidues
 
 __all__ = [
     "BindingResidues",
@@ -12,4 +13,5 @@ __all__ = [
     "Membrane",
     "SecondaryStructure",
     "Conservation",
+    "MembraneResidues",
 ]
