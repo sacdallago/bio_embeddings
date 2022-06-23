@@ -1,8 +1,10 @@
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy
 import numpy as np
+import requests
+from flask import Response
 from werkzeug.exceptions import abort
 
 from webserver.database import get_embedding_cache, get_features_cache, get_structure_cache, get_structure_jobs, \
@@ -96,17 +98,14 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     return features
 
 
-def _get_structure_response(status: str, structure=None):
-    if status == "done":
-        return {
-            'status': status,
-            'structure': structure,
-        }
+def _get_structure_response(status: str, structure=None) -> Tuple[Dict[str, object], int]:
+    if status == 'ok':
+        return {'status': status, 'structure': structure}, requests.codes[status]
     else:
-        return {'status': status}
+        return {'status': status}, requests.codes[status]
 
 
-def get_structure(predictor_name: str, sequence: str) -> Dict[str, object]:
+def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object], int]:
     """
     Checks if a structure for the sequence is already in the cache database. If that is the case, returns the cached
     structure.
@@ -122,7 +121,7 @@ def get_structure(predictor_name: str, sequence: str) -> Dict[str, object]:
         {'predictor_name': predictor_name, 'sequence': sequence}
     )
     if cached:
-        return _get_structure_response("done", cached['structure'])
+        return _get_structure_response('ok', cached['structure'])
 
     # Check if there are any prediction jobs for our structure that are in progress or finished:
     in_progress = get_structure_jobs.find_one(
@@ -130,14 +129,14 @@ def get_structure(predictor_name: str, sequence: str) -> Dict[str, object]:
     )
     if in_progress:
         if in_progress['status'] == JOB_PENDING:
-            return _get_structure_response("pending")
+            return _get_structure_response('accepted')
         elif in_progress['status'] == JOB_DONE:
             # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
             # there is always a structure entry in the database if the job is marked 'done'
-            return _get_structure_response("done", get_structure_cache.find_one(
+            return _get_structure_response('ok', get_structure_cache.find_one(
                 {'predictor_name': predictor_name, 'sequence': sequence})['structure'])
         else:
-            return _get_structure_response("failed")
+            abort(500, "Structure prediction failed")
 
     # If there is neither a structure nor a pending/finished/failed job in the database, we start an asynchronous worker
     # job and tell the client that the job is pending
@@ -151,4 +150,4 @@ def get_structure(predictor_name: str, sequence: str) -> Dict[str, object]:
         expires=60 * 60,
     )
 
-    return _get_structure_response("pending")
+    return _get_structure_response('created')
