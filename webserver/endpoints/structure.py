@@ -16,7 +16,7 @@ class Annotations(Resource):
     @api.response(505, "Server error")
     def get(self):
         params = request.args
-        return get_structure(params.get('sequence'))
+        return get_structure(params.get('predictor', 'colabfold'), params.get('sequence'))
 
     @api.expect(sequence_post_parameters_structure, validate=True)
     @api.response(200, "Annotations in specified format")
@@ -24,5 +24,4 @@ class Annotations(Resource):
     @api.response(505, "Server error")
     def post(self):
         params = request.json
-
-        return get_structure(params.get('sequence'))
+        return get_structure(params.get('predictor', 'colabfold'), params.get('sequence'))

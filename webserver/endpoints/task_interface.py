@@ -106,7 +106,7 @@ def _get_structure_response(status: str, structure=None):
         return {'status': status}
 
 
-def get_structure(sequence: str) -> Dict[str, object]:
+def get_structure(predictor_name: str, sequence: str) -> Dict[str, object]:
     """
     Checks if a structure for the sequence is already in the cache database. If that is the case, returns the cached
     structure.
@@ -119,14 +119,14 @@ def get_structure(sequence: str) -> Dict[str, object]:
 
     # Check if there are already prediction results in the cache collection:
     cached = get_structure_cache.find_one(
-        {'sequence': sequence}
+        {'predictor_name': predictor_name, 'sequence': sequence}
     )
     if cached:
         return _get_structure_response("done", cached['structure'])
 
     # Check if there are any prediction jobs for our structure that are in progress or finished:
     in_progress = get_structure_jobs.find_one(
-        {'sequence': sequence}
+        {'predictor_name': predictor_name, 'sequence': sequence}
     )
     if in_progress:
         if in_progress['status'] == JOB_PENDING:
@@ -134,13 +134,17 @@ def get_structure(sequence: str) -> Dict[str, object]:
         elif in_progress['status'] == JOB_DONE:
             # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
             # there is always a structure entry in the database if the job is marked 'done'
-            return _get_structure_response("done", get_structure_cache.find_one({'sequence': sequence})['structure'])
+            return _get_structure_response("done", get_structure_cache.find_one(
+                {'predictor_name': predictor_name, 'sequence': sequence})['structure'])
         else:
             return _get_structure_response("failed")
 
     # If there is neither a structure nor a pending/finished/failed job in the database, we start an asynchronous worker
     # job and tell the client that the job is pending
-    get_structure_colabfold.apply_async(
+    prediction_model = {
+        'colabfold': get_structure_colabfold
+    }.get(predictor_name)
+    prediction_model.apply_async(
         args=[sequence],
         time_limit=60 * 15,
         soft_time_limit=60 * 15,

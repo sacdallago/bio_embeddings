@@ -67,6 +67,14 @@ sequence_field = fields.String(
     example='MALLHSARVLSGVASAFHPGLAAAASARASSWWAHVEMGPPDPILGVTEAYKRDTNSKKMNLGVGAYRDDNGKPYVLPSVRKAEAQIAAKGLDKEYLPIGGLAEFCRASAELALGENSEVVKSGRFVTVQTISGTGALRIGASFLQRFFKFSRDVFLPKPSWGNHTPIFRDAGMQLQSYRYYDPKTCGFDFTGALEDISKIPEQSVLLLHACAHNPTGVDPRPEQWKEIATVVKKRNLFAFFDMAYQGFASGDGDKDAWAVRHFIEQGINVCLCQSYAKNMGLYGERVGAFTVICKDADEAKRVESQLKILIRPMYSNPPIHGARIASTILTSPDLRKQWLQEVKGMADRIIGMRTQLVSNLKKEGSTHSWQHITDQIGMFCFTGLKPEQVERLTKEFSIYMTKDGRISVAGVTSGNVGYLAHAIHQVTK'
 )
 
+predictor_field = fields.String(
+    location='json',
+    description='Which structure predictor to use; options: colabfold.',
+    required=False,
+    default='colabfold',
+    example='colabfold'
+)
+
 sequence_post_parameters = api.model('sequence_post', {
     'model': lm_field,
     'sequence': sequence_field
@@ -126,7 +134,15 @@ sequence_get_parameters_structure.add_argument(
     required=True,
     help='Protein sequence in AA format.'
 )
+sequence_get_parameters_structure.add_argument(
+    'predictor',
+    location='args',
+    type=str,
+    required=False,
+    help='Which structure predictor to use; options: colabfold'
+)
 
 sequence_post_parameters_structure = api.model('sequence_post_structure', {
-    'sequence': sequence_field
+    'predictor': predictor_field,
+    'sequence': sequence_field,
 })

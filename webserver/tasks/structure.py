@@ -90,13 +90,14 @@ def get_structure_colabfold(query_sequence: str):
     """
 
     # In case that there is already a job for this structure, we don't need to do anything
-    in_progress = get_structure_jobs.find_one({'sequence': query_sequence})
+    in_progress = get_structure_jobs.find_one({'predictor_name': 'colabfold', 'sequence': query_sequence})
     if in_progress:
         return
 
     # Otherwise, we start a job and insert a corresponding entry in the database
     get_structure_jobs.insert_one({
         'timestamp': datetime.utcnow(),
+        'predictor_name': 'colabfold',
         'sequence': query_sequence,
         'status': JOB_PENDING,
     })
@@ -108,6 +109,7 @@ def get_structure_colabfold(query_sequence: str):
         # The job should only be marked as done if there is a structure in the database
         get_structure_cache.insert_one({
             'uploadDate': datetime.utcnow(),
+            'predictor_name': 'colabfold',
             'sequence': query_sequence,
             'structure': structure,
         })
