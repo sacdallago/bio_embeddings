@@ -27,6 +27,7 @@ RUN mkdir bio_embeddings && \
     .venv/bin/pip install -U pip && \
     $HOME/.local/bin/poetry config virtualenvs.in-project true && \
     $HOME/.local/bin/poetry install --no-dev -E transformers && \
+    .venv/bin/pip install 'colabfold[alphafold] @ git+https://github.com/sokrypton/ColabFold' && \
     .venv/bin/pip install -r webserver/requirements.txt
 
 FROM nvidia/cuda:11.4.3-runtime-ubuntu20.04
@@ -51,5 +52,5 @@ WORKDIR /app
 
 ENV MODEL_DIRECTORY /mnt/models
 
-ENTRYPOINT ["/app/.venv/bin/celery", "worker", "-A", "webserver.celery_worker.task_keeper", "--loglevel=info", "--pool=solo", "--queues=pipeline,prott5,prott5_annotations"]
+ENTRYPOINT ["/app/.venv/bin/celery", "worker", "-A", "webserver.celery_worker.task_keeper", "--loglevel=info", "--pool=solo", "--queues=pipeline,prott5,prott5_annotations,colabfold"]
 
