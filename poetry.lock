@@ -1185,7 +1185,7 @@ name = "huggingface-hub"
 version = "0.8.1"
 description = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7.0"
 
 [package.dependencies]
@@ -2536,6 +2536,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "pyfaidx"
+version = "0.6.4"
+description = "pyfaidx: efficient pythonic random access to fasta subsequences"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[[package]]
 name = "pygments"
 version = "2.12.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -3047,6 +3058,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "sklearn"
+version = "0.0"
+description = "A set of python modules for machine learning and data mining"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+scikit-learn = "*"
+
+[[package]]
 name = "smart-open"
 version = "6.0.0"
 description = "Utils for streaming large files (S3, HDFS, GCS, Azure Blob Storage, gzip, bz2...)"
@@ -3493,7 +3515,7 @@ name = "tokenizers"
 version = "0.12.1"
 description = "Fast and Customizable Tokenizers"
 category = "main"
-optional = true
+optional = false
 python-versions = "*"
 
 [package.extras]
@@ -3601,7 +3623,7 @@ name = "transformers"
 version = "4.20.1"
 description = "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.7.0"
 
 [package.dependencies]
@@ -3715,6 +3737,25 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+
+[[package]]
+name = "vespa-effect"
+version = "1.0.1"
+description = "Predictor for single-amino acid variant effects in protein sequences (https://doi.org/10.1007/s00439-021-02411-y)"
+category = "main"
+optional = false
+python-versions = ">=3.8,<3.11"
+
+[package.dependencies]
+biopython = ">=1.79,<2.0"
+h5py = ">=3.4.0,<4.0.0"
+numpy = ">=1.21.2,<2.0.0"
+pyfaidx = ">=0.6.2,<0.7.0"
+sentencepiece = ">=0.1.96,<0.2.0"
+sklearn = ">=0.0,<0.1"
+torch = ">=1.9.0,<2.0.0"
+tqdm = ">=4.62.2,<5.0.0"
+transformers = ">=4.10.2,<5.0.0"
 
 [[package]]
 name = "vine"
@@ -3874,7 +3915,7 @@ webserver = ["pymongo", "sentry-sdk", "flask"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "8f45cc01d9e8e0e0c489ea0a50c824d675b1302d1351def918425e6d007ca4b3"
+content-hash = "b1436abf373c82f0bd159f37ffe1e83467b51501daeaee8c1c099325b6acb9e8"
 
 [metadata.files]
 absl-py = [
@@ -5522,6 +5563,9 @@ pycparser = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
     {file = "pycparser-2.21.tar.gz", hash = "sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"},
 ]
+pyfaidx = [
+    {file = "pyfaidx-0.6.4.tar.gz", hash = "sha256:7ba3bdcb1df4ba749f7665b34e6a052aa4e842406a0df95e6df4717cc123f392"},
+]
 pygments = [
     {file = "Pygments-2.12.0-py3-none-any.whl", hash = "sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519"},
     {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
@@ -6047,6 +6091,9 @@ six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
+sklearn = [
+    {file = "sklearn-0.0.tar.gz", hash = "sha256:e23001573aa194b834122d2b9562459bf5ae494a2d59ca6b8aa22c85a44c0e31"},
+]
 smart-open = [
     {file = "smart_open-6.0.0-py3-none-any.whl", hash = "sha256:94afbd5058a45d4fdc4f859ed158b46054cb5ca1c019d76f6f8a60495f662129"},
     {file = "smart_open-6.0.0.tar.gz", hash = "sha256:d60106b96f0bcaedf5f1cd46ff5524a1c3d02d5653425618bb0fa66e158d22b0"},
@@ -6375,6 +6422,10 @@ unidecode = [
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
     {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
+]
+vespa-effect = [
+    {file = "vespa-effect-1.0.1.tar.gz", hash = "sha256:d8f3b7b32996e49282f1b3e76dfdd0ac3aef91380cb1b727cd20c8b1774ecee9"},
+    {file = "vespa_effect-1.0.1-py3-none-any.whl", hash = "sha256:2f8403d47d90fcf3b1eabb51484debfcfdc818eeefd45532f93dd93ff2cd5013"},
 ]
 vine = [
     {file = "vine-5.0.0-py2.py3-none-any.whl", hash = "sha256:4c9dceab6f76ed92105027c49c823800dd33cacce13bdedc5b914e3514b7fb30"},
