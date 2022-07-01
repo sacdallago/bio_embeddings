@@ -6,11 +6,22 @@ import numpy
 import numpy as np
 from werkzeug.exceptions import abort
 
-from webserver.database import get_embedding_cache, get_features_cache, get_residue_landscape_cache
+from webserver.database import get_embedding_cache, get_features_cache, get_residue_landscape_cache, \
+    get_structure_cache, get_structure_jobs, JOB_PENDING, JOB_DONE
+
 # Prott5
 from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 from webserver.tasks.prott5_residue_landscape_annotations import get_residue_landscape_output_sync
+# Colabfold
+from webserver.tasks.structure import get_structure_colabfold
+
+
+_HTTP_CODES = {
+    'OK': 200,
+    'Created': 201,
+    'Accepted': 202,
+}
 
 
 def get_embedding(model_name: str, sequence: str) -> np.array:
@@ -83,8 +94,6 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     )
 
     features = job.get()
-
-
     get_features_cache.insert_one(
         {
             "uploadDate": datetime.utcnow(),
@@ -162,3 +171,58 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
     return {'predictedConservation': predictedConservation,
             'predictedVariation': predictedVariation,
             'meta':meta_data}
+
+
+def _get_structure_response(status: str, structure=None) -> Tuple[Dict[str, object], int]:
+    if status == 'OK':
+        return {'status': status, 'structure': structure}, _HTTP_CODES[status]
+    else:
+        return {'status': status}, _HTTP_CODES[status]
+
+
+def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object], int]:
+    """
+    Checks if a structure for the sequence is already in the cache database. If that is the case, returns the cached
+    structure.
+    If that is not the case, checks whether there is a job in the job database for the prediction of the structure.
+    If a job is found, returns information about the job.
+    Otherwise, asynchronously initiates a prediction job on a worker and returns that the job is pending.
+    """
+    "".join(sequence.split())
+    sequence = sequence.upper()
+
+    # Check if there are already prediction results in the cache collection:
+    cached = get_structure_cache.find_one(
+        {'predictor_name': predictor_name, 'sequence': sequence}
+    )
+    if cached:
+        return _get_structure_response('OK', cached['structure'])
+
+    # Check if there are any prediction jobs for our structure that are in progress or finished:
+    in_progress = get_structure_jobs.find_one(
+        {'predictor_name': predictor_name, 'sequence': sequence}
+    )
+    if in_progress:
+        if in_progress['status'] == JOB_PENDING:
+            return _get_structure_response('Accepted')
+        elif in_progress['status'] == JOB_DONE:
+            # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
+            # there is always a structure entry in the database if the job is marked 'done'
+            return _get_structure_response('OK', get_structure_cache.find_one(
+                {'predictor_name': predictor_name, 'sequence': sequence})['structure'])
+        else:
+            abort(500, "Structure prediction failed")
+
+    # If there is neither a structure nor a pending/finished/failed job in the database, we start an asynchronous worker
+    # job and tell the client that the job is pending
+    prediction_model = {
+        'colabfold': get_structure_colabfold
+    }.get(predictor_name)
+    prediction_model.apply_async(
+        args=[sequence],
+        time_limit=60 * 15,
+        soft_time_limit=60 * 15,
+        expires=60 * 60,
+    )
+
+    return _get_structure_response('Created')
