@@ -8,6 +8,8 @@ from webserver.utilities.configuration import configuration
 
 logger = logging.getLogger(__name__)
 
+logger.info("prott5_annotations imported")
+
 featureExtractor = None
 reference_embeddings = None
 reference_identifiers = None
@@ -17,10 +19,12 @@ MFO_annotations = None
 metric = "euclidean"
 k = 25
 la = None
+be = None
 
 if "prott5_annotations" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.extract.basic import BasicAnnotationExtractor
     from bio_embeddings.extract.light_attention import LightAttentionAnnotationExtractor
+    from bio_embeddings.extract.bindEmbed21 import BindEmbed21DLAnnotationExtractor
 
     from bio_embeddings.utilities import convert_list_of_enum_to_string
 
@@ -32,12 +36,21 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
         subcellular_location_checkpoint_file=configuration['prottrans_t5_xl_u50']['subcellular_location_checkpoint_file']
     )
 
+
     la = LightAttentionAnnotationExtractor(
         "la_prott5",
         membrane_checkpoint_file=configuration['prottrans_t5_xl_u50']['la_solubility_checkpoint_file'],
         subcellular_location_checkpoint_file=configuration['prottrans_t5_xl_u50']['la_subcellular_location_checkpoint_file']
     )
 
+    be = BindEmbed21DLAnnotationExtractor(
+        model_1_file=configuration['bindembed21']['model_1_file'],
+        model_2_file=configuration['bindembed21']['model_2_file'],
+        model_3_file=configuration['bindembed21']['model_3_file'],
+        model_4_file=configuration['bindembed21']['model_4_file'],
+        model_5_file=configuration['bindembed21']['model_5_file']
+    )
+    
     logger.info("Loading goa reference embeddings and annotations...")
     import h5py
     from pandas import read_csv, DataFrame
@@ -65,6 +78,7 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
 
     annotations = featureExtractor.get_annotations(embedding)
     la_annotations = la.get_subcellular_location(embedding)
+    be_annotations = be.get_binding_residues(embedding)
 
     # GOA
     reduced_embedding = np.array(embedding).mean(0)
@@ -102,6 +116,9 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
         .drop_duplicates(subset=["GO_Term"], keep="first")
 
     return {
+        "predictedBindingMetal": convert_list_of_enum_to_string(be_annotations.metal_ion),
+        "predictedBindingNucleicAcids": convert_list_of_enum_to_string(be_annotations.nucleic_acids),
+        "predictedBindingSmallMolecules": convert_list_of_enum_to_string(be_annotations.small_molecules),
         "predictedMembrane": la_annotations.membrane.value,
         "predictedSubcellularLocalizations": la_annotations.localization.value,
         "predictedDSSP3": convert_list_of_enum_to_string(annotations.DSSP3),
@@ -111,6 +128,9 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
         "predictedBPO": k_nn_BPO.to_dict("records"),
         "predictedMFO": k_nn_MFO.to_dict("records"),
         "meta": {
+            "predictedBindingMetal": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingNucleicAcids": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
+            "predictedBindingSmallMolecules": "bindEmbed21, https://www.nature.com/articles/s41598-021-03431-4",
             "predictedDSSP3": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
             "predictedDSSP8": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
             "predictedDisorder": "ProtT5Sec, https://arxiv.org/pdf/2007.06225",
@@ -118,6 +138,6 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
             "predictedBPO": "goPredSim ProtT5, https://github.com/Rostlab/goPredSim#performance-assessment",
             "predictedMFO": "goPredSim ProtT5, https://github.com/Rostlab/goPredSim#performance-assessment",
             "predictedMembrane": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
+            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1"
         }
     }

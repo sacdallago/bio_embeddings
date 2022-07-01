@@ -14,6 +14,7 @@ from bio_embeddings.extract.light_attention.light_attention_annotation_extractor
 from bio_embeddings.extract.prott5cons import ProtT5consAnnotationExtractor
 from bio_embeddings.extract.bindEmbed21.bindEmbed21DL_annotation_extractor import BindEmbed21DLAnnotationExtractor
 from bio_embeddings.extract.bindEmbed21.bindEmbed21HBI_annotation_extractor import BindEmbed21HBIAnnotationExtractor
+from bio_embeddings.extract.tmbed.tmbed_annotation_extractor import TmbedAnnotationExtractor
 from bio_embeddings.extract.unsupervised_utilities import get_k_nearest_neighbours
 from bio_embeddings.utilities import get_model_file, get_model_directories_from_zip
 from bio_embeddings.utilities.exceptions import InvalidParameterError, UnrecognizedEmbeddingError, \
@@ -486,6 +487,60 @@ def bindembed21(**kwargs) -> Dict[str, Any]:
     return result_kwargs
 
 
+def tmbed(**kwargs) -> Dict[str, Any]:
+    '''
+    Protocol extracts membrane residues from "embeddings_file".
+    Embeddings must have been generated with ProtT5-XL-U50.
+    '''
+
+    check_required(kwargs, ['embeddings_file', 'remapped_sequences_file'])
+
+    result_kwargs = deepcopy(kwargs)
+    file_manager = get_file_manager(**kwargs)
+
+    # Download necessary files if needed
+    for file in TmbedAnnotationExtractor.necessary_files:
+        if not result_kwargs.get(file):
+            result_kwargs[file] = get_model_file(model='tmbed', file=file)
+
+    tmbed_extractor = TmbedAnnotationExtractor(**result_kwargs)
+
+    # Try to create final file (if this fails, now is better than later)
+    membrane_residues_predictions_file_path = file_manager.create_file(result_kwargs.get('prefix'),
+                                                                       result_kwargs.get('stage_name'),
+                                                                       'membrane_residues_predictions_file',
+                                                                       extension='.fasta')
+
+    result_kwargs['membrane_residues_predictions_file'] = membrane_residues_predictions_file_path
+
+    tmbed_sequences = []
+
+    with h5py.File(result_kwargs['embeddings_file'], 'r') as embedding_file:
+        for protein_sequence in read_fasta(result_kwargs['remapped_sequences_file']):
+            embedding = np.array(embedding_file[protein_sequence.id])
+
+            # Add batch dimension (until we support batch processing)
+            embedding = embedding[None, ]
+
+            # Sequence lengths (only a single sequence for now)
+            lengths = [len(protein_sequence.seq)]
+
+            annotations = tmbed_extractor.get_membrane_residues(embedding, lengths)
+
+            # Gratuitous loop (only a single item for now)
+            # Needs to be changed for batch mode to deepcopy different protein sequences
+            for annotation in annotations:
+                tmbed_sequence = deepcopy(protein_sequence)
+                tmbed_sequence.seq = Seq(convert_list_of_enum_to_string(annotation.membrane_residues))
+
+                tmbed_sequences.append(tmbed_sequence)
+
+    # Write file
+    write_fasta_file(tmbed_sequences, membrane_residues_predictions_file_path)
+
+    return result_kwargs
+
+
 def light_attention(model: str, **kwargs) -> Dict[str, Any]:
     """
     Protocol extracts subcellular locationfrom "embeddings_file".
@@ -661,6 +716,7 @@ PROTOCOLS = {
     "bindembed21dl": bindembed21dl,
     "bindembed21hbi": bindembed21hbi,
     "bindembed21": bindembed21,
+    "tmbed": tmbed,
     "unsupervised": unsupervised
 }
 

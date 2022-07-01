@@ -42,6 +42,7 @@ def get_or_create_cache(name: str) -> Collection:
 # Caches for the direct feature extractors
 get_embedding_cache = get_or_create_cache("get_embedding_cache")
 get_features_cache = get_or_create_cache("get_features_cache")
+get_residue_landscape_cache = get_or_create_cache("get_residue_landscape_cache")
 get_structure_cache = get_or_create_cache("get_structure_cache")
 get_structure_jobs = get_or_create_cache("get_structure_jobs")
 
@@ -65,6 +66,12 @@ if "structure_sequence_jobs" not in get_structure_jobs.index_information():
     get_structure_jobs.create_index(
         ([("predictor_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
         name="structure_sequence_jobs",
+    )
+
+if "model_name_sequence" not in get_residue_landscape_cache.index_information():
+    get_residue_landscape_cache.create_index(
+        ([("model_name", pymongo.ASCENDING), ("sequence", pymongo.HASHED)]),
+        name="model_name_sequence",
     )
 
 

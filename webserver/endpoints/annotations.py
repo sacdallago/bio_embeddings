@@ -3,11 +3,12 @@ from flask import request, abort
 from flask_restx import Resource
 
 from webserver.endpoints import api
-from webserver.endpoints.request_models import sequence_post_parameters_annotations, sequence_get_parameters_annotations
+from webserver.endpoints.request_models import sequence_post_parameters_annotations, sequence_get_parameters_annotations,residue_landscape_post_parameters
 from webserver.endpoints.task_interface import get_features
+from webserver.endpoints.task_interface import get_residue_landscape
 from webserver.endpoints.utils import check_valid_sequence
 from webserver.utilities.parsers import (
-    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder
+    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder, BindingResidues
 )
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
@@ -26,8 +27,21 @@ def _get_annotations_from_params(params):
         return abort(400, "Sequence is too long or contains invalid characters.")
 
     model_name = params.get('model', 'prottrans_t5_xl_u50')
-
     annotations = get_features(model_name, sequence)
+
+    if model_name == 'prottrans_t5_xl_u50':
+        residue_landscape_output = get_residue_landscape(model_name=model_name, sequence=sequence)
+        # merge the output of the residue landscape into the feature dict
+        # add the meta information
+        for key in residue_landscape_output['meta']:
+            annotations['meta'][key] = residue_landscape_output['meta'][key]
+
+        residue_landscape_output.pop('meta', None)
+
+        # add all the remaining information
+        for key in residue_landscape_output:
+            annotations[key] = residue_landscape_output[key]
+
     annotations['sequence'] = sequence
 
     format = params.get('format', 'legacy')
@@ -70,13 +84,40 @@ def _get_annotations_from_params(params):
                     feature_enum=SecondaryStructure
                 )
             )
-        if annotations.get('predictedDSSP3'):
+        if annotations.get('predictedDisorder'):
             protvista_features['features'].extend(
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDisorder'],
                     evidences=[evidence],
                     type=f"DISORDER_({model_name})",
                     feature_enum=Disorder
+                )
+            )
+        if annotations.get('predictedBindingMetal'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingMetal'],
+                    evidences=[evidence],
+                    type=f"BINDING_METAL_({model_name})",
+                    feature_enum=BindingResidues
+                )
+            )
+        if annotations.get('predictedBindingNucleicAcids'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingNucleicAcids'],
+                    evidences=[evidence],
+                    type=f"BINDING_NUCLEIC_ACIDS_({model_name})",
+                    feature_enum=BindingResidues
+                )
+            )
+        if annotations.get('predictedBindingSmallMolecules'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedBindingSmallMolecules'],
+                    evidences=[evidence],
+                    type=f"BINDING_SMALL_MOLECULES_({model_name})",
+                    feature_enum=BindingResidues
                 )
             )
 
@@ -100,7 +141,6 @@ def _get_annotations_from_params(params):
         annotations['predictedMFO'] = predictedMFO
 
         return annotations
-
     elif format == "go-predictprotein":
         mapping_function = lambda x: {
             "gotermid": x['GO_Term'],
@@ -147,3 +187,23 @@ class Annotations(Resource):
         params = request.json
 
         return _get_annotations_from_params(params)
+
+
+@ns.route('/residue/landscape')
+class residue_landscape(Resource):
+    @api.expect(residue_landscape_post_parameters, validate=True)
+    @api.response(200, "Returns an hdf5 file with one dataset called `sequence` "
+                       "containing the embedding_buffer of the supplied sequence.")
+    @api.response(400, "Invalid input. See return message for details.")
+    @api.response(505, "Server error")
+    def post(self):
+        params = request.json
+
+        sequence = params.get('sequence')
+
+        if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
+            return abort(400, "Sequence is too long or contains invalid characters.")
+
+        residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50',sequence=sequence)
+
+        return residue_landscape_output

@@ -126,6 +126,10 @@ sequence_get_parameters_annotations.add_argument(
     help='Output format. Options: legacy (default), protvista-predictprotein, go-predictprotein, full'
 )
 
+residue_landscape_post_parameters = api.model('residue_landscape_post_sequence', {
+    'sequence': sequence_field
+})
+
 sequence_get_parameters_structure = api.parser()
 sequence_get_parameters_structure.add_argument(
     'sequence',

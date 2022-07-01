@@ -41,6 +41,14 @@ configuration = {
             model_directory, "light_attention", "la_prott5_solubility"
         ),
     },
+    # BindEmbed21 stuff
+    "bindembed21": {
+        "model_1_file": os.path.join(model_directory, "bindembed21", "checkpoint1.pt"),
+        "model_2_file": os.path.join(model_directory, "bindembed21", "checkpoint2.pt"),
+        "model_3_file": os.path.join(model_directory, "bindembed21", "checkpoint3.pt"),
+        "model_4_file": os.path.join(model_directory, "bindembed21", "checkpoint4.pt"),
+        "model_5_file": os.path.join(model_directory, "bindembed21", "checkpoint5.pt")
+    },
     "goa": {
         "bpo": os.path.join(
             model_directory, "goa", "goa_annotations_2022_bpo.txt",

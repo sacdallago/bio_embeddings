@@ -40,6 +40,7 @@ def create_app():
     api.add_namespace(structure_namespace)
     api.add_namespace(status_namespace)
 
+
     app.register_blueprint(blueprint)
 
     # https://flask.palletsprojects.com/en/1.1.x/quickstart/#hooking-in-wsgi-middleware
