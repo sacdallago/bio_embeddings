@@ -2,16 +2,17 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.31"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2021.11.23"/>
         <title>Colab initialization - bio_embeddings</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=7f0192ddeb2adecfbaa87ffbcf67d16358b30bc1" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=0af69da206d614734f649b27d4cdc2dd6c31f41d" />
     
     
 
@@ -185,7 +186,7 @@
   </aside>
   <div class="main">
     <div class="content">
-      <article role="main">
+      <div class="article-container">
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -200,7 +201,8 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="tex2jax_ignore mathjax_ignore section" id="colab-initialization">
+        <article role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="colab-initialization">
 <h1>Colab initialization<a class="headerlink" href="#colab-initialization" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>install the pipeline in the colab runtime</p></li>
@@ -227,8 +229,8 @@
 </div>
 </div>
 </div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="visualize-sequence-spaces-drawn-by-deeploc-embeddings">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="visualize-sequence-spaces-drawn-by-deeploc-embeddings">
 <h1>Visualize sequence spaces drawn by DeepLoc embeddings<a class="headerlink" href="#visualize-sequence-spaces-drawn-by-deeploc-embeddings" title="Permalink to this headline">¶</a></h1>
 <p>In this notebook, we use the output of the <em>embed</em> stage to draw custom UMAP sequence space plots. We will first use the annotations of subcellular localization from <a class="reference external" href="http://www.cbs.dtu.dk/services/DeepLoc/">DeepLoc</a>. These come in 10 subcellular localization classes.</p>
 <p>Following that, we will use a different anntoations file that describes the solubility of the proteins in the DeepLoc set. We will keep the same representations as drawn by UMAP before, so we can “side-by-side” see how embeddings separate the 10 subcellular localization classes, as well as the difference between soluble and membrane bound proteins.</p>
@@ -321,8 +323,8 @@
 </div>
 </div>
 </div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="visualize-soluble-vs-membrane-vs-unknown-sequences">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="visualize-soluble-vs-membrane-vs-unknown-sequences">
 <h1>Visualize soluble vs. membrane vs. unknown sequences<a class="headerlink" href="#visualize-soluble-vs-membrane-vs-unknown-sequences" title="Permalink to this headline">¶</a></h1>
 <p>We can use the UMAP projections from before to re-color the visualization using a new annotation: solubility vs. membrane boundness. The annotations are again taken from DeepLoc. This highlights the versatility of the visualizations, e.g. if you have a protein sequence set with different properties you would like to study, you can do so by visualizing the different properties in different graphs.</p>
 <div class="cell docutils container">
@@ -350,8 +352,8 @@
 </div>
 </div>
 </div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="visualize-in-3d">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="visualize-in-3d">
 <h1>Visualize in 3D<a class="headerlink" href="#visualize-in-3d" title="Permalink to this headline">¶</a></h1>
 <p>The bio_embeddings pipeline allows you to also plot 3D protein spaces, which might be better suited for overarching annotations. Additionally, we will only look at definite solubility (aka, drop the “unknown” annotations)</p>
 <div class="cell docutils container">
@@ -409,9 +411,10 @@
 </div>
 </div>
 </div>
-</div>
+</section>
 
-      </article>
+        </article>
+      </div>
       <footer>
         
         <div class="related-pages">
@@ -420,14 +423,10 @@
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
-            |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
-            <a class="muted-link" href="../_sources/notebooks/deeploc_visualizations.ipynb.txt"
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/notebooks/deeploc_visualizations.ipynb.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -464,10 +463,13 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/main.js"></script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     </body>
 </html>

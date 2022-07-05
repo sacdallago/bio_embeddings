@@ -2,16 +2,17 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Contributing" href="../contributing/index.html" /><link rel="prev" title="bio_embeddings.utilities" href="bio_embeddings.utilities.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Contributing" href="../contributing/index.html" /><link rel="prev" title="bio_embeddings.utilities" href="bio_embeddings.utilities.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.31"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2021.11.23"/>
         <title>bio_embeddings.visualize - bio_embeddings</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=c7c65a82b42f6b978e58466c1e9ef2509836d916" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=7f0192ddeb2adecfbaa87ffbcf67d16358b30bc1" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=0af69da206d614734f649b27d4cdc2dd6c31f41d" />
     
     
 
@@ -185,7 +186,7 @@
   </aside>
   <div class="main">
     <div class="content">
-      <article role="main">
+      <div class="article-container">
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -200,7 +201,8 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="tex2jax_ignore mathjax_ignore section" id="module-bio_embeddings.visualize">
+        <article role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="module-bio_embeddings.visualize">
 <span id="bio-embeddings-visualize"></span><h1>bio_embeddings.visualize<a class="headerlink" href="#module-bio_embeddings.visualize" title="Permalink to this headline">¶</a></h1>
 <p>Display t-SNE or UMAP projections from the project stage</p>
 <dl class="py function">
@@ -212,7 +214,7 @@
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="bio_embeddings.visualize.render_3D_scatter_plotly">
-<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">render_3D_scatter_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#render_3D_scatter_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.render_3D_scatter_plotly" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">render_3D_scatter_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#render_3D_scatter_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.render_3D_scatter_plotly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Plotly Figure (3D scatter plot) based on a DataFrame containing three components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,7 +230,7 @@ to color the points in the scatter plot.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="bio_embeddings.visualize.render_scatter_plotly">
-<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">render_scatter_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_dataframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#render_scatter_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.render_scatter_plotly" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">render_scatter_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embeddings_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#render_scatter_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.render_scatter_plotly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Plotly Figure (2D scatter plot) based on a DataFrame containing three components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -244,7 +246,7 @@ to color the points in the scatter plot.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="bio_embeddings.visualize.save_plotly_figure_to_html">
-<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">save_plotly_figure_to_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">plotly.graph_objs._figure.Figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#save_plotly_figure_to_html"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.save_plotly_figure_to_html" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bio_embeddings.visualize.</span></span><span class="sig-name descname"><span class="pre">save_plotly_figure_to_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">plotly.graph_objs._figure.Figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/bio_embeddings/visualize/plotly_plots.html#save_plotly_figure_to_html"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bio_embeddings.visualize.save_plotly_figure_to_html" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store plotly figure as interactive HTML file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -256,9 +258,10 @@ to color the points in the scatter plot.</p>
 </dd>
 </dl>
 </dd></dl>
-</div>
+</section>
 
-      </article>
+        </article>
+      </div>
       <footer>
         
         <div class="related-pages">
@@ -285,14 +288,10 @@ to color the points in the scatter plot.</p>
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi
-            |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
-            <a class="muted-link" href="../_sources/api/bio_embeddings.visualize.md.txt"
+              Copyright &#169; 2020, Christian Dallago, Konstantin Schütze, Michael Heinzinger, Tobias Olenyi |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/api/bio_embeddings.visualize.md.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -310,10 +309,13 @@ to color the points in the scatter plot.</p>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/main.js"></script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     </body>
 </html>
