@@ -1,4 +1,4 @@
-image: "python:3.7"
+image: "python:3.8"
 
 #cache:
 #  key:
@@ -35,23 +35,23 @@ stages:
   coverage: '/TOTAL.*\s(\d+\.\d+\%)/'
   script: poetry run pytest -v
 
-python3.7:
+python3.8:
   <<: *test
-  image: python:3.7
+  image: python:3.8
 
 python3.9:
   <<: *test
   image: python:3.9
 
 # Those two are ran weekly to also run test the more expensive tests
-python3.7-scheduled:
+python3.8-scheduled:
   <<: *install-deps
   stage: tests
   variables:
     SKIP_AVX2_TESTS: 1
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
-  image: python:3.7
+  image: python:3.8
   script: poetry run pytest -v
 
 python3.9-scheduled:
