@@ -30,8 +30,17 @@ def _get_annotations_from_params(params):
     annotations = get_features(model_name, sequence)
 
     if model_name == 'prottrans_t5_xl_u50':
-        print('test')
         residue_landscape_output = get_residue_landscape(model_name=model_name, sequence=sequence)
+        # merge the output of the residue landscape into the feature dict
+        # add the meta information
+        for key in residue_landscape_output['meta']:
+            annotations['meta'][key] = residue_landscape_output['meta'][key]
+
+        residue_landscape_output.pop('meta', None)
+
+        # add all the remaining information
+        for key in residue_landscape_output:
+            annotations[key] = residue_landscape_output[key]
 
     annotations['sequence'] = sequence
 
@@ -63,8 +72,7 @@ def _get_annotations_from_params(params):
                 annotations_to_protvista_converter(
                     features_string=annotations['predictedDSSP8'],
                     evidences=[evidence],
-                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})",
-                    feature_enum=SecondaryStructure
+                    type=f"SECONDARY_STRUCTURE_8_STATES_({model_name})", feature_enum=SecondaryStructure
                 )
             )
         if annotations.get('predictedDSSP3'):
@@ -155,19 +163,6 @@ def _get_annotations_from_params(params):
 
         return [predictedBPO, predictedCCO, predictedMFO]
     elif format == "full":
-
-        if model_name == 'prottrans_t5_xl_u50':
-            # merge the output of the residue landscape into the feature dict
-            # add the meta information
-            for key in residue_landscape_output['meta']:
-                annotations['meta'][key] = residue_landscape_output['meta'][key]
-
-            residue_landscape_output.pop('meta', None)
-
-            # add all the remaining information
-            for key in residue_landscape_output:
-                annotations[key] = residue_landscape_output[key]
-
         return annotations
     else:
         abort(400, f"Wrong format passed: {format}")
@@ -210,8 +205,5 @@ class residue_landscape(Resource):
             return abort(400, "Sequence is too long or contains invalid characters.")
 
         residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50',sequence=sequence)
-        cons_pred = residue_landscape_output['predictedConservation']
-        variation = residue_landscape_output['predictedVariation']
 
-        return {'predictedVariation': variation,
-                'predictedConservation': cons_pred}
+        return residue_landscape_output

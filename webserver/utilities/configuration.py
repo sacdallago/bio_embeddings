@@ -63,6 +63,10 @@ configuration = {
             model_directory, "goa", "prott5_reference_embeddings.h5"
         ),
     },
+    # Colabfold stuff
+    "colabfold": {
+        "data_dir": os.path.join(model_directory, "colabfold")
+    },
     # Celery worker type
     "celery": {
         # Types can be, separated by comma:
@@ -70,6 +74,7 @@ configuration = {
         #  - pipeline ==> pipeline async worker
         #  - prott5 ==> takes sequences and returns embeddings (sync)
         #  - prott5_annotations ==> takes embeddings and returns annotations (sync)
+        #  - colabfold ==> takes sequence and returns structure
 
         "celery_worker_type": environ["CELERY_WORKER_TYPE"].split(",") if "CELERY_WORKER_TYPE" in environ else [],
     }
