@@ -5,11 +5,30 @@ The webserver provides an easy-to-use web interface to a part of the functionali
  * mongodb
  * rabbitmq
  * The webserver
- * The worker, which should run on a GPU host
+ * Some workers, which should ideally run on a GPU host!
 
 You need to provide the worker with a model directory, either by mounting it to `/mnt/models` (docker only) or by setting `MODEL_DIRECTORY` to the location. You can download it from https://rostlab.org/~bio_embeddings/webserver_models.zip. After unzipping, it should look like this:
 
 ```
+├── bindembed21
+│   ├── checkpoint1.pt
+│   ├── checkpoint2.pt
+│   ├── checkpoint3.pt
+│   ├── checkpoint4.pt
+│   └── checkpoint5.pt
+├── colabfold
+│   ├── LICENSE
+│   └── params
+│       ├── params_model_1.npz
+│       ├── params_model_1_ptm.npz
+│       ├── params_model_2.npz
+│       ├── params_model_2_ptm.npz
+│       ├── params_model_3.npz
+│       ├── params_model_3_ptm.npz
+│       ├── params_model_4.npz
+│       ├── params_model_4_ptm.npz
+│       ├── params_model_5.npz
+│       └── params_model_5_ptm.npz
 ├── goa
 │   ├── goa_annotations_2022_bpo.txt
 │   ├── goa_annotations_2022_cco.txt
@@ -23,9 +42,15 @@ You need to provide the worker with a model directory, either by mounting it to 
 │       ├── config.json
 │       ├── pytorch_model.bin
 │       └── spiece.model
-└── t5_xl_u50_from_publication_annotations_extractors
-    ├── secondary_structure_checkpoint_file
-    └── subcellular_location_checkpoint_file
+├── t5_xl_u50_from_publication_annotations_extractors
+│   ├── secondary_structure_checkpoint_file
+│   └── subcellular_location_checkpoint_file
+└── tmbed
+    ├── cv_0.pt
+    ├── cv_1.pt
+    ├── cv_2.pt
+    ├── cv_3.pt
+    └── cv_4.pt
 ```
 
 If you run without docker-compose, you need to configure `CELERY_BROKER_URL`, `MONGO_URL` and `MODEL_DIRECTORY` for the worker and the webserver.

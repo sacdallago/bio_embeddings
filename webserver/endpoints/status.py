@@ -1,8 +1,7 @@
 from flask import abort
 from flask_restx import Resource
 from webserver.endpoints import api
-from webserver.tasks import task_keeper
-
+from webserver.endpoints.utils import get_queues
 
 ns = api.namespace("status", description="Get the status of the workers.")
 
@@ -10,17 +9,9 @@ _workers = [
     'prott5',
     'prott5_annotations',
     'pipeline',
+    'colabfold',
+    'prott5_residue_landscape_annotations'
 ]
-
-
-def _get_queues():
-    i = task_keeper.control.inspect()
-    queues = set()
-    active_queues = i.active_queues() or dict()
-    for queue in active_queues:
-        queues.add(active_queues[queue][0]["name"])
-
-    return queues
 
 
 @ns.route('')
@@ -28,7 +19,7 @@ class Status(Resource):
     @api.response(200, "Returns an object with active workers.")
     @api.response(505, "Server error")
     def get(self):
-        queues = _get_queues()
+        queues = get_queues()
 
         active_workers = dict()
 
@@ -44,7 +35,7 @@ class Status(Resource):
     @api.response(503, "Queue for worker does not exist")
     @api.response(505, "Server error")
     def get(self, worker=""):
-        queues = _get_queues()
+        queues = get_queues()
 
         if worker in queues:
             return "OK"

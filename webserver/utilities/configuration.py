@@ -67,6 +67,14 @@ configuration = {
     "colabfold": {
         "data_dir": os.path.join(model_directory, "colabfold")
     },
+    # tembed
+    "tmbed": {
+        "model_0_file": os.path.join(model_directory, "tmbed", "cv_0.pt"),
+        "model_1_file": os.path.join(model_directory, "tmbed", "cv_1.pt"),
+        "model_2_file": os.path.join(model_directory, "tmbed", "cv_2.pt"),
+        "model_3_file": os.path.join(model_directory, "tmbed", "cv_3.pt"),
+        "model_4_file": os.path.join(model_directory, "tmbed", "cv_4.pt")
+    },
     # Celery worker type
     "celery": {
         # Types can be, separated by comma:
