@@ -20,11 +20,13 @@ metric = "euclidean"
 k = 25
 la = None
 be = None
+tmbed = None
 
 if "prott5_annotations" in configuration['celery']['celery_worker_type']:
     from bio_embeddings.extract.basic import BasicAnnotationExtractor
     from bio_embeddings.extract.light_attention import LightAttentionAnnotationExtractor
     from bio_embeddings.extract.bindEmbed21 import BindEmbed21DLAnnotationExtractor
+    from bio_embeddings.extract.tmbed import TmbedAnnotationExtractor
 
     from bio_embeddings.utilities import convert_list_of_enum_to_string
 
@@ -49,6 +51,14 @@ if "prott5_annotations" in configuration['celery']['celery_worker_type']:
         model_3_file=configuration['bindembed21']['model_3_file'],
         model_4_file=configuration['bindembed21']['model_4_file'],
         model_5_file=configuration['bindembed21']['model_5_file']
+    )
+
+    tmbed = TmbedAnnotationExtractor(
+        model_0_file=configuration['tmbed']['model_0_file'],
+        model_1_file=configuration['tmbed']['model_1_file'],
+        model_2_file=configuration['tmbed']['model_2_file'],
+        model_3_file=configuration['tmbed']['model_3_file'],
+        model_4_file=configuration['tmbed']['model_4_file']
     )
     
     logger.info("Loading goa reference embeddings and annotations...")
@@ -79,6 +89,9 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
     annotations = featureExtractor.get_annotations(embedding)
     la_annotations = la.get_subcellular_location(embedding)
     be_annotations = be.get_binding_residues(embedding)
+
+    # TMbed needs special things: Batch dimension as first dim + length of sequences
+    tmbed_annotations = tmbed.get_membrane_residues(embedding[None, ], [len(embedding)])
 
     # GOA
     reduced_embedding = np.array(embedding).mean(0)
@@ -124,6 +137,7 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
         "predictedDSSP3": convert_list_of_enum_to_string(annotations.DSSP3),
         "predictedDSSP8": convert_list_of_enum_to_string(annotations.DSSP8),
         "predictedDisorder": convert_list_of_enum_to_string(annotations.disorder),
+        "predictedTransmembrane": convert_list_of_enum_to_string(tmbed_annotations[0].membrane_residues),
         "predictedCCO": k_nn_CCO.to_dict("records"),
         "predictedBPO": k_nn_BPO.to_dict("records"),
         "predictedMFO": k_nn_MFO.to_dict("records"),
@@ -138,6 +152,7 @@ def get_prott5_annotations_sync(embedding: List) -> Dict[str, str]:
             "predictedBPO": "goPredSim ProtT5, https://github.com/Rostlab/goPredSim#performance-assessment",
             "predictedMFO": "goPredSim ProtT5, https://github.com/Rostlab/goPredSim#performance-assessment",
             "predictedMembrane": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
-            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1"
+            "predictedSubcellularLocalizations": "LA_ProtT5, https://www.biorxiv.org/content/10.1101/2021.04.25.441334v1",
+            "predictedTransmembrane": "TMbed, https://doi.org/10.1101/2022.06.12.495804"
         }
     }
