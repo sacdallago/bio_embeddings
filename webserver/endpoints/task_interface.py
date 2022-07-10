@@ -14,7 +14,7 @@ from webserver.tasks.prott5_embeddings import get_prott5_embeddings_sync
 from webserver.tasks.prott5_annotations import get_prott5_annotations_sync
 from webserver.tasks.prott5_residue_landscape_annotations import get_residue_landscape_output_sync
 # Colabfold
-from webserver.tasks.structure import get_structure_colabfold
+from webserver.tasks.colabfold import get_structure_colabfold
 
 
 _HTTP_CODES = {
@@ -33,6 +33,7 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
     cached = get_embedding_cache.find_one(
         {"model_name": model_name, "sequence": sequence}
     )
+
     if cached:
         return numpy.frombuffer(cached["array"], dtype=numpy.float64).reshape(
             cached["shape"]
@@ -49,19 +50,20 @@ def get_embedding(model_name: str, sequence: str) -> np.array:
     job = model.apply_async(
         args=[sequence], time_limit=60 * 5, soft_time_limit=60 * 5, expires=60 * 60
     )
+
     array = np.array(job.get())
+
     assert array.dtype == numpy.float64, array.dtype
 
     if len(sequence) < 500:
-        get_embedding_cache.insert_one(
-            {
-                "uploadDate": datetime.utcnow(),
-                "model_name": model_name,
-                "sequence": sequence,
-                "shape": array.shape,
-                "array": array.tobytes(),
-            }
-        )
+        get_embedding_cache.insert_one({
+            "uploadDate": datetime.utcnow(),
+            "model_name": model_name,
+            "sequence": sequence,
+            "shape": array.shape,
+            "array": array.tobytes(),
+        })
+
     return array
 
 
@@ -77,6 +79,7 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     cached = get_features_cache.find_one(
         {"model_name": model_name, "sequence": sequence}
     )
+
     if cached:
         return cached["features"]
 
@@ -94,14 +97,14 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
     )
 
     features = job.get()
-    get_features_cache.insert_one(
-        {
-            "uploadDate": datetime.utcnow(),
-            "model_name": model_name,
-            "sequence": sequence,
-            "features": features,
-        }
-    )
+
+    get_features_cache.insert_one({
+        "uploadDate": datetime.utcnow(),
+        "model_name": model_name,
+        "sequence": sequence,
+        "features": features,
+    })
+
     return features
 
 
@@ -109,24 +112,32 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
     cached = get_residue_landscape_cache.find_one(
         {"model_name": model_name, "sequence": sequence}
     )
+
     if cached:
         predicted_conservation_values = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(
             cached['conservation_prediction_shape']).tolist()
         predicted_variation_values = numpy.frombuffer(cached['variation_prediction'], dtype=numpy.int8).reshape(
             cached['variation_prediction_shape']).tolist()
 
-        predictedVariation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
-                              'values': predicted_variation_values}
+        predictedVariation = {
+            'x_axis': cached['x_axis'],
+            'y_axis': cached['y_axis'],
+            'values': predicted_variation_values
+        }
 
-        predictedConservation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
-                                 'values': predicted_conservation_values}
+        predictedConservation = {
+            'x_axis': cached['x_axis'],
+            'y_axis': cached['y_axis'],
+            'values': predicted_conservation_values
+        }
 
         meta_data = cached['meta']
 
-        return {'predictedConservation': predictedConservation,
-                'predictedVariation': predictedVariation,
-                'meta':meta_data}
-
+        return {
+            'predictedConservation': predictedConservation,
+            'predictedVariation': predictedVariation,
+            'meta': meta_data
+        }
 
     embedding_as_list = get_embedding(model_name,sequence).tolist()
 
@@ -143,34 +154,32 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
     meta_data = residue_landscape_worker_out['meta']
 
     predictedVariation = residue_landscape_worker_out['predictedVariation']
-
     predictedConservation = residue_landscape_worker_out['predictedConservation']
 
     predicted_conservation_values = np.array(predictedVariation['values'], dtype=np.int8)
-
     predicted_variation_values = np.array(predictedVariation['values'], dtype=np.int8)
 
     assert predictedVariation['x_axis'] == predictedConservation['x_axis']
     assert predictedVariation['y_axis'] == predictedConservation['y_axis']
 
-    get_residue_landscape_cache.insert_one(
-        {
-            "uploadDate": datetime.utcnow(),
-            "model_name": "prottrans_t5_xl_u50",
-            "sequence": sequence,
-            "conservation_prediction_shape": predicted_conservation_values.shape,
-            "conservation_prediction": predicted_conservation_values.tobytes(),
-            "variation_prediction": predicted_variation_values.tobytes(),
-            "variation_prediction_shape": predicted_variation_values.shape,
-            "x_axis": predictedVariation['x_axis'],
-            "y_axis": predictedVariation['y_axis'],
-            "meta":meta_data
-        }
-    )
+    get_residue_landscape_cache.insert_one({
+        "uploadDate": datetime.utcnow(),
+        "model_name": "prottrans_t5_xl_u50",
+        "sequence": sequence,
+        "conservation_prediction_shape": predicted_conservation_values.shape,
+        "conservation_prediction": predicted_conservation_values.tobytes(),
+        "variation_prediction": predicted_variation_values.tobytes(),
+        "variation_prediction_shape": predicted_variation_values.shape,
+        "x_axis": predictedVariation['x_axis'],
+        "y_axis": predictedVariation['y_axis'],
+        "meta":meta_data
+    })
 
-    return {'predictedConservation': predictedConservation,
-            'predictedVariation': predictedVariation,
-            'meta':meta_data}
+    return {
+        'predictedConservation': predictedConservation,
+        'predictedVariation': predictedVariation,
+        'meta': meta_data
+    }
 
 
 def _get_structure_response(status: str, structure=None) -> Tuple[Dict[str, object], int]:
@@ -188,6 +197,7 @@ def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object]
     If a job is found, returns information about the job.
     Otherwise, asynchronously initiates a prediction job on a worker and returns that the job is pending.
     """
+
     "".join(sequence.split())
     sequence = sequence.upper()
 
@@ -195,6 +205,7 @@ def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object]
     cached = get_structure_cache.find_one(
         {'predictor_name': predictor_name, 'sequence': sequence}
     )
+
     if cached:
         return _get_structure_response('OK', cached['structure'])
 
@@ -202,14 +213,17 @@ def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object]
     in_progress = get_structure_jobs.find_one(
         {'predictor_name': predictor_name, 'sequence': sequence}
     )
+
     if in_progress:
         if in_progress['status'] == JOB_PENDING:
             return _get_structure_response('Accepted')
         elif in_progress['status'] == JOB_DONE:
             # In the (very unlikely) case that we get here, there must be an entry in the database, as we assure that
             # there is always a structure entry in the database if the job is marked 'done'
-            return _get_structure_response('OK', get_structure_cache.find_one(
-                {'predictor_name': predictor_name, 'sequence': sequence})['structure'])
+            return _get_structure_response('OK', get_structure_cache.find_one({
+                'predictor_name': predictor_name,
+                'sequence': sequence
+            })['structure'])
         else:
             abort(500, "Structure prediction failed")
 
@@ -218,6 +232,7 @@ def get_structure(predictor_name: str, sequence: str) -> Tuple[Dict[str, object]
     prediction_model = {
         'colabfold': get_structure_colabfold
     }.get(predictor_name)
+
     prediction_model.apply_async(
         args=[sequence],
         time_limit=60 * 15,

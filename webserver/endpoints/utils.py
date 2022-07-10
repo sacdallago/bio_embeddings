@@ -7,6 +7,7 @@ from Bio import SeqIO
 from flask import abort
 from pandas import read_csv
 
+from webserver.tasks import task_keeper
 from webserver.utilities.configuration import configuration
 
 ValidationResult = collections.namedtuple('ValidationResult', 'sequences statistics')
@@ -150,3 +151,13 @@ def check_valid_sequence(sequence: str) -> bool:
         return False
 
     return True
+
+
+def get_queues():
+    i = task_keeper.control.inspect()
+    queues = set()
+    active_queues = i.active_queues() or dict()
+    for queue in active_queues:
+        queues.add(active_queues[queue][0]["name"])
+
+    return queues

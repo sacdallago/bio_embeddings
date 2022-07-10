@@ -6,9 +6,10 @@ from webserver.endpoints import api
 from webserver.endpoints.request_models import sequence_post_parameters_annotations, sequence_get_parameters_annotations,residue_landscape_post_parameters
 from webserver.endpoints.task_interface import get_features
 from webserver.endpoints.task_interface import get_residue_landscape
-from webserver.endpoints.utils import check_valid_sequence
+from webserver.endpoints.utils import check_valid_sequence, get_queues
 from webserver.utilities.parsers import (
-    Source, Evidence, annotations_to_protvista_converter, SecondaryStructure, Disorder, BindingResidues
+    Source, Evidence, annotations_to_protvista_converter,
+    SecondaryStructure, Disorder, BindingResidues, MembraneResidues
 )
 
 ns = api.namespace("annotations", description="Get annotations on the fly.")
@@ -29,7 +30,7 @@ def _get_annotations_from_params(params):
     model_name = params.get('model', 'prottrans_t5_xl_u50')
     annotations = get_features(model_name, sequence)
 
-    if model_name == 'prottrans_t5_xl_u50':
+    if model_name == 'prottrans_t5_xl_u50' and 'prott5_residue_landscape_annotations' in get_queues():
         residue_landscape_output = get_residue_landscape(model_name=model_name, sequence=sequence)
         # merge the output of the residue landscape into the feature dict
         # add the meta information
@@ -118,6 +119,15 @@ def _get_annotations_from_params(params):
                     evidences=[evidence],
                     type=f"BINDING_SMALL_MOLECULES_({model_name})",
                     feature_enum=BindingResidues
+                )
+            )
+        if annotations.get('predictedTransmembrane'):
+            protvista_features['features'].extend(
+                annotations_to_protvista_converter(
+                    features_string=annotations['predictedTransmembrane'],
+                    evidences=[evidence],
+                    type=f"TRANSMEMBRANE_({model_name})",
+                    feature_enum=MembraneResidues
                 )
             )
 
