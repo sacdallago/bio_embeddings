@@ -21,24 +21,24 @@
         </div>
     </div>
     <div class="ui row">
+        <div class="sixteen wide column">
+            <h2>Direct jobs</h2>
+            <p>Direct jobs (e.g., getting secondary structure prediction from ProtT5 on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
+            <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
+            <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> The ProtT5 worker is currently {{ "in" if "prott5" not in workers }}active.
+            <br />
+            <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> The ProtT5 Annotations worker is currently {{ "in" if "prott5_annotations" not in workers }}active.
+            <br />
+            <label class="ui circular orange {{ "blue" if "prott5_residue_landscape_annotations" in workers }} label"></label> The ProtT5 Residue Landscape Annotations worker is currently {{ "in" if "prott5_residue_landscape_annotations" not in workers }}active.
+        </div>
+    </div>
+        <div class="ui row">
         <div class="ui sixteen wide column">
             <h2>Async jobs</h2>
             <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
             <label class="ui circular orange {{ "blue" if "pipeline" in workers }} label"></label> Pipeline jobs are currently {{ "in" if "pipeline" not in workers }}active.
             <br />
             <label class="ui circular orange {{ "blue" if "colabfold" in workers }} label"></label> Colabfold jobs are currently {{ "in" if "colabfold" not in workers }}active.
-        </div>
-    </div>
-    <div class="ui row">
-        <div class="sixteen wide column">
-            <h2>Direct jobs</h2>
-            <p>Direct jobs (e.g., getting secondary structure prediction from ProtT5 on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
-            <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
-            <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> ProtT5
-            <br />
-            <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> ProtT5 Annotations
-            <br />
-            <label class="ui circular orange {{ "blue" if "prott5_residue_landscape_annotations" in workers }} label"></label> ProtT5 Residue Landscape Annotations
         </div>
     </div>
     <div class="ui row">
