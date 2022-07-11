@@ -30,7 +30,7 @@ def _get_annotations_from_params(params):
     annotations = get_features(model_name, sequence)
 
     if model_name == 'prottrans_t5_xl_u50':
-        print('test')
+
         residue_landscape_output = get_residue_landscape(model_name=model_name, sequence=sequence)
 
     annotations['sequence'] = sequence

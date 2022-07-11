@@ -16,6 +16,7 @@ if 'prott5_residue_landscape_annotations' in configuration['celery']['celery_wor
     from vespa.predict.utils import MutationGenerator
     from vespa.predict.config import MUTANT_ORDER
 
+    from celery.contrib import rdb
 
 @task_keeper.task()
 def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) -> dict:
@@ -24,7 +25,7 @@ def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) ->
     ################################################conspred################################################
     checkpoint_path = Path(MODEL_PATH_DICT["CONSCNN"])
     write_probs = True
-    write_classes = False
+    write_classes = True
 
     embedding_buffer = io.BytesIO()
     with h5py.File(embedding_buffer, "w") as embeddings_file:
@@ -152,6 +153,7 @@ def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) ->
 
     return {'predictedConservation': conservation_return_dict,
             'predictedVariation': vespa_return_dict,
+            'predictedClasses': classes_out['sequence'].tolist(),
             'meta': {
                 'predictedConservation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y',
                 'predictedVariation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y'

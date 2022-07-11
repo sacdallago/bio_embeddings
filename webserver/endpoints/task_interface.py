@@ -112,10 +112,13 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
         predictedConservation = {'x_axis': cached['x_axis'], 'y_axis': cached['y_axis'],
                                  'values': predicted_conservation_values}
 
+        predictedClasses = numpy.frombuffer(cached["classes_prediction"], dtype=np.int8).tolist()
+
         meta_data = cached['meta']
 
         return {'predictedConservation': predictedConservation,
                 'predictedVariation': predictedVariation,
+                'predictedClasses': predictedClasses,
                 'meta':meta_data}
 
 
@@ -137,9 +140,15 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
 
     predictedConservation = residue_landscape_worker_out['predictedConservation']
 
+    predictedClasses = residue_landscape_worker_out['predictedClasses']
+
+    predictedClasses_arr = np.array(predictedClasses,dtype=np.int8)
+
     predicted_conservation_values = np.array(predictedVariation['values'], dtype=np.int8)
 
     predicted_variation_values = np.array(predictedVariation['values'], dtype=np.int8)
+
+
 
     assert predictedVariation['x_axis'] == predictedConservation['x_axis']
     assert predictedVariation['y_axis'] == predictedConservation['y_axis']
@@ -153,6 +162,7 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
             "conservation_prediction": predicted_conservation_values.tobytes(),
             "variation_prediction": predicted_variation_values.tobytes(),
             "variation_prediction_shape": predicted_variation_values.shape,
+            "classes_prediction" : predictedClasses_arr.tobytes(),
             "x_axis": predictedVariation['x_axis'],
             "y_axis": predictedVariation['y_axis'],
             "meta":meta_data
@@ -161,4 +171,5 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
 
     return {'predictedConservation': predictedConservation,
             'predictedVariation': predictedVariation,
+            'predictedClasses' : predictedClasses,
             'meta':meta_data}
