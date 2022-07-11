@@ -21,155 +21,24 @@
         </div>
     </div>
     <div class="ui row">
-        <div class="ui sixteen wide column">
-            <h2>Submit a pipeline job</h2>
-            <label class="ui circular orange {{ "blue" if "pipeline" in workers }} label"></label> Pipeline jobs are currently {{ "in" if "pipeline" not in workers }}active.
-            <div class="ui segment {{ "disabled" if "pipeline" not in workers }}">
-                <div class="ui two column very relaxed grid">
-                    <div class="column">
-                        <form class="ui form" id="submit-form">
-                            <div class="field">
-                                <label>FASTA file</label>
-                                <input type="file" id="sequences" name="sequences" placeholder="FASTA file">
-                            </div>
-                            <div class="field">
-                                <label>Embed via</label>
-                                <div class="ui selection dropdown">
-                                    <input value="annotations_from_prott5" type="hidden" name="pipeline_type">
-                                    <div class="default text">ProtT5: embed, extract (supervised)</div>
-                                    <i class="dropdown icon"></i>
-                                    <div class="menu">
-                                        <div class="item" data-value="annotations_from_prott5">ProtT5: embed, extract (supervised)</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="ui button" type="submit">Submit</button>
-                            <div class="error message"></div>
-                            <div class="job submission messages"></div>
-                        </form>
-                    </div>
-                    <div class="middle aligned column">
-                        <form class="ui form" id="check-form">
-                            <div class="field">
-                                <label>Job id</label>
-                                <input type="text" id="id" name="id" placeholder="Job Id">
-                            </div>
-                            <button class="ui button" type="submit">Check</button>
-                            <div class="error message"></div>
-                        </form>
-                        <div id="job-id-status-card">
-                            <div id="job-id-status-message"></div>
-                            <div class="ui celled list">
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">Job parameters</div>
-                                        <div class="description">Files relevant to the execution of the job.</div>
-                                        <div class="list">
-                                            <a class="item download_file" id="download_input_sequence_file">
-                                                <div class="content">
-                                                    <div class="header">input_sequence_file</div>
-                                                    <div class="description">Sequences in FASTA</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_mapping_file">
-                                                <div class="content">
-                                                    <div class="header">mapping_file</div>
-                                                    <div class="description">CSV file mapping input ids to pipeline ids</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_input_config_file">
-                                                <div class="content">
-                                                    <div class="header">input_config_file</div>
-                                                    <div class="description">The configuration file used for your job</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">embed</div>
-                                        <div class="description">Results from the embed stage</div>
-                                        <div class="list">
-                                            <a class="item download_file" id="download_embeddings_file">
-                                                <div class="content">
-                                                    <div class="header">embeddings_file</div>
-                                                    <div class="description">Per-amino-acid embeddings in hdf5</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_reduced_embeddings_file">
-                                                <div class="content">
-                                                    <div class="header">reduced_embeddings_file</div>
-                                                    <div class="description">Per-sequence embeddings in hdf5</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">extract</div>
-                                        <div class="description">Results from the extract stage</div>
-                                        <div class="list">
-                                            <a class="item download_file" id="download_DSSP3_predictions_file">
-                                                <div class="content">
-                                                    <div class="header">DSSP3_predictions_file</div>
-                                                    <div class="description">Secondary structure predicted in three states as FASTA file</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_DSSP8_predictions_file">
-                                                <div class="content">
-                                                    <div class="header">DSSP8_predictions_file</div>
-                                                    <div class="description">Secondary structure predicted in eight states as FASTA file</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_disorder_predictions_file">
-                                                <div class="content">
-                                                    <div class="header">disorder_predictions_file</div>
-                                                    <div class="description">Disorder predicted in two states as FASTA file</div>
-                                                </div>
-                                            </a>
-                                            <a class="item download_file" id="download_per_sequence_predictions_file">
-                                                <div class="content">
-                                                    <div class="header">per_sequence_predictions_file</div>
-                                                    <div class="description">Subcellular localization and membrane/non-membrane predictions per-sequence in CSV</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">visualize</div>
-                                        <div class="description">Results from the visualize stage</div>
-                                        <div class="list">
-                                            <a class="item download_file" id="download_plot_file">
-                                                <div class="content">
-                                                    <div class="header">plot_file</div>
-                                                    <div class="description">2D UMAP projection of sequences</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui vertical divider">
-                    Or
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ui row">
         <div class="sixteen wide column">
             <h2>Direct jobs</h2>
             <p>Direct jobs (e.g., getting secondary structure prediction from ProtT5 on the fly) are available through <a target="_blank" href="https://predictprotein.org">PredictProtein</a> and <a target="_blank" href="https://embed.protein.properties">Embed Protein Properties</a>.</p>
             <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
-            <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> ProtT5
+            <label class="ui circular orange {{ "blue" if "prott5" in workers }} label"></label> The ProtT5 worker is currently {{ "in" if "prott5" not in workers }}active.
             <br />
-            <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> ProtT5 Annotations
+            <label class="ui circular orange {{ "blue" if "prott5_annotations" in workers }} label"></label> The ProtT5 Annotations worker is currently {{ "in" if "prott5_annotations" not in workers }}active.
+            <br />
+            <label class="ui circular orange {{ "blue" if "prott5_residue_landscape_annotations" in workers }} label"></label> The ProtT5 Residue Landscape Annotations worker is currently {{ "in" if "prott5_residue_landscape_annotations" not in workers }}active.
+        </div>
+    </div>
+        <div class="ui row">
+        <div class="ui sixteen wide column">
+            <h2>Async jobs</h2>
+            <p>In the following, you find the status of the sync workers. If workers are inactive (orange), jobs will not be executed. Blue workers are active and can execute jobs.</p>
+            <label class="ui circular orange {{ "blue" if "pipeline" in workers }} label"></label> Pipeline jobs are currently {{ "in" if "pipeline" not in workers }}active.
+            <br />
+            <label class="ui circular orange {{ "blue" if "colabfold" in workers }} label"></label> Colabfold jobs are currently {{ "in" if "colabfold" not in workers }}active.
         </div>
     </div>
     <div class="ui row">

@@ -29,7 +29,7 @@ homepage = "https://visualize.protein.properties"
 repository = "https://github.com/sacdallago/bio_embeddings"
 
 [tool.poetry.dependencies]
-python = ">=3.7.1,<3.10"
+python = ">=3.8,<3.10"
 
 # Packages which we had to patch
 bio-embeddings-cpcprot = { version = "0.0.1", optional = true }
@@ -39,39 +39,47 @@ bio-embeddings-bepler = { version = "0.0.1", optional = true }
 bio-embeddings-allennlp = { version = "0.9.2", optional = true }
 bio-embeddings-deepblast = { version = "0.1.0", optional = true }
 
-numpy = "^1.18.3"
-gensim = "^3.8.2"
+numpy = "^1.19.2"
+gensim = "^4.2.0"
 biopython = "^1.79"
 "ruamel.yaml" = "^0.17.10"
-pandas = "^1.2.0"
-h5py = "^3.2.1"
-transformers = { version = "^4.5.0", optional = true }
-plotly = "^5.1.0"
-umap-learn = "^0.5.1"
-matplotlib = "^3.2.1"
-scikit-learn = "^0.24.0"
-scipy = "^1.4.1"
+pandas = "^1.4.2"
+h5py = "^3.7.0"
+transformers = { version = "^4.19.2", optional = true }
+plotly = "^5.8.0"
+umap-learn = "^0.5.3"
+matplotlib = "^3.5.2"
+scikit-learn = "^1.1.1"
+scipy = "^1.8.1"
 torch = ">=1.8.0,<=1.10.0"
-tqdm = "^4.45.0"
+tqdm = "^4.64.0"
 lock = "^2018.3.25"
 # https://github.com/ElArkk/jax-unirep/issues/107
-jax-unirep = { version = "^1.0.0", optional = true }
+jax-unirep = { version = "^2.1.0", optional = true }
 # https://github.com/google/jax/blob/23b82b99d2e178fc648d5ac9ebc8bf5e4049075e/CHANGELOG.md#jaxlib-0162-march-9-2021
 # "jaxlib wheels are now built to require AVX instructions on x86-64 machines by default"
 # However, our CI machine is too old for AVX
 # We then go even lower due to https://github.com/google/jax/issues/5374
-jaxlib = { version = "^0.1.71", optional = true }
+jaxlib = { version = "^0.3.10", optional = true }
 appdirs = "^1.4.4"
-importlib_metadata = "^4.6.1"
-pymongo = { "version" = "^3.11.2", optional = true }
-sentry-sdk = { "version" = "^1.0.0", extras = ["flask"], optional = true }
-python-slugify = "^5.0.2"
+importlib_metadata = "^4.11.4"
+pymongo = { "version" = "^4.1.1", optional = true }
+sentry-sdk = { extras = ["flask"],"version" = "^1.5.12", optional = true }
+python-slugify = "^6.1.2"
 fsspec = { version = "0.8.5", optional = true }
-humanize = "^3.2.0"
+humanize = "^4.1.0"
 fair-esm = { version = "0.4.0", optional = true }
-flask = { version = "^2.0.0", optional = true }
+flask = { version = "^2.1.2", optional = true }
 atomicwrites = "^1.4.0"
-pyyaml = "5.4.1"
+pyyaml = "6.0"
+# Hiwi addons
+sentencepiece="0.1.96"
+celery="^5.2.7"
+flask-cors="^3.0.10"
+gunicorn="^20.1.0"
+vespa-effect= {version = "^1.0.0", python="^3.8"}
+werkzeug="2.0.3"
+
 
 [tool.poetry.extras]
 # Extras by paper/model name
@@ -86,15 +94,14 @@ deepblast = ["bio-embeddings-deepblast", "fsspec"]
 
 # General
 transformers = ["transformers"]
-
 all = ["bio-embeddings-allennlp", "transformers", "jax-unirep", "fair-esm", "bio-embeddings-cpcprot", "bio-embeddings-tape-proteins", "bio-embeddings-plus", "bio-embeddings-bepler", "bio-embeddings-deepblast"]
 # User don't need those, but we need it to run the tests
 webserver = ["pymongo", "sentry-sdk", "flask"]
 
 [tool.poetry.dev-dependencies]
 black = "21.8b0"
-check-manifest = "^0.41"
-flask-restx = "^0.5.0"
+check-manifest = "^0.48"
+flask-restx = "^0.5.1"
 furo = "^2021.08.31"
 hypothesis = "^6.3.4"
 hypothesis-bio = { git = "https://github.com/IQTLabs/hypothesis-bio", rev = "393f080772ae7aa7ca0358ce1a6753c0b69546e2" }
@@ -113,6 +120,7 @@ toml = "^0.10.1"
 tox = "^3.16.1"
 wheel = "^0.34.2"
 nbconvert = "^6.1.0"
+
 
 [tool.pytest.ini_options]
 addopts = "--tb=short"
