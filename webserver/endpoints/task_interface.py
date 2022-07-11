@@ -104,7 +104,7 @@ def get_features(model_name: str, sequence: str) -> Dict[str, str]:
         "sequence": sequence,
         "features": features,
     })
-
+    
     return features
 
 
@@ -114,7 +114,7 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
     )
 
     if cached:
-        predicted_conservation_values = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(
+        predictedConservation = numpy.frombuffer(cached['conservation_prediction'], dtype=numpy.int8).reshape(
             cached['conservation_prediction_shape']).tolist()
         predicted_variation_values = numpy.frombuffer(cached['variation_prediction'], dtype=numpy.int8).reshape(
             cached['variation_prediction_shape']).tolist()
@@ -125,12 +125,6 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
             'values': predicted_variation_values
         }
 
-        predictedConservation = {
-            'x_axis': cached['x_axis'],
-            'y_axis': cached['y_axis'],
-            'values': predicted_conservation_values
-        }
-
         meta_data = cached['meta']
 
         return {
@@ -139,7 +133,7 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
             'meta': meta_data
         }
 
-    embedding_as_list = get_embedding(model_name,sequence).tolist()
+    embedding_as_list = get_embedding(model_name, sequence).tolist()
 
     residue_landscape_model = {
         "prottrans_t5_xl_u50": get_residue_landscape_output_sync,
@@ -156,11 +150,8 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
     predictedVariation = residue_landscape_worker_out['predictedVariation']
     predictedConservation = residue_landscape_worker_out['predictedConservation']
 
-    predicted_conservation_values = np.array(predictedVariation['values'], dtype=np.int8)
+    predicted_conservation_values = np.array(predictedConservation, dtype=np.int8)
     predicted_variation_values = np.array(predictedVariation['values'], dtype=np.int8)
-
-    assert predictedVariation['x_axis'] == predictedConservation['x_axis']
-    assert predictedVariation['y_axis'] == predictedConservation['y_axis']
 
     get_residue_landscape_cache.insert_one({
         "uploadDate": datetime.utcnow(),
@@ -172,7 +163,7 @@ def get_residue_landscape(model_name: str, sequence: str) -> dict:
         "variation_prediction_shape": predicted_variation_values.shape,
         "x_axis": predictedVariation['x_axis'],
         "y_axis": predictedVariation['y_axis'],
-        "meta":meta_data
+        "meta": meta_data
     })
 
     return {
