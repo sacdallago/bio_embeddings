@@ -150,11 +150,11 @@ def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) ->
         'values': cons_probs_arr.tolist()
     }
 
-    return {'predictedConservation': conservation_return_dict,
-            'predictedVariation': vespa_return_dict,
-            'predictedClasses': classes_out['sequence'].tolist(),
-            'meta': {
-                'predictedConservation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y',
-                'predictedVariation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y'
+    return {
+        'predictedConservation': classes_out['sequence'].tolist(),
+        'predictedVariation': vespa_return_dict,
+        'meta': {
+            'predictedConservation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y',
+            'predictedVariation': 'https://link.springer.com/article/10.1007/s00439-021-02411-y'
             }
-            }
+        }

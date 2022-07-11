@@ -215,8 +215,4 @@ class residue_landscape(Resource):
         if not sequence or len(sequence) > 2000 or not check_valid_sequence(sequence):
             return abort(400, "Sequence is too long or contains invalid characters.")
 
-        residue_landscape_output = get_residue_landscape(model_name='prottrans_t5_xl_u50',sequence=sequence)
-        cons_pred = residue_landscape_output['predictedConservation']
-        variation = residue_landscape_output['predictedVariation']
-
-        return residue_landscape_output
+        return get_residue_landscape(model_name='prottrans_t5_xl_u50', sequence=sequence)
