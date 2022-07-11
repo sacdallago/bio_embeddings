@@ -16,7 +16,6 @@ if 'prott5_residue_landscape_annotations' in configuration['celery']['celery_wor
     from vespa.predict.utils import MutationGenerator
     from vespa.predict.config import MUTANT_ORDER
 
-    from celery.contrib import rdb
 
 @task_keeper.task()
 def get_residue_landscape_output_sync(sequence: str, embedding_as_list: list) -> dict:
