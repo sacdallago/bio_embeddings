@@ -24,7 +24,7 @@ def _get_structure_from_params(params):
 @ns.route('')
 class Annotations(Resource):
     @api.expect(sequence_get_parameters_structure, validate=True)
-    @api.response(200, "Annotations in specified format")
+    @api.response(200, "Structure in specified format")
     @api.response(201, "Created job for structure prediction")
     @api.response(202, "Structure prediction request accepted")
     @api.response(400, "Invalid input. See return message for details.")
@@ -33,7 +33,7 @@ class Annotations(Resource):
         return _get_structure_from_params(request.args)
 
     @api.expect(sequence_post_parameters_structure, validate=True)
-    @api.response(200, "Annotations in specified format")
+    @api.response(200, "Structure in specified format")
     @api.response(201, "Created job for structure prediction")
     @api.response(202, "Structure prediction request accepted")
     @api.response(400, "Invalid input. See return message for details.")
