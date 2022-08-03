@@ -30,6 +30,7 @@ def create_app():
             "https://seqvec.bioembeddings.com",
             "https://login.predictprotein.org",
             "https://embed.predictprotein.org",
+            "https://lambda.predictprotein.org",
         ],
     )
 
