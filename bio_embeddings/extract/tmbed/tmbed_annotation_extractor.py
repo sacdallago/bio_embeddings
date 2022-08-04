@@ -22,8 +22,8 @@ _tmbed_labels = {
     2: MembraneResidues.TMH_IN_OUT,
     3: MembraneResidues.TMH_OUT_IN,
     4: MembraneResidues.SIGNAL_PEPTIDE,
-    5: MembraneResidues.NON_TRANSMEMBRANE,
-    6: MembraneResidues.NON_TRANSMEMBRANE,
+    5: MembraneResidues.INSIDE_RESIDUE,
+    6: MembraneResidues.OUTSIDE_RESIDUE,
 }
 
 

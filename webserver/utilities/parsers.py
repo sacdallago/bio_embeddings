@@ -10,6 +10,8 @@ class MembraneResidues(Enum):
     TMH_OUT_IN = 'h'
     SIGNAL_PEPTIDE = 'S'
     NON_TRANSMEMBRANE = '.'
+    INSIDE_RESIDUE = 'i'
+    OUTSIDE_RESIDUE = 'o'
 
     def __str__(self):
         return {
@@ -18,7 +20,9 @@ class MembraneResidues(Enum):
             self.TMH_IN_OUT: 'Transmembrane alpha helix (IN --> OUT orientation)',
             self.TMH_OUT_IN: 'Transmembrane alpha helix (OUT --> IN orientation)',
             self.SIGNAL_PEPTIDE: 'Signal peptide',
-            self.NON_TRANSMEMBRANE: 'Non-Transmembrane'
+            self.NON_TRANSMEMBRANE: 'Non-Transmembrane',
+            self.INSIDE_RESIDUE: 'Non-Transmembrane inside',
+            self.OUTSIDE_RESIDUE: 'Non-Transmembrane outside',
         }.get(self)
 
     @staticmethod
