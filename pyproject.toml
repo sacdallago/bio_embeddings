@@ -51,7 +51,7 @@ umap-learn = "^0.5.3"
 matplotlib = "^3.5.2"
 scikit-learn = "^1.1.1"
 scipy = "^1.8.1"
-torch = ">=1.8.0,<=1.10.0"
+torch = ">=1.8.0,<2"
 tqdm = "^4.64.0"
 lock = "^2018.3.25"
 # https://github.com/ElArkk/jax-unirep/issues/107
